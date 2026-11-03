@@ -160,7 +160,7 @@ describe('ScalpChart', () => {
 
   it('draws no volume and reads none for an index', async () => {
     const { container } = render(<ScalpChart symbol="NIFTY" exchange="NSE_INDEX" interval="1m" />)
-    await waitFor(() => expect(container.textContent).toContain('C 103.00'))
+    await waitFor(() => expect(container.textContent).toContain('收 103.00'))
     expect(volume().applyOptions).toHaveBeenCalledWith({ visible: false })
     expect(container.textContent).not.toMatch(/\bV \d/)
   })
@@ -169,7 +169,7 @@ describe('ScalpChart', () => {
     const { container, rerender } = render(
       <ScalpChart symbol="NIFTY28OCT2525000CE" exchange="NFO" interval="1m" />
     )
-    await waitFor(() => expect(container.textContent).toContain('C 103.00'))
+    await waitFor(() => expect(container.textContent).toContain('收 103.00'))
     expect(container.textContent).toContain('NIFTY28OCT2525000CE')
     expect(container.textContent).toContain('· 1m · NFO')
 
@@ -177,17 +177,17 @@ describe('ScalpChart', () => {
     act(() => {
       for (const cb of chart().crosshair) cb({ time: T0 - IST })
     })
-    expect(container.textContent).toContain('C 101.00')
+    expect(container.textContent).toContain('收 101.00')
 
     pushTick('NIFTY28OCT2525000CE', 'NFO', 108, T0 - IST + 125)
     rerender(<ScalpChart symbol="NIFTY28OCT2525000CE" exchange="NFO" interval="1m" />)
-    expect(container.textContent).toContain('C 101.00')
+    expect(container.textContent).toContain('收 101.00')
 
     // Off the chart, it follows the forming candle again.
     act(() => {
       for (const cb of chart().crosshair) cb({ time: null })
     })
-    expect(container.textContent).toContain('C 108.00')
+    expect(container.textContent).toContain('收 108.00')
   })
 
   it('destroys the chart when it unmounts', async () => {

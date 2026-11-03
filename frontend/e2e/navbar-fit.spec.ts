@@ -86,6 +86,6 @@ test.describe('Navbar fits the space it has', () => {
     await page.goto('/dashboard')
 
     await expect(page.getByTestId('navbar-row')).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Dashboard', exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: '仪表盘', exact: true })).toBeVisible()
   })
 })

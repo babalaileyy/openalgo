@@ -31,10 +31,10 @@ describe('TemplateDialog payoff topology guard', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'Long Call' })
     expect(within(dialog).getByRole('combobox', { name: /strike for buy call leg 1/i })).toBeVisible()
-    expect(within(dialog).getByRole('combobox', { name: /strategy expiry/i })).toBeVisible()
-    expect(within(dialog).getByRole('spinbutton', { name: /strategy lot quantity/i })).toBeVisible()
-    expect(within(dialog).getByRole('button', { name: /decrease strategy lots/i })).toBeVisible()
-    expect(within(dialog).getByRole('button', { name: /increase strategy lots/i })).toBeVisible()
+    expect(within(dialog).getByRole('combobox', { name: /策略到期日/ })).toBeVisible()
+    expect(within(dialog).getByRole('spinbutton', { name: /策略手数/ })).toBeVisible()
+    expect(within(dialog).getByRole('button', { name: /减少策略手数/ })).toBeVisible()
+    expect(within(dialog).getByRole('button', { name: /增加策略手数/ })).toBeVisible()
     expect(await axe(view.container)).toHaveNoViolations()
   })
 
@@ -89,7 +89,7 @@ describe('TemplateDialog payoff topology guard', () => {
     )
 
     expect(screen.getByRole('alert')).toHaveTextContent(/later expiry is required/i)
-    expect(screen.getByRole('combobox', { name: /strategy expiry/i })).toHaveAttribute(
+    expect(screen.getByRole('combobox', { name: /策略到期日/ })).toHaveAttribute(
       'aria-invalid',
       'true'
     )
@@ -123,7 +123,7 @@ describe('TemplateDialog payoff topology guard', () => {
       'aria-invalid',
       'true'
     )
-    expect(screen.getByRole('combobox', { name: /strategy expiry/i })).toHaveAttribute(
+    expect(screen.getByRole('combobox', { name: /策略到期日/ })).toHaveAttribute(
       'aria-invalid',
       'false'
     )

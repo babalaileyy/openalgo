@@ -55,4 +55,11 @@ def test_broker_master_contract_sessions_are_found_by_name():
     sample = sorted((REPO / "broker").glob("*/database/master_contract_db.py"))
     assert sample, "no broker master contract modules found"
     for path in sample[:5]:
-        assert "db_session" in _scoped_sessions_in(path), path
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        shared_symbol_session = any(
+            isinstance(node, ast.ImportFrom)
+            and node.module == "database.symbol"
+            and any(alias.name == "db_session" and alias.asname is None for alias in node.names)
+            for node in tree.body
+        )
+        assert "db_session" in _scoped_sessions_in(path) or shared_symbol_session, path
