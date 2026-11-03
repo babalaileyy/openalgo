@@ -11,13 +11,13 @@ function rail(active: PanelId | null = null) {
 describe('RightRail', () => {
   it('opens the assistant panel', async () => {
     const onSelect = rail()
-    await userEvent.click(screen.getByRole('button', { name: 'Assistant' }))
+    await userEvent.click(screen.getByRole('button', { name: '助手' }))
     expect(onSelect).toHaveBeenCalledWith('agent')
   })
 
   it('closes the assistant panel from the button that opened it', async () => {
     const onSelect = rail('agent')
-    const button = screen.getByRole('button', { name: 'Assistant' })
+    const button = screen.getByRole('button', { name: '助手' })
     expect(button).toHaveAttribute('aria-expanded', 'true')
     // The rail is the only way back to a full-width chart, so the button that
     // opened a panel has to put it away.
@@ -29,13 +29,13 @@ describe('RightRail', () => {
 
   it('leaves the panels that were already there alone', () => {
     rail()
-    expect(screen.getByRole('button', { name: 'Watchlist' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Option chain' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '自选列表' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '期权链' })).toBeInTheDocument()
   })
 
   it('opens Objects from a glyph, not a word down the rail', async () => {
     const onSelect = rail()
-    const button = screen.getByRole('button', { name: 'Objects' })
+    const button = screen.getByRole('button', { name: '图表对象' })
     // The rail is glyphs in identical 32px boxes. Spelling this one out made
     // its button twice the height of the three beside it, so the name reaches
     // a reader through the button and the hover tip instead of the rail.
@@ -48,7 +48,7 @@ describe('RightRail', () => {
 
   it('opens Alerts from the rail, beside the objects it lists', async () => {
     const onSelect = rail()
-    const button = screen.getByRole('button', { name: 'Alerts' })
+    const button = screen.getByRole('button', { name: '提醒' })
     expect(button.textContent).toBe('')
     await userEvent.click(button)
     expect(onSelect).toHaveBeenCalledWith('alerts')
@@ -56,7 +56,7 @@ describe('RightRail', () => {
 
   it('opens the data window from a glyph on the rail', async () => {
     const onSelect = rail()
-    const button = screen.getByRole('button', { name: 'Data window' })
+    const button = screen.getByRole('button', { name: '数据窗口' })
     expect(button.textContent).toBe('')
     await userEvent.click(button)
     expect(onSelect).toHaveBeenCalledWith('data')

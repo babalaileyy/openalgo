@@ -61,7 +61,7 @@ export function McpPanel() {
       void queryClient.invalidateQueries({ queryKey: agentQueryKeys.mcp() })
     },
     onError: (cause) =>
-      setError(agentErrorMessage(cause, 'Could not change the external data setting')),
+      setError(agentErrorMessage(cause, '无法更改外部数据设置')),
   })
 
   const test = useMutation({
@@ -70,7 +70,7 @@ export function McpPanel() {
       setError(null)
       setChecks(Object.fromEntries(results.map((result) => [result.key, result])))
     },
-    onError: (cause) => setError(agentErrorMessage(cause, 'Could not run the connection test')),
+    onError: (cause) => setError(agentErrorMessage(cause, '无法运行连接测试')),
   })
 
   const enabled = settings.data?.data.mcp_enabled ?? true
@@ -87,10 +87,7 @@ export function McpPanel() {
         <h2 id="agent-mcp-heading" className="text-base font-semibold">
           External data (MCP)
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Read-only market data services the agent may consult beside your broker. Nothing here can
-          place or change an order.
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">智能体除交易商外还可查询的只读行情服务。这里的服务不能下单或修改订单。</p>
       </div>
 
       <div className="rounded-lg border border-border">
@@ -103,9 +100,7 @@ export function McpPanel() {
             aria-describedby="agent-mcp-help"
           />
           <div className="min-w-0 flex-1">
-            <Label htmlFor="agent-mcp-enabled" className="text-sm font-medium">
-              Let the agent read external market data
-            </Label>
+            <Label htmlFor="agent-mcp-enabled" className="text-sm font-medium">允许智能体读取外部行情数据</Label>
             <p id="agent-mcp-help" className="mt-1 text-sm text-muted-foreground">
               {enabled
                 ? 'The agent can look up data from the services listed below when a question needs it. Takes effect on the next message.'
@@ -138,9 +133,7 @@ export function McpPanel() {
               Test connection
             </Button>
             {test.isPending ? (
-              <span className="text-xs text-muted-foreground">
-                A slow server can take up to half a minute to answer.
-              </span>
+              <span className="text-xs text-muted-foreground">响应较慢的服务器最多可能需要半分钟。</span>
             ) : null}
           </div>
         </div>

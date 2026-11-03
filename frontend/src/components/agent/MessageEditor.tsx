@@ -97,7 +97,7 @@ export function MessageEditor({ value, onSend, onCancel, className }: MessageEdi
       />
       <div className="flex items-center justify-end gap-2 pt-1">
         <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="h-7 text-xs">
-          Cancel
+          取消
         </Button>
         <Button
           type="button"
@@ -106,11 +106,11 @@ export function MessageEditor({ value, onSend, onCancel, className }: MessageEdi
           disabled={!canSend}
           className="h-7 text-xs"
         >
-          Send
+          发送
         </Button>
       </div>
       <p className="px-1 pt-1 text-[11px] text-muted-foreground">
-        Sending replaces this message and discards the reply below it.
+        发送后将替换此消息，并丢弃其后的回复。
       </p>
     </div>
   )

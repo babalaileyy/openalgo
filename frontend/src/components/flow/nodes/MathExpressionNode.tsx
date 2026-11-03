@@ -38,7 +38,7 @@ export const MathExpressionNode = memo(({ data, selected }: MathExpressionNodePr
           <div className="node-icon bg-purple-500/20">
             <Sigma className="h-3 w-3 text-purple-500" />
           </div>
-          <span className="node-title">Math</span>
+          <span className="node-title">数学运算</span>
         </div>
 
         {expression ? (
@@ -50,7 +50,7 @@ export const MathExpressionNode = memo(({ data, selected }: MathExpressionNodePr
           </div>
         ) : (
           <div className="rounded bg-muted/50 px-2 py-1 text-center">
-            <span className="text-[10px] text-muted-foreground">Configure expression</span>
+            <span className="text-[10px] text-muted-foreground">配置表达式</span>
           </div>
         )}
       </div>

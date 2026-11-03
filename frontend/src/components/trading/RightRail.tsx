@@ -31,52 +31,52 @@ const PANELS = [
   // glyph there keep the app's icon, at the same line weight.
   {
     id: 'watchlist',
-    label: 'Watchlist',
+    label: '自选列表',
     icon: 'watchlist',
-    hint: 'Your instruments with live prices; click one to chart it',
+    hint: '查看自选品种的实时价格，点击可打开图表',
   },
   {
     id: 'options',
-    label: 'Option chain',
+    label: '期权链',
     icon: Table2,
-    hint: 'Strikes for the charted underlying; click one to chart it',
+    hint: '查看当前标的的期权行权价，点击可打开图表',
   },
   {
     id: 'objects',
-    label: 'Objects',
+    label: '图表对象',
     icon: Shapes,
-    hint: 'Every drawing, study and line on this chart',
+    hint: '查看当前图表上的画线、指标和线条',
   },
   // Beside the objects panel, because both answer "what is on this chart" and
   // an alert line is one of the things drawn on it.
   {
     id: 'alerts',
-    label: 'Alerts',
+    label: '提醒',
     icon: 'bell',
-    hint: 'Alerts on this chart, and every one that fired',
+    hint: '查看图表提醒及触发记录',
   },
   // The values under the crosshair: the bar and every study on it. With the
   // two above because it too reads the chart rather than the market.
   {
     id: 'data',
-    label: 'Data window',
+    label: '数据窗口',
     icon: 'crosshair',
-    hint: 'The values under the crosshair, for the bar and every study',
+    hint: '查看十字光标处的 K 线和指标数值',
   },
   {
     id: 'scripts',
-    label: 'Scripts',
+    label: '脚本',
     icon: FileCode2,
-    hint: 'Write and edit OpenScript studies and strategies',
+    hint: '编写和编辑 OpenScript 指标与策略',
   },
   // Beside the editor, because writing a strategy and asking what it would
   // have done are one activity seen twice, and a trader moves between the two
   // constantly while a strategy is taking shape.
   {
     id: 'backtest',
-    label: 'Backtest',
+    label: '回测',
     icon: FlaskConical,
-    hint: "Test a strategy on this chart's history",
+    hint: '使用当前图表的历史数据回测策略',
   },
   // After the backtest, because that is the order the work happens in: a
   // strategy is written, tested over history, and only then run. This is the
@@ -84,15 +84,15 @@ const PANELS = [
   // this tab, and they outlive it.
   {
     id: 'strategies',
-    label: 'Strategies',
+    label: '策略',
     icon: 'trading',
-    hint: 'Strategies running on the server, Live or Sandbox',
+    hint: '查看服务器上运行的实盘或模拟策略',
   },
   {
     id: 'agent',
-    label: 'Assistant',
+    label: '助手',
     icon: Bot,
-    hint: 'Ask about this chart, or have it changed for you',
+    hint: '询问图表内容或请求调整图表',
   },
 ] as const
 
@@ -162,7 +162,7 @@ export function RightRail({ active, onSelect }: Props) {
           <Tip
             key={id}
             side="left"
-            tip={{ title: label, chord: isOpen ? 'Esc' : undefined, sub: isOpen ? 'Close' : hint }}
+            tip={{ title: label, chord: isOpen ? 'Esc' : undefined, sub: isOpen ? '关闭' : hint }}
           >
             <div className="group relative">
               <button

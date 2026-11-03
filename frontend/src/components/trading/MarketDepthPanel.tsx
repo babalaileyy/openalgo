@@ -82,7 +82,7 @@ export function MarketDepthPanel({
     <Collapsible open={isExpanded} onOpenChange={onToggle}>
       <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 bg-muted/20 rounded hover:bg-muted/30 transition-colors">
         <span className="text-sm text-muted-foreground">
-          {isExpanded ? 'Hide' : 'Show'} Market Depth
+          {isExpanded ? '隐藏' : '显示'}盘口深度
         </span>
         <span className="text-xs text-muted-foreground">{isExpanded ? '[-]' : '[+]'}</span>
       </CollapsibleTrigger>
@@ -90,14 +90,14 @@ export function MarketDepthPanel({
       <CollapsibleContent>
         {!hasDepth ? (
           <div className="py-4 text-center text-sm text-muted-foreground">
-            No depth data available
+            暂无盘口深度数据
           </div>
         ) : (
           <div className="mt-2 border rounded-lg overflow-hidden">
             {/* Header */}
             <div className="grid grid-cols-2 bg-muted/30">
-              <div className="px-2 py-1.5 text-xs font-medium text-emerald-500 border-r">Bids</div>
-              <div className="px-2 py-1.5 text-xs font-medium text-rose-500">Asks</div>
+              <div className="px-2 py-1.5 text-xs font-medium text-emerald-500 border-r">买盘</div>
+              <div className="px-2 py-1.5 text-xs font-medium text-rose-500">卖盘</div>
             </div>
 
             {/* Depth rows */}
@@ -140,7 +140,7 @@ export function MarketDepthPanel({
             {/* Total row */}
             <div className="grid grid-cols-2 bg-muted/30 border-t divide-x">
               <div className="px-2 py-1.5 text-xs text-muted-foreground flex justify-between">
-                <span>Total</span>
+                <span>合计</span>
                 <span className="font-mono text-emerald-400">
                   {buyLevels.reduce((sum, l) => sum + l.quantity, 0).toLocaleString()}
                 </span>
@@ -149,7 +149,7 @@ export function MarketDepthPanel({
                 <span className="font-mono text-rose-400">
                   {sellLevels.reduce((sum, l) => sum + l.quantity, 0).toLocaleString()}
                 </span>
-                <span>Total</span>
+                <span>合计</span>
               </div>
             </div>
           </div>

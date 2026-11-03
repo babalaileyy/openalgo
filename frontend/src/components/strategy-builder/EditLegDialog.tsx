@@ -214,7 +214,7 @@ export function EditLegDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Edit Position</DialogTitle>
+          <DialogTitle>编辑持仓</DialogTitle>
           <DialogDescription>
             Update expiry, strike, side, quantity, entry price, or mark the leg closed with an exit
             price.
@@ -231,7 +231,7 @@ export function EditLegDialog({
                 resolveSelection(strike, optionType, v)
               }}
             >
-              <SelectTrigger aria-label="Expiry" className="h-10 text-sm font-semibold">
+              <SelectTrigger aria-label="到期日" className="h-10 text-sm font-semibold">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -242,7 +242,7 @@ export function EditLegDialog({
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-[11px] text-muted-foreground">Select Expiry</p>
+            <p className="text-[11px] text-muted-foreground">选择到期日</p>
           </div>
 
           {/* Strike + Type (options only) */}
@@ -257,8 +257,8 @@ export function EditLegDialog({
                     resolveSelection(nextStrike, optionType, expiry)
                   }}
                 >
-                  <SelectTrigger aria-label="Strike" className="h-10 text-sm font-semibold">
-                    <SelectValue placeholder="Strike" />
+                  <SelectTrigger aria-label="行权价" className="h-10 text-sm font-semibold">
+                    <SelectValue placeholder="行权价" />
                   </SelectTrigger>
                   <SelectContent>
                     {strikes.map((s) => (
@@ -271,11 +271,11 @@ export function EditLegDialog({
                 {(() => {
                   const m = strikeMoneyness(strike, atmStrike, strikeStep, optionType)
                   if (!m) {
-                    return <p className="text-[11px] text-muted-foreground">Strike</p>
+                    return <p className="text-[11px] text-muted-foreground">行权价</p>
                   }
                   return (
                     <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      Strike
+                      行权价
                       <span
                         className={cn(
                           'rounded px-1 py-px text-[9px] font-semibold uppercase tracking-wider',
@@ -299,7 +299,7 @@ export function EditLegDialog({
                     resolveSelection(strike, nextType, expiry)
                   }}
                 >
-                  <SelectTrigger aria-label="Option type" className="h-10 text-sm font-semibold">
+                  <SelectTrigger aria-label="期权类型" className="h-10 text-sm font-semibold">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -307,7 +307,7 @@ export function EditLegDialog({
                     <SelectItem value="PE">PE</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-[11px] text-muted-foreground">Option Type</p>
+                <p className="text-[11px] text-muted-foreground">期权类型</p>
               </div>
             </div>
           )}
@@ -332,19 +332,19 @@ export function EditLegDialog({
                 onChange={() => setSide('SELL')}
                 className="h-4 w-4 accent-rose-500"
               />
-              <span className={cn(side === 'SELL' && 'font-semibold text-rose-600')}>Sell</span>
+              <span className={cn(side === 'SELL' && 'font-semibold text-rose-600')}>卖出</span>
             </label>
           </div>
 
           {/* Lot Qty */}
           <div className="space-y-1">
-            <label className="text-sm font-medium">Lot Qty</label>
+            <label className="text-sm font-medium">手数</label>
             <div className="inline-flex h-10 w-[160px] items-center overflow-hidden rounded-md border">
               <button
                 type="button"
                 onClick={() => setLots(Math.max(1, lots - 1))}
                 className="flex h-full w-10 items-center justify-center text-muted-foreground hover:bg-muted"
-                aria-label="Decrease lots"
+                aria-label="减少手数"
               >
                 <Minus className="h-4 w-4" />
               </button>
@@ -359,7 +359,7 @@ export function EditLegDialog({
                 type="button"
                 onClick={() => setLots(lots + 1)}
                 className="flex h-full w-10 items-center justify-center text-muted-foreground hover:bg-muted"
-                aria-label="Increase lots"
+                aria-label="增加手数"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -440,7 +440,7 @@ export function EditLegDialog({
 
         <DialogFooter className="flex-row items-center justify-between gap-2 sm:justify-between">
           <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
-            Close
+            关闭
           </Button>
           <div className="ml-auto flex items-center gap-2">
             <Button
@@ -448,7 +448,7 @@ export function EditLegDialog({
               onClick={handleSave}
               disabled={isPriceLoading || resolvedContract === null}
             >
-              Modify
+              修改
             </Button>
             <Button
               variant="ghost"

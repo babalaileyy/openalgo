@@ -24,11 +24,11 @@ export function RunAllDaySwitch({
   return (
     <div className="flex items-start justify-between gap-4 rounded-lg border p-3">
       <div className="space-y-1">
-        <Label htmlFor="run_24x7">Run 24/7</Label>
+        <Label htmlFor="run_24x7">全天候运行（24/7）</Label>
         <p className="text-xs text-muted-foreground">
           {checked
-            ? 'The schedule never stops this strategy. It runs until you stop it, and if the script exits on its own it is started again at 00:00 IST.'
-            : 'The strategy runs only between the start and stop time below, on the days you pick.'}
+            ? '定时设置不会停止此策略；策略将持续运行，直到手动停止。如果脚本自行退出，将在印度标准时间 00:00 再次启动。'
+            : '策略仅在所选日期和下方设置的开始、停止时间之间运行。'}
         </p>
       </div>
       <Switch id="run_24x7" checked={checked} onCheckedChange={onCheckedChange} />

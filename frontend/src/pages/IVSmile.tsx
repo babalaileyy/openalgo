@@ -146,11 +146,11 @@ export default function IVSmile() {
       if (response.status === 'success') {
         setIvData(response)
       } else {
-        showToast.error(response.message || 'Failed to fetch IV Smile data')
+        showToast.error(response.message || '获取隐含波动率微笑数据失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to fetch IV Smile data'))
+      showToast.error(serverSentence(error, '获取隐含波动率微笑数据失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -238,10 +238,10 @@ export default function IVSmile() {
         y: ceIVs,
         type: 'scatter' as const,
         mode: 'lines+markers' as const,
-        name: 'Call IV',
+        name: 'Call IV（看涨隐含波动率）',
         line: { color: themeColors.callIV, width: 2.5 },
         marker: { size: 4, color: themeColors.callIV },
-        hovertemplate: 'Strike: %{x}<br>Call IV: %{y:.2f}%<extra></extra>',
+        hovertemplate: '行权价：%{x}<br>Call IV（看涨隐含波动率）：%{y:.2f}%<extra></extra>',
         connectgaps: true,
       },
       {
@@ -249,10 +249,10 @@ export default function IVSmile() {
         y: peIVs,
         type: 'scatter' as const,
         mode: 'lines+markers' as const,
-        name: 'Put IV',
+        name: 'Put IV（看跌隐含波动率）',
         line: { color: themeColors.putIV, width: 2.5 },
         marker: { size: 4, color: themeColors.putIV },
-        hovertemplate: 'Strike: %{x}<br>Put IV: %{y:.2f}%<extra></extra>',
+        hovertemplate: '行权价：%{x}<br>Put IV（看跌隐含波动率）：%{y:.2f}%<extra></extra>',
         connectgaps: true,
       },
     ]
@@ -275,7 +275,7 @@ export default function IVSmile() {
         x: spotPrice,
         y: 1,
         yref: 'paper' as const,
-        text: `Spot ${spotPrice?.toFixed(1)}`,
+        text: `现货价 ${spotPrice?.toFixed(1)}`,
         showarrow: false,
         font: { color: themeColors.text, size: 11 },
         yanchor: 'bottom' as const,
@@ -299,7 +299,7 @@ export default function IVSmile() {
 
     const layout: Partial<PlotlyTypes.Layout> = {
       title: {
-        text: `${selectedUnderlying} ${expiryLabel} - IV Smile`,
+        text: `${selectedUnderlying} ${expiryLabel} - IV Smile（隐含波动率微笑）`,
         font: { color: themeColors.text, size: 14 },
       },
       paper_bgcolor: themeColors.paper,
@@ -321,13 +321,13 @@ export default function IVSmile() {
       },
       margin: { l: 60, r: 30, t: 50, b: 80 },
       xaxis: {
-        title: { text: 'Strike Price', font: { color: themeColors.text, size: 12 } },
+        title: { text: '行权价', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
         tickangle: -45,
       },
       yaxis: {
-        title: { text: 'Implied Volatility (%)', font: { color: themeColors.text, size: 12 } },
+        title: { text: 'Implied Volatility（隐含波动率，%）', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
         ticksuffix: '%',
@@ -362,12 +362,12 @@ export default function IVSmile() {
     <div className="py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">IV Smile</h1>
+        <h1 className="text-2xl font-bold">IV Smile（隐含波动率微笑）</h1>
         <div className="flex items-center gap-3 flex-wrap">
           {/* Exchange selector */}
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {toolsFnoExchanges.map((ex) => (
@@ -387,15 +387,15 @@ export default function IVSmile() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -425,7 +425,7 @@ export default function IVSmile() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((e) => (
@@ -442,12 +442,12 @@ export default function IVSmile() {
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
           >
-            {autoRefresh ? 'Auto: ON' : 'Auto: OFF'}
+            {autoRefresh ? '自动刷新：开' : '自动刷新：关'}
           </Button>
 
           {/* Refresh */}
           <Button variant="outline" size="sm" onClick={fetchIVSmileData} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
         </div>
       </div>
@@ -456,19 +456,19 @@ export default function IVSmile() {
       {ivData && ivData.status === 'success' && (
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Spot: {ivData.spot_price?.toFixed(1)}
+            现货价：{ivData.spot_price?.toFixed(1)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            ATM: {ivData.atm_strike}
+            ATM（平值行权价）：{ivData.atm_strike}
           </Badge>
           {ivData.atm_iv !== null && ivData.atm_iv !== undefined && (
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              ATM IV: {ivData.atm_iv}%
+              ATM IV（平值隐含波动率）：{ivData.atm_iv}%
             </Badge>
           )}
           {ivData.skew !== null && ivData.skew !== undefined && (
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              Skew (25d): {ivData.skew > 0 ? '+' : ''}
+              Skew (25d)（25 Delta 偏斜）：{ivData.skew > 0 ? '+' : ''}
               {ivData.skew}%
             </Badge>
           )}
@@ -480,7 +480,7 @@ export default function IVSmile() {
         <CardContent className="p-2 sm:p-4">
           {isLoading && !ivData ? (
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
-              Loading IV Smile data...
+              正在加载隐含波动率微笑数据...
             </div>
           ) : ivSmilePlot.data.length > 0 ? (
             <Plot
@@ -493,8 +493,8 @@ export default function IVSmile() {
           ) : (
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
               {selectedExpiry
-                ? 'No IV data available'
-                : 'Select an underlying and expiry to view IV Smile'}
+                ? '暂无隐含波动率数据'
+                : '请选择标的和到期日以查看隐含波动率微笑'}
             </div>
           )}
         </CardContent>
@@ -504,18 +504,18 @@ export default function IVSmile() {
       {ivTable.length > 0 && (
         <Card>
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-3 text-sm">IV Near ATM</h3>
+            <h3 className="font-semibold mb-3 text-sm">IV Near ATM（平值附近隐含波动率）</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left py-2 px-3 font-medium text-muted-foreground">
-                      Strike
+                      行权价
                     </th>
-                    <th className="text-right py-2 px-3 font-medium text-blue-500">Call IV</th>
-                    <th className="text-right py-2 px-3 font-medium text-red-500">Put IV</th>
+                    <th className="text-right py-2 px-3 font-medium text-blue-500">Call IV（看涨隐含波动率）</th>
+                    <th className="text-right py-2 px-3 font-medium text-red-500">Put IV（看跌隐含波动率）</th>
                     <th className="text-right py-2 px-3 font-medium text-muted-foreground">
-                      Diff (PE-CE)
+                      Diff (PE-CE)（看跌与看涨之差）
                     </th>
                   </tr>
                 </thead>

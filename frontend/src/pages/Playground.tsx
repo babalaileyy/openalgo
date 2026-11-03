@@ -182,7 +182,7 @@ export default function Playground() {
       await authApi.logout()
       logout()
       navigate('/login')
-      showToast.success('Logged out successfully', 'analyzer')
+      showToast.success('已退出登录', 'analyzer')
     } catch {
       logout()
       navigate('/login')
@@ -270,7 +270,7 @@ export default function Playground() {
         setEndpoints(data)
       }
     } catch {
-      showToast.error('Failed to load endpoints', 'analyzer')
+      showToast.error('加载接口失败', 'analyzer')
     }
   }
 
@@ -403,21 +403,21 @@ export default function Playground() {
       const parsed = JSON.parse(requestBody)
       const prettified = JSON.stringify(parsed, null, 2)
       updateCurrentTabBody(prettified)
-      showToast.success('JSON prettified', 'analyzer')
+      showToast.success('JSON 已格式化', 'analyzer')
     } catch {
-      showToast.error('Invalid JSON - cannot prettify', 'analyzer')
+      showToast.error('JSON 格式无效，无法格式化', 'analyzer')
     }
   }
 
   const sendRequest = async () => {
     if (!url) {
-      showToast.warning('Please select an endpoint', 'analyzer')
+      showToast.warning('请选择接口', 'analyzer')
       return
     }
 
     const validation = isValidApiUrl(url, method)
     if (!validation.valid) {
-      showToast.error(validation.error || 'Validation error', 'analyzer')
+      showToast.error(validation.error || '校验错误', 'analyzer')
       return
     }
 
@@ -453,7 +453,7 @@ export default function Playground() {
             })
             fetchUrl = urlObj.toString()
           } catch {
-            showToast.error('Invalid JSON for query parameters', 'analyzer')
+            showToast.error('查询参数的 JSON 格式无效', 'analyzer')
             setIsLoading(false)
             return
           }
@@ -498,7 +498,7 @@ export default function Playground() {
       setResponseStatus(0)
       setResponseTime(elapsed)
       setResponseData(
-        JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }, null, 2)
+        JSON.stringify({ error: error instanceof Error ? error.message : '未知错误' }, null, 2)
       )
     } finally {
       setIsLoading(false)
@@ -508,14 +508,14 @@ export default function Playground() {
   const copyResponse = () => {
     if (responseData) {
       navigator.clipboard.writeText(responseData)
-      showToast.success('Response copied!', 'clipboard')
+      showToast.success('响应已复制！', 'clipboard')
     }
   }
 
   const copyApiKey = () => {
     if (apiKey) {
       navigator.clipboard.writeText(apiKey)
-      showToast.success('API key copied!', 'clipboard')
+      showToast.success('API 密钥已复制！', 'clipboard')
     }
   }
 
@@ -533,7 +533,7 @@ export default function Playground() {
         }, 2000)
       }
     } else {
-      showToast.error(result.message || 'Failed to toggle mode', 'analyzer')
+      showToast.error(result.message || '切换模式失败', 'analyzer')
     }
   }
 
@@ -553,7 +553,7 @@ export default function Playground() {
         })
         curlUrl = urlObj.toString()
       } catch {
-        showToast.error('Invalid JSON for query parameters', 'analyzer')
+        showToast.error('查询参数的 JSON 格式无效', 'analyzer')
         return
       }
     }
@@ -568,7 +568,7 @@ export default function Playground() {
     }
 
     navigator.clipboard.writeText(curl)
-    showToast.success('Copied as cURL', 'clipboard')
+    showToast.success('已复制为 cURL 命令', 'clipboard')
   }
 
   // Filter endpoints by search
@@ -675,7 +675,7 @@ export default function Playground() {
                 selectEndpoint(endpoints[firstCat][0])
               }
             }}
-            aria-label="New request tab"
+            aria-label="新建请求标签页"
           >
             <Plus className="h-3.5 w-3.5" />
           </Button>
@@ -752,9 +752,7 @@ export default function Playground() {
 
           <Button variant="ghost" size="sm" className="h-7 text-xs" asChild>
             <Link to="/dashboard">
-              <Home className="h-3.5 w-3.5 mr-1.5" />
-              Dashboard
-            </Link>
+              <Home className="h-3.5 w-3.5 mr-1.5" />仪表盘</Link>
           </Button>
 
           {/* Profile Dropdown */}
@@ -764,7 +762,7 @@ export default function Playground() {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full bg-primary text-primary-foreground"
-                aria-label="Open profile menu"
+                aria-label="打开个人资料菜单"
               >
                 <span className="text-sm font-medium">
                   {user?.username?.[0]?.toUpperCase() || 'O'}
@@ -789,18 +787,14 @@ export default function Playground() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2"
                 >
-                  <BookOpen className="h-4 w-4" />
-                  Docs
-                </a>
+                  <BookOpen className="h-4 w-4" />文档</a>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => setShowLogoutDialog(true)}
                 className="text-destructive focus:text-destructive"
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </DropdownMenuItem>
+                <LogOut className="h-4 w-4 mr-2" />退出登录</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -903,7 +897,7 @@ export default function Playground() {
                     value={apiKey}
                     readOnly
                     className="flex-1 h-5 text-[10px] font-mono bg-transparent border-none p-0 text-muted-foreground"
-                    placeholder="No API key"
+                    placeholder="没有 API 密钥"
                   />
                   <Button
                     variant="ghost"
@@ -919,7 +913,7 @@ export default function Playground() {
                     size="icon"
                     className="h-5 w-5 text-muted-foreground hover:text-foreground"
                     onClick={copyApiKey}
-                    aria-label="Copy API key"
+                    aria-label="复制 API 密钥"
                   >
                     <Copy className="h-3 w-3" />
                   </Button>
@@ -966,9 +960,7 @@ export default function Playground() {
                         <RefreshCw className="h-4 w-4 animate-spin" />
                       ) : (
                         <>
-                          <Send className="h-3.5 w-3.5 mr-1.5" />
-                          Send
-                        </>
+                          <Send className="h-3.5 w-3.5 mr-1.5" />发送</>
                       )}
                     </Button>
                   </div>
@@ -984,15 +976,11 @@ export default function Playground() {
                             <TabsTrigger
                               value="body"
                               className="h-6 px-2 text-xs data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
-                            >
-                              Body
-                            </TabsTrigger>
+                            >请求体</TabsTrigger>
                             <TabsTrigger
                               value="headers"
                               className="h-6 px-2 text-xs data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
-                            >
-                              Headers
-                            </TabsTrigger>
+                            >请求头</TabsTrigger>
                           </TabsList>
                           <div className="flex items-center gap-1">
                             <span className="text-[10px] text-muted-foreground mr-2">JSON</span>
@@ -1001,9 +989,7 @@ export default function Playground() {
                               size="sm"
                               className="h-6 text-[10px] text-muted-foreground hover:text-foreground hover:bg-accent"
                               onClick={prettifyBody}
-                            >
-                              Prettify
-                            </Button>
+                            >格式化</Button>
                           </div>
                         </div>
 
@@ -1045,15 +1031,11 @@ export default function Playground() {
                             <TabsTrigger
                               value="response"
                               className="h-6 px-2 text-xs data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
-                            >
-                              Response
-                            </TabsTrigger>
+                            >响应</TabsTrigger>
                             <TabsTrigger
                               value="headers"
                               className="h-6 px-2 text-xs data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
-                            >
-                              Headers
-                            </TabsTrigger>
+                            >请求头</TabsTrigger>
                           </TabsList>
                           <div className="flex items-center gap-3 text-xs font-mono">
                             {responseStatus !== null && (
@@ -1095,7 +1077,7 @@ export default function Playground() {
                                 size="icon"
                                 className="h-6 w-6 text-muted-foreground hover:text-foreground"
                                 onClick={copyResponse}
-                                aria-label="Copy response"
+                                aria-label="复制响应"
                               >
                                 <Copy className="h-3 w-3" />
                               </Button>
@@ -1133,10 +1115,8 @@ export default function Playground() {
                                 ) : (
                                   <>
                                     <Send className="h-10 w-10 text-muted-foreground/30 mb-3" />
-                                    <p className="text-muted-foreground text-sm">No response yet</p>
-                                    <p className="text-muted-foreground/70 text-xs mt-1">
-                                      Click Send to make a request
-                                    </p>
+                                    <p className="text-muted-foreground text-sm">暂无响应</p>
+                                    <p className="text-muted-foreground/70 text-xs mt-1">点击“发送”发起请求</p>
                                   </>
                                 )}
                               </div>
@@ -1158,9 +1138,7 @@ export default function Playground() {
                               ))}
                             </div>
                           ) : (
-                            <div className="text-xs text-muted-foreground">
-                              No headers to display
-                            </div>
+                            <div className="text-xs text-muted-foreground">没有可显示的请求头</div>
                           )}
                         </TabsContent>
                       </Tabs>
@@ -1178,15 +1156,11 @@ export default function Playground() {
                   <h2 className="text-lg font-semibold text-foreground/80 mb-2">
                     API Playground [WS-TEST]
                   </h2>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    Select an endpoint from the sidebar to get started
-                  </p>
+                  <p className="text-muted-foreground text-sm mb-4">请从侧边栏选择一个接口开始使用</p>
                   {!apiKey && (
                     <Button variant="outline" size="sm" asChild>
                       <Link to="/apikey">
-                        <Key className="h-4 w-4 mr-2" />
-                        Generate API Key
-                      </Link>
+                        <Key className="h-4 w-4 mr-2" />生成 API 密钥</Link>
                     </Button>
                   )}
                 </div>

@@ -173,7 +173,7 @@ const tooltip = () => screen.getByTestId('straddle-pnl-tooltip')
 /** The page simulates on demand: wait for an expiry, then press Simulate. */
 async function renderSimulated() {
   const view = render(<CustomStraddle />)
-  const button = screen.getByRole('button', { name: 'Simulate' })
+  const button = screen.getByRole('button', { name: '开始模拟' })
   await waitFor(() => expect(screen.getByText('28-OCT-26')).toBeInTheDocument())
   fireEvent.click(button)
   await waitFor(() => expect(pnl().setData).toHaveBeenCalled())
@@ -255,20 +255,20 @@ describe('CustomStraddle', () => {
     const text = tooltip().textContent ?? ''
     expect(tooltip().style.display).toBe('block')
     // Each label beside its own value.
-    expect(text).toMatch(/P&L\s*1,234\.50/)
-    expect(text).toMatch(/Spot\s*24,990\.25/)
-    expect(text).toMatch(/ATM Strike\s*25000/)
-    expect(text).toMatch(/Entry Strike\s*24950/)
-    expect(text).toMatch(/Straddle\s*233\.90/)
-    expect(text).toMatch(/Synthetic Fut\s*24,991\.10/)
-    expect(text).toMatch(/Adjustments\s*3/)
+    expect(text).toMatch(/P&L（盈亏）\s*1,234\.50/)
+    expect(text).toMatch(/现货价\s*24,990\.25/)
+    expect(text).toMatch(/ATM Strike（平值行权价）\s*25000/)
+    expect(text).toMatch(/建仓行权价\s*24950/)
+    expect(text).toMatch(/Straddle（跨式组合）\s*233\.90/)
+    expect(text).toMatch(/Synthetic Fut（合成期货）\s*24,991\.10/)
+    expect(text).toMatch(/调仓次数\s*3/)
     expect(text).toMatch(/27 Oct\s*09:15 AM/)
     expect(tooltip().firstElementChild?.getAttribute('style')).toContain(theme.upColor)
 
     act(() => {
       for (const cb of chart().crosshair) cb({ time: T0 + 60, point: { x: 120, y: 80 } })
     })
-    expect(tooltip().textContent).toMatch(/P&L\s*-1,250\.50/)
+    expect(tooltip().textContent).toMatch(/P&L（盈亏）\s*-1,250\.50/)
     expect(tooltip().firstElementChild?.getAttribute('style')).toContain(theme.downColor)
 
     act(() => {
@@ -285,8 +285,8 @@ describe('CustomStraddle', () => {
     expect(tagged.lastPriceUp).toBe(theme.downColor)
     expect(tagged.lastPriceDown).toBe(theme.downColor)
 
-    fireEvent.click(screen.getByRole('button', { name: 'P&L' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Spot' }))
+    fireEvent.click(screen.getByRole('button', { name: 'P&L（盈亏）' }))
+    fireEvent.click(screen.getByRole('button', { name: '现货价' }))
     expect(pnl().applyOptions).toHaveBeenLastCalledWith(expect.objectContaining({ visible: false }))
     expect(spot().applyOptions).toHaveBeenLastCalledWith(expect.objectContaining({ visible: true }))
     const spotColour = spot().applyOptions.mock.lastCall?.[0].color

@@ -1360,7 +1360,7 @@ export default function StrategyBuilder() {
   const handleTemplatePick = useCallback(
     (tpl: StrategyTemplate) => {
       if (!activeChain || atmStrike === null) {
-        showToast.error('Option chain not loaded yet')
+        showToast.error('期权链尚未加载')
         return
       }
       setActiveTemplate(tpl)
@@ -1376,7 +1376,7 @@ export default function StrategyBuilder() {
         return
       }
       if (!apiKey || !activeChain) {
-        showToast.error('Option chain not loaded yet')
+        showToast.error('期权链尚未加载')
         return
       }
 
@@ -1669,7 +1669,7 @@ export default function StrategyBuilder() {
       } catch (err) {
         if (!cancelled) {
           setIsHydrating(false)
-          showToast.error(err instanceof Error ? err.message : 'Failed to load strategy')
+          showToast.error(err instanceof Error ? err.message : '加载策略失败')
         }
       }
     })()
@@ -1715,7 +1715,7 @@ export default function StrategyBuilder() {
           : await strategyPortfolioApi.create(payload)
         setLoadedEntry(saved)
         setSaveDialogOpen(false)
-        showToast.success(loadedEntry ? 'Strategy updated' : 'Strategy saved')
+        showToast.success(loadedEntry ? '策略已更新' : '策略已保存')
       } finally {
         setIsSaving(false)
       }
@@ -1733,11 +1733,9 @@ export default function StrategyBuilder() {
           the top is needed. */}
       <div className="space-y-1.5">
         <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-          <Sparkles className="h-3 w-3" />
-          Tools / Strategy Builder
-        </div>
+          <Sparkles className="h-3 w-3" />工具 / 策略构建器</div>
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-bold tracking-tight">Strategy Builder</h1>
+          <h1 className="text-3xl font-bold tracking-tight">策略构建器</h1>
           {loadedEntry && (
             <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-violet-700 dark:text-violet-400">
               <span className="h-1.5 w-1.5 rounded-full bg-violet-500" />
@@ -1745,9 +1743,7 @@ export default function StrategyBuilder() {
             </span>
           )}
         </div>
-        <p className="text-sm text-muted-foreground">
-          Design and analyse multi-leg options strategies with live Greeks and payoff.
-        </p>
+        <p className="text-sm text-muted-foreground">使用实时 Greeks（希腊值）和损益分析设计多腿期权策略。</p>
       </div>
 
       {/* Symbol header */}
@@ -1774,7 +1770,7 @@ export default function StrategyBuilder() {
       />
 
       {/* Template grid */}
-      <h2 className="sr-only">Build a strategy</h2>
+      <h2 className="sr-only">构建策略</h2>
       <div className="overflow-hidden rounded-xl border bg-card p-5 shadow-sm">
         <TemplateGrid
           direction={direction}
@@ -1818,7 +1814,7 @@ export default function StrategyBuilder() {
             </div>
 
             <div className="space-y-1.5">
-              <h3 className="text-base font-semibold">Your canvas awaits</h3>
+              <h3 className="text-base font-semibold">开始构建你的策略</h3>
               <p className="mx-auto max-w-md text-[13px] text-muted-foreground">
                 Pick a pre-built strategy above, or add a position manually. Payoff chart, Greeks
                 and live P&amp;L will materialize here.
@@ -1827,14 +1823,12 @@ export default function StrategyBuilder() {
 
             <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
               <span className="inline-flex items-center gap-1 rounded-full border bg-background/80 px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
-                <LineChart className="h-3 w-3" /> Payoff diagrams
-              </span>
+                <LineChart className="h-3 w-3" />损益图</span>
               <span className="inline-flex items-center gap-1 rounded-full border bg-background/80 px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
                 <Sparkles className="h-3 w-3" /> Greeks &amp; IV
               </span>
               <span className="inline-flex items-center gap-1 rounded-full border bg-background/80 px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
-                <TrendingUp className="h-3 w-3" /> What-if sims
-              </span>
+                <TrendingUp className="h-3 w-3" />假设情景模拟</span>
             </div>
           </div>
         </div>
@@ -1886,16 +1880,12 @@ export default function StrategyBuilder() {
                     value="payoff"
                     className="rounded-lg px-4 text-xs font-semibold data-[state=active]:bg-gradient-to-br data-[state=active]:from-background data-[state=active]:to-muted/60 data-[state=active]:shadow-sm"
                   >
-                    <LineChart className="mr-1.5 h-3.5 w-3.5" />
-                    Payoff
-                  </TabsTrigger>
+                    <LineChart className="mr-1.5 h-3.5 w-3.5" />损益</TabsTrigger>
                   <TabsTrigger
                     value="greeks"
                     className="rounded-lg px-4 text-xs font-semibold data-[state=active]:bg-gradient-to-br data-[state=active]:from-background data-[state=active]:to-muted/60 data-[state=active]:shadow-sm"
                   >
-                    <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                    Greeks
-                  </TabsTrigger>
+                    <Sparkles className="mr-1.5 h-3.5 w-3.5" />Greeks（希腊值）</TabsTrigger>
                   <TabsTrigger
                     value="pnl"
                     className="rounded-lg px-4 text-xs font-semibold data-[state=active]:bg-gradient-to-br data-[state=active]:from-background data-[state=active]:to-muted/60 data-[state=active]:shadow-sm"
@@ -1907,16 +1897,12 @@ export default function StrategyBuilder() {
                     value="strategychart"
                     className="rounded-lg px-4 text-xs font-semibold data-[state=active]:bg-gradient-to-br data-[state=active]:from-background data-[state=active]:to-muted/60 data-[state=active]:shadow-sm"
                   >
-                    <Activity className="mr-1.5 h-3.5 w-3.5" />
-                    Strategy Chart
-                  </TabsTrigger>
+                    <Activity className="mr-1.5 h-3.5 w-3.5" />策略图表</TabsTrigger>
                   <TabsTrigger
                     value="multistrikeoi"
                     className="rounded-lg px-4 text-xs font-semibold data-[state=active]:bg-gradient-to-br data-[state=active]:from-background data-[state=active]:to-muted/60 data-[state=active]:shadow-sm"
                   >
-                    <Layers className="mr-1.5 h-3.5 w-3.5" />
-                    Multi Strike OI
-                  </TabsTrigger>
+                    <Layers className="mr-1.5 h-3.5 w-3.5" />多行权价 OI（持仓量）</TabsTrigger>
                   </TabsList>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
@@ -1926,9 +1912,7 @@ export default function StrategyBuilder() {
                     onClick={() => navigate('/strategybuilder/portfolio')}
                     className="h-10 gap-1.5 px-4 text-xs font-semibold"
                   >
-                    <Briefcase className="h-3.5 w-3.5" />
-                    Portfolio
-                  </Button>
+                    <Briefcase className="h-3.5 w-3.5" />策略组合</Button>
                 </div>
               </div>
               <TabsContent value="payoff" className="pt-4">
@@ -1948,9 +1932,7 @@ export default function StrategyBuilder() {
                       formatCurrency={formatCurrency}
                     />
                   ) : (
-                    <div className="flex h-[440px] items-center justify-center text-sm text-muted-foreground">
-                      Load an option chain to see the payoff chart.
-                    </div>
+                    <div className="flex h-[440px] items-center justify-center text-sm text-muted-foreground">请加载期权链以查看损益图。</div>
                   )}
                 </div>
               </TabsContent>
@@ -1976,9 +1958,7 @@ export default function StrategyBuilder() {
                     optionExchange={fnoExchange}
                   />
                 ) : (
-                  <div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground shadow-sm">
-                    Resolving the underlying market-data reference...
-                  </div>
+                  <div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground shadow-sm">正在获取标的行情数据…</div>
                 )}
               </TabsContent>
               <TabsContent value="multistrikeoi" className="pt-4">
@@ -1992,9 +1972,7 @@ export default function StrategyBuilder() {
                     optionExchange={fnoExchange}
                   />
                 ) : (
-                  <div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground shadow-sm">
-                    Resolving the underlying market-data reference...
-                  </div>
+                  <div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground shadow-sm">正在获取标的行情数据…</div>
                 )}
               </TabsContent>
             </Tabs>
@@ -2060,7 +2038,7 @@ export default function StrategyBuilder() {
       >
         <AlertDialogContent role="alertdialog">
           <AlertDialogHeader>
-            <AlertDialogTitle>Clear the current strategy?</AlertDialogTitle>
+            <AlertDialogTitle>清空当前策略？</AlertDialogTitle>
             <AlertDialogDescription>
               Changing the {pendingIdentityChange?.kind} clears every leg and resets the current
               scenario so contracts cannot be mixed across strategy identities.
@@ -2073,7 +2051,7 @@ export default function StrategyBuilder() {
                 if (pendingIdentityChange) applyIdentityChange(pendingIdentityChange, true)
               }}
             >
-              Clear strategy
+              清空策略
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

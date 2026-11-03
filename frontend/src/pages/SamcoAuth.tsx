@@ -60,10 +60,10 @@ export default function SamcoAuth() {
       if (data.status === 'success') {
         login('', 'samco')
         setConnected(true)
-        showToast.success('Connected to Samco')
+        showToast.success('已连接 Samco')
         await checkIpStatus()
       } else {
-        setError(data.message || 'Authentication failed. Please try again.')
+        setError(data.message || '验证失败，请重试。')
       }
     } catch {
       setError('Authentication failed. Please check your API credentials and try again.')
@@ -86,10 +86,10 @@ export default function SamcoAuth() {
       if (data.status === 'success') {
         setIpStatus(data)
       } else {
-        setError(data.message || 'Could not verify the static IP status.')
+        setError(data.message || '无法验证静态 IP 状态。')
       }
     } catch {
-      setError('Could not verify the static IP status.')
+      setError('无法验证静态 IP 状态。')
     } finally {
       setIsCheckingIp(false)
     }
@@ -100,9 +100,7 @@ export default function SamcoAuth() {
       <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Connect to Samco
-          </CardTitle>
+            <Shield className="h-5 w-5" />连接 Samco</CardTitle>
           <CardDescription>
             Samco Trade API v3.2 authenticates with an API Key and API Secret from an OAuth
             app. Create the app, copy both values into your .env as BROKER_API_KEY and
@@ -112,9 +110,7 @@ export default function SamcoAuth() {
 
         <CardContent className="space-y-4">
           <Button asChild variant="outline" className="w-full">
-            <a href={DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
-              Open Samco Web Dashboard
-              <ExternalLink className="ml-2 h-4 w-4" />
+            <a href={DASHBOARD_URL} target="_blank" rel="noopener noreferrer">打开 Samco 网页控制台<ExternalLink className="ml-2 h-4 w-4" />
             </a>
           </Button>
 
@@ -129,9 +125,7 @@ export default function SamcoAuth() {
             <Button className="w-full" onClick={handleConnect} disabled={isConnecting}>
               {isConnecting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Connecting
-                </>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />正在连接</>
               ) : (
                 'Connect'
               )}
@@ -141,17 +135,13 @@ export default function SamcoAuth() {
           {connected && (
             <Alert>
               <Check className="h-4 w-4" />
-              <AlertDescription>
-                Session token generated. It stays valid until 08:00 IST tomorrow.
-              </AlertDescription>
+              <AlertDescription>会话令牌已生成，有效期至明天印度标准时间 08:00。</AlertDescription>
             </Alert>
           )}
 
           {isCheckingIp && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Verifying static IP
-            </div>
+              <Loader2 className="h-4 w-4 animate-spin" />正在验证静态 IP</div>
           )}
 
           {ipStatus && (
@@ -166,15 +156,13 @@ export default function SamcoAuth() {
                   </span>
                 ) : (
                   <span className="ml-auto flex items-center gap-1 text-sm text-destructive">
-                    <X className="h-4 w-4" />
-                    Not registered
-                  </span>
+                    <X className="h-4 w-4" />未注册</span>
                 )}
               </div>
 
               <dl className="space-y-1 text-sm">
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">This server</dt>
+                  <dt className="text-muted-foreground">此服务器</dt>
                   <dd className="font-mono">{ipStatus.src_ip || 'unknown'}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
@@ -202,19 +190,17 @@ export default function SamcoAuth() {
           {connected && (
             <div className="flex gap-2">
               <Button variant="outline" className="flex-1" onClick={checkIpStatus}>
-                Recheck IP
+                重新检查 IP
               </Button>
               <Button className="flex-1" onClick={() => navigate('/dashboard')}>
-                Continue
+                继续
               </Button>
             </div>
           )}
 
           <Button asChild variant="ghost" className="w-full">
             <Link to="/broker">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to brokers
-            </Link>
+              <ArrowLeft className="mr-2 h-4 w-4" />返回交易商列表</Link>
           </Button>
         </CardContent>
       </Card>

@@ -51,7 +51,7 @@ export function DrawingLevelsEditor({ levels: source, onChange, onLabels }: Prop
   return (
     <div className="w-[19rem] max-w-[calc(100cqw-12px)]">
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs font-medium">Levels</span>
+        <span className="text-xs font-medium">水平线</span>
         {labels !== null && (
           <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <input
@@ -62,14 +62,14 @@ export function DrawingLevelsEditor({ levels: source, onChange, onLabels }: Prop
                 onLabels(e.target.checked)
               }}
             />
-            Show labels
+            显示标签
           </label>
         )}
       </div>
       <div className="grid max-h-[46vh] gap-1 overflow-y-auto">
         {list.length === 0 && (
           <p className="py-1 text-xs text-muted-foreground">
-            No levels. Add one, or reset to the defaults.
+            暂无水平位，请添加或恢复默认设置。
           </p>
         )}
         {list.map((level, i) => {
@@ -168,7 +168,7 @@ export function DrawingLevelsEditor({ levels: source, onChange, onLabels }: Prop
             )
           }}
         >
-          Add level
+          添加水平位
         </button>
         <button
           type="button"
@@ -181,7 +181,7 @@ export function DrawingLevelsEditor({ levels: source, onChange, onLabels }: Prop
             )
           }}
         >
-          Reset
+          重置
         </button>
       </div>
     </div>

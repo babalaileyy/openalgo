@@ -89,7 +89,7 @@ export default function Login() {
       })
 
       if (!csrfResponse.ok) {
-        setError('Failed to initialize login. Please refresh the page.')
+        setError('登录初始化失败，请刷新页面。')
         setIsLoading(false)
         return
       }
@@ -114,10 +114,10 @@ export default function Login() {
       if (!contentType || !contentType.includes('application/json')) {
         // If redirected to setup page, inform user
         if (response.url.includes('/setup')) {
-          setError('Please complete initial setup first.')
+          setError('请先完成初始设置。')
           navigate('/setup')
         } else {
-          setError('Login failed. Please try again.')
+          setError('登录失败，请重试。')
         }
         setIsLoading(false)
         return
@@ -126,7 +126,7 @@ export default function Login() {
       const data = await response.json()
 
       if (!response.ok || data.status === 'error') {
-        setError(data.message || 'Login failed. Please try again.')
+        setError(data.message || '登录失败，请重试。')
         if (data.redirect) {
           navigate(data.redirect)
         }
@@ -138,12 +138,12 @@ export default function Login() {
       } else {
         // Set login state (broker from response if session was resumed, empty otherwise)
         setLogin(username, data.broker || '')
-        showToast.success('Login successful', 'system')
+        showToast.success('登录成功', 'system')
         // Use redirect from response if provided, otherwise go to broker
         navigate(data.redirect || '/broker')
       }
     } catch (_err) {
-      setError('Login failed. Please try again.')
+      setError('登录失败，请重试。')
     } finally {
       setIsLoading(false)
     }
@@ -157,7 +157,7 @@ export default function Login() {
     try {
       const csrfResponse = await fetch('/auth/csrf-token', { credentials: 'include' })
       if (!csrfResponse.ok) {
-        setError('Failed to verify TOTP. Please refresh the page.')
+        setError('无法验证动态验证码，请刷新页面。')
         setIsLoading(false)
         return
       }
@@ -184,16 +184,16 @@ export default function Login() {
       }
 
       if (!response.ok || data.status === 'error') {
-        setError(data.message || 'Invalid TOTP code.')
+        setError(data.message || '动态验证码无效。')
         setTotpCode('')
         return
       }
 
       setLogin(username, data.broker || '')
-      showToast.success('Login successful', 'system')
+      showToast.success('登录成功', 'system')
       navigate(data.redirect || '/broker')
     } catch (_err) {
-      setError('Failed to verify TOTP. Please try again.')
+      setError('动态验证码验证失败，请重试。')
     } finally {
       setIsLoading(false)
     }
@@ -224,18 +224,18 @@ export default function Login() {
               <div className="flex justify-center mb-4">
                 <img src="/logo.png" alt="OpenAlgo" className="h-20 w-20" />
               </div>
-              <CardTitle className="text-2xl">Welcome Back</CardTitle>
-              <CardDescription>Sign in to your OpenAlgo account</CardDescription>
+              <CardTitle className="text-2xl">欢迎回来</CardTitle>
+              <CardDescription>登录 OpenAlgo 账户</CardDescription>
             </CardHeader>
             <CardContent>
               {step === 'password' ? (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username">用户名</Label>
                     <Input
                       id="username"
                       type="text"
-                      placeholder="Enter your username"
+                      placeholder="请输入用户名"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
@@ -245,12 +245,12 @@ export default function Login() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">密码</Label>
                     <div className="relative">
                       <Input
                         id="password"
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Enter your password"
+                        placeholder="请输入密码"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -264,7 +264,7 @@ export default function Login() {
                         size="icon"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                         onClick={() => setShowPassword(!showPassword)}
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        aria-label={showPassword ? '隐藏密码' : '显示密码'}
                       >
                         {showPassword ? (
                           <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -278,7 +278,7 @@ export default function Login() {
                         to="/reset-password"
                         className="text-sm text-muted-foreground hover:text-primary"
                       >
-                        Forgot password?
+                        忘记密码？
                       </Link>
                     </div>
                   </div>
@@ -293,12 +293,12 @@ export default function Login() {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Signing in...
+                        正在登录…
                       </>
                     ) : (
                       <>
                         <LogIn className="mr-2 h-4 w-4" />
-                        Sign in
+                        登录
                       </>
                     )}
                   </Button>
@@ -307,14 +307,14 @@ export default function Login() {
                 <form onSubmit={handleTotpSubmit} className="space-y-4">
                   <Alert>
                     <ShieldCheck className="h-4 w-4" />
-                    <AlertTitle>Two-factor authentication</AlertTitle>
+                    <AlertTitle>双重身份验证</AlertTitle>
                     <AlertDescription>
-                      Enter the 6-digit code from your authenticator app to complete sign-in.
+                      请输入身份验证器应用中的 6 位验证码以完成登录。
                     </AlertDescription>
                   </Alert>
 
                   <div className="space-y-2">
-                    <Label htmlFor="totp_code">Authentication code</Label>
+                    <Label htmlFor="totp_code">验证码</Label>
                     <Input
                       id="totp_code"
                       inputMode="numeric"
@@ -345,7 +345,7 @@ export default function Login() {
                       disabled={isLoading}
                     >
                       <ArrowLeft className="mr-1 h-4 w-4" />
-                      Back
+                      返回
                     </Button>
                     <Button
                       type="submit"
@@ -355,10 +355,10 @@ export default function Login() {
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Verifying...
+                          正在验证…
                         </>
                       ) : (
-                        'Verify code'
+                        '验证'
                       )}
                     </Button>
                   </div>
@@ -370,18 +370,17 @@ export default function Login() {
           {/* Welcome Content - Second on mobile */}
           <div className="flex-1 max-w-xl text-center lg:text-left order-2 lg:order-1">
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Welcome to <span className="text-primary">OpenAlgo</span>
+              欢迎使用 <span className="text-primary">OpenAlgo</span>
             </h1>
             <p className="text-lg lg:text-xl mb-8 text-muted-foreground">
-              Sign in to your account to access your trading dashboard and manage your algorithmic
-              trading strategies.
+              登录后可查看交易仪表盘并管理量化交易策略。
             </p>
 
             <Alert className="mb-6">
               <Info className="h-4 w-4" />
-              <AlertTitle>First Time User?</AlertTitle>
+              <AlertTitle>首次使用？</AlertTitle>
               <AlertDescription>
-                Contact your administrator to set up your account.
+                请联系管理员设置账户。
               </AlertDescription>
             </Alert>
 

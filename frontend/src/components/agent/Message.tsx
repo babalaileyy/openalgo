@@ -267,7 +267,7 @@ function ThinkingIndicator() {
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground/70 [animation-delay:200ms]" />
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground/70 [animation-delay:400ms]" />
       </span>
-      <span>Thinking</span>
+      <span>思考中</span>
     </div>
   )
 }
@@ -287,7 +287,7 @@ function Reasoning({ text }: { text: string }) {
           className={cn('h-3.5 w-3.5 shrink-0 transition-transform', open && 'rotate-90')}
           aria-hidden
         />
-        Reasoning
+        推理过程
       </CollapsibleTrigger>
       <CollapsibleContent>
         <p className="border-t border-border px-3 py-2 text-xs leading-relaxed whitespace-pre-wrap break-words text-muted-foreground">
@@ -364,7 +364,7 @@ function PendingConfirm({
   return (
     <div className="space-y-2 rounded-lg border border-amber-500/60 bg-amber-50 p-3 dark:border-amber-600/60 dark:bg-amber-950/40">
       <p className="text-xs font-medium text-amber-900 dark:text-amber-200">
-        This turn is waiting for your approval.
+        此操作正在等待你的批准。
       </p>
       <ul className="space-y-1">
         {pending.requirements.map((requirement: ConfirmRequirement) => (
@@ -387,10 +387,10 @@ function PendingConfirm({
       )}
       <div className="flex gap-2">
         <Button type="button" size="sm" onClick={() => decide(true)} disabled={incomplete}>
-          Approve
+          批准
         </Button>
         <Button type="button" size="sm" variant="outline" onClick={() => decide(false)}>
-          Reject
+          拒绝
         </Button>
       </div>
     </div>

@@ -33,6 +33,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { chartSettingLabel, indicatorName } from '@/lib/trading/indicatorChinese'
 import { numberProblem, pickedPrice } from '@/lib/trading/inputValidation'
 import { isScriptInstance } from '@/lib/trading/openscriptFiles'
 import { scriptIntervalChoices } from '@/lib/trading/openscriptIntervals'
@@ -238,10 +239,10 @@ export function IndicatorSettingsDialog({
   const tabs: { key: 'inputs' | 'style'; label: string; n: number }[] = [
     {
       key: 'inputs',
-      label: 'Inputs',
+      label: '参数',
       n: req.inputs.length + (req.barSource === undefined ? 0 : 1),
     },
-    { key: 'style', label: 'Style', n: req.styleInputs.length },
+    { key: 'style', label: '样式', n: req.styleInputs.length },
   ]
 
   return (
@@ -256,7 +257,7 @@ export function IndicatorSettingsDialog({
       {picking && (
         <output className="pointer-events-auto absolute left-1/2 top-3 z-10 flex -translate-x-1/2 items-center gap-3 rounded-lg border bg-popover px-3 py-2 text-xs shadow-lg">
           <span>
-            Click the chart to pick the {picking.kind} for{' '}
+            点击图表选择{picking.kind === 'price' ? '价格' : '时间'}：
             <span className="font-medium">{picking.label}</span>
           </span>
           <button
@@ -264,7 +265,7 @@ export function IndicatorSettingsDialog({
             className="rounded border border-border px-2 py-1 hover:bg-accent"
             onClick={() => picking.cancel()}
           >
-            Cancel
+            取消
           </button>
         </output>
       )}
@@ -276,11 +277,13 @@ export function IndicatorSettingsDialog({
       >
         {/* Title */}
         <div className="flex items-center justify-between px-4 pb-2 pt-3">
-          <h3 className="text-[15px] font-semibold tracking-tight">{req.name}</h3>
+          <h3 className="text-[15px] font-semibold tracking-tight">
+            {script ? req.name : indicatorName(req.name)}
+          </h3>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="关闭"
             className="-mr-1 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <svg
@@ -327,7 +330,7 @@ export function IndicatorSettingsDialog({
               {groupsOf(fields).map(([title, group]) => (
                 <PlotStyleRow
                   key={title}
-                  title={title}
+                  title={script ? title : chartSettingLabel(title)}
                   fields={group}
                   values={values}
                   onChange={set}
@@ -338,6 +341,7 @@ export function IndicatorSettingsDialog({
             <div className="grid grid-cols-[minmax(0,1fr)_150px] items-center gap-x-5 gap-y-3">
               {barSource !== undefined && (
                 <SettingsField
+                  localize
                   field={BAR_SOURCE_FIELD}
                   id={`${req.instanceId}-barSource`}
                   value={barSource}
@@ -348,13 +352,14 @@ export function IndicatorSettingsDialog({
                 <Fragment key={heading}>
                   {heading !== '' && (
                     <h4 className="col-span-2 pt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      {heading}
+                      {script ? heading : chartSettingLabel(heading)}
                     </h4>
                   )}
                   {group.map((f) => (
                     <SettingsField
                       key={f.key}
                       field={f}
+                      localize={!script}
                       id={`${req.instanceId}-${f.key}`}
                       value={values[f.key]}
                       onChange={(v) => set(f.key, v)}
@@ -366,7 +371,7 @@ export function IndicatorSettingsDialog({
             </div>
           )}
           {fields.length === 0 && (tab === 'style' || barSource === undefined) && (
-            <p className="py-3 text-[13px] text-muted-foreground">Nothing to configure here.</p>
+            <p className="py-3 text-[13px] text-muted-foreground">没有可配置的选项。</p>
           )}
         </div>
 
@@ -377,7 +382,7 @@ export function IndicatorSettingsDialog({
             onClick={() => void reset()}
             className="flex items-center gap-2 rounded border border-foreground/25 px-2.5 py-1 text-[13px] text-muted-foreground transition-colors hover:border-foreground/50 hover:text-foreground"
           >
-            Defaults
+            恢复默认
             <svg viewBox="0 0 10 10" className="h-2.5 w-2.5 opacity-70" aria-hidden="true">
               <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" strokeWidth={1.4} />
             </svg>
@@ -388,14 +393,14 @@ export function IndicatorSettingsDialog({
               onClick={onClose}
               className="rounded border border-foreground/25 px-3.5 py-1 text-[13px] transition-colors hover:border-foreground/50 hover:bg-accent"
             >
-              Cancel
+              取消
             </button>
             <button
               type="button"
               onClick={apply}
               className="rounded bg-foreground px-5 py-1 text-[13px] font-medium text-background transition-opacity hover:opacity-90"
             >
-              Ok
+              确定
             </button>
           </div>
         </div>
@@ -449,17 +454,20 @@ export function SettingsField({
   value,
   onChange,
   onPick,
+  localize = false,
 }: {
   field: SettingsFieldShape
+  localize?: boolean
   id: string
   value: unknown
   onChange(v: unknown): void
   /** Offer a Pick button that fills this input from a click on the chart. */
   onPick?: () => void
 }) {
+  const display = (text: string) => (localize ? chartSettingLabel(text) : text)
   const label = (
     <label htmlFor={id} title={field.unavailable} className="text-[13px] text-muted-foreground">
-      {field.label}
+      {display(field.label)}
     </label>
   )
   // The declaration's help text, on its own line under the row and spanning
@@ -475,10 +483,10 @@ export function SettingsField({
       type="button"
       onClick={onPick}
       disabled={!!field.unavailable}
-      aria-label={`Pick ${field.label} on the chart`}
+      aria-label={`在图表上选择${display(field.label)}`}
       className="h-7 shrink-0 rounded border border-border px-1.5 text-[11px] text-muted-foreground transition-colors hover:border-primary hover:text-foreground disabled:opacity-40"
     >
-      Pick
+      选择
     </button>
   ) : null
   const row = (control: ReactNode) => (
@@ -498,7 +506,11 @@ export function SettingsField({
         </p>
       )}
       {problem && (
-        <p id={errorId} aria-live="polite" className="col-span-2 -mt-2 text-[11px] text-destructive">
+        <p
+          id={errorId}
+          aria-live="polite"
+          className="col-span-2 -mt-2 text-[11px] text-destructive"
+        >
           {problem}
         </p>
       )}
@@ -526,7 +538,7 @@ export function SettingsField({
           disabled={!!field.unavailable}
           value={v}
           onChange={(e) => onChange(e.target.value)}
-          aria-label={field.label}
+          aria-label={display(field.label)}
           aria-describedby={helpId}
           // A colour control is a swatch, not a bar: square and small enough
           // that a column of them reads as a palette rather than as blocks.
@@ -564,7 +576,7 @@ export function SettingsField({
         >
           {opts.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {display(o.label)}
             </option>
           ))}
         </select>
@@ -635,7 +647,7 @@ export function SettingsField({
       <span className="flex h-full flex-col justify-center border-l border-border">
         <button
           type="button"
-          aria-label="Increase"
+          aria-label="增加"
           disabled={!!field.unavailable}
           onClick={() => nudge(1)}
           className="flex h-3 w-5 items-center justify-center text-muted-foreground hover:text-foreground"
@@ -646,7 +658,7 @@ export function SettingsField({
         </button>
         <button
           type="button"
-          aria-label="Decrease"
+          aria-label="减少"
           disabled={!!field.unavailable}
           onClick={() => nudge(-1)}
           className="flex h-3 w-5 items-center justify-center text-muted-foreground hover:text-foreground"

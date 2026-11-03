@@ -193,7 +193,7 @@ function renderBuilder(route = '/strategybuilder') {
 }
 
 async function chooseExpiry(expiry: string) {
-  fireEvent.keyDown(screen.getByRole('combobox', { name: 'Option expiry' }), {
+  fireEvent.keyDown(screen.getByRole('combobox', { name: '期权到期日' }), {
     key: 'ArrowDown',
   })
   fireEvent.click(await screen.findByRole('option', { name: expiry }))
@@ -205,7 +205,7 @@ async function chooseUnderlying(underlying: string) {
 }
 
 async function chooseExchange(exchange: string) {
-  fireEvent.keyDown(screen.getByRole('combobox', { name: 'Derivative exchange' }), {
+  fireEvent.keyDown(screen.getByRole('combobox', { name: '衍生品交易所' }), {
     key: 'ArrowDown',
   })
   fireEvent.click(await screen.findByRole('option', { name: exchange }))
@@ -232,7 +232,7 @@ async function waitForAddButton() {
 }
 
 async function waitForExecuteButton() {
-  const execute = await screen.findByRole('button', { name: 'Execute' })
+  const execute = await screen.findByRole('button', { name: '执行' })
   await waitFor(() => expect(execute).toBeEnabled(), { timeout: ASYNC_READY_TIMEOUT })
   return execute
 }
@@ -368,9 +368,9 @@ describe('StrategyBuilder live request orchestration', () => {
     await waitFor(() =>
       expect(mocks.getExpiries).toHaveBeenCalledWith('test-api-key', 'GUARSEED', 'NCDEX', 'options')
     )
-    expect(screen.getByRole('combobox', { name: 'Derivative exchange' })).toHaveTextContent('NCDEX')
+    expect(screen.getByRole('combobox', { name: '衍生品交易所' })).toHaveTextContent('NCDEX')
     await waitFor(() =>
-      expect(screen.getByRole('combobox', { name: 'Option expiry' })).toHaveTextContent('13AUG26')
+      expect(screen.getByRole('combobox', { name: '期权到期日' })).toHaveTextContent('13AUG26')
     )
   })
 
@@ -409,14 +409,14 @@ describe('StrategyBuilder live request orchestration', () => {
 
     renderBuilder()
     await addOneLeg()
-    await user.click(screen.getByRole('tab', { name: 'Strategy Chart' }))
+    await user.click(screen.getByRole('tab', { name: '策略图表' }))
     await waitFor(() => expect(mocks.strategyChartProps).not.toHaveLength(0))
     mocks.strategyChartProps.length = 0
     mocks.multiStrikeOIProps.length = 0
 
     await chooseExpiry('18AUG26')
     await waitFor(() => expect(slowRequestStarted).toBe(true))
-    await user.click(screen.getByRole('tab', { name: 'Multi Strike OI' }))
+    await user.click(screen.getByRole('tab', { name: '多行权价 OI（持仓量）' }))
 
     expect(
       mocks.strategyChartProps.some((props) => !props.underlyingSymbol || !props.underlyingExchange)
@@ -441,7 +441,7 @@ describe('StrategyBuilder live request orchestration', () => {
       )
     )
 
-    await user.click(screen.getByRole('tab', { name: 'Strategy Chart' }))
+    await user.click(screen.getByRole('tab', { name: '策略图表' }))
     await waitFor(() =>
       expect(mocks.strategyChartProps.at(-1)).toEqual(
         expect.objectContaining({
@@ -464,7 +464,7 @@ describe('StrategyBuilder live request orchestration', () => {
     renderBuilder()
     await addOneLeg()
 
-    await user.click(screen.getByRole('tab', { name: 'Strategy Chart' }))
+    await user.click(screen.getByRole('tab', { name: '策略图表' }))
     await waitFor(() => expect(mocks.strategyChartProps).not.toHaveLength(0))
     expect(mocks.strategyChartProps.at(-1)).toEqual(
       expect.objectContaining({
@@ -473,7 +473,7 @@ describe('StrategyBuilder live request orchestration', () => {
       })
     )
 
-    await user.click(screen.getByRole('tab', { name: 'Multi Strike OI' }))
+    await user.click(screen.getByRole('tab', { name: '多行权价 OI（持仓量）' }))
     await waitFor(() => expect(mocks.multiStrikeOIProps).not.toHaveLength(0))
     expect(mocks.multiStrikeOIProps.at(-1)).toEqual(
       expect.objectContaining({
@@ -499,9 +499,9 @@ describe('StrategyBuilder live request orchestration', () => {
     }
     mocks.getOptionChain.mockResolvedValue(farChain)
     renderBuilder()
-    await screen.findByText('NIFTY13AUG2624600CE')
+    await screen.findByText('NIFTY13AUG2624600CE', {}, { timeout: ASYNC_READY_TIMEOUT })
 
-    fireEvent.keyDown(screen.getByRole('combobox', { name: 'Expiry' }), { key: 'ArrowDown' })
+    fireEvent.keyDown(screen.getByRole('combobox', { name: '到期日' }), { key: 'ArrowDown' })
     fireEvent.click(await screen.findByRole('option', { name: '18AUG26' }))
 
     expect(await screen.findByText('NIFTY18AUG2624600CE')).toBeVisible()
@@ -535,9 +535,9 @@ describe('StrategyBuilder live request orchestration', () => {
     })
 
     renderBuilder()
-    await screen.findByText('NIFTY13AUG2624600CE')
+    await screen.findByText('NIFTY13AUG2624600CE', {}, { timeout: ASYNC_READY_TIMEOUT })
 
-    fireEvent.keyDown(screen.getByRole('combobox', { name: 'Expiry' }), { key: 'ArrowDown' })
+    fireEvent.keyDown(screen.getByRole('combobox', { name: '到期日' }), { key: 'ArrowDown' })
     fireEvent.click(await screen.findByRole('option', { name: '18AUG26' }))
     await waitFor(() => expect(mocks.getOptionChain).toHaveBeenCalledTimes(1))
 
@@ -562,7 +562,7 @@ describe('StrategyBuilder live request orchestration', () => {
     expect(screen.getAllByText('₹125.00').length).toBeGreaterThan(0)
     expect(screen.queryByText('₹225.00')).not.toBeInTheDocument()
 
-    await user.click(await screen.findByRole('tab', { name: 'Greeks' }, { timeout: ASYNC_READY_TIMEOUT }))
+    await user.click(await screen.findByRole('tab', { name: 'Greeks（希腊值）' }, { timeout: ASYNC_READY_TIMEOUT }))
     const rows = await screen.findAllByRole('row')
     const row = rows.find((item) => item.textContent?.includes('24600CE'))
     expect(row).toBeDefined()
@@ -574,7 +574,7 @@ describe('StrategyBuilder live request orchestration', () => {
     await waitForAddButton()
 
     fireEvent.keyDown(screen.getByRole('combobox', { name: 'Segment' }), { key: 'ArrowDown' })
-    fireEvent.click(await screen.findByRole('option', { name: 'Futures' }))
+    fireEvent.click(await screen.findByRole('option', { name: '期货' }))
 
     expect(await screen.findByText('NIFTY27AUG26FUT')).toBeVisible()
     expect(mocks.getFutures).toHaveBeenCalledWith('NIFTY', 'NFO')
@@ -594,9 +594,9 @@ describe('StrategyBuilder live request orchestration', () => {
     mocks.marketAuthenticated = true
     mocks.marketConnectionEpoch = 1
     const view = renderBuilder()
-    await screen.findByText('NIFTY13AUG2624600CE')
+    await screen.findByText('NIFTY13AUG2624600CE', {}, { timeout: ASYNC_READY_TIMEOUT })
 
-    fireEvent.keyDown(screen.getByRole('combobox', { name: 'Expiry' }), { key: 'ArrowDown' })
+    fireEvent.keyDown(screen.getByRole('combobox', { name: '到期日' }), { key: 'ArrowDown' })
     fireEvent.click(await screen.findByRole('option', { name: '18AUG26' }))
     expect(await screen.findByText('NIFTY18AUG2624600CE')).toBeVisible()
     expect(mocks.getOptionChain).toHaveBeenCalledTimes(1)
@@ -629,7 +629,7 @@ describe('StrategyBuilder live request orchestration', () => {
     mocks.marketAuthenticated = true
     mocks.marketConnectionEpoch = 1
     const view = renderBuilder()
-    await screen.findByText('NIFTY13AUG2624600CE')
+    await screen.findByText('NIFTY13AUG2624600CE', {}, { timeout: ASYNC_READY_TIMEOUT })
     expect(mocks.getOptionChain).not.toHaveBeenCalled()
 
     mocks.marketData = new Map([
@@ -678,7 +678,7 @@ describe('StrategyBuilder live request orchestration', () => {
     await waitForAddButton()
 
     fireEvent.keyDown(screen.getByRole('combobox', { name: 'Segment' }), { key: 'ArrowDown' })
-    fireEvent.click(await screen.findByRole('option', { name: 'Futures' }))
+    fireEvent.click(await screen.findByRole('option', { name: '期货' }))
     expect(await screen.findByText('NIFTY27AUG26FUT')).toBeVisible()
     expect(mocks.getFutures).toHaveBeenCalledTimes(1)
 
@@ -919,14 +919,14 @@ describe('StrategyBuilder live request orchestration', () => {
     expect(screen.getAllByText('₹125.00').length).toBeGreaterThan(0)
 
     ltp = 175
-    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }))
+    fireEvent.click(screen.getByRole('button', { name: '刷新' }))
     await waitFor(() => expect(requests('/api/v1/optionchain')).toHaveLength(2))
     await screen.findByText('24700.00')
     await screen.findByTitle('Current mark ₹175.00')
 
     expect(screen.getAllByText('₹125.00').length).toBeGreaterThan(0)
 
-    await user.click(await screen.findByRole('tab', { name: 'Greeks' }, { timeout: ASYNC_READY_TIMEOUT }))
+    await user.click(await screen.findByRole('tab', { name: 'Greeks（希腊值）' }, { timeout: ASYNC_READY_TIMEOUT }))
     const greekRows = await screen.findAllByRole('row')
     const positionRow = greekRows.find((row) => row.textContent?.includes('13AUG26 24600CE'))
     expect(positionRow).toBeDefined()
@@ -1008,7 +1008,7 @@ describe('StrategyBuilder live request orchestration', () => {
     expect(screen.getAllByText('18AUG26').length).toBeGreaterThan(0)
     expect(screen.getAllByText('₹225.00').length).toBeGreaterThan(0)
 
-    await user.click(await screen.findByRole('tab', { name: 'Greeks' }, { timeout: ASYNC_READY_TIMEOUT }))
+    await user.click(await screen.findByRole('tab', { name: 'Greeks（希腊值）' }, { timeout: ASYNC_READY_TIMEOUT }))
     const greekRows = await screen.findAllByRole('row')
     const farGreekRow = greekRows.find((row) => row.textContent?.includes('18AUG26 24600CE'))
     expect(farGreekRow).toBeDefined()
@@ -1061,7 +1061,7 @@ describe('StrategyBuilder live request orchestration', () => {
         { withGreeks: true }
       )
 
-      await user.click(await screen.findByRole('tab', { name: 'Greeks' }, { timeout: ASYNC_READY_TIMEOUT }))
+      await user.click(await screen.findByRole('tab', { name: 'Greeks（希腊值）' }, { timeout: ASYNC_READY_TIMEOUT }))
       let rows = await screen.findAllByRole('row')
       let farRow = rows.find((row) => row.textContent?.includes('18AUG26 24600CE'))
       const nearRow = rows.find((row) => row.textContent?.includes('13AUG26 24600CE'))
@@ -1103,7 +1103,7 @@ describe('StrategyBuilder live request orchestration', () => {
 
       farIv = 47
       farDelta = 0.57
-      await user.click(screen.getByRole('button', { name: 'Refresh' }))
+      await user.click(screen.getByRole('button', { name: '刷新' }))
       await waitFor(() => expect(mocks.getOptionChain).toHaveBeenCalledTimes(3))
       rows = await screen.findAllByRole('row')
       farRow = rows.find((row) => row.textContent?.includes('18AUG26 24600CE'))
@@ -1168,7 +1168,7 @@ describe('StrategyBuilder live request orchestration', () => {
         expect(screen.getAllByRole('button', { name: 'Remove position' })).toHaveLength(2)
       )
 
-      await user.click(await screen.findByRole('tab', { name: 'Greeks' }, { timeout: ASYNC_READY_TIMEOUT }))
+      await user.click(await screen.findByRole('tab', { name: 'Greeks（希腊值）' }, { timeout: ASYNC_READY_TIMEOUT }))
       let rows = await screen.findAllByRole('row')
       let farRow = rows.find((row) => row.textContent?.includes('18AUG26 24600CE'))
       const initialGreeks = within(farRow as HTMLElement)
@@ -1319,13 +1319,13 @@ describe('StrategyBuilder live request orchestration', () => {
       )
 
       await user.click(screen.getAllByRole('button', { name: 'Edit position' })[1])
-      const dialog = await screen.findByRole('dialog', { name: 'Edit Position' })
+      const dialog = await screen.findByRole('dialog', { name: '编辑持仓' })
       const optionType = within(dialog).getAllByRole('combobox')[2]
       fireEvent.keyDown(optionType, { key: 'ArrowDown' })
       fireEvent.click(await screen.findByRole('option', { name: 'PE' }))
-      await user.click(within(dialog).getByRole('button', { name: 'Modify' }))
+      await user.click(within(dialog).getByRole('button', { name: '修改' }))
 
-      await user.click(await screen.findByRole('tab', { name: 'Greeks' }, { timeout: ASYNC_READY_TIMEOUT }))
+      await user.click(await screen.findByRole('tab', { name: 'Greeks（希腊值）' }, { timeout: ASYNC_READY_TIMEOUT }))
       const rows = await screen.findAllByRole('row')
       const editedRow = rows.find((row) => row.textContent?.includes('18AUG26 24600PE'))
       expect(editedRow).toBeDefined()
@@ -1365,7 +1365,7 @@ describe('StrategyBuilder identity orchestration', () => {
 
     renderBuilder()
     const add = await waitForAddButton()
-    fireEvent.keyDown(screen.getByRole('combobox', { name: 'Expiry' }), { key: 'ArrowDown' })
+    fireEvent.keyDown(screen.getByRole('combobox', { name: '到期日' }), { key: 'ArrowDown' })
     fireEvent.click(await screen.findByRole('option', { name: '18AUG26' }))
     await addOneLeg()
 
@@ -1373,7 +1373,7 @@ describe('StrategyBuilder identity orchestration', () => {
     fireEvent.change(timeSlider, { target: { value: '4' } })
     expect(timeSlider).toHaveValue('4')
 
-    fireEvent.keyDown(screen.getByRole('combobox', { name: 'Expiry' }), { key: 'ArrowDown' })
+    fireEvent.keyDown(screen.getByRole('combobox', { name: '到期日' }), { key: 'ArrowDown' })
     fireEvent.click(await screen.findByRole('option', { name: '13AUG26' }))
     await waitFor(() => expect(add).toBeEnabled(), { timeout: ASYNC_READY_TIMEOUT })
     fireEvent.click(add)
@@ -1443,7 +1443,7 @@ describe('StrategyBuilder identity orchestration', () => {
       expect(spotShift).toHaveValue('5')
 
       await chooseUnderlying('BANKNIFTY')
-      expect(screen.getByRole('alertdialog')).toHaveTextContent('Clear the current strategy')
+      expect(screen.getByRole('alertdialog')).toHaveTextContent('清空当前策略')
       expect(screen.getByRole('combobox', { name: 'Underlying', hidden: true })).toHaveTextContent(
         'NIFTY'
       )
@@ -1454,7 +1454,7 @@ describe('StrategyBuilder identity orchestration', () => {
       expect(screen.getAllByRole('slider')[0]).toHaveValue('5')
 
       await chooseUnderlying('BANKNIFTY')
-      fireEvent.click(screen.getByRole('button', { name: 'Clear strategy' }))
+      fireEvent.click(screen.getByRole('button', { name: '清空策略' }))
 
       await waitFor(() =>
         expect(screen.getByRole('combobox', { name: 'Underlying' })).toHaveTextContent('BANKNIFTY')
@@ -1511,7 +1511,7 @@ describe('StrategyBuilder identity orchestration', () => {
       )
 
       await chooseUnderlying('BANKNIFTY')
-      fireEvent.click(screen.getByRole('button', { name: 'Clear strategy' }))
+      fireEvent.click(screen.getByRole('button', { name: '清空策略' }))
       await waitFor(() =>
         expect(screen.getByRole('combobox', { name: 'Underlying' })).toHaveTextContent('BANKNIFTY')
       )
@@ -1597,7 +1597,7 @@ describe('StrategyBuilder identity orchestration', () => {
     await waitFor(() =>
       expect(screen.getByRole('combobox', { name: 'Underlying' })).toHaveTextContent('RELIANCE')
     )
-    expect(screen.getByRole('combobox', { name: 'Option expiry' })).toHaveTextContent('18AUG26')
+    expect(screen.getByRole('combobox', { name: '期权到期日' })).toHaveTextContent('18AUG26')
     expect(screen.getByRole('button', { name: 'Remove position' })).toBeInTheDocument()
     expect(screen.getByText('2500CE')).toBeInTheDocument()
   })
@@ -1617,7 +1617,7 @@ describe('StrategyBuilder identity orchestration', () => {
     renderBuilder('/strategybuilder?load=17')
 
     await screen.findByRole('button', { name: 'Remove position' })
-    expect(screen.getByRole('button', { name: 'Execute' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '执行' })).toBeDisabled()
 
     await act(async () => {
       restoredChain.resolve(chainFixture('RELIANCE', '18AUG26'))
@@ -1666,7 +1666,7 @@ describe('StrategyBuilder identity orchestration', () => {
 
     renderBuilder('/strategybuilder?load=17')
     await screen.findByRole('button', { name: 'Remove position' })
-    expect(screen.getByRole('button', { name: 'Execute' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '执行' })).toBeDisabled()
     expect(mocks.getFutures).not.toHaveBeenCalled()
 
     await act(async () => {
@@ -1675,7 +1675,7 @@ describe('StrategyBuilder identity orchestration', () => {
     })
 
     await waitFor(() => expect(mocks.getFutures).toHaveBeenCalledWith('RELIANCE', 'NFO'))
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Execute' })).toBeEnabled())
+    await waitFor(() => expect(screen.getByRole('button', { name: '执行' })).toBeEnabled())
   })
 
   it('keeps a saved leg blocked when the restored chain cannot resolve its contract', async () => {
@@ -1694,7 +1694,7 @@ describe('StrategyBuilder identity orchestration', () => {
 
     await screen.findByRole('button', { name: 'Remove position' })
     await waitFor(() => expect(requests('/api/v1/optionchain')).toHaveLength(1))
-    expect(screen.getByRole('button', { name: 'Execute' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '执行' })).toBeDisabled()
   })
 
   it('rehydrates each saved leg independently when another resolver rejects', async () => {

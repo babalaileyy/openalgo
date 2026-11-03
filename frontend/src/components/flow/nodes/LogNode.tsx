@@ -40,7 +40,7 @@ export const LogNode = memo(({ data, selected }: LogNodeProps) => {
             <FileText className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Log</div>
+            <div className="text-xs font-medium leading-tight">日志</div>
             <div className={cn('text-[9px]', levelColors[data.level] || 'text-muted-foreground')}>
               {levelLabels[data.level] || 'INFO'}
             </div>

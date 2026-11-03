@@ -49,24 +49,24 @@ const UNITS: TimeframeUnit[] = [
   'years',
 ]
 const NAMES = {
-  s: 'second',
-  m: 'minute',
-  h: 'hour',
-  D: 'day',
-  W: 'week',
-  M: 'month',
-  tick: 'tick',
-  other: 'interval',
+  s: '秒',
+  m: '分钟',
+  h: '小时',
+  D: '天',
+  W: '周',
+  M: '月',
+  tick: '笔',
+  other: '周期',
 }
 const GROUPS = ['s', 'm', 'h', 'D', 'W', 'M', 'tick', 'other'] as const
-const GROUP_NAMES = ['Seconds', 'Minutes', 'Hours', 'Days', 'Weeks', 'Months', 'Ticks', 'Other']
+const GROUP_NAMES = ['秒', '分钟', '小时', '天', '周', '月', '逐笔', '其他']
 function identity(code: string): string {
   const part = intervalParts(code)
   return part ? `${part.unit}:${part.multiplier}` : code
 }
 function label(code: string): string {
   const part = intervalParts(code)
-  return part ? `${part.multiplier} ${NAMES[part.unit]}${part.multiplier === 1 ? '' : 's'}` : code
+  return part ? `${part.multiplier} ${NAMES[part.unit]}` : code
 }
 function unique(codes: readonly string[]): string[] {
   const seen = new Set<string>()
@@ -124,13 +124,13 @@ export function TimeframeMenu({
       <div
         className="hidden max-w-56 items-center gap-0.5 overflow-x-auto sm:flex"
         role="toolbar"
-        aria-label="Favorite intervals"
+        aria-label="收藏的周期"
       >
         {favorites.map((code) => (
           <button
             key={code}
             type="button"
-            aria-label={`Favorite interval ${code}`}
+            aria-label={`收藏的周期 ${code}`}
             aria-pressed={identity(current) === identity(code)}
             disabled={!canSelectInterval(code)}
             onClick={() => choose(code)}
@@ -148,7 +148,7 @@ export function TimeframeMenu({
           <button
             type="button"
             className="inline-flex h-8 shrink-0 items-center gap-1 rounded px-2 text-sm font-semibold hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label={`Interval ${current}`}
+            aria-label={`周期 ${current}`}
           >
             {current || '-'}
             <ChromeIcon id="chevron-down" size={14} />
@@ -158,7 +158,7 @@ export function TimeframeMenu({
           container={container}
           align="start"
           className="flex max-h-[min(36rem,var(--radix-popover-content-available-height))] w-72 max-w-[calc(100vw-1rem)] flex-col gap-0 p-1.5"
-          aria-label="Timeframes"
+          aria-label="图表周期"
         >
           <button
             type="button"
@@ -169,7 +169,7 @@ export function TimeframeMenu({
             }}
           >
             <ChromeIcon id="plus" size={18} />
-            Add custom interval
+            添加自定义周期
           </button>
           <div className="min-h-0 overflow-y-auto overscroll-contain">
             {GROUPS.map((group, index) => {
@@ -220,7 +220,7 @@ export function TimeframeMenu({
                             title={
                               enabled
                                 ? undefined
-                                : 'The current data source cannot build this interval'
+                                : '当前数据源无法生成此周期'
                             }
                             onClick={() => choose(code)}
                           >
@@ -230,7 +230,7 @@ export function TimeframeMenu({
                             <button
                               type="button"
                               className="flex h-8 w-8 items-center justify-center rounded text-muted-foreground hover:bg-foreground/10"
-                              aria-label={`Remove ${text}`}
+                              aria-label={`移除 ${text}`}
                               onClick={() => preferences.removeCustom(code)}
                             >
                               <ChromeIcon id="trash" size={16} />
@@ -244,7 +244,7 @@ export function TimeframeMenu({
                               'flex h-8 w-8 items-center justify-center rounded hover:bg-foreground/10',
                               favoriteKeys.has(key) ? 'text-primary' : 'text-muted-foreground'
                             )}
-                            aria-label={`${favoriteKeys.has(key) ? 'Remove' : 'Add'} ${text} ${favoriteKeys.has(key) ? 'from' : 'to'} favorites`}
+                            aria-label={`${favoriteKeys.has(key) ? '取消收藏' : '收藏'} ${text}`}
                             aria-pressed={favoriteKeys.has(key)}
                             onClick={() => preferences.toggle(code)}
                           >
@@ -300,10 +300,10 @@ function CustomIntervalDialog({
     code = customTimeframeCode(Number(count), unit)
     if (!canSelect(code)) {
       code = ''
-      reason = 'The current data source cannot build this interval.'
+      reason = '当前数据源无法生成此周期。'
     }
   } catch {
-    reason = count ? 'Enter a whole number between 1 and 100000.' : ''
+    reason = count ? '请输入 1 至 100000 之间的整数。' : ''
   }
   const submit = () => {
     if (code) {
@@ -331,10 +331,10 @@ function CustomIntervalDialog({
         }}
       >
         <div className="flex items-center justify-between gap-3">
-          <DialogTitle>Add custom interval</DialogTitle>
+          <DialogTitle>添加自定义周期</DialogTitle>
           <button
             type="button"
-            aria-label="Close"
+            aria-label="关闭"
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded hover:bg-accent"
           >
@@ -342,7 +342,7 @@ function CustomIntervalDialog({
           </button>
         </div>
         <DialogDescription className="sr-only">
-          Choose the interval type and a positive whole number.
+          选择周期类型并输入正整数。
         </DialogDescription>
         <form
           onSubmit={(event) => {
@@ -352,7 +352,7 @@ function CustomIntervalDialog({
           className="grid gap-5 pt-2"
         >
           <div className="grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-3">
-            <label htmlFor={`${id}-type`}>Type</label>
+            <label htmlFor={`${id}-type`}>类型</label>
             <select
               id={`${id}-type`}
               value={unit}
@@ -361,11 +361,11 @@ function CustomIntervalDialog({
             >
               {UNITS.map((value) => (
                 <option key={value} value={value}>
-                  {value}
+                  {({ seconds: '秒', minutes: '分钟', hours: '小时', days: '天', weeks: '周', months: '月', quarters: '季度', years: '年' } as Record<TimeframeUnit, string>)[value]}
                 </option>
               ))}
             </select>
-            <label htmlFor={`${id}-count`}>Interval</label>
+            <label htmlFor={`${id}-count`}>周期</label>
             <input
               ref={input}
               id={`${id}-count`}
@@ -385,10 +385,10 @@ function CustomIntervalDialog({
           <output className="min-h-5 text-sm text-muted-foreground">{reason || failure}</output>
           <div className="flex justify-end gap-2 border-t pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              取消
             </Button>
             <Button type="submit" disabled={!code}>
-              Add
+              添加
             </Button>
           </div>
         </form>

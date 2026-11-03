@@ -102,10 +102,10 @@ export default function BrokerSelect() {
           // Auto-select the configured broker
           setSelectedBroker(data.broker_name)
         } else {
-          setError(data.message || 'Failed to load broker configuration')
+          setError(data.message || '加载交易商配置失败')
         }
       } catch {
-        setError('Failed to load broker configuration')
+        setError('加载交易商配置失败')
       } finally {
         setIsLoading(false)
       }
@@ -118,12 +118,12 @@ export default function BrokerSelect() {
     e.preventDefault()
 
     if (!selectedBroker) {
-      setError('Please select a broker')
+      setError('请选择交易商')
       return
     }
 
     if (!brokerConfig) {
-      setError('Broker configuration not loaded')
+      setError('交易商配置尚未加载')
       return
     }
 
@@ -231,7 +231,7 @@ export default function BrokerSelect() {
       }
 
       default:
-        setError('Please select a broker')
+        setError('请选择交易商')
         setIsSubmitting(false)
         return
     }
@@ -260,7 +260,7 @@ export default function BrokerSelect() {
               <div className="flex justify-center mb-4">
                 <img src="/logo.png" alt="OpenAlgo" className="h-20 w-20" />
               </div>
-              <CardTitle className="text-2xl">Connect Your Trading Account</CardTitle>
+              <CardTitle className="text-2xl">连接您的交易账户</CardTitle>
               <CardDescription>
                 Welcome, <span className="font-medium">{user?.username}</span>!
               </CardDescription>
@@ -274,16 +274,14 @@ export default function BrokerSelect() {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="broker-select" className="block text-center">
-                    Login with your Broker
-                  </Label>
+                  <Label htmlFor="broker-select" className="block text-center">使用交易商账户登录</Label>
                   <Select
                     value={selectedBroker}
                     onValueChange={setSelectedBroker}
                     disabled={isSubmitting}
                   >
                     <SelectTrigger id="broker-select" className="w-full">
-                      <SelectValue placeholder="Select a Broker" />
+                      <SelectValue placeholder="选择交易商" />
                     </SelectTrigger>
                     <SelectContent>
                       {allBrokers
@@ -311,14 +309,10 @@ export default function BrokerSelect() {
                 <Button type="submit" className="w-full" disabled={!selectedBroker || isSubmitting}>
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Connecting...
-                    </>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />正在连接…</>
                   ) : (
                     <>
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Connect Account
-                    </>
+                      <ExternalLink className="mr-2 h-4 w-4" />连接账户</>
                   )}
                 </Button>
               </form>
@@ -342,15 +336,13 @@ export default function BrokerSelect() {
             <Alert className="mb-6">
               <BookOpen className="h-4 w-4" />
               <AlertTitle>Need Help?</AlertTitle>
-              <AlertDescription>Check our documentation for broker setup guides.</AlertDescription>
+              <AlertDescription>请参阅文档中的交易商配置指南。</AlertDescription>
             </Alert>
 
             <div className="flex justify-center lg:justify-start gap-4">
               <Button variant="outline" asChild>
                 <a href="https://docs.openalgo.in" target="_blank" rel="noopener noreferrer">
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Documentation
-                </a>
+                  <BookOpen className="mr-2 h-4 w-4" />文档</a>
               </Button>
             </div>
           </div>

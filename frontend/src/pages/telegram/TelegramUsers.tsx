@@ -111,11 +111,11 @@ export default function TelegramUsers() {
         setMessageUser(null)
         setMessageText('')
       } else {
-        showToast.error(response.data.message || 'Failed to send message', 'telegram')
+        showToast.error(response.data.message || '发送消息失败', 'telegram')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to send message', 'telegram')
+      showToast.error(err.response?.data?.message || '发送消息失败', 'telegram')
     } finally {
       setIsSending(false)
     }
@@ -135,11 +135,11 @@ export default function TelegramUsers() {
         setUnlinkUser(null)
         fetchUsers()
       } else {
-        showToast.error(response.data.message || 'Failed to unlink user', 'telegram')
+        showToast.error(response.data.message || '解除用户绑定失败', 'telegram')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to unlink user', 'telegram')
+      showToast.error(err.response?.data?.message || '解除用户绑定失败', 'telegram')
     } finally {
       setIsUnlinking(false)
     }
@@ -168,10 +168,10 @@ export default function TelegramUsers() {
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Users className="h-6 w-6" />
-            Telegram Users
+            Telegram 用户
           </h1>
         </div>
-        <p className="text-muted-foreground">Manage users linked to the Telegram bot</p>
+        <p className="text-muted-foreground">管理与 Telegram 机器人关联的用户</p>
       </div>
 
       {/* Stats */}
@@ -179,7 +179,7 @@ export default function TelegramUsers() {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold">{users.length}</p>
-            <p className="text-sm text-muted-foreground">Total Users</p>
+            <p className="text-sm text-muted-foreground">用户总数</p>
           </CardContent>
         </Card>
         <Card>
@@ -187,19 +187,19 @@ export default function TelegramUsers() {
             <p className="text-2xl font-bold">
               {users.filter((u) => u.notifications_enabled).length}
             </p>
-            <p className="text-sm text-muted-foreground">Notifications On</p>
+            <p className="text-sm text-muted-foreground">通知已开启</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold">{users.filter((u) => u.openalgo_username).length}</p>
-            <p className="text-sm text-muted-foreground">Linked Accounts</p>
+            <p className="text-sm text-muted-foreground">已关联账户</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold">{stats.reduce((sum, s) => sum + s.count, 0)}</p>
-            <p className="text-sm text-muted-foreground">Commands (30d)</p>
+            <p className="text-sm text-muted-foreground">命令数（近 30 天）</p>
           </CardContent>
         </Card>
       </div>
@@ -207,7 +207,7 @@ export default function TelegramUsers() {
       {/* Users Table */}
       <Card>
         <CardHeader>
-          <CardTitle>User List</CardTitle>
+          <CardTitle>用户列表</CardTitle>
           <CardDescription>{filteredUsers.length} users total</CardDescription>
         </CardHeader>
         <CardContent>
@@ -216,7 +216,7 @@ export default function TelegramUsers() {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by username..."
+                placeholder="按用户名搜索…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -229,12 +229,12 @@ export default function TelegramUsers() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Telegram User</TableHead>
-                  <TableHead>OpenAlgo Account</TableHead>
-                  <TableHead>Notifications</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead>Last Active</TableHead>
-                  <TableHead className="w-[100px]">Actions</TableHead>
+                  <TableHead>Telegram 用户</TableHead>
+                  <TableHead>OpenAlgo 账户</TableHead>
+                  <TableHead>通知</TableHead>
+                  <TableHead>加入时间</TableHead>
+                  <TableHead>最近活跃</TableHead>
+                  <TableHead className="w-[100px]">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -261,19 +261,19 @@ export default function TelegramUsers() {
                         {user.openalgo_username ? (
                           <Badge variant="outline">{user.openalgo_username}</Badge>
                         ) : (
-                          <span className="text-muted-foreground">Not linked</span>
+                          <span className="text-muted-foreground">未关联</span>
                         )}
                       </TableCell>
                       <TableCell>
                         {user.notifications_enabled ? (
                           <Badge className="bg-green-500 hover:bg-green-600">
                             <Bell className="h-3 w-3 mr-1" />
-                            On
+                            开启
                           </Badge>
                         ) : (
                           <Badge variant="secondary">
                             <BellOff className="h-3 w-3 mr-1" />
-                            Off
+                            关闭
                           </Badge>
                         )}
                       </TableCell>
@@ -289,8 +289,8 @@ export default function TelegramUsers() {
                               setMessageUser(user)
                               setMessageText('')
                             }}
-                            title="Send message"
-                            aria-label="Send message"
+                            title="发送消息"
+                            aria-label="发送消息"
                           >
                             <Send className="h-4 w-4" />
                           </Button>
@@ -299,8 +299,8 @@ export default function TelegramUsers() {
                             variant="ghost"
                             className="h-8 w-8 text-destructive hover:text-destructive"
                             onClick={() => setUnlinkUser(user)}
-                            title="Unlink user"
-                            aria-label="Unlink user"
+                            title="解除用户关联"
+                            aria-label="解除用户关联"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -319,7 +319,7 @@ export default function TelegramUsers() {
       <Dialog open={!!messageUser} onOpenChange={() => setMessageUser(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Send Message</DialogTitle>
+            <DialogTitle>发送消息</DialogTitle>
             <DialogDescription>
               Send a message to{' '}
               {messageUser?.telegram_username
@@ -329,9 +329,9 @@ export default function TelegramUsers() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Message</Label>
+              <Label>消息</Label>
               <Textarea
-                placeholder="Enter your message..."
+                placeholder="输入消息…"
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 rows={4}
@@ -341,7 +341,7 @@ export default function TelegramUsers() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setMessageUser(null)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={handleSendMessage} disabled={isSending || !messageText.trim()}>
               {isSending ? 'Sending...' : 'Send Message'}
@@ -354,7 +354,7 @@ export default function TelegramUsers() {
       <AlertDialog open={!!unlinkUser} onOpenChange={() => setUnlinkUser(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Unlink User?</AlertDialogTitle>
+            <AlertDialogTitle>解除用户关联？</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to unlink{' '}
               {unlinkUser?.telegram_username
@@ -364,7 +364,7 @@ export default function TelegramUsers() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleUnlink} disabled={isUnlinking}>
               {isUnlinking ? 'Unlinking...' : 'Unlink'}
             </AlertDialogAction>

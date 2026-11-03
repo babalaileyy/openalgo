@@ -20,13 +20,13 @@ export const PlaceOrderNode = memo(({ data, selected }: PlaceOrderNodeProps) => 
             <ShoppingCart className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Place Order</div>
+            <div className="text-xs font-medium leading-tight">下单</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NSE'}</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
           <div className="flex items-center justify-between">
@@ -39,7 +39,7 @@ export const PlaceOrderNode = memo(({ data, selected }: PlaceOrderNodeProps) => 
               {data.action || 'BUY'}
             </span>
             <div className="flex items-center gap-1 text-[10px]">
-              <span className="text-muted-foreground">Qty:</span>
+              <span className="text-muted-foreground">数量：</span>
               <span className="mono-data font-medium">{data.quantity || 0}</span>
             </div>
           </div>
@@ -49,7 +49,7 @@ export const PlaceOrderNode = memo(({ data, selected }: PlaceOrderNodeProps) => 
           </div>
           {data.ltp !== undefined && (
             <div className="mt-0.5 flex items-center justify-between rounded border border-border/50 bg-surface-2 px-1.5 py-0.5">
-              <span className="text-[9px] text-muted-foreground">LTP</span>
+              <span className="text-[9px] text-muted-foreground">最新价</span>
               <span className="mono-data text-[10px] font-semibold text-primary">
                 {data.ltp.toFixed(2)}
               </span>

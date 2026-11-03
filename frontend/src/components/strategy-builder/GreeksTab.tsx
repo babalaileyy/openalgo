@@ -73,11 +73,11 @@ export function GreeksTab({ legs, greeksByLeg, formatCurrency }: GreeksTabProps)
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-xs">Position</TableHead>
+            <TableHead className="text-xs">持仓</TableHead>
             <TableHead className="text-xs">IV</TableHead>
-            <TableHead className="text-xs">Delta (underlying units)</TableHead>
-            <TableHead className="text-xs">Theta (position currency per day)</TableHead>
-            <TableHead className="text-xs">Gamma (delta units / price point)</TableHead>
+            <TableHead className="text-xs">Delta（德尔塔，以标的单位计）</TableHead>
+            <TableHead className="text-xs">Theta（时间价值衰减，每日持仓货币金额）</TableHead>
+            <TableHead className="text-xs">Gamma（伽马，每价格点的 Delta 变化）</TableHead>
             <TableHead className="text-xs">Vega (position currency per 1% IV)</TableHead>
           </TableRow>
         </TableHeader>
@@ -154,7 +154,7 @@ export function GreeksTab({ legs, greeksByLeg, formatCurrency }: GreeksTabProps)
             })}
           {legs.length > 0 && (
             <TableRow className="bg-muted/40 font-semibold">
-              <TableCell className="text-xs">Positional Greeks</TableCell>
+              <TableCell className="text-xs">Positional Greeks（持仓希腊值）</TableCell>
               <TableCell className="text-xs">—</TableCell>
               <TableCell className="text-xs tabular-nums" data-testid="net-delta">
                 {positional.delta.toFixed(2)}
@@ -176,13 +176,13 @@ export function GreeksTab({ legs, greeksByLeg, formatCurrency }: GreeksTabProps)
       <div className="flex items-center gap-6 border-t pt-3">
         <label className="flex items-center gap-2 text-xs">
           <Checkbox checked={!currencyValues} onCheckedChange={() => setCurrencyValues(false)} />
-          Decimal values
+          小数值
         </label>
         <label className="flex items-center gap-2 text-xs">
           <Checkbox checked={currencyValues} onCheckedChange={() => setCurrencyValues(true)} />
-          Currency values
+          金额值
         </label>
-        <span className="text-xs text-muted-foreground">Signed position quantity</span>
+        <span className="text-xs text-muted-foreground">带方向的持仓数量</span>
       </div>
     </div>
   )

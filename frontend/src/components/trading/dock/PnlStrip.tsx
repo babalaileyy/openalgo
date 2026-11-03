@@ -69,11 +69,11 @@ export function PnlStrip({
 }: Props) {
   return (
     <div className="flex min-w-0 items-center gap-3">
-      <Figure label={`Open (${openCount})`} value={openPnl} format={formatCurrency} />
-      {realised !== null && <Figure label="Realised" value={realised} format={formatCurrency} />}
+      <Figure label={`持仓盈亏 (${openCount})`} value={openPnl} format={formatCurrency} />
+      {realised !== null && <Figure label="已实现盈亏" value={realised} format={formatCurrency} />}
       {live && openCount > 0 && (
         <Badge variant="secondary" className="h-4 px-1.5 text-[9px] uppercase tracking-wide">
-          Live
+          实时
         </Badge>
       )}
 
@@ -85,19 +85,19 @@ export function PnlStrip({
             className="h-6 px-2 text-[11px]"
             disabled={workingOrders === 0}
           >
-            Cancel all
+            全部撤单
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel all open orders?</AlertDialogTitle>
+            <AlertDialogTitle>确认撤销所有未完成委托？</AlertDialogTitle>
             <AlertDialogDescription>
-              Every working order is withdrawn, across every symbol. {workingOrders} in the book.
+              将撤销所有品种的未完成委托，当前共 {workingOrders} 笔。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep</AlertDialogCancel>
-            <AlertDialogAction onClick={onCancelAll}>Cancel all orders</AlertDialogAction>
+            <AlertDialogCancel>返回</AlertDialogCancel>
+            <AlertDialogAction onClick={onCancelAll}>确认全部撤单</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -110,20 +110,19 @@ export function PnlStrip({
             className="h-6 px-2 text-[11px] text-rose-600 hover:text-rose-600 dark:text-rose-400"
             disabled={openCount === 0}
           >
-            Close all
+            全部平仓
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Close all positions?</AlertDialogTitle>
+            <AlertDialogTitle>确认平掉所有持仓？</AlertDialogTitle>
             <AlertDialogDescription>
-              Every open position is squared off at market, across every symbol and product.{' '}
-              {openCount} open.
+              将以市价平掉所有品种及产品类型的持仓，当前共 {openCount} 笔持仓。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep</AlertDialogCancel>
-            <AlertDialogAction onClick={onCloseAll}>Close all positions</AlertDialogAction>
+            <AlertDialogCancel>返回</AlertDialogCancel>
+            <AlertDialogAction onClick={onCloseAll}>确认全部平仓</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

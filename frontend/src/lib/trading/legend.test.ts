@@ -60,11 +60,11 @@ describe('buildChartLegend', () => {
 
   it('carries every O/H/L/C/V reading for the bar it describes', () => {
     const text = flat(input())
-    expect(text).toContain('O 24456.30')
-    expect(text).toContain('H 24459.50')
-    expect(text).toContain('L 24443.70')
-    expect(text).toContain('C 24451.00')
-    expect(text).toContain('V 12K')
+    expect(text).toContain('开 24456.30')
+    expect(text).toContain('高 24459.50')
+    expect(text).toContain('低 24443.70')
+    expect(text).toContain('收 24451.00')
+    expect(text).toContain('量 12K')
     // No LTP and no day change: every number in the line belongs to this bar.
     expect(text).not.toContain('LTP')
   })
@@ -76,17 +76,17 @@ describe('buildChartLegend', () => {
 
   it('omits volume when the chart type does not carry one', () => {
     // Renko and point-and-figure elements are not one bar each.
-    expect(flat(input({ bar: { open: 1, high: 2, low: 0.5, close: 1.5 } }))).not.toContain(' V ')
+    expect(flat(input({ bar: { open: 1, high: 2, low: 0.5, close: 1.5 } }))).not.toContain(' 量 ')
   })
 
   it('distinguishes zero volume from unavailable or invalid volume', () => {
     expect(flat(input({ bar: { open: 1, high: 2, low: 0.5, close: 1.5, volume: 0 } }))).toContain(
-      ' V 0K'
+      ' 量 0K'
     )
     for (const volume of [undefined, NaN, Infinity, -1]) {
       expect(
         flat(input({ bar: { open: 1, high: 2, low: 0.5, close: 1.5, volume } }))
-      ).not.toContain(' V ')
+      ).not.toContain(' 量 ')
     }
   })
 
@@ -98,8 +98,8 @@ describe('buildChartLegend', () => {
   it('tones the bar readout by candle direction', () => {
     const up = buildChartLegend(input({ bar: { open: 10, high: 12, low: 9, close: 11 } }))
     const down = buildChartLegend(input({ bar: { open: 11, high: 12, low: 9, close: 10 } }))
-    expect(up.find((r) => r.text.startsWith('O'))?.tone).toBe('up')
-    expect(down.find((r) => r.text.startsWith('O'))?.tone).toBe('down')
+    expect(up.find((r) => r.text.startsWith('开'))?.tone).toBe('up')
+    expect(down.find((r) => r.text.startsWith('开'))?.tone).toBe('down')
   })
 
   it("reports the bar's own change, absolute and percent, signed and toned", () => {
@@ -201,16 +201,16 @@ describe('volume is its own legend run', () => {
 
   it('does not fuse the volume into the OHLC run', () => {
     const runs = buildChartLegend(input() as Parameters<typeof buildChartLegend>[0])
-    const ohlc = runs.find((r) => r.text.startsWith('O '))
-    expect(ohlc?.text).not.toContain('V ')
+    const ohlc = runs.find((r) => r.text.startsWith('开 '))
+    expect(ohlc?.text).not.toContain('量 ')
     const vol = runs.find((r) => r.action === 'volume')
-    expect(vol?.text).toBe('V 126.30K')
+    expect(vol?.text).toBe('量 126.30K')
   })
 
   it('renders the volume run as a control, and the others as plain text', () => {
     const html = legendHtml(buildChartLegend(input() as Parameters<typeof buildChartLegend>[0]))
     expect(html).toContain('data-legend-action="volume"')
-    expect(html).toContain('Hide volume')
+    expect(html).toContain('隐藏成交量')
     // One control only: the readout must not become a row of buttons.
     expect(html.match(/data-legend-action/g)).toHaveLength(1)
   })
@@ -222,7 +222,7 @@ describe('volume is its own legend run', () => {
     expect(runs.find((r) => r.action === 'volume')?.dim).toBe(true)
     const html = legendHtml(runs)
     expect(html).toContain('line-through')
-    expect(html).toContain('Show volume')
+    expect(html).toContain('显示成交量')
   })
 
   it('emits no volume run at all on a transformed chart type', () => {

@@ -42,7 +42,7 @@ export default function ServerError() {
         <div className="mb-8">
           <img
             src="/images/yoga.png"
-            alt="Meditation illustration"
+            alt="冥想插图"
             className="w-64 h-64 mx-auto animate-float"
             onError={(e) => {
               e.currentTarget.style.display = 'none'
@@ -51,36 +51,36 @@ export default function ServerError() {
         </div>
 
         <h1 className="text-5xl font-bold mb-4">
-          <span className="text-destructive">500</span> - Internal Server Error
+          <span className="text-destructive">500</span> - 服务器内部错误
         </h1>
 
         <p className="text-xl text-muted-foreground mb-6">
-          Oops! Something went wrong. Don't worry, we're here to help you resolve this.
+          服务器遇到问题，请检查以下信息并重试。
         </p>
 
         {/* API Key Warning */}
         <Alert variant="warning" className="mb-8 text-left">
           <AlertTriangle className="h-5 w-5" />
-          <AlertTitle>Common Cause</AlertTitle>
+          <AlertTitle>常见原因</AlertTitle>
           <AlertDescription>
-            Please check if your <strong>API Key</strong> or <strong>API Secret</strong> is valid.
+            请检查 <strong>API 密钥</strong>和 <strong>API Secret（密钥）</strong>是否有效。
             <br />
-            If you updated the <strong>.env</strong> file while logged in,{' '}
-            <span className="text-red-600 font-bold">logout</span> and{' '}
-            <span className="text-green-600 font-bold">login again</span> to refresh credentials.
+            如果登录期间修改了 <strong>.env</strong> 文件，请先{' '}
+            <span className="text-red-600 font-bold">退出登录</span>，然后{' '}
+            <span className="text-green-600 font-bold">重新登录</span>以刷新凭据。
           </AlertDescription>
         </Alert>
 
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Button variant="destructive" onClick={handleLogout} disabled={isLoggingOut}>
             <LogOut className="h-4 w-4 mr-2" />
-            {isLoggingOut ? 'Logging out...' : 'Logout & Fix Issue'}
+            {isLoggingOut ? '正在退出...' : '退出登录并排查问题'}
           </Button>
 
           <Button variant="outline" asChild>
             <Link to="/">
               <Home className="h-4 w-4 mr-2" />
-              Back to Home
+              返回首页
             </Link>
           </Button>
         </div>
@@ -91,7 +91,7 @@ export default function ServerError() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Quick Links</span>
+            <span className="bg-background px-2 text-muted-foreground">快捷链接</span>
           </div>
         </div>
 
@@ -100,7 +100,7 @@ export default function ServerError() {
           <Button variant="ghost" size="sm" asChild>
             <a href="https://docs.openalgo.in" target="_blank" rel="noopener noreferrer">
               <BookOpen className="h-4 w-4 mr-2" />
-              Documentation
+              文档
             </a>
           </Button>
           <Button variant="ghost" size="sm" asChild>
@@ -112,7 +112,7 @@ export default function ServerError() {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/download">
               <Download className="h-4 w-4 mr-2" />
-              Download
+              下载
             </Link>
           </Button>
         </div>

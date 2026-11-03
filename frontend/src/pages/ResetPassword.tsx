@@ -68,7 +68,7 @@ export default function ResetPassword() {
         session_expired: 'Your session has expired. Please start the reset process again.',
         processing_error: 'An error occurred. Please try again.',
       }
-      setError(errorMessages[urlError] || 'An error occurred.')
+      setError(errorMessages[urlError] || '发生错误。')
       return
     }
 
@@ -144,10 +144,10 @@ export default function ResetPassword() {
       if (data.status === 'success') {
         setStep('method')
       } else {
-        setError(data.message || 'Email not found')
+        setError(data.message || '未找到邮箱')
       }
     } catch {
-      setError('Failed to process request')
+      setError('处理请求失败')
     } finally {
       setLoading(false)
     }
@@ -178,10 +178,10 @@ export default function ResetPassword() {
           setStep('email_sent')
         }
       } else {
-        setError(data.message || 'Failed to select method')
+        setError(data.message || '选择验证方式失败')
       }
     } catch {
-      setError('Failed to process request')
+      setError('处理请求失败')
     } finally {
       setLoading(false)
     }
@@ -210,10 +210,10 @@ export default function ResetPassword() {
         setToken(data.token || '')
         setStep('password')
       } else {
-        setError(data.message || 'Invalid TOTP code')
+        setError(data.message || 'TOTP 验证码无效')
       }
     } catch {
-      setError('Failed to verify code')
+      setError('验证代码失败')
     } finally {
       setLoading(false)
     }
@@ -248,15 +248,15 @@ export default function ResetPassword() {
 
       if (data.status === 'success') {
         setSuccess('Password reset successfully! Redirecting to login...')
-        showToast.success('Password reset successfully!')
+        showToast.success('密码重置成功！')
         setTimeout(() => {
           window.location.href = '/login'
         }, 2000)
       } else {
-        setError(data.message || 'Failed to reset password')
+        setError(data.message || '重置密码失败')
       }
     } catch {
-      setError('Failed to reset password')
+      setError('重置密码失败')
     } finally {
       setLoading(false)
     }
@@ -276,7 +276,7 @@ export default function ResetPassword() {
       <div className="w-full max-w-lg">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Reset Password</CardTitle>
+            <CardTitle className="text-2xl">重置密码</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {error && (
@@ -299,19 +299,17 @@ export default function ResetPassword() {
             {step === 'email' && (
               <form onSubmit={handleEmailSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="email">邮箱地址</Label>
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
+                    placeholder="输入邮箱"
                     required
                     autoFocus
                   />
-                  <p className="text-sm text-muted-foreground">
-                    Enter the email address associated with your account
-                  </p>
+                  <p className="text-sm text-muted-foreground">请输入与账户关联的邮箱地址</p>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? 'Processing...' : 'Continue'}
@@ -323,10 +321,8 @@ export default function ResetPassword() {
             {step === 'method' && (
               <div className="space-y-4">
                 <div className="text-center mb-6">
-                  <h3 className="text-lg font-semibold">Choose Verification Method</h3>
-                  <p className="text-muted-foreground text-sm mt-2">
-                    How would you like to verify your identity?
-                  </p>
+                  <h3 className="text-lg font-semibold">选择验证方式</h3>
+                  <p className="text-muted-foreground text-sm mt-2">请选择身份验证方式</p>
                 </div>
 
                 <button
@@ -340,10 +336,8 @@ export default function ResetPassword() {
                       <Shield className="h-6 w-6 text-primary-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold">Authenticator App (TOTP)</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Use your authenticator app to generate a verification code
-                      </p>
+                      <h4 className="font-semibold">身份验证器（TOTP）</h4>
+                      <p className="text-sm text-muted-foreground">使用身份验证器应用生成验证码</p>
                     </div>
                     <ChevronRight className="h-5 w-5 text-muted-foreground" />
                   </div>
@@ -360,10 +354,8 @@ export default function ResetPassword() {
                       <Mail className="h-6 w-6 text-secondary-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold">Email Reset Link</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Receive a password reset link via email
-                      </p>
+                      <h4 className="font-semibold">发送重置链接</h4>
+                      <p className="text-sm text-muted-foreground">通过邮件接收密码重置链接</p>
                     </div>
                     <ChevronRight className="h-5 w-5 text-muted-foreground" />
                   </div>
@@ -375,7 +367,7 @@ export default function ResetPassword() {
             {step === 'totp' && (
               <form onSubmit={handleTotpSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="totp">TOTP Code</Label>
+                  <Label htmlFor="totp">动态验证码</Label>
                   <Input
                     id="totp"
                     type="text"
@@ -389,9 +381,7 @@ export default function ResetPassword() {
                     required
                     autoFocus
                   />
-                  <p className="text-sm text-muted-foreground">
-                    Enter the 6-digit code from your authenticator app
-                  </p>
+                  <p className="text-sm text-muted-foreground">请输入身份验证器应用生成的 6 位验证码</p>
                 </div>
                 <Button
                   type="submit"
@@ -411,7 +401,7 @@ export default function ResetPassword() {
                     <Mail className="h-8 w-8 text-white" />
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold">Check Your Email</h3>
+                <h3 className="text-lg font-semibold">请查看邮箱</h3>
                 <p className="text-muted-foreground">
                   We've sent a password reset link to <strong>{email}</strong>. Click the link in
                   the email to continue resetting your password.
@@ -421,18 +411,16 @@ export default function ResetPassword() {
                   <AlertDescription>
                     <strong>Didn't receive the email?</strong>
                     <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                      <li>Check your spam/junk folder</li>
+                      <li>请检查垃圾邮件文件夹</li>
                       <li>Make sure {email} is correct</li>
                       <li>The link expires in 1 hour</li>
                     </ul>
                   </AlertDescription>
                 </Alert>
                 <div className="flex gap-2 justify-center">
-                  <Button variant="outline" size="sm" onClick={() => setStep('method')}>
-                    Try Different Method
-                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => setStep('method')}>尝试其他方式</Button>
                   <Button size="sm" asChild>
-                    <Link to="/login">Back to Login</Link>
+                    <Link to="/login">返回登录</Link>
                   </Button>
                 </div>
               </div>
@@ -442,13 +430,13 @@ export default function ResetPassword() {
             {step === 'password' && (
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="password">New Password</Label>
+                  <Label htmlFor="password">新密码</Label>
                   <Input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter new password"
+                    placeholder="输入新密码"
                     required
                     autoFocus
                   />
@@ -461,13 +449,13 @@ export default function ResetPassword() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                  <Label htmlFor="confirmPassword">确认新密码</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm new password"
+                    placeholder="确认新密码"
                     required
                   />
                   {passwordsMatch !== null && (
@@ -478,16 +466,16 @@ export default function ResetPassword() {
                 </div>
 
                 <div className="bg-muted rounded-lg p-4 space-y-2">
-                  <RequirementItem met={requirements.length} label="Minimum 8 characters" />
+                  <RequirementItem met={requirements.length} label="至少 8 个字符" />
                   <RequirementItem
                     met={requirements.uppercase}
-                    label="At least 1 uppercase letter (A-Z)"
+                    label="至少包含 1 个大写字母（A-Z）"
                   />
                   <RequirementItem
                     met={requirements.lowercase}
-                    label="At least 1 lowercase letter (a-z)"
+                    label="至少包含 1 个小写字母（a-z）"
                   />
-                  <RequirementItem met={requirements.number} label="At least 1 number (0-9)" />
+                  <RequirementItem met={requirements.number} label="至少包含 1 个数字（0-9）" />
                   <RequirementItem
                     met={requirements.special}
                     label="At least 1 special character (!@#$%^&*)"

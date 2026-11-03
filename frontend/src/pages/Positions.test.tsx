@@ -169,6 +169,6 @@ describe('Positions close button', () => {
   it('disables Close All when every position is squared off', async () => {
     await renderPositions([CLOSED_POSITION])
 
-    expect(screen.getByRole('button', { name: /Close All/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /全部平仓/ })).toBeDisabled()
   })
 })

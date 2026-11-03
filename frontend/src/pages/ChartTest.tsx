@@ -150,7 +150,7 @@ export default function ChartTest() {
       <div className="flex flex-wrap items-center gap-3">
         <Select value={exchange} onValueChange={setExchange}>
           <SelectTrigger className="w-[140px]">
-            <SelectValue placeholder="Exchange" />
+            <SelectValue placeholder="交易所" />
           </SelectTrigger>
           <SelectContent>
             {EXCHANGES.map((ex) => (
@@ -164,7 +164,7 @@ export default function ChartTest() {
         <div className="relative">
           <Input
             value={query}
-            placeholder="Search symbol (e.g. RELIANCE, NIFTY)"
+            placeholder="搜索品种（例如 RELIANCE、NIFTY）"
             className="w-[280px]"
             autoComplete="off"
             onChange={(e) => onQueryChange(e.target.value)}
@@ -219,14 +219,14 @@ export default function ChartTest() {
 
         {charts.length > 0 && (
           <Button variant="outline" size="sm" onClick={() => setCharts([])}>
-            Remove all
+            全部移除
           </Button>
         )}
       </div>
 
       {charts.length === 0 ? (
         <div className="rounded-md border border-dashed py-16 text-center text-sm text-muted-foreground">
-          Search a symbol and select it to add a chart. You can add multiple charts.
+          搜索并选择交易品种以添加图表，可添加多个图表。
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
@@ -512,7 +512,7 @@ function LiveChart({
         >
           {last != null ? last.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'}
         </span>
-        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onRemove} title="Remove">
+        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onRemove} title="移除">
           <X className="h-4 w-4" />
         </Button>
       </div>

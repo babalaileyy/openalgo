@@ -180,7 +180,7 @@ export default function ActionCenterPage() {
         )
       }
     } catch (_error) {
-      showToast.error('Failed to load action center data', 'actionCenter')
+      showToast.error('无法加载操作中心数据', 'actionCenter')
     } finally {
       setIsLoading(false)
       setIsRefreshing(false)
@@ -236,7 +236,7 @@ export default function ActionCenterPage() {
       }
 
       // Show toast notification (showToast handles category filtering)
-      showToast.warning(`New Order Queued: ${data.message}`, 'actionCenter', {
+      showToast.warning(`新订单已进入审批队列：${data.message}`, 'actionCenter', {
         duration: 5000,
       })
 
@@ -270,7 +270,7 @@ export default function ActionCenterPage() {
   const handleRefresh = async () => {
     setIsRefreshing(true)
     await fetchData()
-    showToast.success('Data refreshed', 'actionCenter')
+    showToast.success('数据已刷新', 'actionCenter')
   }
 
   const handleApprove = async (orderId: number) => {
@@ -282,17 +282,17 @@ export default function ActionCenterPage() {
       )
 
       if (response.data.status === 'success') {
-        showToast.success(response.data.message || 'Order approved and executed', 'actionCenter')
+        showToast.success(response.data.message || '订单已批准并执行', 'actionCenter')
         fetchData()
       } else if (response.data.status === 'warning') {
         showToast.warning(response.data.message, 'actionCenter')
         fetchData()
       } else {
-        showToast.error(response.data.message || 'Failed to approve order', 'actionCenter')
+        showToast.error(response.data.message || '批准订单失败', 'actionCenter')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to approve order', 'actionCenter')
+      showToast.error(err.response?.data?.message || '批准订单失败', 'actionCenter')
     } finally {
       setIsApproving(null)
     }
@@ -307,14 +307,14 @@ export default function ActionCenterPage() {
       )
 
       if (response.data.status === 'success') {
-        showToast.success('Order rejected', 'actionCenter')
+        showToast.success('订单已拒绝', 'actionCenter')
         fetchData()
       } else {
-        showToast.error(response.data.message || 'Failed to reject order', 'actionCenter')
+        showToast.error(response.data.message || '拒绝订单失败', 'actionCenter')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to reject order', 'actionCenter')
+      showToast.error(err.response?.data?.message || '拒绝订单失败', 'actionCenter')
     } finally {
       setIsRejecting(null)
     }
@@ -330,15 +330,15 @@ export default function ActionCenterPage() {
       )
 
       if (response.data.status === 'success') {
-        showToast.success('Order deleted', 'actionCenter')
+        showToast.success('订单已删除', 'actionCenter')
         setOrderToDelete(null)
         fetchData()
       } else {
-        showToast.error(response.data.message || 'Failed to delete order', 'actionCenter')
+        showToast.error(response.data.message || '删除订单失败', 'actionCenter')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to delete order', 'actionCenter')
+      showToast.error(err.response?.data?.message || '删除订单失败', 'actionCenter')
     } finally {
       setIsDeleting(false)
     }
@@ -353,17 +353,17 @@ export default function ActionCenterPage() {
       )
 
       if (response.data.status === 'success') {
-        showToast.success(response.data.message || 'All orders approved', 'actionCenter')
+        showToast.success(response.data.message || '所有订单已批准', 'actionCenter')
         fetchData()
       } else if (response.data.status === 'warning') {
         showToast.warning(response.data.message, 'actionCenter')
         fetchData()
       } else {
-        showToast.error(response.data.message || 'Failed to approve all orders', 'actionCenter')
+        showToast.error(response.data.message || '批量批准订单失败', 'actionCenter')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to approve all orders', 'actionCenter')
+      showToast.error(err.response?.data?.message || '批量批准订单失败', 'actionCenter')
     } finally {
       setIsApprovingAll(false)
     }
@@ -416,17 +416,17 @@ export default function ActionCenterPage() {
       const diffMs = now.getTime() - orderTime.getTime()
       const diffMins = Math.floor(diffMs / 60000)
 
-      if (diffMins < 1) return 'Just now'
-      if (diffMins === 1) return '1 minute ago'
-      if (diffMins < 60) return `${diffMins} minutes ago`
+      if (diffMins < 1) return '刚刚'
+      if (diffMins === 1) return '1 分钟前'
+      if (diffMins < 60) return `${diffMins} 分钟前`
 
       const diffHours = Math.floor(diffMins / 60)
-      if (diffHours === 1) return '1 hour ago'
-      if (diffHours < 24) return `${diffHours} hours ago`
+      if (diffHours === 1) return '1 小时前'
+      if (diffHours < 24) return `${diffHours} 小时前`
 
       const diffDays = Math.floor(diffHours / 24)
-      if (diffDays === 1) return 'Yesterday'
-      return `${diffDays} days ago`
+      if (diffDays === 1) return '昨天'
+      return `${diffDays} 天前`
     } catch {
       return ''
     }
@@ -445,11 +445,9 @@ export default function ActionCenterPage() {
       {/* Info Alert */}
       <Alert>
         <Info className="h-4 w-4" />
-        <AlertTitle>OpenAlgo Action Center</AlertTitle>
+        <AlertTitle>OpenAlgo 操作中心</AlertTitle>
         <AlertDescription>
-          Centralized hub for managing semi-automated trading orders. When Semi-Auto mode is enabled
-          in API Key settings, all incoming orders are queued here for manual approval before broker
-          execution.
+          在此集中管理半自动交易订单。在 API 密钥设置中启用半自动模式后，收到的订单将在此排队，须经人工审批后才会发送给券商。
         </AlertDescription>
       </Alert>
 
@@ -462,10 +460,10 @@ export default function ActionCenterPage() {
             </Link>
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <PlayCircle className="h-6 w-6" />
-              Action Center
+              操作中心
             </h1>
           </div>
-          <p className="text-muted-foreground">Review and manage pending orders</p>
+          <p className="text-muted-foreground">审核并管理待处理订单</p>
         </div>
         <div className="flex gap-2">
           {activeFilter === 'pending' && stats.total_pending > 0 && (
@@ -480,17 +478,17 @@ export default function ActionCenterPage() {
               ) : (
                 <Check className="h-4 w-4 mr-2" />
               )}
-              Approve All ({stats.total_pending})
+              全部批准（{stats.total_pending}）
             </Button>
           )}
           <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Refresh
+            刷新
           </Button>
           <Link to="/apikey">
             <Button variant="outline">
               <Settings className="h-4 w-4 mr-2" />
-              Toggle Order Mode
+              切换订单模式
             </Button>
           </Link>
         </div>
@@ -500,7 +498,7 @@ export default function ActionCenterPage() {
       <Tabs value={activeFilter} onValueChange={(v) => setActiveFilter(v as typeof activeFilter)}>
         <TabsList>
           <TabsTrigger value="pending" className="relative">
-            Pending
+            待审批
             {stats.total_pending > 0 && (
               <Badge variant="destructive" className="ml-2 animate-pulse">
                 {stats.total_pending}
@@ -508,7 +506,7 @@ export default function ActionCenterPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="approved">
-            Approved
+            已批准
             {stats.total_approved > 0 && (
               <Badge variant="secondary" className="ml-2 bg-green-500">
                 {stats.total_approved}
@@ -516,14 +514,14 @@ export default function ActionCenterPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="rejected">
-            Rejected
+            已拒绝
             {stats.total_rejected > 0 && (
               <Badge variant="destructive" className="ml-2">
                 {stats.total_rejected}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="all">All Orders</TabsTrigger>
+          <TabsTrigger value="all">全部订单</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -532,31 +530,31 @@ export default function ActionCenterPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-yellow-500">{stats.total_pending}</p>
-            <p className="text-sm text-muted-foreground">Pending Approval</p>
+            <p className="text-sm text-muted-foreground">待审批</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-green-500">{stats.total_buy_orders}</p>
-            <p className="text-sm text-muted-foreground">Buy Orders</p>
+            <p className="text-sm text-muted-foreground">买入订单</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-red-500">{stats.total_sell_orders}</p>
-            <p className="text-sm text-muted-foreground">Sell Orders</p>
+            <p className="text-sm text-muted-foreground">卖出订单</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-green-500">{stats.total_approved}</p>
-            <p className="text-sm text-muted-foreground">Approved</p>
+            <p className="text-sm text-muted-foreground">已批准</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-red-500">{stats.total_rejected}</p>
-            <p className="text-sm text-muted-foreground">Rejected</p>
+            <p className="text-sm text-muted-foreground">已拒绝</p>
           </CardContent>
         </Card>
       </div>
@@ -564,24 +562,24 @@ export default function ActionCenterPage() {
       {/* Orders Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Orders</CardTitle>
-          <CardDescription>{orders.length} orders</CardDescription>
+          <CardTitle>订单</CardTitle>
+          <CardDescription>共 {orders.length} 笔订单</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="border rounded-md">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Strategy</TableHead>
-                  <TableHead>Symbol</TableHead>
-                  <TableHead>Exchange</TableHead>
-                  <TableHead>Action</TableHead>
-                  <TableHead className="text-right">Quantity</TableHead>
-                  <TableHead className="text-right">Price</TableHead>
-                  <TableHead>Order Type</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>策略</TableHead>
+                  <TableHead>品种</TableHead>
+                  <TableHead>交易所</TableHead>
+                  <TableHead>方向</TableHead>
+                  <TableHead className="text-right">数量</TableHead>
+                  <TableHead className="text-right">价格</TableHead>
+                  <TableHead>订单类型</TableHead>
+                  <TableHead>交易产品</TableHead>
+                  <TableHead>创建时间</TableHead>
+                  <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -589,13 +587,13 @@ export default function ActionCenterPage() {
                   <TableRow>
                     <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
                       <div className="space-y-2">
-                        <p>No orders found</p>
+                        <p>暂无订单</p>
                         <p className="text-sm">
-                          Enable Semi-Auto mode in{' '}
+                          在
                           <Link to="/apikey" className="text-primary hover:underline">
-                            API Key settings
+                            API 密钥设置
                           </Link>{' '}
-                          to queue orders here
+                          中启用半自动模式后，订单将在此排队。
                         </p>
                       </div>
                     </TableCell>
@@ -629,7 +627,7 @@ export default function ActionCenterPage() {
                             ) : order.action === 'SELL' ? (
                               <ArrowDown className="h-3 w-3" />
                             ) : null}
-                            {order.action}
+                            {order.action === 'BUY' ? '买入' : order.action === 'SELL' ? '卖出' : order.action}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right font-mono">{order.quantity}</TableCell>
@@ -657,8 +655,8 @@ export default function ActionCenterPage() {
                               onClick={() => toggleExpanded(order.id)}
                               aria-label={
                                 expandedOrders.has(order.id)
-                                  ? 'Collapse order details'
-                                  : 'Expand order details'
+                                  ? '收起订单详情'
+                                  : '展开订单详情'
                               }
                             >
                               {expandedOrders.has(order.id) ? (
@@ -670,7 +668,7 @@ export default function ActionCenterPage() {
 
                             {isSending(order, readAt, now) && (
                               <Badge variant="outline" className="h-8">
-                                Sending
+                                发送中
                               </Badge>
                             )}
 
@@ -679,7 +677,7 @@ export default function ActionCenterPage() {
                                 variant="outline"
                                 className="h-8 border-amber-500 text-amber-700 dark:text-amber-400"
                               >
-                                Status unclear
+                                状态未确认
                               </Badge>
                             )}
 
@@ -731,13 +729,9 @@ export default function ActionCenterPage() {
                           <TableCell colSpan={10} className="p-2">
                             <Alert variant="warning">
                               <AlertTriangle className="h-4 w-4" />
-                              <AlertTitle>This order may still be sending</AlertTitle>
+                              <AlertTitle>此订单可能仍在发送</AlertTitle>
                               <AlertDescription>
-                                OpenAlgo has no broker answer recorded. A split or basket order can
-                                take longer than two minutes. Sending may still be in progress, or
-                                an interruption may have left its outcome unknown. Check your
-                                broker's order book and refresh this page. Do not place this order
-                                again while its status is unclear.
+                                系统尚未记录券商的响应。拆分订单或篮子订单可能需要超过两分钟；订单可能仍在发送，也可能因中断而结果未知。请检查券商订单簿并刷新此页面。在状态未确认前，请勿重复下单。
                               </AlertDescription>
                             </Alert>
                           </TableCell>
@@ -751,18 +745,18 @@ export default function ActionCenterPage() {
                             <Collapsible open={true}>
                               <CollapsibleContent>
                                 <div className="space-y-4">
-                                  <h4 className="font-semibold">Order Details</h4>
+                                  <h4 className="font-semibold">订单详情</h4>
 
                                   {/* Order Type Specific Details */}
                                   {order.api_type === 'basketorder' &&
                                   order.raw_order_data.orders ? (
                                     <div className="space-y-3">
                                       <p className="text-sm text-muted-foreground">
-                                        Basket Order with{' '}
+                                        篮子订单，共 
                                         {Array.isArray(order.raw_order_data.orders)
                                           ? order.raw_order_data.orders.length
                                           : 0}{' '}
-                                        orders
+                                        笔
                                       </p>
                                       {Array.isArray(order.raw_order_data.orders) &&
                                         order.raw_order_data.orders.map(
@@ -770,7 +764,7 @@ export default function ActionCenterPage() {
                                             <Card key={idx}>
                                               <CardContent className="p-3">
                                                 <div className="flex items-center gap-2 mb-2">
-                                                  <Badge variant="outline">Order {idx + 1}</Badge>
+                                                  <Badge variant="outline">订单 {idx + 1}</Badge>
                                                   <span className="font-medium">
                                                     {String(basketOrder.symbol || '')}
                                                   </span>
@@ -838,15 +832,15 @@ export default function ActionCenterPage() {
       <AlertDialog open={!!orderToDelete} onOpenChange={() => setOrderToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Order?</AlertDialogTitle>
+            <AlertDialogTitle>删除订单？</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this order? This action cannot be undone.
+              确定删除此订单吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? '删除中…' : '删除'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

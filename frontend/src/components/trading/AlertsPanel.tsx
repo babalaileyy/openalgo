@@ -63,17 +63,17 @@ type Tab = 'alerts' | 'log'
 type Sort = 'state' | 'name' | 'recent'
 
 const SORTS: readonly { value: Sort; label: string }[] = [
-  { value: 'state', label: 'Status' },
-  { value: 'name', label: 'Name' },
-  { value: 'recent', label: 'Recently fired' },
+  { value: 'state', label: '状态' },
+  { value: 'name', label: '名称' },
+  { value: 'recent', label: '最近触发' },
 ]
 
 /** What the row says an alert is doing, in a trader's words rather than a state name. */
 const STATE_LABEL: Record<Alert['state'], string> = {
-  armed: 'Active',
-  triggered: 'Fired',
-  expired: 'Expired',
-  disabled: 'Stopped',
+  armed: '监测中',
+  triggered: '已触发',
+  expired: '已到期',
+  disabled: '已停止',
 }
 
 /**
@@ -117,12 +117,12 @@ function upperOf(alert: Alert): number | undefined {
 
 /** A sentence naming what the alert is waiting for, in the engine's own terms. */
 function conditionText(alert: Alert): string {
-  const words = alert.condition.replace(/([A-Z])/g, ' $1').toLowerCase()
+  const labels: Record<string, string> = { crossing: '穿越', crossingUp: '向上穿越', crossingDown: '向下穿越', greaterThan: '大于', lessThan: '小于', enteringRange: '进入区间', leavingRange: '离开区间' }
+  const words = labels[alert.condition] ?? alert.condition
   const level = levelOf(alert)
-  if (level === undefined) return words.charAt(0).toUpperCase() + words.slice(1)
+  if (level === undefined) return words
   const upper = upperOf(alert)
-  const bounds = upper === undefined ? String(level) : `${level} and ${upper}`
-  return `${words.charAt(0).toUpperCase()}${words.slice(1)} ${bounds}`
+  return `${words} ${level}${upper === undefined ? '' : ` 至 ${upper}`}`
 }
 
 /**
@@ -290,13 +290,13 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
   return (
     <PanelShell
       id="trading-alerts-panel"
-      label="Alerts"
+      label="提醒"
       storageKey="trading.panel.alerts.width"
       defaultWidth={340}
     >
       <div className={PANEL_HEADER}>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-[13px] font-medium">Alerts</div>
+          <div className="truncate text-[13px] font-medium">提醒</div>
           <div className="truncate text-[10px] text-muted-foreground">{paneLabel}</div>
         </div>
         {/* No New button. An alert is made where the price is, by
@@ -308,7 +308,7 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              aria-label="Alert list actions"
+              aria-label="提醒列表操作"
               disabled={view === null}
               className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
             >
@@ -322,7 +322,7 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
                 for (const alert of alerts) view?.alerts.enable(alert.id)
               }}
             >
-              Start all
+              全部启用
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled={!view || armedCount === 0}
@@ -330,7 +330,7 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
                 for (const alert of alerts) view?.alerts.disable(alert.id)
               }}
             >
-              Stop all
+              全部停止
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -340,21 +340,21 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
                 for (const alert of alerts) view?.alerts.remove(alert.id)
               }}
             >
-              Remove all alerts
+              移除全部提醒
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      <div role="tablist" aria-label="Alerts and log" className="flex shrink-0 gap-1 border-b px-2">
+      <div role="tablist" aria-label="提醒与记录" className="flex shrink-0 gap-1 border-b px-2">
         <TabButton
-          label="Alerts"
+          label="提醒"
           count={alerts.length}
           active={tab === 'alerts'}
           onClick={() => setTab('alerts')}
         />
         <TabButton
-          label="Log"
+          label="触发记录"
           count={log.length}
           active={tab === 'log'}
           onClick={() => setTab('log')}
@@ -366,15 +366,15 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder={tab === 'alerts' ? 'Search alerts' : 'Search log'}
-          aria-label={tab === 'alerts' ? 'Search alerts' : 'Search log'}
+          placeholder={tab === 'alerts' ? '搜索提醒' : '搜索触发记录'}
+          aria-label={tab === 'alerts' ? '搜索提醒' : '搜索触发记录'}
           className="h-8 min-w-0 flex-1 rounded-md border border-input bg-background px-2.5 text-xs outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
         />
         {tab === 'alerts' && (
           <select
             value={sort}
             onChange={(event) => setSort(event.target.value as Sort)}
-            aria-label="Sort alerts"
+            aria-label="提醒排序"
             className="h-8 shrink-0 rounded-md border border-input bg-background px-1.5 text-[11px] outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
             {SORTS.map((one) => (
@@ -395,7 +395,7 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
             className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md border border-input px-2 text-[11px] leading-none text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
           >
             <Eraser className="h-3 w-3" strokeWidth={1.5} />
-            Clear
+            清空
           </button>
         )}
       </div>
@@ -411,8 +411,8 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
               <Bell className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
               <p className="max-w-[17rem] text-xs leading-relaxed text-muted-foreground">
                 {alerts.length === 0
-                  ? 'No alerts on this chart yet. Right-click the chart at a price to set one there and then, or use Alerts on the toolbar for one that needs a condition the defaults do not give it.'
-                  : 'No alert matches that search.'}
+                  ? '当前图表暂无提醒。可在图表价格处点击右键设置，或使用工具栏的提醒功能设置其他条件。'
+                  : '没有找到匹配的提醒。'}
               </p>
             </div>
           ) : (
@@ -469,7 +469,7 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
                 </div>
                 <RowAction
                   label={
-                    alert.state === 'disabled' ? `Start ${alert.title}` : `Stop ${alert.title}`
+                    alert.state === 'disabled' ? `启用 ${alert.title}` : `停止 ${alert.title}`
                   }
                   onClick={() =>
                     alert.state === 'disabled'
@@ -483,11 +483,11 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
                     <Pause className="h-3.5 w-3.5" strokeWidth={1.5} />
                   )}
                 </RowAction>
-                <RowAction label={`Edit ${alert.title}`} onClick={() => onEdit(alert.id)}>
+                <RowAction label={`编辑 ${alert.title}`} onClick={() => onEdit(alert.id)}>
                   <Settings2 className="h-3.5 w-3.5" strokeWidth={1.5} />
                 </RowAction>
                 <RowAction
-                  label={`Delete ${alert.title}`}
+                  label={`删除 ${alert.title}`}
                   danger
                   onClick={() => view.alerts.remove(alert.id)}
                 >
@@ -501,8 +501,8 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
             <Bell className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
             <p className="max-w-[17rem] text-xs leading-relaxed text-muted-foreground">
               {log.length === 0
-                ? 'Nothing has fired yet. Alerts are evaluated by the chart that is open, so one only fires while /trading is running. What fires is kept here afterwards.'
-                : 'No firing matches that search.'}
+                ? '暂无触发记录。提醒由当前打开的图表判断，仅在交易终端运行时触发，触发后记录会保留在这里。'
+                : '没有找到匹配的触发记录。'}
             </p>
           </div>
         ) : (
@@ -527,7 +527,7 @@ export function AlertsPanel({ view, log, paneLabel, onEdit, onClearLog, revision
                 )}
                 {fire.price !== undefined && (
                   <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
-                    at {fire.price}
+                    价格 {fire.price}
                   </span>
                 )}
                 {/*

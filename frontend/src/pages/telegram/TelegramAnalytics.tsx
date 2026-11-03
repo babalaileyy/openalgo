@@ -67,7 +67,7 @@ export default function TelegramAnalytics() {
   if (!analytics) {
     return (
       <div className="flex items-center justify-center py-16">
-        <p className="text-muted-foreground">Failed to load analytics data</p>
+        <p className="text-muted-foreground">加载分析数据失败</p>
       </div>
     )
   }
@@ -89,13 +89,9 @@ export default function TelegramAnalytics() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <BarChart3 className="h-6 w-6" />
-            Bot Analytics
-          </h1>
+            <BarChart3 className="h-6 w-6" />机器人分析</h1>
         </div>
-        <p className="text-muted-foreground">
-          View usage statistics and trends for your Telegram bot
-        </p>
+        <p className="text-muted-foreground">查看 Telegram 机器人的使用统计和趋势</p>
       </div>
 
       {/* Overview Stats */}
@@ -108,7 +104,7 @@ export default function TelegramAnalytics() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{analytics.total_users}</p>
-                <p className="text-sm text-muted-foreground">Total Users</p>
+                <p className="text-sm text-muted-foreground">用户总数</p>
               </div>
             </div>
           </CardContent>
@@ -121,7 +117,7 @@ export default function TelegramAnalytics() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{analytics.active_users}</p>
-                <p className="text-sm text-muted-foreground">Active Users</p>
+                <p className="text-sm text-muted-foreground">活跃用户</p>
               </div>
             </div>
           </CardContent>
@@ -167,9 +163,7 @@ export default function TelegramAnalytics() {
           </CardHeader>
           <CardContent>
             {safeStats7d.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">
-                No command data for the last 7 days
-              </p>
+              <p className="text-center text-muted-foreground py-8">过去 7 天没有命令数据</p>
             ) : (
               <div className="space-y-3">
                 {safeStats7d.map((stat) => (
@@ -207,9 +201,7 @@ export default function TelegramAnalytics() {
           </CardHeader>
           <CardContent>
             {safeStats30d.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">
-                No command data for the last 30 days
-              </p>
+              <p className="text-center text-muted-foreground py-8">过去 30 天没有命令数据</p>
             ) : (
               <div className="space-y-3">
                 {safeStats30d.map((stat) => (
@@ -239,27 +231,25 @@ export default function TelegramAnalytics() {
       {/* User Activity */}
       <Card>
         <CardHeader>
-          <CardTitle>User Activity</CardTitle>
-          <CardDescription>Recent user activity overview</CardDescription>
+          <CardTitle>用户活动</CardTitle>
+          <CardDescription>最近用户活动概览</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="border rounded-md">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>OpenAlgo Account</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead>Last Active</TableHead>
+                  <TableHead>用户</TableHead>
+                  <TableHead>OpenAlgo 账户</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead>加入时间</TableHead>
+                  <TableHead>最近活跃</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {safeUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                      No users registered yet
-                    </TableCell>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">尚无已注册用户</TableCell>
                   </TableRow>
                 ) : (
                   safeUsers.slice(0, 10).map((user: TelegramUser) => (
@@ -282,9 +272,9 @@ export default function TelegramAnalytics() {
                       </TableCell>
                       <TableCell>
                         {user.notifications_enabled ? (
-                          <Badge className="bg-green-500 hover:bg-green-600">Active</Badge>
+                          <Badge className="bg-green-500 hover:bg-green-600">活跃</Badge>
                         ) : (
-                          <Badge variant="secondary">Inactive</Badge>
+                          <Badge variant="secondary">不活跃</Badge>
                         )}
                       </TableCell>
                       <TableCell className="text-sm">{formatDate(user.created_at)}</TableCell>

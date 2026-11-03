@@ -38,8 +38,8 @@ export const VarConditionNode = memo(({ data, selected }: VarConditionNodeProps)
             <SlidersHorizontal className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Var</div>
-            <div className="text-[9px] text-muted-foreground">Condition</div>
+            <div className="text-xs font-medium leading-tight">变量</div>
+            <div className="text-[9px] text-muted-foreground">条件</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1 text-center">
@@ -56,8 +56,8 @@ export const VarConditionNode = memo(({ data, selected }: VarConditionNodeProps)
           </span>
         </div>
         <div className="mt-2 flex justify-between px-1 text-[8px]">
-          <span className="text-buy">True</span>
-          <span className="text-sell">False</span>
+          <span className="text-buy">真</span>
+          <span className="text-sell">假</span>
         </div>
       </div>
       <Handle

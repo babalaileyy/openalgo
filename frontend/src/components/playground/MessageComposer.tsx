@@ -399,7 +399,7 @@ export function MessageComposer({
           disabled={disabled || !value.trim()}
         >
           <Send className="h-3.5 w-3.5 mr-1.5" />
-          Send Message
+          发送消息
         </Button>
       </div>
     </div>

@@ -8,9 +8,9 @@ export default function Tools() {
     <div className="py-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Tools</h1>
+        <h1 className="text-2xl font-bold">工具</h1>
         <p className="text-muted-foreground mt-1">
-          Analytical tools for options trading and market analysis
+          用于期权交易与市场分析的工具
         </p>
       </div>
 
@@ -39,7 +39,7 @@ export default function Tools() {
                 <CardDescription>{tool.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-sm text-muted-foreground">Click to open {tool.title}</div>
+                <div className="text-sm text-muted-foreground">点击打开{tool.title}</div>
               </CardContent>
             </Card>
           </Link>

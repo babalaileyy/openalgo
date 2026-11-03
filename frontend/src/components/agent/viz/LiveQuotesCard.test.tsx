@@ -324,7 +324,7 @@ describe('LiveQuotesCard honesty', () => {
     expect(
       screen.getByText(/Could not read the opening quote: the broker returned no quote/)
     ).toBeInTheDocument()
-    expect(screen.getByText('No price yet')).toBeInTheDocument()
+    expect(screen.getByText('暂无价格')).toBeInTheDocument()
   })
 })
 
@@ -365,7 +365,7 @@ describe('LiveQuotesCard subscriptions', () => {
     ).toBeInTheDocument()
 
     // And the operator can take a slot rather than being stuck behind them.
-    await userEvent.click(screen.getByRole('button', { name: 'Stream this one instead' }))
+    await userEvent.click(screen.getByRole('button', { name: '改为订阅此项' }))
     expect(feed.live()).toHaveLength(MAX_LIVE_CARDS)
     expect(feed.live()).toContain(`NSE:SYM${MAX_LIVE_CARDS}:LTP`)
   })

@@ -38,78 +38,78 @@ export default function AdminIndex() {
 
   const adminCards = [
     {
-      title: 'Freeze Quantity',
-      description: 'Manage F&O freeze quantity limits for order splitting',
+      title: '单笔数量限制',
+      description: '管理期货及期权的单笔数量限制，用于拆分委托',
       icon: Snowflake,
       href: '/admin/freeze',
       count: stats?.freeze_count,
-      countLabel: 'entries',
+      countLabel: '条记录',
       color: 'bg-blue-500',
     },
     {
-      title: 'Market Holidays',
-      description: 'View and manage market holidays for all exchanges',
+      title: '市场假日',
+      description: '查看和管理所有交易所的市场假日',
       icon: Calendar,
       href: '/admin/holidays',
       count: stats?.holiday_count,
-      countLabel: 'holidays',
+      countLabel: '个假日',
       color: 'bg-green-500',
     },
     {
-      title: 'Market Timings',
-      description: 'Configure trading session timings for each exchange',
+      title: '市场交易时间',
+      description: '配置各交易所的交易时段',
       icon: Clock,
       href: '/admin/timings',
       count: 7,
-      countLabel: 'exchanges',
+      countLabel: '个交易所',
       color: 'bg-purple-500',
     },
     {
-      title: 'Security Dashboard',
-      description: 'Monitor IP bans, API abuse, and security threats',
+      title: '安全看板',
+      description: '监控 IP 封禁、API 滥用和安全威胁',
       icon: Shield,
       href: '/logs/security',
-      countLabel: 'monitoring',
+      countLabel: '监控',
       color: 'bg-red-500',
     },
     {
-      title: 'Traffic Dashboard',
-      description: 'Monitor HTTP traffic and API request logs',
+      title: '流量看板',
+      description: '监控 HTTP 流量和 API 请求日志',
       icon: Activity,
       href: '/logs/traffic',
-      countLabel: 'monitoring',
+      countLabel: '监控',
       color: 'bg-cyan-500',
     },
     {
-      title: 'Latency Dashboard',
-      description: 'Monitor order execution and API latency',
+      title: '延迟看板',
+      description: '监控委托执行及 API 延迟',
       icon: Zap,
       href: '/logs/latency',
-      countLabel: 'monitoring',
+      countLabel: '监控',
       color: 'bg-orange-500',
     },
     {
-      title: 'Diagnostics',
-      description: 'System info, errors, latency probes, and downloadable report for support',
+      title: '诊断',
+      description: '查看系统信息、错误和延迟探测，并下载支持报告',
       icon: Gauge,
       href: '/admin/diagnostics',
-      countLabel: 'troubleshoot',
+      countLabel: '故障排查',
       color: 'bg-indigo-500',
     },
     {
-      title: 'Agent Config',
-      description: 'LLM providers and models, API keys, trading switch, and web search',
+      title: '助手配置',
+      description: '配置模型服务商、API 密钥、交易开关和网页搜索',
       icon: Bot,
       href: '/agent/config',
-      countLabel: 'models and keys',
+      countLabel: '模型与密钥',
       color: 'bg-violet-500',
     },
     {
-      title: 'Remote MCP',
-      description: 'Approve OAuth clients, browse tool-call audit log, kill switch',
+      title: '远程 MCP',
+      description: '审批 OAuth 客户端、查看工具调用审计日志和紧急开关',
       icon: Globe,
       href: '/admin/remote-mcp',
-      countLabel: 'AI clients',
+      countLabel: 'AI 客户端',
       color: 'bg-teal-500',
     },
   ]
@@ -128,10 +128,10 @@ export default function AdminIndex() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Settings className="h-6 w-6" />
-          Admin Dashboard
+          管理控制台
         </h1>
         <p className="text-muted-foreground mt-1">
-          Manage system settings, market data, and configurations
+          管理系统设置、市场数据和配置
         </p>
       </div>
 
@@ -161,7 +161,7 @@ export default function AdminIndex() {
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-muted-foreground">
-                  Click to manage {card.title.toLowerCase()}
+                  点击管理{card.title}
                 </div>
               </CardContent>
             </Card>
@@ -172,24 +172,21 @@ export default function AdminIndex() {
       {/* Info Section */}
       <Card>
         <CardHeader>
-          <CardTitle>About Admin Settings</CardTitle>
+          <CardTitle>关于管理设置</CardTitle>
         </CardHeader>
         <CardContent className="prose prose-sm dark:prose-invert max-w-none">
           <p className="text-muted-foreground">
-            The admin dashboard provides tools to manage critical system configurations:
+            管理控制台提供以下重要系统配置工具：
           </p>
           <ul className="text-muted-foreground space-y-2 list-disc list-inside">
             <li>
-              <strong>Freeze Quantity:</strong> Set maximum order quantities for F&O instruments.
-              Orders exceeding these limits will be automatically split.
+              <strong>单笔数量限制：</strong> 设置期货及期权的单笔最大委托数量，超出限制的委托会自动拆分。
             </li>
             <li>
-              <strong>Market Holidays:</strong> Maintain the holiday calendar for all supported
-              exchanges (NSE, BSE, NFO, BFO, MCX, CDS, BCD).
+              <strong>市场假日：</strong> 维护所有支持交易所的假日日历（NSE、BSE、NFO、BFO、MCX、CDS、BCD）。
             </li>
             <li>
-              <strong>Market Timings:</strong> Configure trading session timings for each exchange,
-              including special sessions like Muhurat trading.
+              <strong>市场交易时间：</strong> 配置各交易所的交易时段，包括 Muhurat 等特殊交易时段。
             </li>
           </ul>
         </CardContent>

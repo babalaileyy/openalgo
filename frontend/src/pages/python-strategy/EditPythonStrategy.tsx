@@ -64,7 +64,7 @@ export default function EditPythonStrategy() {
       setCode(contentData.content || '')
       setOriginalCode(contentData.content || '')
     } catch (_error) {
-      showToast.error('Failed to load strategy', 'pythonStrategy')
+      showToast.error('加载策略失败', 'pythonStrategy')
       navigate('/python')
     } finally {
       setLoading(false)
@@ -89,12 +89,12 @@ export default function EditPythonStrategy() {
 
       if (response.status === 'success') {
         setOriginalCode(currentCode)
-        showToast.success('Strategy saved', 'pythonStrategy')
+        showToast.success('策略已保存', 'pythonStrategy')
       } else {
-        showToast.error(response.message || 'Failed to save strategy', 'pythonStrategy')
+        showToast.error(response.message || '保存策略失败', 'pythonStrategy')
       }
     } catch (_error) {
-      showToast.error('Failed to save strategy', 'pythonStrategy')
+      showToast.error('保存策略失败', 'pythonStrategy')
     } finally {
       setSaving(false)
     }
@@ -262,9 +262,7 @@ export default function EditPythonStrategy() {
           showToast.error('Save or discard changes before opening the logs', 'pythonStrategy')
         }}
       >
-        <ScrollText className="h-4 w-4 mr-2" />
-        View Logs
-      </Link>
+        <ScrollText className="h-4 w-4 mr-2" />查看日志</Link>
     </Button>
   )
 
@@ -309,13 +307,9 @@ export default function EditPythonStrategy() {
         </span>
         <span>
           {hasChanges ? (
-            <Badge variant="outline" className="text-yellow-500 border-yellow-500">
-              Unsaved Changes
-            </Badge>
+            <Badge variant="outline" className="text-yellow-500 border-yellow-500">未保存的更改</Badge>
           ) : (
-            <Badge variant="outline" className="text-green-500 border-green-500">
-              Saved
-            </Badge>
+            <Badge variant="outline" className="text-green-500 border-green-500">已保存</Badge>
           )}
         </span>
       </div>
@@ -327,9 +321,7 @@ export default function EditPythonStrategy() {
       {/* Back Button */}
       <Button variant="ghost" asChild>
         <Link to="/python">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Python Strategies
-        </Link>
+          <ArrowLeft className="h-4 w-4 mr-2" />返回 Python 策略</Link>
       </Button>
 
       {/* Header */}
@@ -337,7 +329,7 @@ export default function EditPythonStrategy() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
             {isRunning ? 'View' : 'Edit'} Strategy
-            {isRunning && <Badge className="bg-green-500">Running</Badge>}
+            {isRunning && <Badge className="bg-green-500">运行中</Badge>}
           </h1>
           <p className="text-muted-foreground flex items-center gap-2">
             <FileCode className="h-4 w-4" />
@@ -353,23 +345,15 @@ export default function EditPythonStrategy() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
+                <Download className="h-4 w-4 mr-2" />导出</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => handleExport('saved')}>
-                Saved Version
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('current')}>
-                Current Content
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('saved')}>已保存版本</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('current')}>当前内容</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Button variant="outline" size="sm" onClick={handleReset} disabled={!hasChanges}>
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Reset
-          </Button>
+            <RotateCcw className="h-4 w-4 mr-2" />重置</Button>
           <Button
             size="sm"
             onClick={handleSave}
@@ -386,10 +370,7 @@ export default function EditPythonStrategy() {
       {isRunning && (
         <Alert>
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            This strategy is currently running. The editor is in read-only mode. Stop the strategy
-            to make changes.
-          </AlertDescription>
+          <AlertDescription>策略当前正在运行，编辑器为只读模式。请先停止策略再修改。</AlertDescription>
         </Alert>
       )}
 
@@ -420,7 +401,7 @@ export default function EditPythonStrategy() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center justify-between">
-            <span>Code Editor</span>
+            <span>代码编辑器</span>
             <span className="font-normal text-xs text-muted-foreground">
               Ctrl+S to save • F11 for fullscreen • Tab to indent
             </span>
@@ -432,22 +413,18 @@ export default function EditPythonStrategy() {
       {/* Keyboard Shortcuts */}
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Keyboard Shortcuts</CardTitle>
+          <CardTitle className="text-sm">快捷键</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
-              <kbd className="px-2 py-1 bg-muted rounded">Ctrl+S</kbd> Save
-            </div>
+              <kbd className="px-2 py-1 bg-muted rounded">Ctrl+S</kbd>保存</div>
             <div>
-              <kbd className="px-2 py-1 bg-muted rounded">Tab</kbd> Indent
-            </div>
+              <kbd className="px-2 py-1 bg-muted rounded">Tab</kbd>缩进</div>
             <div>
-              <kbd className="px-2 py-1 bg-muted rounded">Shift+Tab</kbd> Unindent
-            </div>
+              <kbd className="px-2 py-1 bg-muted rounded">Shift+Tab</kbd>取消缩进</div>
             <div>
-              <kbd className="px-2 py-1 bg-muted rounded">F11</kbd> Fullscreen
-            </div>
+              <kbd className="px-2 py-1 bg-muted rounded">F11</kbd>全屏</div>
           </div>
         </CardContent>
       </Card>

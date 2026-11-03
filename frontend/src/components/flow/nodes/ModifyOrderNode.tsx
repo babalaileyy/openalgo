@@ -24,26 +24,26 @@ export const ModifyOrderNode = memo(({ data, selected }: ModifyOrderNodeProps) =
             <Pencil className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Modify Order</div>
-            <div className="text-[9px] text-muted-foreground">Edit order</div>
+            <div className="text-xs font-medium leading-tight">修改订单</div>
+            <div className="text-[9px] text-muted-foreground">修改订单</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Order ID</span>
+            <span className="text-[10px] text-muted-foreground">订单号</span>
             <span className="mono-data text-[10px] font-medium">
               {data.orderId ? `...${data.orderId.slice(-6)}` : 'Variable'}
             </span>
           </div>
           {data.newPrice && (
             <div className="flex items-center justify-between text-[9px] text-muted-foreground">
-              <span>New Price</span>
+              <span>新价格</span>
               <span className="mono-data">{data.newPrice}</span>
             </div>
           )}
           {data.newQuantity && (
             <div className="flex items-center justify-between text-[9px] text-muted-foreground">
-              <span>New Qty</span>
+              <span>新数量</span>
               <span className="mono-data">{data.newQuantity}</span>
             </div>
           )}

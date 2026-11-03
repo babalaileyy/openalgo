@@ -100,7 +100,7 @@ describe('what the trader is told', () => {
   })
 
   it('says the size is the trader own when it comes from an input', () => {
-    expect(quantityNote({ kind: 'input', key: 'q', units: 3 })).toMatch(/you choose/i)
+    expect(quantityNote({ kind: 'input', key: 'q', units: 3 })).toMatch(/由您设置/)
   })
 
   it('never puts a code or a field name in front of a trader', () => {
@@ -112,7 +112,7 @@ describe('what the trader is told', () => {
     ]) {
       const note = quantityNote(quantity)
       expect(note).not.toMatch(/OS\d{4}|meta\.|qtyType|undefined|null/)
-      expect(note.endsWith('.')).toBe(true)
+      expect(note.endsWith('。')).toBe(true)
     }
   })
 })

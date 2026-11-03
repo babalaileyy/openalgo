@@ -41,8 +41,8 @@ interface Props {
 }
 
 const TITLE: Record<BoxChartType, string> = {
-  renko: 'Renko settings',
-  'point-figure': 'Point & Figure settings',
+  renko: 'Renko（砖形图）设置',
+  'point-figure': 'Point & Figure（点数图）设置',
 }
 
 /** The percent presets each type offers. */
@@ -58,10 +58,10 @@ const COLOR_ROWS: Record<BoxChartType, string[]> = {
 }
 
 const MODES: { value: Mode; label: string }[] = [
-  { value: 'fixed', label: 'Absolute' },
-  { value: 'percent', label: 'Percent' },
-  { value: 'atr', label: 'ATR' },
-  { value: 'atrPercent', label: 'ATR %' },
+  { value: 'fixed', label: '绝对值' },
+  { value: 'percent', label: '百分比' },
+  { value: 'atr', label: 'ATR（平均真实波幅）' },
+  { value: 'atrPercent', label: 'ATR（平均真实波幅）百分比' },
 ]
 
 /** The option the size box edits in each mode: ATR % is a percent of the ATR, so it shares the percent. */
@@ -85,11 +85,11 @@ const asText = (v: Value | undefined) => (v === undefined ? '' : String(v))
 function sizeProblem(mode: Mode, text: string): string | null {
   const trimmed = text.trim()
   const n = trimmed === '' && mode === 'fixed' ? 0 : Number(trimmed)
-  if (trimmed === '' && mode !== 'fixed') return 'Enter a number above 0'
+  if (trimmed === '' && mode !== 'fixed') return '请输入大于 0 的数值'
   if (!Number.isFinite(n))
-    return mode === 'fixed' ? 'Enter 0 or a positive number' : 'Enter a number above 0'
+    return mode === 'fixed' ? '请输入 0 或正数' : '请输入大于 0 的数值'
   if (mode === 'fixed' ? n < 0 : n <= 0)
-    return mode === 'fixed' ? 'Enter 0 or a positive number' : 'Enter a number above 0'
+    return mode === 'fixed' ? '请输入 0 或正数' : '请输入大于 0 的数值'
   return null
 }
 
@@ -97,7 +97,7 @@ function lengthProblem(text: string): string | null {
   const n = Number(text.trim())
   return text.trim() !== '' && Number.isInteger(n) && n >= 1
     ? null
-    : 'Enter a whole number, 1 or more'
+    : '请输入大于或等于 1 的整数'
 }
 
 export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
@@ -267,7 +267,7 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="关闭"
             className="-mr-1 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <svg
@@ -318,7 +318,7 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
             </fieldset>
 
             <label htmlFor={`${id}-size`} className="text-[13px] text-muted-foreground">
-              Size
+              大小
             </label>
             <div className="flex min-w-0 items-center gap-1.5">
               <input
@@ -326,8 +326,8 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
                 type="text"
                 inputMode="decimal"
                 value={sizeText}
-                placeholder={mode === 'fixed' ? 'Auto' : ''}
-                title={mode === 'fixed' ? 'Blank or 0 sizes it from the loaded history' : undefined}
+                placeholder={mode === 'fixed' ? '自动' : ''}
+                title={mode === 'fixed' ? '留空或输入 0 时根据已加载的历史数据自动计算' : undefined}
                 onChange={(e) => typeSize(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && apply()}
                 aria-invalid={sizeError ? true : undefined}
@@ -343,7 +343,7 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
             {error(`${id}-size`, sizeError)}
 
             <label htmlFor={`${id}-mode`} className="text-[13px] text-muted-foreground">
-              Measured as
+              计算方式
             </label>
             <Select id={`${id}-mode`} value={mode} onChange={(v) => chooseMode(v as Mode)}>
               {MODES.map((m) => (
@@ -356,7 +356,7 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
             {usesAtr(mode) && (
               <>
                 <label htmlFor={`${id}-length`} className="text-[13px] text-muted-foreground">
-                  ATR length
+                  ATR（平均真实波幅）周期
                 </label>
                 <input
                   id={`${id}-length`}
@@ -377,11 +377,11 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
               </>
             )}
 
-            {heading('Construction')}
+            {heading('构造')}
             {type === 'point-figure' && (
               <>
                 <label htmlFor={`${id}-reversal`} className="text-[13px] text-muted-foreground">
-                  Reversal
+                  反转格数
                 </label>
                 <Select
                   id={`${id}-reversal`}
@@ -390,20 +390,20 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
                 >
                   {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                     <option key={n} value={n}>
-                      {n === 1 ? '1 box' : `${n} boxes`}
+                      {n === 1 ? '1 格' : `${n} 格`}
                     </option>
                   ))}
                 </Select>
               </>
             )}
             <span className="text-[13px] text-muted-foreground" id={`${id}-prices`}>
-              Prices
+              价格
             </span>
             <div className="flex flex-col gap-1" role="radiogroup" aria-labelledby={`${id}-prices`}>
               {(
                 [
-                  ['close', 'Close only'],
-                  ['hl', 'High and low'],
+                  ['close', '仅收盘价'],
+                  ['hl', '最高价和最低价'],
                 ] as const
               ).map(([value, label]) => (
                 <label key={value} className="flex items-center gap-2 text-[13px]">
@@ -429,12 +429,12 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
             onClick={reset}
             title={
               deviates
-                ? 'Restore the size, construction and colours to their defaults'
-                : 'Already at the defaults'
+                ? '将大小、构造和颜色恢复默认值'
+                : '当前已是默认值'
             }
             className="rounded px-2 py-1 text-[13px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
           >
-            Reset to defaults
+            恢复默认值
           </button>
           <div className="flex items-center gap-2">
             <button
@@ -442,14 +442,14 @@ export function BoxChartSettingsDialog({ type, req, onApply, onClose }: Props) {
               onClick={onClose}
               className="rounded border border-foreground/25 px-3.5 py-1 text-[13px] transition-colors hover:border-foreground/50 hover:bg-accent"
             >
-              Cancel
+              取消
             </button>
             <button
               type="button"
               onClick={apply}
               className="rounded bg-foreground px-5 py-1 text-[13px] font-medium text-background transition-opacity hover:opacity-90"
             >
-              Ok
+              确定
             </button>
           </div>
         </div>

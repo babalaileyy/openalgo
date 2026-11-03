@@ -20,31 +20,28 @@ export function LogoutConfirmDialog({ open, onOpenChange, onConfirm }: LogoutCon
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+          <AlertDialogTitle>确认退出登录</AlertDialogTitle>
           <AlertDialogDescription asChild>
             <div className="space-y-3">
-              <p>Are you sure you want to logout? Once logged out:</p>
+              <p>确定要退出登录吗？退出后：</p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>All automated orders and running strategies will stop working.</li>
-                <li>
-                  External signals from TradingView, ChartInk, or any other source will not be
-                  processed.
-                </li>
-                <li>Open positions will remain as-is but will not be managed automatically.</li>
+                <li>所有自动下单和运行中的策略将停止工作。</li>
+                <li>来自 TradingView、ChartInk 或其他来源的外部信号将不再处理。</li>
+                <li>未平仓头寸将保持原样，但不再受到自动管理。</li>
                 <li className="font-medium text-destructive">
-                  All devices connected to this account will be logged out immediately.
+                  连接此账户的所有设备将立即退出登录。
                 </li>
               </ul>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            Yes, Logout
+            确认退出
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

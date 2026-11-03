@@ -15,134 +15,134 @@ export interface Tool {
 
 export const tools: Tool[] = [
   {
-    title: 'Strategy Builder',
+    title: '期权策略构建器',
     description:
-      'Build multi-leg option strategies with live Greeks, payoff diagram and what-if simulators',
+      '构建多腿期权策略，查看实时希腊值、损益图及情景模拟',
     href: '/strategybuilder',
     color: 'bg-fuchsia-500',
   },
   {
-    title: 'Strategy Portfolio',
-    description: 'Saved strategies across MyTrades and Simulation watchlists',
+    title: '策略组合',
+    description: '查看交易和模拟自选列表中保存的策略',
     href: '/strategybuilder/portfolio',
     color: 'bg-violet-500',
   },
   {
-    title: 'Portfolio Backtester',
+    title: '投资组合回测',
     description:
-      'Backtest a weighted portfolio against an index with real delivery costs, rebalancing rules, crisis periods and a full tearsheet',
+      '对照指数回测加权投资组合，涵盖实际交割成本、再平衡规则、危机时段和完整分析报告',
     href: '/portfolio-backtester',
     color: 'bg-emerald-500',
   },
   {
-    title: 'SIP Backtester',
+    title: '定投回测',
     description:
-      'What a monthly, weekly or quarterly SIP would actually have returned: XIRR, rupee-cost averaging, start-date sensitivity and how it compares with a lumpsum',
+      '回测每月、每周或每季度定投的收益，比较 XIRR、成本摊平、起投日期影响及一次性投入',
     href: '/sip-backtester',
     color: 'bg-emerald-500',
   },
   {
-    title: 'Portfolio Analyzer',
+    title: '投资组合分析',
     description:
-      'Grade the holdings you actually own: concentration, co-movement, drawdown resilience and behaviour in past crises',
+      '分析实际持仓的集中度、相关走势、抗回撤能力及历史危机表现',
     href: '/portfolio-analyzer',
     color: 'bg-sky-500',
   },
   {
-    title: 'Sector Rotation',
+    title: '板块轮动',
     description:
-      'Which NSE sectors, stocks and indices are leading, weakening, lagging or improving against a benchmark, with daily or weekly trails',
+      '对照基准分析 NSE 板块、股票和指数的领先、转弱、落后与改善走势，支持日线或周线轨迹',
     href: '/sector-rotation',
     color: 'bg-cyan-500',
   },
   {
-    title: 'Option Chain',
-    description: 'Real-time option chain with live Greeks, OI data, and quick order placement',
+    title: '期权链',
+    description: '实时期权链，提供希腊值、持仓量数据和快捷下单',
     href: '/optionchain',
     color: 'bg-emerald-500',
   },
   {
-    title: 'Option Greeks',
-    description: 'Historical IV, Delta, Theta, Vega, and Gamma charts for ATM options',
+    title: '期权希腊值',
+    description: '查看平值期权的历史隐含波动率及 Delta、Theta、Vega、Gamma 图表',
     href: '/ivchart',
     color: 'bg-violet-500',
   },
   {
-    title: 'OI Tracker',
-    description: 'Open Interest analysis with CE/PE OI bars, PCR overlay, and ATM strike marker',
+    title: '持仓量追踪',
+    description: '分析看涨／看跌期权持仓量，叠加看跌看涨比并标记平值行权价',
     href: '/oitracker',
     color: 'bg-blue-500',
   },
   {
-    title: 'OI Range',
+    title: '持仓量区间',
     description:
-      'Open Interest by strike for a custom range with ATM-relative quick selectors and optional 1-minute auto-refresh',
+      '按自定义行权价区间分析持仓量，支持按平值行权价快速选择及每分钟自动刷新',
     href: '/oirange',
     color: 'bg-sky-500',
   },
   {
-    title: 'Max Pain',
-    description: 'Max Pain strike calculation with visual pain distribution across strikes',
+    title: '最大痛点',
+    description: '计算最大痛点行权价，并展示各行权价的损失分布',
     href: '/maxpain',
     color: 'bg-amber-500',
   },
   {
-    title: 'Straddle Chart',
+    title: '跨式策略图表',
     description:
-      'Dynamic ATM Straddle chart with rolling strike, Spot, and Synthetic Futures overlay',
+      '动态平值跨式策略图表，支持滚动行权价及叠加现货和合成期货',
     href: '/straddle',
     color: 'bg-teal-500',
   },
   {
-    title: 'Straddle PnL',
+    title: '跨式策略盈亏',
     description:
-      'Simulated intraday ATM straddle P&L with automated N-point adjustments and trade log',
+      '模拟日内平值跨式策略盈亏，支持按设定点数自动调整并记录交易',
     href: '/straddlepnl',
     color: 'bg-orange-500',
   },
   {
-    title: 'Vol Surface',
+    title: '波动率曲面',
     description:
-      '3D Implied Volatility surface across strikes and expiries using live option chain data',
+      '根据实时期权链绘制不同行权价和到期日的三维隐含波动率曲面',
     href: '/volsurface',
     color: 'bg-rose-500',
   },
   {
-    title: 'GEX Dashboard',
-    description: 'Gamma Exposure analysis with OI Walls, Net GEX per strike, and top gamma strikes',
+    title: '伽马敞口分析',
+    description: '分析伽马敞口，包括持仓量墙、各行权价净伽马敞口和主要伽马行权价',
     href: '/gex',
     color: 'bg-indigo-500',
   },
   {
-    title: 'Strike Profile',
+    title: '行权价分布',
     description:
-      'GEX and DEX heatmap by strike and expiry with per-expiry peaks, gamma flip, call and put walls',
+      '按行权价和到期日展示伽马与德尔塔敞口热力图、到期峰值、伽马翻转点及看涨／看跌持仓墙',
     href: '/strikeprofile',
     color: 'bg-blue-600',
   },
   {
-    title: 'Gamma Density',
+    title: '伽马密度',
     description:
-      'Γ×OI density and convexity zones with intraday & to-expiry views, ATM IV, and ±1σ/±2σ expected-move bands',
+      '展示伽马乘持仓量密度和凸性区域，支持日内及到期视图、平值隐含波动率和预期波动区间',
     href: '/gammadensity',
     color: 'bg-lime-500',
   },
   {
-    title: 'IV Smile',
-    description: 'Implied Volatility smile with Call/Put IV curves, ATM IV, and skew analysis',
+    title: '隐含波动率微笑',
+    description: '查看看涨／看跌期权隐含波动率曲线、平值波动率及偏斜分析',
     href: '/ivsmile',
     color: 'bg-cyan-500',
   },
   {
-    title: 'OI Profile',
-    description: 'Futures candlestick with OI butterfly and daily OI change across strikes',
+    title: '持仓量分布',
+    description: '展示期货 K 线、持仓量蝶形图及各行权价每日持仓量变化',
     href: '/oiprofile',
     color: 'bg-orange-500',
   },
   {
-    title: 'Arbitrage',
+    title: '套利扫描',
     description:
-      'Realtime futures calendar-spread scanner across NFO & MCX, ranked by executable bid/ask spread % with one-click two-leg orders',
+      '实时扫描 NFO 和 MCX 期货跨期价差，按可成交买卖价差百分比排序，支持一键双腿下单',
     href: '/arbitrage',
     color: 'bg-green-600',
   },

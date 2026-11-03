@@ -31,12 +31,12 @@ export const NotGateNode = memo(({ selected }: NotGateNodeProps) => {
           </div>
         </div>
         <div className="rounded bg-muted/50 px-2 py-1 text-center">
-          <div className="text-[9px] text-muted-foreground">Inverts condition</div>
+          <div className="text-[9px] text-muted-foreground">条件取反</div>
         </div>
         {/* Handle labels */}
         <div className="mt-2 flex justify-between px-1 text-[8px]">
-          <span className="text-buy">Yes</span>
-          <span className="text-sell">No</span>
+          <span className="text-buy">是</span>
+          <span className="text-sell">否</span>
         </div>
       </div>
       {/* Yes output (left) */}

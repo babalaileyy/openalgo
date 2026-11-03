@@ -19,8 +19,8 @@ describe('OrderPriceFields', () => {
       />
     )
 
-    expect(Boolean(screen.queryByLabelText('Price'))).toBe(hasPrice)
-    expect(Boolean(screen.queryByLabelText('Trigger Price'))).toBe(hasTrigger)
+    expect(Boolean(screen.queryByLabelText('委托价格'))).toBe(hasPrice)
+    expect(Boolean(screen.queryByLabelText('触发价格'))).toBe(hasTrigger)
   })
 
   it('reports a numeric limit price', () => {
@@ -35,7 +35,7 @@ describe('OrderPriceFields', () => {
       />
     )
 
-    fireEvent.change(screen.getByLabelText('Price'), { target: { value: '125.5' } })
+    fireEvent.change(screen.getByLabelText('委托价格'), { target: { value: '125.5' } })
 
     expect(onPriceChange).toHaveBeenLastCalledWith(125.5)
   })
@@ -52,7 +52,7 @@ describe('OrderPriceFields', () => {
       />
     )
 
-    fireEvent.change(screen.getByLabelText('Trigger Price'), { target: { value: '124.5' } })
+    fireEvent.change(screen.getByLabelText('触发价格'), { target: { value: '124.5' } })
 
     expect(onTriggerPriceChange).toHaveBeenLastCalledWith(124.5)
   })
@@ -69,7 +69,7 @@ describe('OrderPriceFields', () => {
       />
     )
 
-    fireEvent.change(screen.getByLabelText('Price'), { target: { value: '' } })
+    fireEvent.change(screen.getByLabelText('委托价格'), { target: { value: '' } })
 
     expect(onPriceChange).toHaveBeenLastCalledWith(0)
   })

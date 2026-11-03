@@ -203,11 +203,11 @@ export default function OIProfile() {
         // only some contracts because loading the rest took too long.
         if (response.message) showToast.warning(response.message)
       } else {
-        showToast.error(response.message || 'Failed to fetch OI Profile data')
+        showToast.error(response.message || '获取持仓量分布数据失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to fetch OI Profile data'))
+      showToast.error(serverSentence(error, '获取持仓量分布数据失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -301,7 +301,7 @@ export default function OIProfile() {
         low: lows,
         close: closes,
         type: 'candlestick' as const,
-        name: profileData.futures_symbol || 'Futures',
+        name: profileData.futures_symbol || '期货',
         xaxis: 'x',
         yaxis: 'y',
         increasing: { line: { color: themeColors.increasing } },
@@ -314,11 +314,11 @@ export default function OIProfile() {
         x: ceOI,
         type: 'bar' as const,
         orientation: 'h' as const,
-        name: 'CE OI',
+        name: 'CE OI（看涨持仓量）',
         marker: { color: themeColors.ceOI },
         xaxis: 'x2',
         yaxis: 'y',
-        hovertemplate: '<b>%{y} CE</b><br>OI: %{x:,.0f}<extra></extra>',
+        hovertemplate: '<b>%{y} CE</b><br>OI（持仓量）： %{x:,.0f}<extra></extra>',
         showlegend: false,
       },
       // Column 2: PE OI (left side - negative)
@@ -327,12 +327,12 @@ export default function OIProfile() {
         x: peOI,
         type: 'bar' as const,
         orientation: 'h' as const,
-        name: 'PE OI',
+        name: 'PE OI（看跌持仓量）',
         marker: { color: themeColors.peOI },
         xaxis: 'x2',
         yaxis: 'y',
         customdata: peOIAbs,
-        hovertemplate: '<b>%{y} PE</b><br>OI: %{customdata:,.0f}<extra></extra>',
+        hovertemplate: '<b>%{y} PE</b><br>OI（持仓量）： %{customdata:,.0f}<extra></extra>',
         showlegend: false,
       },
       // Column 3: CE OI Change (right side)
@@ -341,11 +341,11 @@ export default function OIProfile() {
         x: ceOIChange,
         type: 'bar' as const,
         orientation: 'h' as const,
-        name: 'CE Change',
+        name: 'CE Change（看涨持仓量变化）',
         marker: { color: themeColors.ceChange },
         xaxis: 'x3',
         yaxis: 'y',
-        hovertemplate: '<b>%{y} CE</b><br>Change: %{x:,.0f}<extra></extra>',
+        hovertemplate: '<b>%{y} CE</b><br>Change（持仓量变化）： %{x:,.0f}<extra></extra>',
         showlegend: false,
       },
       // Column 3: PE OI Change (left side - negative)
@@ -354,12 +354,12 @@ export default function OIProfile() {
         x: peOIChange,
         type: 'bar' as const,
         orientation: 'h' as const,
-        name: 'PE Change',
+        name: 'PE Change（看跌持仓量变化）',
         marker: { color: themeColors.peChange },
         xaxis: 'x3',
         yaxis: 'y',
         customdata: peOIChangeAbs,
-        hovertemplate: '<b>%{y} PE</b><br>Change: %{customdata:,.0f}<extra></extra>',
+        hovertemplate: '<b>%{y} PE</b><br>Change（持仓量变化）： %{customdata:,.0f}<extra></extra>',
         showlegend: false,
       },
     ]
@@ -387,7 +387,7 @@ export default function OIProfile() {
             x: 0,
             xref: 'paper' as const,
             y: atmStrike,
-            text: `ATM ${atmStrike}`,
+            text: `ATM（平值行权价） ${atmStrike}`,
             showarrow: false,
             font: { color: themeColors.atmLine, size: 11 },
             xanchor: 'left' as const,
@@ -398,7 +398,7 @@ export default function OIProfile() {
 
     const layout: Partial<PlotlyTypes.Layout> = {
       title: {
-        text: `${selectedUnderlying} ${expiryLabel} - Futures with OI Profile`,
+        text: `${selectedUnderlying} ${expiryLabel} - 期货及 OI Profile（持仓量分布）`,
         font: { color: themeColors.text, size: 14 },
       },
       paper_bgcolor: themeColors.paper,
@@ -421,7 +421,7 @@ export default function OIProfile() {
         tickvals: candleTickVals,
         tickfont: { color: themeColors.text, size: 9 },
         gridcolor: themeColors.grid,
-        title: { text: 'Time', font: { color: themeColors.text, size: 11 } },
+        title: { text: '时间', font: { color: themeColors.text, size: 11 } },
         rangeslider: { visible: false },
       },
       // Column 2: Current OI
@@ -431,7 +431,7 @@ export default function OIProfile() {
         tickfont: { color: themeColors.text, size: 9 },
         gridcolor: themeColors.grid,
         title: {
-          text: 'CE <-> PE OI',
+          text: 'CE <-> PE OI（看涨与看跌持仓量）',
           font: { color: themeColors.text, size: 11 },
         },
         zeroline: true,
@@ -444,7 +444,7 @@ export default function OIProfile() {
         tickfont: { color: themeColors.text, size: 9 },
         gridcolor: themeColors.grid,
         title: {
-          text: 'CE <-> PE Change (D)',
+          text: 'CE <-> PE Change (D)（看涨与看跌持仓量日变化）',
           font: { color: themeColors.text, size: 11 },
         },
         zeroline: true,
@@ -453,7 +453,7 @@ export default function OIProfile() {
       // Shared Y-axis (price/strike)
       yaxis: {
         title: {
-          text: 'Price / Strike',
+          text: '价格 / 行权价',
           font: { color: themeColors.text, size: 11 },
         },
         tickfont: { color: themeColors.text, size: 10 },
@@ -471,12 +471,12 @@ export default function OIProfile() {
     <div className="py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">OI Profile</h1>
+        <h1 className="text-2xl font-bold">OI Profile（持仓量分布）</h1>
         <div className="flex items-center gap-3 flex-wrap">
           {/* Exchange */}
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {toolsFnoExchanges.map((ex) => (
@@ -496,15 +496,15 @@ export default function OIProfile() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -534,7 +534,7 @@ export default function OIProfile() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((e) => (
@@ -548,7 +548,7 @@ export default function OIProfile() {
           {/* Interval */}
           <Select value={selectedInterval} onValueChange={setSelectedInterval}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Interval" />
+              <SelectValue placeholder="时间周期" />
             </SelectTrigger>
             <SelectContent>
               {intervals.map((i) => (
@@ -561,7 +561,7 @@ export default function OIProfile() {
 
           {/* Refresh */}
           <Button variant="outline" size="sm" onClick={fetchProfileData} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
         </div>
       </div>
@@ -570,24 +570,24 @@ export default function OIProfile() {
       {profileData && profileData.status === 'success' && (
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Spot: {profileData.spot_price?.toFixed(1)}
+            现货价：{profileData.spot_price?.toFixed(1)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            ATM: {profileData.atm_strike}
+            ATM（平值行权价）：{profileData.atm_strike}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Lot Size: {profileData.lot_size}
+            每手数量：{profileData.lot_size}
           </Badge>
           {profileData.futures_symbol && (
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              Futures: {profileData.futures_symbol}
+              期货：{profileData.futures_symbol}
             </Badge>
           )}
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Interval: {profileData.interval}
+            时间周期：{profileData.interval}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Candles: {profileData.candles?.length || 0}
+            K 线数量：{profileData.candles?.length || 0}
           </Badge>
         </div>
       )}
@@ -597,7 +597,7 @@ export default function OIProfile() {
         <CardContent className="p-2 sm:p-4">
           {isLoading && !profileData ? (
             <div className="flex items-center justify-center h-[700px] text-muted-foreground">
-              Loading OI Profile data...
+              正在加载持仓量分布数据...
             </div>
           ) : profilePlot.data.length > 0 ? (
             <Plot
@@ -610,8 +610,8 @@ export default function OIProfile() {
           ) : (
             <div className="flex items-center justify-center h-[700px] text-muted-foreground">
               {selectedExpiry
-                ? 'No data available'
-                : 'Select an underlying and expiry to view OI Profile'}
+                ? '暂无数据'
+                : '请选择标的和到期日以查看持仓量分布'}
             </div>
           )}
         </CardContent>

@@ -61,7 +61,7 @@ export default function ViewChartinkStrategy() {
       setStrategy(data.strategy)
       setMappings(data.mappings || [])
     } catch (_error) {
-      showToast.error('Failed to load strategy', 'chartink')
+      showToast.error('加载策略失败', 'chartink')
       navigate('/chartink')
     } finally {
       setLoading(false)
@@ -97,10 +97,10 @@ export default function ViewChartinkStrategy() {
     try {
       await navigator.clipboard.writeText(text)
       setCopiedField(field)
-      showToast.success('Copied to clipboard', 'clipboard')
+      showToast.success('已复制到剪贴板', 'clipboard')
       setTimeout(() => setCopiedField(null), 2000)
     } catch {
-      showToast.error('Failed to copy', 'clipboard')
+      showToast.error('复制失败', 'clipboard')
     }
   }
 
@@ -116,10 +116,10 @@ export default function ViewChartinkStrategy() {
           'chartink'
         )
       } else {
-        showToast.error(response.message || 'Failed to toggle strategy', 'chartink')
+        showToast.error(response.message || '切换策略状态失败', 'chartink')
       }
     } catch (_error) {
-      showToast.error('Failed to toggle strategy', 'chartink')
+      showToast.error('切换策略状态失败', 'chartink')
     } finally {
       setToggling(false)
     }
@@ -134,10 +134,10 @@ export default function ViewChartinkStrategy() {
         showToast.success('Strategy deleted successfully', 'chartink')
         navigate('/chartink')
       } else {
-        showToast.error(response.message || 'Failed to delete strategy', 'chartink')
+        showToast.error(response.message || '删除策略失败', 'chartink')
       }
     } catch (_error) {
-      showToast.error('Failed to delete strategy', 'chartink')
+      showToast.error('删除策略失败', 'chartink')
     } finally {
       setDeleting(false)
       setDeleteDialogOpen(false)
@@ -152,10 +152,10 @@ export default function ViewChartinkStrategy() {
         setMappings(mappings.filter((m) => m.id !== mappingId))
         showToast.success('Symbol mapping deleted', 'chartink')
       } else {
-        showToast.error(response.message || 'Failed to delete mapping', 'chartink')
+        showToast.error(response.message || '删除映射失败', 'chartink')
       }
     } catch (_error) {
-      showToast.error('Failed to delete mapping', 'chartink')
+      showToast.error('删除映射失败', 'chartink')
     }
   }
 
@@ -182,9 +182,7 @@ export default function ViewChartinkStrategy() {
       {/* Back Button */}
       <Button variant="ghost" asChild>
         <Link to="/chartink">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Chartink Strategies
-        </Link>
+          <ArrowLeft className="h-4 w-4 mr-2" />返回 Chartink 策略</Link>
       </Button>
 
       {/* Header */}
@@ -211,7 +209,7 @@ export default function ViewChartinkStrategy() {
           </Button>
           <Button variant="destructive" onClick={() => setDeleteDialogOpen(true)}>
             <Trash2 className="h-4 w-4 mr-2" />
-            Delete
+            删除
           </Button>
         </div>
       </div>
@@ -220,30 +218,30 @@ export default function ViewChartinkStrategy() {
         {/* Strategy Details */}
         <Card>
           <CardHeader>
-            <CardTitle>Strategy Details</CardTitle>
-            <CardDescription>Configuration and settings</CardDescription>
+            <CardTitle>策略详情</CardTitle>
+            <CardDescription>配置与设置</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Status</p>
+                <p className="text-sm text-muted-foreground">状态</p>
                 <Badge variant={strategy.is_active ? 'default' : 'secondary'} className="mt-1">
                   {strategy.is_active ? 'Active' : 'Inactive'}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Type</p>
+                <p className="text-sm text-muted-foreground">类型</p>
                 <Badge variant="outline" className="mt-1">
                   {strategy.is_intraday ? 'Intraday' : 'Positional'}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Exchanges</p>
-                <p className="mt-1">NSE, BSE only</p>
+                <p className="text-sm text-muted-foreground">交易所</p>
+                <p className="mt-1">仅限 NSE、BSE</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Products</p>
-                <p className="mt-1">MIS, CNC only</p>
+                <p className="text-sm text-muted-foreground">产品类型</p>
+                <p className="mt-1">仅限 MIS、CNC</p>
               </div>
             </div>
 
@@ -252,12 +250,10 @@ export default function ViewChartinkStrategy() {
                 <Separator />
                 <div>
                   <p className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
-                    <Clock className="h-4 w-4" />
-                    Trading Hours
-                  </p>
+                    <Clock className="h-4 w-4" />交易时段</p>
                   <div className="grid grid-cols-3 gap-2 text-sm">
                     <div className="p-2 bg-muted rounded">
-                      <p className="text-xs text-muted-foreground">Start</p>
+                      <p className="text-xs text-muted-foreground">开始</p>
                       <p className="font-mono">{strategy.start_time}</p>
                     </div>
                     <div className="p-2 bg-muted rounded">
@@ -265,7 +261,7 @@ export default function ViewChartinkStrategy() {
                       <p className="font-mono">{strategy.end_time}</p>
                     </div>
                     <div className="p-2 bg-muted rounded">
-                      <p className="text-xs text-muted-foreground">Square Off</p>
+                      <p className="text-xs text-muted-foreground">平仓</p>
                       <p className="font-mono">{strategy.squareoff_time}</p>
                     </div>
                   </div>
@@ -279,10 +275,8 @@ export default function ViewChartinkStrategy() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Webhook className="h-5 w-5" />
-              Webhook Configuration
-            </CardTitle>
-            <CardDescription>Use this URL in your Chartink screener</CardDescription>
+              <Webhook className="h-5 w-5" />Webhook 配置</CardTitle>
+            <CardDescription>在 Chartink 筛选器中使用此地址</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Webhook URL */}
@@ -311,12 +305,12 @@ export default function ViewChartinkStrategy() {
             <Alert>
               <Info className="h-4 w-4" />
               <AlertDescription>
-                <p className="font-medium mb-2">Chartink Setup:</p>
+                <p className="font-medium mb-2">Chartink 设置：</p>
                 <ol className="list-decimal list-inside space-y-1 text-sm">
-                  <li>Go to your Chartink screener settings</li>
-                  <li>Add this webhook URL</li>
-                  <li>Include BUY/SELL/SHORT/COVER in alert name</li>
-                  <li>Save and enable alerts</li>
+                  <li>进入 Chartink 筛选器设置</li>
+                  <li>添加此 Webhook 地址</li>
+                  <li>提醒名称中须包含 BUY / SELL / SHORT / COVER</li>
+                  <li>保存并启用提醒</li>
                 </ol>
               </AlertDescription>
             </Alert>
@@ -327,21 +321,21 @@ export default function ViewChartinkStrategy() {
       {/* Important Notes */}
       <Alert>
         <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>Important Notes</AlertTitle>
+        <AlertTitle>重要说明</AlertTitle>
         <AlertDescription>
           <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
             <li>
-              Orders are processed only when the strategy is <strong>active</strong>
+              仅当策略<strong>已启用</strong>时处理订单
             </li>
             {strategy.is_intraday && (
               <li>
-                Orders are processed only during trading hours ({strategy.start_time} -{' '}
-                {strategy.end_time})
+                仅在交易时间内处理订单（{strategy.start_time} -{' '}
+                {strategy.end_time}）
               </li>
             )}
-            <li>Chartink symbol must be configured in the mappings below</li>
-            <li>Only NSE and BSE exchanges are supported</li>
-            <li>Only MIS and CNC product types are supported</li>
+            <li>必须在下方映射中配置 Chartink 品种代码</li>
+            <li>仅支持 NSE 和 BSE 交易所</li>
+            <li>仅支持 MIS 和 CNC 产品类型</li>
           </ul>
         </AlertDescription>
       </Alert>
@@ -350,34 +344,32 @@ export default function ViewChartinkStrategy() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Symbol Mappings</CardTitle>
+            <CardTitle>品种代码映射</CardTitle>
             <CardDescription>
               Chartink symbols configured for this strategy ({mappings.length} total)
             </CardDescription>
           </div>
           <Button asChild>
             <Link to={`/chartink/${strategy.id}/configure`}>
-              <Settings className="h-4 w-4 mr-2" />
-              Configure Symbols
-            </Link>
+              <Settings className="h-4 w-4 mr-2" />配置交易品种</Link>
           </Button>
         </CardHeader>
         <CardContent>
           {mappings.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No symbols configured yet.</p>
+              <p>尚未配置交易品种。</p>
               <Button variant="link" asChild>
-                <Link to={`/chartink/${strategy.id}/configure`}>Add your first symbol</Link>
+                <Link to={`/chartink/${strategy.id}/configure`}>添加第一个交易品种</Link>
               </Button>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Chartink Symbol</TableHead>
-                  <TableHead>Exchange</TableHead>
-                  <TableHead className="text-right">Quantity</TableHead>
-                  <TableHead>Product</TableHead>
+                  <TableHead>Chartink 品种代码</TableHead>
+                  <TableHead>交易所</TableHead>
+                  <TableHead className="text-right">数量</TableHead>
+                  <TableHead>产品类型</TableHead>
                   <TableHead className="w-16"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -396,7 +388,7 @@ export default function ViewChartinkStrategy() {
                         size="icon"
                         className="text-red-500 hover:text-red-600 hover:bg-red-50"
                         onClick={() => handleDeleteMapping(mapping.id)}
-                        aria-label="Delete symbol mapping"
+                        aria-label="删除品种映射"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -413,7 +405,7 @@ export default function ViewChartinkStrategy() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Strategy</DialogTitle>
+            <DialogTitle>删除策略</DialogTitle>
             <DialogDescription>
               Are you sure you want to delete "{strategy.name}"? This action cannot be undone. All
               symbol mappings will also be deleted.
@@ -421,7 +413,7 @@ export default function ViewChartinkStrategy() {
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
               {deleting ? 'Deleting...' : 'Delete Strategy'}

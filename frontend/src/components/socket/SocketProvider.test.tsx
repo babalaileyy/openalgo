@@ -332,7 +332,7 @@ describe('Action Center on the shared connection', () => {
 
   it('opens no connection of its own', async () => {
     renderActionCenter()
-    await screen.findByText('Review and manage pending orders')
+    await screen.findByText('审核并管理待处理订单')
 
     const socket = onlySocket()
     expect(socket.listenerCount('pending_order_created')).toBe(1)
@@ -341,7 +341,7 @@ describe('Action Center on the shared connection', () => {
 
   it('still alerts and refreshes when an order is queued', async () => {
     renderActionCenter()
-    await screen.findByText('Review and manage pending orders')
+    await screen.findByText('审核并管理待处理订单')
     const socket = onlySocket()
     const fetchesBefore = http.get.mock.calls.length
 
@@ -349,7 +349,7 @@ describe('Action Center on the shared connection', () => {
       socket.fire('pending_order_created', { api_type: 'placeorder', message: 'BUY 75 NIFTY' })
     })
 
-    expect(toasts.warning).toHaveBeenCalledWith('New Order Queued: BUY 75 NIFTY', {
+    expect(toasts.warning).toHaveBeenCalledWith('新订单已进入审批队列：BUY 75 NIFTY', {
       duration: 5000,
     })
     expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalled()
@@ -358,7 +358,7 @@ describe('Action Center on the shared connection', () => {
 
   it('still refreshes when an order is approved, rejected or deleted elsewhere', async () => {
     renderActionCenter()
-    await screen.findByText('Review and manage pending orders')
+    await screen.findByText('审核并管理待处理订单')
     const socket = onlySocket()
     const fetchesBefore = http.get.mock.calls.length
 
@@ -371,7 +371,7 @@ describe('Action Center on the shared connection', () => {
 
   it('removes only its own handlers when the trader leaves, and keeps the connection', async () => {
     renderActionCenter()
-    await screen.findByText('Review and manage pending orders')
+    await screen.findByText('审核并管理待处理订单')
     const socket = onlySocket()
 
     fireEvent.click(screen.getByRole('button', { name: 'remove page' }))
@@ -385,7 +385,7 @@ describe('Action Center on the shared connection', () => {
 
   it('keeps the shared connection retrying while it is open, as its own connection did', async () => {
     renderActionCenter()
-    await screen.findByText('Review and manage pending orders')
+    await screen.findByText('审核并管理待处理订单')
     const socket = onlySocket()
 
     expect(socket.io.listenerCount('reconnect_failed')).toBe(1)
@@ -419,7 +419,7 @@ describe('WhatsApp page on the shared connection', () => {
 
   it('opens no connection of its own', async () => {
     renderWhatsApp()
-    await screen.findByText('No device linked yet')
+    await screen.findByText('尚未关联设备')
 
     const socket = onlySocket()
     for (const event of WHATSAPP_EVENTS) expect(socket.listenerCount(event)).toBe(1)
@@ -427,14 +427,14 @@ describe('WhatsApp page on the shared connection', () => {
 
   it('still shows each new pairing QR as it arrives', async () => {
     renderWhatsApp()
-    await screen.findByText('No device linked yet')
+    await screen.findByText('尚未关联设备')
     const socket = onlySocket()
 
     act(() => {
       socket.fire('whatsapp_qr', { data_url: 'data:image/png;base64,AAAA' })
     })
 
-    expect(await screen.findByAltText('WhatsApp pairing QR')).toHaveAttribute(
+    expect(await screen.findByAltText('WhatsApp 配对二维码')).toHaveAttribute(
       'src',
       'data:image/png;base64,AAAA'
     )
@@ -442,7 +442,7 @@ describe('WhatsApp page on the shared connection', () => {
 
   it('removes only its own handlers when the trader leaves, and keeps the connection', async () => {
     renderWhatsApp()
-    await screen.findByText('No device linked yet')
+    await screen.findByText('尚未关联设备')
     const socket = onlySocket()
 
     fireEvent.click(screen.getByRole('button', { name: 'remove page' }))
@@ -513,7 +513,7 @@ describe('Historify on the shared connection', () => {
       socket.fire('historify_job_cancelled', { job_id: 'j1', status: 'cancelled' })
     })
 
-    expect(toasts.info).toHaveBeenCalledWith('Job cancelled', undefined)
+    expect(toasts.info).toHaveBeenCalledWith('任务已取消', undefined)
   })
 
   it('removes only its own handlers when the trader leaves, and keeps the connection', async () => {

@@ -126,7 +126,7 @@ describe('an OpenScript interval input', () => {
     const user = userEvent.setup()
     const { onApply } = mount(request('openscript:higher-1', [FIELD], { tf: '1h' }), '5m')
     await user.selectOptions(screen.getByLabelText('Higher timeframe'), 'Chart interval (5m)')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith('openscript:higher-1', { tf: '5m' })
   })
 
@@ -134,7 +134,7 @@ describe('an OpenScript interval input', () => {
     const user = userEvent.setup()
     const { onApply } = mount(request('openscript:higher-1', [FIELD], { tf: '1h' }), '5m')
     await user.selectOptions(screen.getByLabelText('Higher timeframe'), 'D')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith('openscript:higher-1', { tf: '1D' })
   })
 
@@ -144,7 +144,7 @@ describe('an OpenScript interval input', () => {
     const user = userEvent.setup()
     const { onApply } = mount(request('openscript:higher-1', [FIELD], { tf: '' }), '5m')
     expect((screen.getByLabelText('Higher timeframe') as HTMLSelectElement).value).toBe('5m')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith('openscript:higher-1', { tf: '5m' })
   })
 })
@@ -160,7 +160,7 @@ describe('which bars a study computes on', () => {
     // same bars, so a control there changes nothing and asks a question that
     // has no answer.
     mount(request('ema-1', EMA, { length: 9, timeframe: '' }))
-    expect(screen.queryByLabelText('Compute on')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('计算依据')).not.toBeInTheDocument()
   })
 
   it('leads with Compute on when the chart transforms its bars, and hands the choice back', async () => {
@@ -169,15 +169,15 @@ describe('which bars a study computes on', () => {
       barSource: 'chart',
     })
     const labels = [...document.querySelectorAll('label, h4')].map((one) => one.textContent)
-    expect(labels).toEqual(['Compute on', 'Length', 'Timeframe'])
-    const select = screen.getByLabelText('Compute on')
+    expect(labels).toEqual(['计算依据', '周期', 'Timeframe'])
+    const select = screen.getByLabelText('计算依据')
     expect(optionsOf(select)).toEqual([
-      { label: 'Chart bars', value: 'chart' },
-      { label: 'Underlying bars', value: 'underlying' },
+      { label: '图表柱线', value: 'chart' },
+      { label: '原始柱线', value: 'underlying' },
     ])
     await userEvent.selectOptions(select, 'underlying')
     await userEvent.selectOptions(screen.getByLabelText('Timeframe'), '15m')
-    await userEvent.click(screen.getByRole('button', { name: 'Ok' }))
+    await userEvent.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith('ema-1', { length: 9, timeframe: '15m' }, 'underlying')
   })
 
@@ -186,16 +186,16 @@ describe('which bars a study computes on', () => {
       ...request('ema-1', EMA, { length: 9, timeframe: '' }),
       barSource: 'underlying',
     })
-    expect(screen.getByLabelText('Compute on')).toHaveValue('underlying')
-    await userEvent.click(screen.getByRole('button', { name: /Defaults/ }))
-    expect(screen.getByLabelText('Compute on')).toHaveValue('chart')
-    await userEvent.click(screen.getByRole('button', { name: 'Ok' }))
+    expect(screen.getByLabelText('计算依据')).toHaveValue('underlying')
+    await userEvent.click(screen.getByRole('button', { name: /恢复默认/ }))
+    expect(screen.getByLabelText('计算依据')).toHaveValue('chart')
+    await userEvent.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply.mock.calls[0]?.[2]).toBe('chart')
   })
 
   it('passes no bar source when the form did not offer one', async () => {
     const { onApply } = mount(request('ema-1', EMA, { length: 9, timeframe: '' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Ok' }))
+    await userEvent.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply.mock.calls[0]).toHaveLength(2)
   })
 })
@@ -207,7 +207,7 @@ describe('typed numbers', () => {
 
   it('says what is wrong under the box as it is typed, and keeps Ok from applying it', async () => {
     const { onApply, onClose } = mount(request('ema-1', LENGTH, { length: 14 }))
-    const box = screen.getByLabelText('Length')
+    const box = screen.getByLabelText('周期')
     fireEvent.change(box, { target: { value: '0' } })
     expect(screen.getByText('The lowest allowed is 1')).toBeVisible()
     expect(box).toHaveAttribute('aria-invalid', 'true')
@@ -217,14 +217,14 @@ describe('typed numbers', () => {
     expect(screen.getByText('Use a whole number')).toBeVisible()
     fireEvent.change(box, { target: { value: '' } })
     expect(screen.getByText('Enter a number')).toBeVisible()
-    await userEvent.click(screen.getByRole('button', { name: 'Ok' }))
+    await userEvent.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).not.toHaveBeenCalled()
     expect(onClose).not.toHaveBeenCalled()
 
     fireEvent.change(box, { target: { value: '21' } })
     expect(screen.queryByText('Enter a number')).toBeNull()
     expect(box).not.toHaveAttribute('aria-invalid')
-    await userEvent.click(screen.getByRole('button', { name: 'Ok' }))
+    await userEvent.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith('ema-1', { length: 21 })
   })
 })
@@ -257,28 +257,32 @@ describe('picking an input on the chart', () => {
         onPick={onPick}
       />
     )
-    return { onApply, onClose, onPick, cancel, answer: (value: InputPick | null) => answer?.(value) }
+    return {
+      onApply,
+      onClose,
+      onPick,
+      cancel,
+      answer: (value: InputPick | null) => answer?.(value),
+    }
   }
 
   it('offers Pick for price and time inputs only', () => {
     mountPicking()
-    expect(screen.getByRole('button', { name: 'Pick Level on the chart' })).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Pick At on the chart' })).toBeVisible()
-    expect(screen.queryByRole('button', { name: 'Pick Length on the chart' })).toBeNull()
+    expect(screen.getByRole('button', { name: '在图表上选择Level' })).toBeVisible()
+    expect(screen.getByRole('button', { name: '在图表上选择At' })).toBeVisible()
+    expect(screen.queryByRole('button', { name: '在图表上选择周期' })).toBeNull()
   })
 
   it('steps aside for the click, then fills the price and its paired time', async () => {
     const { onPick, onApply, answer } = mountPicking()
-    await userEvent.click(screen.getByRole('button', { name: 'Pick Level on the chart' }))
+    await userEvent.click(screen.getByRole('button', { name: '在图表上选择Level' }))
     expect(onPick).toHaveBeenCalledOnce()
-    expect(screen.getByRole('status')).toHaveTextContent(
-      'Click the chart to pick the price for Level'
-    )
+    expect(screen.getByRole('status')).toHaveTextContent('点击图表选择价格：Level')
     act(() => answer({ price: 24567.834, time: 1_700_000_000, clock: '2023-11-15 03:43' }))
     expect(screen.queryByRole('status')).toBeNull()
     expect(screen.getByLabelText('Level')).toHaveValue(24567.83)
     expect(screen.getByLabelText('At')).toHaveValue('2023-11-15 03:43')
-    await userEvent.click(screen.getByRole('button', { name: 'Ok' }))
+    await userEvent.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith('anchored-1', {
       level: 24567.83,
       at: '2023-11-15 03:43',
@@ -288,8 +292,8 @@ describe('picking an input on the chart', () => {
 
   it('puts the form back on Escape without closing it or changing anything', async () => {
     const { cancel, onClose } = mountPicking()
-    await userEvent.click(screen.getByRole('button', { name: 'Pick At on the chart' }))
-    expect(screen.getByRole('status')).toHaveTextContent('pick the time for At')
+    await userEvent.click(screen.getByRole('button', { name: '在图表上选择At' }))
+    expect(screen.getByRole('status')).toHaveTextContent('点击图表选择时间：At')
     fireEvent.keyDown(window, { key: 'Escape' })
     expect(cancel).toHaveBeenCalledOnce()
     expect(onClose).not.toHaveBeenCalled()

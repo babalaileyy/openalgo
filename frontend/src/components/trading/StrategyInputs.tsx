@@ -65,7 +65,7 @@ export function StrategyInputs({ declarations, edited, onChange, note }: Props) 
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Inputs</span>
+      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">输入参数</span>
 
       {groupsOf(declarations).map(([heading, group]) => (
         <Fragment key={heading}>
@@ -96,7 +96,7 @@ export function StrategyInputs({ declarations, edited, onChange, note }: Props) 
       ))}
 
       <p className="text-[10px] text-muted-foreground">
-        {note ?? "A box left empty uses the script's own default."}
+        {note ?? '留空时使用脚本默认值。'}
       </p>
     </div>
   )
@@ -129,8 +129,8 @@ function InputRow({
           onChange={(e) => onChange(one.key, e.target.value)}
           aria-describedby={helpId}
         >
-          <option value="true">true</option>
-          <option value="false">false</option>
+          <option value="true">是</option>
+          <option value="false">否</option>
         </select>
       ) : one.options && one.options.length > 0 ? (
         <select

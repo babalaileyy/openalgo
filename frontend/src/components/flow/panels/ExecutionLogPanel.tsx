@@ -45,15 +45,15 @@ export function ExecutionLogPanel({ logs, status, onClose }: ExecutionLogPanelPr
   const getStatusText = () => {
     switch (status) {
       case 'running':
-        return 'Executing...'
+        return '执行中…'
       case 'started':
-        return 'Running in background'
+        return '后台运行中'
       case 'success':
-        return 'Completed'
+        return '已完成'
       case 'error':
-        return 'Failed'
+        return '失败'
       default:
-        return 'Ready'
+        return '就绪'
     }
   }
 
@@ -88,7 +88,7 @@ export function ExecutionLogPanel({ logs, status, onClose }: ExecutionLogPanelPr
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
           {getStatusIcon()}
-          <span className="font-medium">Execution Log</span>
+          <span className="font-medium">执行日志</span>
         </div>
         <div className="flex items-center gap-2">
           <span
@@ -107,7 +107,7 @@ export function ExecutionLogPanel({ logs, status, onClose }: ExecutionLogPanelPr
             size="icon"
             className="h-7 w-7"
             onClick={onClose}
-            aria-label="Close execution log"
+            aria-label="关闭执行日志"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -120,8 +120,8 @@ export function ExecutionLogPanel({ logs, status, onClose }: ExecutionLogPanelPr
           {logs.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground text-sm">
               <Terminal className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p>No logs yet</p>
-              <p className="text-xs mt-1">Click "Run Now" to execute the workflow</p>
+              <p>暂无日志</p>
+              <p className="text-xs mt-1">点击“立即运行”执行工作流</p>
             </div>
           ) : (
             logs.map((log, index) => (
@@ -163,8 +163,8 @@ export function ExecutionLogPanel({ logs, status, onClose }: ExecutionLogPanelPr
       {logs.length > 0 && (
         <div className="border-t border-border px-4 py-2 text-xs text-muted-foreground">
           <div className="flex justify-between">
-            <span>{logs.length} log entries</span>
-            <span>{logs.filter((l) => l.level === 'error').length} errors</span>
+            <span>{logs.length} 条日志</span>
+            <span>{logs.filter((l) => l.level === 'error').length} 条错误</span>
           </div>
         </div>
       )}

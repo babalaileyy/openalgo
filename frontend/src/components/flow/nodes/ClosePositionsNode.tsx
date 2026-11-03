@@ -32,31 +32,31 @@ export const ClosePositionsNode = memo(({ data, selected }: ClosePositionsNodePr
             <div className="text-xs font-medium leading-tight">
               {hasFilter ? 'Close' : 'Close All'}
             </div>
-            <div className="text-[9px] text-muted-foreground">Positions</div>
+            <div className="text-[9px] text-muted-foreground">持仓</div>
           </div>
         </div>
         {hasFilter ? (
           <div className="space-y-1">
             <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-              <span className="text-[10px] text-muted-foreground">Symbol</span>
+              <span className="text-[10px] text-muted-foreground">交易品种</span>
               <span className="text-[10px] font-medium">{data.symbol}</span>
             </div>
             {data.exchange && (
               <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-                <span className="text-[10px] text-muted-foreground">Exchange</span>
+                <span className="text-[10px] text-muted-foreground">交易所</span>
                 <span className="text-[10px] font-medium">{data.exchange}</span>
               </div>
             )}
             {data.product && (
               <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-                <span className="text-[10px] text-muted-foreground">Product</span>
+                <span className="text-[10px] text-muted-foreground">交易产品</span>
                 <span className="text-[10px] font-medium">{data.product}</span>
               </div>
             )}
           </div>
         ) : (
           <div className="rounded bg-sell/10 px-1.5 py-1 text-center">
-            <span className="text-[9px] text-sell">Squares off all positions</span>
+            <span className="text-[9px] text-sell">平掉所有持仓</span>
           </div>
         )}
       </div>

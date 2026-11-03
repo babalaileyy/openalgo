@@ -103,8 +103,8 @@ export function buildChartLegend(input: LegendInput): LegendRun[] {
   const bar = input.bar
   if (bar) {
     const text =
-      `O ${input.fmt(bar.open)} H ${input.fmt(bar.high)} ` +
-      `L ${input.fmt(bar.low)} C ${input.fmt(bar.close)}`
+      `开 ${input.fmt(bar.open)} 高 ${input.fmt(bar.high)} ` +
+      `低 ${input.fmt(bar.low)} 收 ${input.fmt(bar.close)}`
     const tone = bar.close >= bar.open ? 'up' : 'down'
     runs.push({ text, tone })
     // Volume is absent on the transformed chart types (renko, point-and-figure),
@@ -113,7 +113,7 @@ export function buildChartLegend(input: LegendInput): LegendRun[] {
     // switch for the bars it is reading.
     if (typeof bar.volume === 'number' && Number.isFinite(bar.volume) && bar.volume >= 0) {
       runs.push({
-        text: `V ${input.fmtVolume(bar.volume)}`,
+        text: `量 ${input.fmtVolume(bar.volume)}`,
         tone,
         action: 'volume',
         dim: input.volumeHidden === true,
@@ -195,7 +195,7 @@ export function legendHtml(runs: readonly LegendRun[]): string {
         ]
           .filter(Boolean)
           .join(';')
-        const title = off ? 'Show volume' : 'Hide volume'
+        const title = off ? '显示成交量' : '隐藏成交量'
         return (
           `<span data-legend-action="${run.action}" role="button" tabindex="0"` +
           ` title="${title}" aria-label="${title}" style="${bits}"` +

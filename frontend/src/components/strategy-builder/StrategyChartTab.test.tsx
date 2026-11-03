@@ -471,7 +471,7 @@ describe('StrategyChartTab chart wiring', () => {
       await vi.advanceTimersByTimeAsync(600)
     })
 
-    expect(screen.getByText(/Add at least one active option leg/)).toBeInTheDocument()
+    expect(screen.getByText(/请至少添加一条有效期权策略腿/)).toBeInTheDocument()
     expect(mocks.getStrategyChart).not.toHaveBeenCalled()
   })
 })

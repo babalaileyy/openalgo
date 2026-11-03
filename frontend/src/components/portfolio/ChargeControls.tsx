@@ -31,15 +31,14 @@ export function ChargeControls({ value, onChange, exchange, onExchange }: Props)
   return (
     <div className="space-y-3 rounded-lg border p-3">
       <div>
-        <div className="text-sm font-semibold">Transaction costs</div>
+        <div className="text-sm font-semibold">交易成本</div>
         <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground">
-          Charged on the value actually traded at each rebalance. Edit any line to
-          match your contract note.
+          按每次再平衡的实际成交金额计费。可根据交易商的成交单修改各项费率。
         </p>
       </div>
 
       <div>
-        <Label className="text-[11px]">Exchange</Label>
+        <Label className="text-[11px]">交易所</Label>
         <div className="mt-1 flex gap-1">
           {(['NSE', 'BSE'] as const).map((ex) => (
             <button
@@ -65,7 +64,7 @@ export function ChargeControls({ value, onChange, exchange, onExchange }: Props)
       </div>
 
       <div className="space-y-2 border-t pt-2">
-        <Label className="text-[11px]">Brokerage</Label>
+        <Label className="text-[11px]">佣金</Label>
         <div className="flex gap-1">
           {(['flat', 'percent'] as const).map((m) => (
             <button
@@ -79,13 +78,13 @@ export function ChargeControls({ value, onChange, exchange, onExchange }: Props)
                   : 'hover:bg-accent'
               )}
             >
-              {m === 'flat' ? '₹ / order' : '% of order'}
+              {m === 'flat' ? '₹ / 每笔' : '委托金额的 %'}
             </button>
           ))}
         </div>
         {value.brokerageMode === 'flat' ? (
           <div className={row}>
-            <span className="text-xs text-muted-foreground">Per order (₹)</span>
+            <span className="text-xs text-muted-foreground">每笔（₹）</span>
             <Input
               type="number"
               className={num}
@@ -96,7 +95,7 @@ export function ChargeControls({ value, onChange, exchange, onExchange }: Props)
         ) : (
           <>
             <div className={row}>
-              <span className="text-xs text-muted-foreground">Rate (%)</span>
+              <span className="text-xs text-muted-foreground">费率（%）</span>
               <Input
                 type="number"
                 step="0.001"
@@ -106,7 +105,7 @@ export function ChargeControls({ value, onChange, exchange, onExchange }: Props)
               />
             </div>
             <div className={row}>
-              <span className="text-xs text-muted-foreground">Cap / order (₹)</span>
+              <span className="text-xs text-muted-foreground">每笔上限（₹）</span>
               <Input
                 type="number"
                 className={num}
@@ -117,19 +116,18 @@ export function ChargeControls({ value, onChange, exchange, onExchange }: Props)
           </>
         )}
         <p className="text-[11px] leading-tight text-muted-foreground">
-          Delivery is free at most discount brokers, set 0 for a true delivery
-          portfolio.
+          多数折扣交易商的股票交割免佣金；若组合仅包含交割交易，可设为 0。
         </p>
       </div>
 
       <div className="space-y-2 border-t pt-2">
         {[
-          ['STT (%)', 'stt', 'both legs', 0.001],
-          ['Exchange txn (%)', 'exchangeTxn', 'of turnover', 0.00001],
-          ['Stamp duty (%)', 'stampDuty', 'buy leg only', 0.001],
-          ['GST (%)', 'gst', 'on fees, not taxes', 0.1],
-          ['SEBI (₹/crore)', 'sebiPerCrore', 'of turnover', 1],
-          ['Slippage (%)', 'slippage', 'of turnover', 0.01],
+          ['STT（证券交易税 %）', 'stt', '买卖双边', 0.001],
+          ['交易所手续费（%）', 'exchangeTxn', '按成交额', 0.00001],
+          ['印花税（%）', 'stampDuty', '仅买入', 0.001],
+          ['GST（商品及服务税 %）', 'gst', '按费用计算，不含税', 0.1],
+          ['SEBI 监管费（₹ / 千万）', 'sebiPerCrore', '按成交额', 1],
+          ['滑点（%）', 'slippage', '按成交额', 0.01],
         ].map(([label, key, note, step]) => (
           <div key={key as string}>
             <div className={row}>

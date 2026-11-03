@@ -24,12 +24,12 @@ export const IntervalsNode = memo(({ data, selected }: IntervalsNodeProps) => {
             <Clock className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Intervals</div>
-            <div className="text-[9px] text-muted-foreground">Time frames</div>
+            <div className="text-xs font-medium leading-tight">时间周期</div>
+            <div className="text-[9px] text-muted-foreground">时间周期</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1 text-center">
-          <span className="text-[10px] text-muted-foreground">Fetch available intervals</span>
+          <span className="text-[10px] text-muted-foreground">获取可用周期</span>
         </div>
         {data.outputVariable && (
           <div className="mt-1 text-center text-[9px] text-muted-foreground">

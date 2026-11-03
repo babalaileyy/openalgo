@@ -128,7 +128,7 @@ describe('RegisteredModelsTable and the two GPT-5.4 rows', () => {
     chatGptStatus = { ...(chatGptStatus as ChatGptStatus), authorised: false }
     wrap(<RegisteredModelsTable />)
 
-    expect(await screen.findByText('No plan connected yet')).toBeInTheDocument()
+    expect(await screen.findByText('尚未连接套餐')).toBeInTheDocument()
     expect(screen.queryByText('No key stored')).not.toBeInTheDocument()
   })
 
@@ -139,7 +139,7 @@ describe('RegisteredModelsTable and the two GPT-5.4 rows', () => {
 
     expect(await screen.findByText('chatgpt/gpt-5.4')).toBeInTheDocument()
     expect(screen.getByText('ChatGPT plan')).toBeInTheDocument()
-    expect(screen.getByText('No plan connected yet')).toBeInTheDocument()
+    expect(screen.getByText('尚未连接套餐')).toBeInTheDocument()
   })
 
   // The route is new and an older server answers 404 for it, so a registry with

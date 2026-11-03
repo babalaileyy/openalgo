@@ -8,6 +8,7 @@ import { Handle, Position } from '@xyflow/react'
 import { Activity } from 'lucide-react'
 import { memo } from 'react'
 import { cn } from '@/lib/utils'
+import { flowIndicatorName } from '@/lib/flow/indicatorChinese'
 import type { IndicatorNodeData } from '@/types/flow'
 
 interface IndicatorNodeProps {
@@ -28,17 +29,17 @@ export const IndicatorNode = memo(({ data, selected }: IndicatorNodeProps) => {
           </div>
           <div>
             <div className="text-xs font-medium leading-tight">
-              {(data.indicatorName || 'sma').toUpperCase()}
+              {flowIndicatorName(data.indicatorName || 'sma')}
             </div>
             <div className="text-[9px] text-muted-foreground">
-              {isNested ? 'Nested' : data.interval || 'D'}
+              {isNested ? '嵌套' : data.interval || 'D'}
             </div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-muted-foreground">
-              {isNested ? 'Source' : 'Symbol'}
+              {isNested ? '来源' : '交易品种'}
             </span>
             <span className="mono-data truncate text-[10px] font-medium" style={{ maxWidth: 70 }}>
               {isNested ? data.sourceSeries : data.symbol || '-'}

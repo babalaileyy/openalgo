@@ -112,7 +112,7 @@ export function InstrumentPicker({ symbol, exchange, interval, product, onChange
       <div ref={box} className="relative col-span-2">
         <input
           className={FIELD}
-          placeholder="Instrument"
+          placeholder="交易品种"
           value={query}
           onChange={(event) => {
             setQuery(event.target.value.toUpperCase())
@@ -133,11 +133,11 @@ export function InstrumentPicker({ symbol, exchange, interval, product, onChange
         {open && query.trim().length >= 2 && (
           <div className="absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded border border-border bg-popover shadow-lg">
             {isFetching && found.length === 0 && (
-              <div className="px-2 py-1.5 text-[11px] text-muted-foreground">Searching</div>
+              <div className="px-2 py-1.5 text-[11px] text-muted-foreground">搜索中…</div>
             )}
             {!isFetching && found.length === 0 && (
               <div className="px-2 py-1.5 text-[11px] text-muted-foreground">
-                Nothing on {exchange || 'any exchange'} matching {query}
+                在{exchange || '所有交易所'}中未找到与 {query} 匹配的品种
               </div>
             )}
             {found.slice(0, 25).map((row) => (
@@ -172,7 +172,7 @@ export function InstrumentPicker({ symbol, exchange, interval, product, onChange
 
       <select
         className={cn(FIELD, 'font-mono')}
-        aria-label="Exchange"
+        aria-label="交易所"
         value={exchange}
         onChange={(event) =>
           onChange({
@@ -192,11 +192,11 @@ export function InstrumentPicker({ symbol, exchange, interval, product, onChange
 
       <select
         className={cn(FIELD, 'font-mono')}
-        aria-label="Interval"
+        aria-label="周期"
         value={interval}
         onChange={(event) => onChange({ interval: event.target.value })}
       >
-        {offered.length === 0 && <option value={interval}>{interval || 'Interval'}</option>}
+        {offered.length === 0 && <option value={interval}>{interval || '周期'}</option>}
         {offered.map((one) => (
           <option key={one} value={one}>
             {one}
@@ -206,7 +206,7 @@ export function InstrumentPicker({ symbol, exchange, interval, product, onChange
 
       <select
         className={cn(FIELD, 'col-span-2 font-mono')}
-        aria-label="Product"
+        aria-label="交易产品"
         value={product}
         onChange={(event) => onChange({ product: event.target.value })}
       >

@@ -31,18 +31,18 @@ export const MarginNode = memo(({ data, selected }: MarginNodeProps) => {
             <Calculator className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Margin Calc</div>
-            <div className="text-[9px] text-muted-foreground">Risk Check</div>
+            <div className="text-xs font-medium leading-tight">保证金计算</div>
+            <div className="text-[9px] text-muted-foreground">风险检查</div>
           </div>
         </div>
         <div className="mt-1 space-y-0.5 text-[10px]">
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Positions:</span>
+            <span className="text-muted-foreground">持仓：</span>
             <span className="mono-data font-medium">{positionCount}</span>
           </div>
           {data.outputVariable && (
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Output:</span>
+              <span className="text-muted-foreground">输出：</span>
               <span className="mono-data text-amber-500">{`{{${data.outputVariable}}}`}</span>
             </div>
           )}

@@ -230,23 +230,23 @@ export default function WhatsAppIndex() {
     <div className="container mx-auto max-w-3xl space-y-6 p-6">
       <header className="space-y-1">
         <h1 className="flex items-center gap-2 text-2xl font-bold">
-          <MessageCircle className="h-6 w-6" /> WhatsApp Bot
+          <MessageCircle className="h-6 w-6" /> WhatsApp 机器人
         </h1>
         <p className="text-sm text-muted-foreground">
-          Pair your phone once. Receive order alerts and run slash-command queries ({' '}
+          配对手机后，即可接收订单提醒，并通过斜杠命令查询（{' '}
           <code className="font-mono">/orderbook</code>,{' '}
           <code className="font-mono">/positions</code>, <code className="font-mono">/quote</code>,
-          ... ) from your own device.
+          等）。
         </p>
       </header>
 
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Status</CardTitle>
+            <CardTitle>状态</CardTitle>
             <Badge variant={isPaired ? 'default' : 'secondary'} className="gap-1">
               {isPaired ? <CheckCircle2 className="h-3 w-3" /> : null}
-              {isPaired ? 'Connected' : 'Not paired'}
+              {isPaired ? '已连接' : '未配对'}
             </Badge>
           </div>
           <CardDescription>
@@ -255,9 +255,9 @@ export default function WhatsAppIndex() {
                 paired and which OpenAlgo user owns it. */}
             {isPaired
               ? cfg?.owner_username
-                ? `Device paired (owner: ${cfg.owner_username})`
-                : 'Device paired'
-              : 'No device linked yet'}
+                ? `设备已配对（用户：${cfg.owner_username}）`
+                : '设备已配对'
+              : '尚未关联设备'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -271,32 +271,31 @@ export default function WhatsAppIndex() {
           {!isPaired && (
             <div className="rounded border bg-muted/30 p-4">
               <div className="mb-3 flex items-center justify-between">
-                <div className="text-sm font-medium">Pair this device</div>
+                <div className="text-sm font-medium">配对此设备</div>
                 <Button size="sm" onClick={startPair} disabled={busy === 'pair' || pairing}>
                   {busy === 'pair' || pairing ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <RefreshCcw className="h-4 w-4" />
                   )}
-                  <span className="ml-2">{pairing ? 'Pairing…' : 'Start pairing'}</span>
+                  <span className="ml-2">{pairing ? '正在配对…' : '开始配对'}</span>
                 </Button>
               </div>
               {pairState?.status === 'awaiting_scan' && pairState.qr_data_url && (
                 <div className="flex flex-col items-center gap-2">
                   <img
                     src={pairState.qr_data_url}
-                    alt="WhatsApp pairing QR"
+                    alt="WhatsApp 配对二维码"
                     className="h-64 w-64 rounded border bg-white p-2"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Open WhatsApp → Linked devices → Link a device → scan. The QR refreshes
-                    automatically every ~30 seconds.
+                    打开 WhatsApp → 已关联设备 → 关联设备，然后扫码。二维码约每 30 秒自动刷新。
                   </p>
                 </div>
               )}
               {pairState?.status === 'awaiting_scan' && pairState.pair_code && (
                 <div className="mt-3 rounded border bg-background p-3 text-center">
-                  <div className="text-xs text-muted-foreground">Or use this pair code</div>
+                  <div className="text-xs text-muted-foreground">或使用此配对码</div>
                   <div className="font-mono text-lg tracking-widest">{pairState.pair_code}</div>
                 </div>
               )}
@@ -316,7 +315,7 @@ export default function WhatsAppIndex() {
               onClick={disconnect}
               disabled={busy === 'disconnect'}
             >
-              <Power className="mr-2 h-4 w-4" /> Disconnect
+              <Power className="mr-2 h-4 w-4" /> 断开连接
             </Button>
           )}
         </CardContent>
@@ -326,27 +325,26 @@ export default function WhatsAppIndex() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Phone className="h-5 w-5" /> Send a one-off message
+              <Phone className="h-5 w-5" /> 发送单条消息
             </CardTitle>
             <CardDescription>
-              Send a WhatsApp message to any number, directly from this page. The recipient does not
-              need to be linked.
+              可直接从此页面向指定号码发送 WhatsApp 消息，接收方无需关联设备。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <Input
-              placeholder="E.164 digits, e.g. 919876543210"
+              placeholder="E.164 格式号码，例如 919876543210"
               value={sendPhone}
               onChange={(e) => setSendPhone(e.target.value)}
             />
             <Textarea
-              placeholder="Message"
+              placeholder="消息内容"
               rows={3}
               value={sendMessage}
               onChange={(e) => setSendMessage(e.target.value)}
             />
             <Button size="sm" onClick={sendToOne} disabled={busy === 'send'}>
-              <Send className="mr-2 h-4 w-4" /> Send
+              <Send className="mr-2 h-4 w-4" /> 发送
             </Button>
           </CardContent>
         </Card>

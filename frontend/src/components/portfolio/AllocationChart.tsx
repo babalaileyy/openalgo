@@ -77,7 +77,7 @@ export function AllocationChart({
               setHover(Math.min(n - 1, Math.max(0, Math.round(frac * (n - 1)))))
             }}
           >
-            <title>Weight of each holding over the backtest</title>
+            <title>回测期间各持仓的权重</title>
             {bands.map((b) => (
               <polygon key={b.symbol} points={b.points} fill={b.colour} fillOpacity={0.85} />
             ))}

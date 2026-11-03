@@ -374,10 +374,10 @@ describe('strategy Orderbook broker truth', () => {
 
     expect(rest.get).not.toHaveBeenCalled()
     expect(
-      screen.getByText(/broker orderbook was not requested because no strategy run is available/i)
+      screen.getByText(/当前没有可用的策略运行记录，因此未查询交易商委托簿/)
     ).toBeInTheDocument()
-    expect(screen.getByText('Strategy audit records')).toBeInTheDocument()
-    expect(screen.queryByText('Broker-confirmed orders')).not.toBeInTheDocument()
+    expect(screen.getByText('策略审计记录')).toBeInTheDocument()
+    expect(screen.queryByText('券商确认的订单')).not.toBeInTheDocument()
   })
 
   it('uses the strategy current run while a stale live frame still names the prior run', async () => {
@@ -433,7 +433,7 @@ describe('strategy Orderbook broker truth', () => {
       <OrdersTab strategy={strategy} live={live} orders={[localOrder()]} loading={false} active />
     )
 
-    expect(await screen.findByText('Broker-confirmed orders')).toBeInTheDocument()
+    expect(await screen.findByText('券商确认的订单')).toBeInTheDocument()
     expect(screen.getByText('25')).toBeInTheDocument()
     expect(screen.getByText('#42')).toBeInTheDocument()
     expect(screen.getByText('entry')).toBeInTheDocument()
@@ -490,8 +490,8 @@ describe('strategy Orderbook broker truth', () => {
     expect(
       await screen.findByText(/broker unavailable.*showing recorded strategy audit, which may lag/i)
     ).toBeInTheDocument()
-    expect(screen.getByText('Strategy audit records')).toBeInTheDocument()
-    expect(screen.queryByText('Broker-confirmed orders')).not.toBeInTheDocument()
+    expect(screen.getByText('策略审计记录')).toBeInTheDocument()
+    expect(screen.queryByText('券商确认的订单')).not.toBeInTheDocument()
   })
 
   it('treats an empty broker answer as available and still exposes local audit history', async () => {
@@ -504,7 +504,7 @@ describe('strategy Orderbook broker truth', () => {
     )
 
     expect(await screen.findByText(/broker reports no orders for run #42/i)).toBeInTheDocument()
-    expect(screen.getByText('Strategy audit records')).toBeInTheDocument()
+    expect(screen.getByText('策略审计记录')).toBeInTheDocument()
     expect(screen.queryByText(/broker unavailable/i)).not.toBeInTheDocument()
   })
 
@@ -515,7 +515,7 @@ describe('strategy Orderbook broker truth', () => {
       <OrdersTab strategy={strategy} live={live} orders={[localOrder()]} loading={false} active />
     )
 
-    expect(screen.getByText(/loading broker orderbook/i)).toBeInTheDocument()
+    expect(screen.getByText(/正在加载交易商委托簿/)).toBeInTheDocument()
     expect(screen.queryByText(/broker reports no orders/i)).not.toBeInTheDocument()
   })
 })
@@ -601,19 +601,19 @@ describe('strategy Positions broker truth', () => {
     expect(within(liveCard as HTMLElement).getByText('Total P&L').parentElement).toHaveTextContent(
       '+117.00'
     )
-    expect(liveCard).toHaveTextContent('Peak: +513.00')
-    expect(liveCard).toHaveTextContent('Trough: -355.50')
-    expect(liveCard).toHaveTextContent('Stopped: 31 Aug 2026, 09:45:29 IST')
-    expect(liveCard).not.toHaveTextContent('Updated:')
+    expect(liveCard).toHaveTextContent('峰值：+513.00')
+    expect(liveCard).toHaveTextContent('谷值：-355.50')
+    expect(liveCard).toHaveTextContent('停止时间：31 Aug 2026, 09:45:29 IST')
+    expect(liveCard).not.toHaveTextContent('更新时间：')
     expect(liveCard).not.toHaveTextContent('+81.00')
 
-    await user.click(screen.getByRole('tab', { name: 'Positions' }))
+    await user.click(screen.getByRole('tab', { name: '持仓' }))
 
-    const thisRun = await screen.findByText('Realized (this run)')
+    const thisRun = await screen.findByText('已实现盈亏（本次运行）')
     expect(thisRun.parentElement).toHaveTextContent('+117.00')
-    expect(screen.getByText('Unrealized').parentElement).toHaveTextContent('0.00')
-    expect(screen.getByText('Run total').parentElement).toHaveTextContent('+117.00')
-    expect(screen.getByText('Cumulative realized').parentElement).toHaveTextContent('-616.50')
+    expect(screen.getByText('未实现盈亏').parentElement).toHaveTextContent('0.00')
+    expect(screen.getByText('本次总盈亏').parentElement).toHaveTextContent('+117.00')
+    expect(screen.getByText('累计已实现盈亏').parentElement).toHaveTextContent('-616.50')
     expect(screen.queryByText('+81.00')).not.toBeInTheDocument()
   })
 
@@ -631,7 +631,7 @@ describe('strategy Positions broker truth', () => {
     const user = userEvent.setup()
 
     renderDetail()
-    await user.click(await screen.findByRole('tab', { name: 'Risk' }))
+    await user.click(await screen.findByRole('tab', { name: '风险' }))
 
     expect(
       screen.getByText(
@@ -680,9 +680,9 @@ describe('strategy Positions broker truth', () => {
     await screen.findByText('Broker truth')
 
     for (const [tab, endpoint] of [
-      ['Positions', '/strategy/api/strategies/7/positions'],
-      ['Orders', '/strategy/api/strategies/7/orderbook'],
-      ['Trades', '/strategy/api/strategies/7/tradebook'],
+      ['持仓', '/strategy/api/strategies/7/positions'],
+      ['订单', '/strategy/api/strategies/7/orderbook'],
+      ['成交', '/strategy/api/strategies/7/tradebook'],
     ] as const) {
       await user.click(screen.getByRole('tab', { name: tab }))
       await waitFor(() =>
@@ -709,7 +709,7 @@ describe('strategy Positions broker truth', () => {
       />
     )
 
-    for (const label of ['Realized (this run)', 'Unrealized', 'Run total', 'Cumulative realized']) {
+    for (const label of ['已实现盈亏（本次运行）', '未实现盈亏', '本次总盈亏', '累计已实现盈亏']) {
       const metric = screen.getByText(label).parentElement
       expect(metric).not.toBeNull()
       expect(metric).toHaveTextContent('—')
@@ -804,7 +804,7 @@ describe('strategy Positions broker truth', () => {
         signal: expect.any(AbortSignal),
       })
     )
-    const header = screen.getByText('Strategy positions').closest('[data-slot="card-header"]')
+    const header = screen.getByText('策略持仓').closest('[data-slot="card-header"]')
     expect(header?.textContent).toContain('Run #43.')
     expect(header?.textContent).not.toContain('Run #42.')
   })
@@ -868,7 +868,7 @@ describe('strategy Positions broker truth', () => {
     ).toBeGreaterThanOrEqual(2)
     expect(row?.textContent).not.toContain('200.00')
     expect(row?.textContent).not.toContain('+5000.00')
-    const header = screen.getByText('Strategy positions').closest('[data-slot="card-header"]')
+    const header = screen.getByText('策略持仓').closest('[data-slot="card-header"]')
     expect(header?.textContent).toContain('Run #43.')
   })
 
@@ -1076,10 +1076,10 @@ describe('strategy Tradebook broker truth', () => {
 
     expect(rest.get).not.toHaveBeenCalled()
     expect(
-      screen.getByText(/broker tradebook was not requested because no strategy run is available/i)
+      screen.getByText(/当前没有可用的策略运行记录，因此未查询交易商成交簿/)
     ).toBeInTheDocument()
-    expect(screen.getByText('Strategy audit records')).toBeInTheDocument()
-    expect(screen.queryByText('Broker-confirmed trades')).not.toBeInTheDocument()
+    expect(screen.getByText('策略审计记录')).toBeInTheDocument()
+    expect(screen.queryByText('券商确认的成交')).not.toBeInTheDocument()
   })
 
   it('renders broker fills as primary and preserves exact local leg context', async () => {
@@ -1112,7 +1112,7 @@ describe('strategy Tradebook broker truth', () => {
       />
     )
 
-    expect(await screen.findByText('Broker-confirmed trades')).toBeInTheDocument()
+    expect(await screen.findByText('券商确认的成交')).toBeInTheDocument()
     expect(screen.getByText('2525.00')).toBeInTheDocument()
     expect(screen.getByText('Leg 3')).toBeInTheDocument()
     expect(screen.getByText(/disagrees: quantity, average price/i)).toBeInTheDocument()
@@ -1235,7 +1235,7 @@ describe('strategy Tradebook broker truth', () => {
       />
     )
 
-    expect(await screen.findByText('Strategy audit records')).toBeInTheDocument()
+    expect(await screen.findByText('策略审计记录')).toBeInTheDocument()
     expect(screen.getByText('BANKNIFTY28MAY2650000CE')).toBeInTheDocument()
     const unpricedRow = screen.getByText('FINNIFTY28MAY2625000PE').closest('tr')
     expect(unpricedRow).not.toBeNull()
@@ -1398,7 +1398,7 @@ describe('strategy exit action toasts describe proven state only', () => {
     const user = userEvent.setup()
 
     renderDetail()
-    await user.click(await screen.findByRole('button', { name: 'Start run' }))
+    await user.click(await screen.findByRole('button', { name: '启动策略' }))
     await user.click(screen.getByRole('button', { name: 'Start sandbox' }))
 
     await waitFor(() =>

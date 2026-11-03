@@ -72,14 +72,14 @@ export function SaveStrategyDialog({
   const submit = async () => {
     const trimmed = name.trim()
     if (!trimmed) {
-      setError('Strategy name is required')
+      setError('请输入策略名称')
       return
     }
     setError(null)
     try {
       await onSave(trimmed, watchlist)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Save failed')
+      setError(err instanceof Error ? err.message : '保存失败')
     }
   }
 
@@ -89,13 +89,13 @@ export function SaveStrategyDialog({
         <DialogHeader>
           <DialogTitle>{isUpdate ? 'Update Strategy' : 'Save Strategy'}</DialogTitle>
           <DialogDescription>
-            Store this strategy in one of your two watchlists so you can revisit or replay it later.
+            将此策略保存到自选列表，方便以后查看或回放。
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-muted-foreground">Strategy Name</label>
+            <label className="text-[11px] font-medium text-muted-foreground">策略名称</label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -110,7 +110,7 @@ export function SaveStrategyDialog({
 
           <div className="space-y-1.5">
             <label className="text-[11px] font-medium text-muted-foreground">
-              Save to watchlist
+              保存到自选列表
             </label>
             <div className="grid grid-cols-2 gap-2">
               {WATCHLIST_OPTIONS.map((opt) => {
@@ -148,7 +148,7 @@ export function SaveStrategyDialog({
 
         <DialogFooter className="flex-row justify-end gap-2">
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={busy}>
-            Cancel
+            取消
           </Button>
           <Button size="sm" onClick={submit} disabled={busy}>
             {busy ? 'Saving…' : isUpdate ? 'Update' : 'Save'}

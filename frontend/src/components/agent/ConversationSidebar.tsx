@@ -289,8 +289,8 @@ export function ConversationSidebar({
           variant="ghost"
           size="icon-sm"
           onClick={() => setCollapsed(false)}
-          aria-label="Show conversations"
-          title="Show conversations"
+          aria-label="显示对话"
+          title="显示对话"
         >
           <PanelLeftOpen className="h-4 w-4" aria-hidden />
         </Button>
@@ -300,8 +300,8 @@ export function ConversationSidebar({
           size="icon-sm"
           onClick={startFresh}
           disabled={busy}
-          aria-label="New chat"
-          title="New chat"
+          aria-label="新建对话"
+          title="新建对话"
         >
           <Plus className="h-4 w-4" aria-hidden />
         </Button>
@@ -324,15 +324,15 @@ export function ConversationSidebar({
           disabled={busy}
         >
           <Plus className="h-4 w-4" aria-hidden />
-          New chat
+          新建对话
         </Button>
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
           onClick={() => setCollapsed(true)}
-          aria-label="Hide conversations"
-          title="Hide conversations"
+          aria-label="隐藏对话"
+          title="隐藏对话"
         >
           <PanelLeftClose className="h-4 w-4" aria-hidden />
         </Button>
@@ -340,7 +340,7 @@ export function ConversationSidebar({
 
       <div className="flex shrink-0 items-center gap-2 px-3 pb-1.5">
         <span className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-          Conversations
+          对话记录
         </span>
         {isFetching && !isLoadingList && (
           <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" aria-hidden />
@@ -369,15 +369,15 @@ export function ConversationSidebar({
               className="h-7 w-full text-xs"
               onClick={() => void refetch()}
             >
-              Try again
+              重试
             </Button>
           </div>
         ) : conversations.length === 0 ? (
           <div className="flex flex-col items-center gap-1.5 px-3 py-8 text-center">
             <MessageSquare className="h-6 w-6 text-muted-foreground/50" aria-hidden />
-            <p className="text-xs font-medium">No conversations yet</p>
+            <p className="text-xs font-medium">暂无对话</p>
             <p className="text-[11px] leading-relaxed text-muted-foreground">
-              Ask the agent something and the thread is saved here.
+              向助手提问后，对话将保存在这里。
             </p>
           </div>
         ) : (
@@ -467,7 +467,7 @@ export function ConversationSidebar({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this conversation?</AlertDialogTitle>
+            <AlertDialogTitle>删除此对话？</AlertDialogTitle>
             <AlertDialogDescription>
               {pendingDelete ? `"${titleOf(pendingDelete)}" and every message in it go. ` : null}
               This cannot be undone. Audit rows are kept: they are a trade record and they outlive

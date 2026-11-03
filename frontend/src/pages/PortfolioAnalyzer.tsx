@@ -79,7 +79,7 @@ export default function PortfolioAnalyzer() {
 
   const run = async () => {
     if (!apiKey) {
-      setError('No API key found. Generate one on the API Key page.')
+      setError('未找到 API 密钥，请在 API 密钥页面生成。')
       return
     }
     setBusy(true)
@@ -111,15 +111,14 @@ export default function PortfolioAnalyzer() {
     <div className="container mx-auto space-y-4 p-4">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Portfolio Analyzer</h1>
+          <h1 className="text-2xl font-bold tracking-tight">投资组合分析</h1>
           <p className="text-sm text-muted-foreground">
-            Your live holdings, graded: concentration, co-movement, drawdown
-            resilience and how they behaved in past crises.
+            分析实时持仓的集中度、联动性、回撤承受能力及其在历史危机中的表现。
           </p>
         </div>
         <div className="flex items-end gap-3">
           <div>
-            <Label className="text-xs">Lookback (days)</Label>
+            <Label className="text-xs">回溯天数</Label>
             <Input
               className="w-28"
               type="number"
@@ -128,19 +127,19 @@ export default function PortfolioAnalyzer() {
             />
           </div>
           <div>
-            <Label className="text-xs">Data source</Label>
+            <Label className="text-xs">数据来源</Label>
             <Select value={source} onValueChange={(v) => setSource(v as PriceSource)}>
               <SelectTrigger className="w-40">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="db">Historify (local)</SelectItem>
-                <SelectItem value="api">Broker API</SelectItem>
+                <SelectItem value="db">Historify（本地）</SelectItem>
+                <SelectItem value="api">交易商 API</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <Button onClick={run} disabled={busy}>
-            {busy ? 'Analysing…' : 'Analyse Holdings'}
+            {busy ? '分析中…' : '分析持仓'}
           </Button>
         </div>
       </div>
@@ -155,51 +154,47 @@ export default function PortfolioAnalyzer() {
         <>
           <div className="grid gap-3 md:grid-cols-5">
             <Metric
-              label="Worth Today"
+              label="当前市值"
               value={inr(s.current)}
-              sub={`${s.count} holdings`}
+              sub={`${s.count} 项持仓`}
             />
             <Metric
-              label="Invested"
+              label="已投入"
               value={s.invested === null ? '-' : inr(s.invested)}
-              sub={s.invested === null ? 'broker reports no average price' : undefined}
+              sub={s.invested === null ? '交易商未提供均价' : undefined}
             />
             <Metric
-              label="Total P&L"
+              label="总盈亏"
               value={inr(s.pnl)}
               sub={
                 s.pnl_pct === null
-                  ? 'percent needs a cost basis'
+                  ? '计算百分比需要成本基础'
                   : `${s.pnl_pct.toFixed(2)}%`
               }
               tone={s.pnl >= 0 ? 'good' : 'bad'}
             />
             <Metric
-              label="Health"
+              label="健康状况"
               value={health?.grade ? `${health.score}/100 (${health.grade})` : '-'}
-              sub={health ? `${health.pillars.length} pillars, formulas shown` : undefined}
+              sub={health ? `${health.pillars.length} 个维度，显示计算公式` : undefined}
               tone={healthGradeTone(health?.grade)}
             />
             <Metric
-              label="Effective Bets"
+              label="Effective Bets（有效独立持仓数）"
               value={
                 result.analysis
                   ? String(result.analysis.structure.effective_bets)
                   : '-'
               }
-              sub={`from ${s.count} names`}
+              sub={`来自 ${s.count} 项持仓`}
             />
           </div>
 
           {s.has_cost_basis === false && (
             <Card className="border-amber-500/40">
               <CardContent className="p-4 text-sm">
-                <span className="font-medium text-amber-500">No cost basis: </span>
-                your broker returns holdings without an average price, so invested
-                value and return percentages cannot be computed. Everything that
-                depends on current value, weights, concentration, co-movement,
-                health and risk, is unaffected, and the P&amp;L shown is the
-                broker's own figure.
+                <span className="font-medium text-amber-500">无成本基础：</span>
+                交易商返回的持仓没有均价，因此无法计算投入金额和收益百分比。基于当前价值的权重、集中度、联动性、健康状况与风险指标不受影响；显示的盈亏来自交易商。
               </CardContent>
             </Card>
           )}
@@ -207,30 +202,29 @@ export default function PortfolioAnalyzer() {
           {result.skipped.length > 0 && (
             <Card className="border-amber-500/40">
               <CardContent className="p-4 text-sm">
-                <span className="font-medium text-amber-500">Not analysed: </span>
-                {result.skipped.join(', ')}, held on an exchange this tool does not
-                price. They are listed below but excluded from the figures above.
+                <span className="font-medium text-amber-500">未分析：</span>
+                {result.skipped.join(', ')} 所在的交易所不受此工具估值支持。这些持仓列在下方，但不计入上方数据。
               </CardContent>
             </Card>
           )}
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Holdings</CardTitle>
+              <CardTitle className="text-base">持仓</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b text-xs text-muted-foreground">
                     <tr>
-                      <th className="p-3 text-left">Symbol</th>
-                      <th className="p-3 text-right">Weight</th>
-                      <th className="p-3 text-right">Qty</th>
-                      <th className="p-3 text-right">Avg</th>
-                      <th className="p-3 text-right">Live</th>
-                      <th className="p-3 text-right">Invested</th>
-                      <th className="p-3 text-right">Current</th>
-                      <th className="p-3 text-right">P&amp;L</th>
+                      <th className="p-3 text-left">交易品种</th>
+                      <th className="p-3 text-right">权重</th>
+                      <th className="p-3 text-right">数量</th>
+                      <th className="p-3 text-right">均价</th>
+                      <th className="p-3 text-right">实时</th>
+                      <th className="p-3 text-right">已投入</th>
+                      <th className="p-3 text-right">当前</th>
+                      <th className="p-3 text-right">盈亏</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -287,22 +281,20 @@ export default function PortfolioAnalyzer() {
 
           {m && (
             <div className="grid gap-3 md:grid-cols-5">
-              <Metric label="CAGR" value={pct(m.cagr)} sub={`over ${lookback} days`} />
-              <Metric label="Volatility" value={pct(m.volatility)} />
-              <Metric label="Sharpe" value={num(m.sharpe)} />
-              <Metric label="Max Drawdown" value={pct(m.max_drawdown)} tone="bad" />
-              <Metric label="Value at Risk" value={pct(m.value_at_risk)} />
+              <Metric label="CAGR（年化复合增长率）" value={pct(m.cagr)} sub={`回溯 ${lookback} 天`} />
+              <Metric label="Volatility（波动率）" value={pct(m.volatility)} />
+              <Metric label="Sharpe（夏普比率）" value={num(m.sharpe)} />
+              <Metric label="Max Drawdown（最大回撤）" value={pct(m.max_drawdown)} tone="bad" />
+              <Metric label="Value at Risk（风险价值）" value={pct(m.value_at_risk)} />
             </div>
           )}
 
           {result.analysis?.asset_returns?.length ? (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Asset Returns</CardTitle>
+                <CardTitle className="text-base">资产收益</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Each holding on its own, close to close. A window longer than the
-                  available history shows n/a rather than a since-inception figure
-                  dressed up as a five-year return.
+                  按收盘价计算各持仓的独立收益。若历史数据不足以覆盖所选区间，显示暂无数据，不会将较短期限的收益冒充完整区间收益。
                 </p>
               </CardHeader>
               <CardContent className="p-0">
@@ -310,7 +302,7 @@ export default function PortfolioAnalyzer() {
                   <table className="w-full text-sm">
                     <thead className="border-b text-xs text-muted-foreground">
                       <tr>
-                        <th className="p-3 text-left">Symbol</th>
+                        <th className="p-3 text-left">交易品种</th>
                         {(['1W', '1M', '3M', '1Y', '3Y', '5Y'] as const).map((w) => (
                           <th key={w} className="p-3 text-right">
                             {w}
@@ -361,10 +353,9 @@ export default function PortfolioAnalyzer() {
           {result.analysis?.correlation?.symbols?.length ? (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Asset Correlation Matrix</CardTitle>
+                <CardTitle className="text-base">资产相关性矩阵</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  How each pair moved together over the lookback. Holdings that move
-                  as one are a single bet however many names they carry.
+                  展示回溯期内各资产的联动程度。走势高度一致的持仓，即使名称不同，也可能集中暴露于同一种风险。
                 </p>
               </CardHeader>
               <CardContent>
@@ -393,7 +384,7 @@ export default function PortfolioAnalyzer() {
                                 key={col}
                                 title={
                                   v === null
-                                    ? 'too little overlap to measure'
+                                    ? '重叠数据不足，无法计算'
                                     : `${row} vs ${col}: ${v.toFixed(2)}`
                                 }
                                 className="min-w-16 rounded p-2 text-center tabular-nums"
@@ -420,10 +411,9 @@ export default function PortfolioAnalyzer() {
           {health && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Health Breakdown</CardTitle>
+                <CardTitle className="text-base">健康状况明细</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Every pillar shows its inputs and formula, so the grade can be argued
-                  with rather than merely believed.
+                  每个评分维度均展示输入和公式，便于核对评分依据。
                 </p>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -432,7 +422,7 @@ export default function PortfolioAnalyzer() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">{p.label}</span>
                       <span className="text-sm tabular-nums text-muted-foreground">
-                        {p.score === null ? 'not measured' : `${p.score}/100`}
+                        {p.score === null ? '未测量' : `${p.score}/100`}
                       </span>
                     </div>
                     {p.score !== null && (
@@ -463,14 +453,14 @@ export default function PortfolioAnalyzer() {
               {result.analysis.crisis.summary && (
                 <div className="grid gap-3 md:grid-cols-3">
                   <Metric
-                    label="Crises Covered"
+                    label="涵盖的危机次数"
                     value={String(result.analysis.crisis.summary.count)}
-                    sub={`inside the ${lookback}-day lookback`}
+                    sub={`在 ${lookback} 天回溯期内`}
                   />
                   <Metric
-                    label="Beat the Benchmark"
+                    label="跑赢基准"
                     value={pct(result.analysis.crisis.summary.hit_rate, 0)}
-                    sub="of those periods"
+                    sub="占上述期间的比例"
                     tone={
                       (result.analysis.crisis.summary.hit_rate ?? 0) >= 0.5
                         ? 'good'
@@ -478,7 +468,7 @@ export default function PortfolioAnalyzer() {
                     }
                   />
                   <Metric
-                    label="Worst Crisis"
+                    label="最差危机表现"
                     value={pct(result.analysis.crisis.summary.worst)}
                     tone="bad"
                   />
@@ -487,11 +477,9 @@ export default function PortfolioAnalyzer() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">In Past Crises</CardTitle>
+                  <CardTitle className="text-base">历史危机期间</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    How these same weights would have fared, with the window each one
-                    ran over and how long it lasted. Only crises inside the lookback
-                    appear, widen it to see more.
+                    展示当前权重在历史危机中的表现及各危机的持续时间。这里只显示回溯期内的危机，可延长回溯期查看更多。
                   </p>
                 </CardHeader>
                 <CardContent>
@@ -514,7 +502,7 @@ export default function PortfolioAnalyzer() {
                 {source === 'db' && (
                   <div className="text-xs text-muted-foreground">
                     A real account usually holds something nobody has ingested.
-                    Switch the data source to <strong>Broker API</strong> and run
+                    Switch the data source to <strong>交易商 API</strong> and run
                     again, slower and rate limited, but it covers every symbol you
                     own. The figures above do not depend on this and are unaffected.
                   </div>

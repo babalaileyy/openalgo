@@ -34,13 +34,13 @@ export const BasketOrderNode = memo(({ data, selected }: BasketOrderNodeProps) =
             <Package className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Basket Order</div>
-            <div className="text-[9px] text-muted-foreground">Multi-order</div>
+            <div className="text-xs font-medium leading-tight">篮子订单</div>
+            <div className="text-[9px] text-muted-foreground">多订单</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Orders</span>
+            <span className="text-[10px] text-muted-foreground">订单</span>
             <span className="mono-data text-[10px] font-medium">{orderCount}</span>
           </div>
           <div className="text-center text-[9px] text-muted-foreground">

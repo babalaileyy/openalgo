@@ -41,12 +41,12 @@ export const OrGateNode = memo(({ data, selected }: OrGateNodeProps) => {
           </div>
         </div>
         <div className="rounded bg-muted/50 px-2 py-1 text-center">
-          <div className="text-[9px] text-muted-foreground">Any condition can be true</div>
+          <div className="text-[9px] text-muted-foreground">任一条件满足即可</div>
         </div>
         {/* Handle labels */}
         <div className="mt-2 flex justify-between px-1 text-[8px]">
-          <span className="text-buy">True</span>
-          <span className="text-sell">False</span>
+          <span className="text-buy">真</span>
+          <span className="text-sell">假</span>
         </div>
       </div>
       {/* True output (left) */}

@@ -96,10 +96,10 @@ export default function Dashboard() {
         setMarginData(data.data)
         setError(null)
       } else {
-        setError(data.message || 'Failed to fetch margin data')
+        setError(data.message === '未找到该交易商对应的模块' ? '未找到对应的券商模块' : data.message || '获取资金数据失败')
       }
     } catch (_err) {
-      setError('Failed to fetch margin data')
+      setError('获取资金数据失败')
     } finally {
       setIsLoading(false)
     }
@@ -138,7 +138,7 @@ export default function Dashboard() {
       const data = await response.json()
       setMasterContract(data)
     } catch (_err) {
-      setMasterContract({ status: 'error', message: 'Failed to check status' })
+      setMasterContract({ status: 'error', message: '检查状态失败' })
     }
   }, [])
 
@@ -177,14 +177,14 @@ export default function Dashboard() {
     switch (masterContract.status) {
       case 'success':
         return masterContract.total_symbols
-          ? `Ready (${masterContract.total_symbols} symbols)`
-          : 'Ready'
+          ? `已就绪（${masterContract.total_symbols} 个交易品种）`
+          : '已就绪'
       case 'downloading':
-        return 'Downloading...'
+        return '下载中...'
       case 'error':
-        return 'Error'
+        return '错误'
       default:
-        return 'Checking...'
+        return '检查中...'
     }
   }
 
@@ -204,8 +204,8 @@ export default function Dashboard() {
   const quickAccessCards = [
     {
       href: '/search',
-      label: 'OpenAlgo Symbols',
-      description: 'Universal symbology across brokers',
+      label: 'OpenAlgo 交易品种',
+      description: '查看各券商通用的交易品种',
       icon: Search,
       gradient: 'from-primary/10 to-primary/5 hover:from-primary/20 hover:to-primary/10',
       iconBg: 'bg-primary/20',
@@ -214,8 +214,8 @@ export default function Dashboard() {
     },
     {
       href: '/logs',
-      label: 'Live Logs',
-      description: 'Real-time trading activity logs',
+      label: '实时日志',
+      description: '实时交易活动日志',
       icon: FileText,
       gradient:
         'from-violet-500/10 to-violet-500/5 hover:from-violet-500/20 hover:to-violet-500/10',
@@ -225,8 +225,8 @@ export default function Dashboard() {
     },
     {
       href: 'https://docs.openalgo.in',
-      label: 'Documentation',
-      description: 'Tutorials, API docs & features',
+      label: '使用文档',
+      description: '教程、API 文档与功能介绍',
       icon: BookOpen,
       gradient: 'from-cyan-500/10 to-cyan-500/5 hover:from-cyan-500/20 hover:to-cyan-500/10',
       iconBg: 'bg-cyan-500/20',
@@ -236,8 +236,8 @@ export default function Dashboard() {
     },
     {
       href: '/pnl-tracker',
-      label: 'P&L Tracker',
-      description: 'Live intraday MTM tracker',
+      label: '盈亏追踪',
+      description: '实时跟踪当日盯市盈亏',
       icon: BarChart3,
       gradient: 'from-green-500/10 to-green-500/5 hover:from-green-500/20 hover:to-green-500/10',
       iconBg: 'bg-green-500/20',
@@ -247,7 +247,7 @@ export default function Dashboard() {
     {
       href: 'https://www.openalgo.in/learn',
       label: 'OpenVarsity',
-      description: 'Learn algo trading with OpenAlgo',
+      description: '学习算法交易',
       icon: GraduationCap,
       gradient: 'from-blue-500/10 to-blue-500/5 hover:from-blue-500/20 hover:to-blue-500/10',
       iconBg: 'bg-blue-500/20',
@@ -257,8 +257,8 @@ export default function Dashboard() {
     },
     {
       href: '/logs/latency',
-      label: 'Latency Monitor',
-      description: 'Monitor order & API latency',
+      label: '延迟监控',
+      description: '监控订单和 API 延迟',
       icon: Zap,
       gradient:
         'from-orange-500/10 to-orange-500/5 hover:from-orange-500/20 hover:to-orange-500/10',
@@ -273,15 +273,15 @@ export default function Dashboard() {
   if (brokerExpired) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-        <h1 className="text-2xl font-bold">Broker Session Expired</h1>
+        <h1 className="text-2xl font-bold">券商会话已过期</h1>
         <p className="text-muted-foreground">
-          Your broker token has expired (brokers roll tokens daily). Reconnect to continue trading.
+          券商登录凭证已过期，请重新连接券商后继续交易。
         </p>
         <Link
           to="/broker"
           className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
-          Reconnect Broker
+          重新连接券商
         </Link>
       </div>
     )
@@ -291,10 +291,10 @@ export default function Dashboard() {
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-        <h1 className="text-2xl font-bold">Session Expired</h1>
-        <p className="text-muted-foreground">Please log in to access the dashboard.</p>
+        <h1 className="text-2xl font-bold">登录会话已过期</h1>
+        <p className="text-muted-foreground">请登录后查看仪表盘。</p>
         <Link to="/login" className="text-primary hover:underline">
-          Go to Login
+          前往登录
         </Link>
       </div>
     )
@@ -305,14 +305,14 @@ export default function Dashboard() {
       {/* Dashboard Header */}
       <div className="flex flex-col lg:flex-row lg:items-start gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl md:text-3xl font-bold">Trading Dashboard</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">交易仪表盘</h1>
           <p className="text-muted-foreground mt-1 md:mt-2 text-sm md:text-base">
-            Overview of your trading account and market positions
+            交易账户和持仓概览
           </p>
         </div>
         {/* Master Contract Status Indicator */}
         <div className="flex items-center gap-2 md:gap-3 bg-muted rounded-lg px-3 md:px-4 py-2 md:py-3 w-fit lg:ml-auto lg:self-start">
-          <span className="text-xs md:text-sm font-medium whitespace-nowrap">Master Contract:</span>
+          <span className="text-xs md:text-sm font-medium whitespace-nowrap">合约数据：</span>
           <div className="flex items-center gap-2">
             <div
               className={cn('w-2.5 h-2.5 md:w-3 md:h-3 rounded-full', getMasterContractLedColor())}
@@ -333,7 +333,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Available Balance</p>
+              <p className="text-sm text-muted-foreground">可用余额</p>
               <p className="text-2xl font-bold text-primary">
                 {isLoading
                   ? '...'
@@ -342,7 +342,7 @@ export default function Dashboard() {
                     : '0.00'}
               </p>
               <Badge variant="secondary" className="mt-2">
-                Cash Balance
+                现金余额
               </Badge>
             </div>
           </CardContent>
@@ -352,7 +352,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Collateral</p>
+              <p className="text-sm text-muted-foreground">抵押品</p>
               <p className="text-2xl font-bold text-violet-500 dark:text-violet-400">
                 {isLoading
                   ? '...'
@@ -361,7 +361,7 @@ export default function Dashboard() {
                     : '0.00'}
               </p>
               <Badge variant="secondary" className="mt-2">
-                Total Collateral
+                抵押品总额
               </Badge>
             </div>
           </CardContent>
@@ -371,7 +371,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Unrealized P&L</p>
+              <p className="text-sm text-muted-foreground">未实现盈亏</p>
               <p
                 className={cn(
                   'text-2xl font-bold',
@@ -388,7 +388,7 @@ export default function Dashboard() {
                 variant={marginData ? getPnLBadgeVariant(marginData.m2munrealized) : 'secondary'}
                 className="mt-2"
               >
-                Mark to Market
+                盯市盈亏
               </Badge>
             </div>
           </CardContent>
@@ -398,7 +398,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Realized P&L</p>
+              <p className="text-sm text-muted-foreground">已实现盈亏</p>
               <p
                 className={cn(
                   'text-2xl font-bold',
@@ -415,7 +415,7 @@ export default function Dashboard() {
                 variant={marginData ? getPnLBadgeVariant(marginData.m2mrealized) : 'secondary'}
                 className="mt-2"
               >
-                Booked P&L
+                已结算盈亏
               </Badge>
             </div>
           </CardContent>
@@ -425,7 +425,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Utilised Margin</p>
+              <p className="text-sm text-muted-foreground">已用保证金</p>
               <p className="text-2xl font-bold text-cyan-500 dark:text-cyan-400">
                 {isLoading
                   ? '...'
@@ -437,7 +437,7 @@ export default function Dashboard() {
                 variant="outline"
                 className="mt-2 border-cyan-500/50 text-cyan-600 dark:text-cyan-400"
               >
-                Used Margin
+                已用保证金
               </Badge>
             </div>
           </CardContent>
@@ -455,7 +455,7 @@ export default function Dashboard() {
 
       {/* Quick Access Tools */}
       <div>
-        <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">Quick Access</h2>
+        <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">快捷访问</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
           {quickAccessCards.map((card) => {
             const cardClasses = cn(

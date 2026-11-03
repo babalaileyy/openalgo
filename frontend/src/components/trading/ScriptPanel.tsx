@@ -164,9 +164,9 @@ function stemOf(file: string): string {
  * panel's, which trades in sandbox or live as the platform is set.
  */
 export const KIND_HINT: Readonly<Record<ScriptKind, string>> = {
-  study: 'Computes and draws on the chart. It places no orders.',
+  study: '在图表上计算并绘制指标，不会下单。',
   strategy:
-    'Draws like a study and also places orders. Backtest it on the chart, then run it from the Strategies panel.',
+    '可在图表上绘制，也可下单。请先在图表上回测，再从策略面板运行。',
 }
 
 /** Where the caret is, counted the way the diagnostics count: from one. */
@@ -685,7 +685,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
       setResult((previous) => ({
         ok: previous?.ok ?? false,
         diagnostics: previous?.diagnostics ?? [],
-        problem: 'There is no chart open to test this strategy against.',
+        problem: '未打开图表，无法回测此策略。',
       }))
       setConsoleOpen(true)
       return
@@ -695,7 +695,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
     setResult((previous) => ({
       ok: previous?.ok ?? false,
       diagnostics: previous?.diagnostics ?? [],
-      problem: 'There is no chart open to add this study to.',
+      problem: '未打开图表，无法添加此指标。',
     }))
     setConsoleOpen(true)
   }, [kind, onBacktest, open, onAddToChart])
@@ -775,7 +775,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
   return (
     <PanelShell
       id="trading-scripts-panel"
-      label="Scripts"
+      label="脚本"
       storageKey="trading.panel.scripts.width"
       defaultWidth={480}
       minWidth={320}
@@ -798,10 +798,10 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             <button
               type="button"
               className="flex min-w-0 max-w-[55%] items-center gap-1.5 rounded px-1.5 py-1 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              title={open ?? 'Choose a script'}
+              title={open ?? '选择脚本'}
             >
               <span className="truncate text-sm font-medium">
-                {open === null ? 'No script' : stemOf(open)}
+                {open === null ? '未选择脚本' : stemOf(open)}
               </span>
               {kind !== null && (
                 <span
@@ -812,7 +812,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                       : 'bg-primary/15 text-primary'
                   )}
                 >
-                  {kind}
+                  {kind === 'strategy' ? '策略' : '指标'}
                 </span>
               )}
               <ChevronDown
@@ -829,7 +829,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             {recentlyOpened.length > 0 && (
               <>
                 <DropdownMenuLabel className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                  Recent
+                  最近打开
                 </DropdownMenuLabel>
                 {recentlyOpened.map((file) => (
                   <DropdownMenuItem
@@ -856,7 +856,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             ))}
             {scripts !== null && scripts.length === 0 && (
               <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-                No scripts yet.
+                暂无脚本。
               </DropdownMenuLabel>
             )}
             {listError !== null && (
@@ -867,7 +867,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-xs" onSelect={startNamingFromMenu}>
               <Plus className="mr-1.5 h-3.5 w-3.5" strokeWidth={1.5} />
-              New script
+              新建脚本
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -881,11 +881,11 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
           type="button"
           onClick={applyToChart}
           disabled={!runnable}
-          aria-label={open === null ? 'Apply to chart' : `Apply ${stemOf(open)} to the chart`}
+          aria-label={open === null ? '应用到图表' : `将 ${stemOf(open)} 应用到图表`}
           title={
             runnable
-              ? 'Apply to chart'
-              : 'Save a script that compiles, and it can be applied to the chart.'
+              ? '应用到图表'
+              : '保存可通过编译的脚本后，即可应用到图表。'
           }
           className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
         >
@@ -899,13 +899,13 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             disabled={busy || !dirty}
             className="inline-flex shrink-0 items-center gap-1 rounded-md bg-primary px-2.5 py-1.5 text-[11px] font-medium leading-none text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-40"
           >
-            Save
+            保存
           </button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                aria-label="Script actions"
+                aria-label="脚本操作"
                 className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
                 <MoreHorizontal className="h-4 w-4" strokeWidth={1.5} />
@@ -914,7 +914,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             <DropdownMenuContent align="end" className="w-48" onCloseAutoFocus={keepNameFocus}>
               <DropdownMenuItem className="text-xs" onSelect={startNamingFromMenu}>
                 <Plus className="mr-1.5 h-3.5 w-3.5" strokeWidth={1.5} />
-                New script
+                新建脚本
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-xs"
@@ -922,7 +922,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                 onSelect={askDiscardFromMenu}
               >
                 <Undo2 className="mr-1.5 h-3.5 w-3.5" strokeWidth={1.5} />
-                Discard unsaved changes
+                放弃未保存的修改
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -931,7 +931,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                 onSelect={() => void remove()}
               >
                 <Trash2 className="mr-1.5 h-3.5 w-3.5" strokeWidth={1.5} />
-                Delete script
+                删除脚本
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -941,7 +941,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
       {naming && (
         <div className="shrink-0 space-y-1.5 border-b px-2 py-2">
           <label className="block text-[11px] text-muted-foreground" htmlFor="new-script-name">
-            Name
+            名称
           </label>
           <input
             ref={nameRef}
@@ -973,7 +973,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               computes and draws, a strategy does that and also places orders,
               and the starter each one opens with is different because of it. */}
           <fieldset className="space-y-1">
-            <legend className="mb-1 text-[11px] text-muted-foreground">Kind</legend>
+            <legend className="mb-1 text-[11px] text-muted-foreground">类型</legend>
             <div className="flex gap-1.5">
               {(['study', 'strategy'] as const).map((kind) => (
                 <button
@@ -987,7 +987,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                     newKind === kind && 'border-primary/70 bg-primary/15 text-foreground'
                   )}
                 >
-                  {kind}
+                  {kind === 'strategy' ? '策略' : '指标'}
                 </button>
               ))}
             </div>
@@ -1007,10 +1007,10 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               // is disabled with a reason beside it.
               disabled={nameFault !== null || busy}
             >
-              Create
+              创建
             </button>
             <button type="button" className={CHIP} onClick={() => setNaming(false)}>
-              Cancel
+              取消
             </button>
           </div>
         </div>
@@ -1021,11 +1021,11 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
       {confirmingDiscard && open !== null && dirty && (
         <div
           role="alertdialog"
-          aria-label={`Discard unsaved changes to ${stemOf(open)}`}
+          aria-label={`放弃对 ${stemOf(open)} 未保存的修改`}
           className="shrink-0 space-y-1.5 border-b px-2 py-2"
         >
           <p className="text-[11px] leading-snug">
-            Discard your unsaved changes to {stemOf(open)}? The saved copy stays as it is.
+            确定放弃对 {stemOf(open)} 未保存的修改吗？已保存的版本将保持不变。
           </p>
           <div className="flex gap-1.5">
             <button
@@ -1033,7 +1033,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               className={cn(CHIP, 'text-destructive hover:text-destructive')}
               onClick={() => void discard()}
             >
-              Discard changes
+              放弃修改
             </button>
             <button
               ref={keepEditingRef}
@@ -1041,7 +1041,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               className={CHIP}
               onClick={() => setConfirmingDiscard(false)}
             >
-              Keep editing
+              继续编辑
             </button>
           </div>
         </div>
@@ -1052,8 +1052,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
           would replace the newer copy on save. */}
       {movedUnder && open !== null && dirty && !confirmingDiscard && (
         <div className="shrink-0 border-b bg-amber-500/10 px-2 py-1.5 text-[11px] leading-snug text-amber-700 dark:text-amber-400">
-          These are unsaved changes from earlier, and the saved copy of {stemOf(open)} has changed
-          since. Saving replaces that copy with this one.{' '}
+          这些是之前未保存的修改，而 {stemOf(open)} 的已保存版本此后已发生变化。保存将用当前内容覆盖该版本。{' '}
           <button
             type="button"
             className="underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -1064,7 +1063,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               requestAnimationFrame(() => keepEditingRef.current?.focus())
             }}
           >
-            Discard changes
+            放弃修改
           </button>
         </div>
       )}
@@ -1088,8 +1087,8 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               find it. */}
           <p className="max-w-[16rem] text-xs leading-relaxed text-muted-foreground">
             {scripts !== null && scripts.length > 0
-              ? 'Open one from the name at the top of this panel, or write a new one.'
-              : 'Nothing written yet.'}
+              ? '从面板顶部的名称菜单打开脚本，或新建脚本。'
+              : '尚未编写脚本。'}
           </p>
           <button
             type="button"
@@ -1098,7 +1097,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-[11px] font-medium leading-none transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
-            New script
+            新建脚本
           </button>
         </div>
       ) : (
@@ -1191,7 +1190,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                 // so turning it off here is what actually keeps one line of
                 // source on one row. See EDITOR_TEXT for why that matters.
                 wrap="off"
-                aria-label={`Source of ${open}`}
+                aria-label={`${open} 的源代码`}
                 aria-describedby="script-editor-keys"
                 className={cn(
                   EDITOR_TEXT,
@@ -1200,8 +1199,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                 style={{ lineHeight: `${LINE_HEIGHT}px` }}
               />
               <p id="script-editor-keys" className="sr-only">
-                Tab indents with spaces and Shift+Tab takes an indent back out. To leave the editor
-                with the keyboard, press Escape, then Tab.
+                Tab 使用空格缩进，Shift+Tab 减少缩进。要用键盘离开编辑器，请先按 Esc，再按 Tab。
               </p>
             </div>
           </div>
@@ -1217,7 +1215,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
             <div className="max-h-[38%] shrink-0 overflow-auto border-t bg-muted/20">
               {noteCount === 0 && result?.problem === undefined && (
                 <p className="px-2 py-3 text-center text-[11px] text-muted-foreground">
-                  Nothing to report.
+                  暂无消息。
                 </p>
               )}
               {noteCount > 0 && (
@@ -1241,7 +1239,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                             {one.code}
                           </span>
                           <span className="text-muted-foreground">
-                            line {one.line}, column {one.column}
+                            第 {one.line} 行，第 {one.column} 列
                           </span>
                         </div>
                         {/* The offending line, with the span underlined beneath
@@ -1266,7 +1264,7 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                         </p>
                         {one.fix && (
                           <p className="mt-0.5 text-muted-foreground">
-                            <span className="font-medium">Fix: </span>
+                            <span className="font-medium">修复建议：</span>
                             {one.fix}
                           </p>
                         )}
@@ -1294,8 +1292,8 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               type="button"
               onClick={() => setConsoleOpen((down) => !down)}
               aria-expanded={consoleOpen}
-              aria-label={consoleOpen ? 'Hide the console' : 'Show the console'}
-              title={consoleOpen ? 'Hide the console' : 'Show the console'}
+              aria-label={consoleOpen ? '隐藏控制台' : '显示控制台'}
+              title={consoleOpen ? '隐藏控制台' : '显示控制台'}
               className={cn(
                 'inline-flex h-5 shrink-0 items-center gap-1 rounded px-1 text-[10px] leading-none transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
                 consoleOpen ? 'bg-accent text-foreground' : 'text-muted-foreground',
@@ -1309,24 +1307,24 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
               {busy ? (
                 <span className="inline-flex items-center gap-1.5">
                   <Loader2 className="h-3 w-3 animate-spin" strokeWidth={1.5} />
-                  Working
+                  处理中
                 </span>
               ) : dirty ? (
-                'Unsaved changes'
+                '未保存的修改'
               ) : result?.ok === false ? (
                 <span className="inline-flex items-center gap-1.5 text-destructive">
                   <AlertTriangle className="h-3 w-3" strokeWidth={1.5} />
-                  {errorCount === 1 ? '1 error' : `${errorCount} errors`}, so it will not run yet
+                  {errorCount} 个错误，暂时无法运行
                 </span>
               ) : result?.ok ? (
                 <span className="inline-flex items-center gap-1.5">
                   <Check className="h-3 w-3" strokeWidth={1.5} />
                   {warningCount > 0
-                    ? `Ready, with ${warningCount === 1 ? '1 warning' : `${warningCount} warnings`}`
-                    : 'Ready'}
+                    ? `已就绪，有 ${warningCount} 条警告`
+                    : '已就绪'}
                 </span>
               ) : (
-                'Ready'
+                '已就绪'
               )}
             </span>
             {/* How to get out of the editor, said while it has focus and Tab has
@@ -1335,14 +1333,14 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
                 anything. */}
             {tabHint !== null && (
               <span aria-hidden className="shrink-0 text-[10px] text-muted-foreground">
-                {tabHint === 'leave' ? 'Tab now leaves the editor' : 'Esc then Tab to leave'}
+                {tabHint === 'leave' ? '现在按 Tab 可离开编辑器' : '按 Esc 再按 Tab 离开'}
               </span>
             )}
             <span aria-live="polite" className="sr-only">
-              {tabHint === 'leave' ? 'Tab now leaves the editor.' : ''}
+              {tabHint === 'leave' ? '现在按 Tab 可离开编辑器。' : ''}
             </span>
             <span className="shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground">
-              Ln {caret.line}, Col {caret.column}
+              第 {caret.line} 行，第 {caret.column} 列
             </span>
           </div>
         </>
@@ -1353,5 +1351,5 @@ export function ScriptPanel({ onAddToChart, onBacktest, openFile = null, onOpene
 
 /** The mark beside a script in the menu that has an edit waiting to be saved. */
 function UnsavedMark() {
-  return <span className="ml-auto shrink-0 text-[10px] text-muted-foreground">unsaved</span>
+  return <span className="ml-auto shrink-0 text-[10px] text-muted-foreground">未保存</span>
 }

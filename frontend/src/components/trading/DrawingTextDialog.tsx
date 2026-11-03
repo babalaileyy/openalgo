@@ -72,7 +72,7 @@ export function DrawingTextDialog({ req, onSubmit, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="关闭"
             className="-mr-1 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <svg
@@ -184,7 +184,7 @@ export function DrawingTextDialog({ req, onSubmit, onClose }: Props) {
               {supports('background') && (
                 <TickBox checked={v.background} onChange={(next) => set('background', next)} />
               )}
-              <span className="flex-1">Background</span>
+              <span className="flex-1">背景</span>
               <input
                 type="color"
                 value={v.backgroundColor}
@@ -199,7 +199,7 @@ export function DrawingTextDialog({ req, onSubmit, onClose }: Props) {
           {supports('border') && (
             <label className="flex items-center gap-2 text-[13px]">
               <TickBox checked={v.border} onChange={(next) => set('border', next)} />
-              <span className="flex-1">Border</span>
+              <span className="flex-1">边框</span>
               <input
                 type="color"
                 value={v.borderColor}
@@ -214,7 +214,7 @@ export function DrawingTextDialog({ req, onSubmit, onClose }: Props) {
           {supports('wrap') && (
             <label className="flex items-center gap-2 text-[13px]">
               <TickBox checked={v.wrap} onChange={(next) => set('wrap', next)} />
-              <span className="flex-1">Text wrap</span>
+              <span className="flex-1">文本换行</span>
             </label>
           )}
         </div>
@@ -225,14 +225,14 @@ export function DrawingTextDialog({ req, onSubmit, onClose }: Props) {
             onClick={onClose}
             className="rounded border border-foreground/25 px-3.5 py-1 text-[13px] transition-colors hover:border-foreground/50 hover:bg-accent"
           >
-            Cancel
+            取消
           </button>
           <button
             type="button"
             onClick={commit}
             className="rounded bg-foreground px-5 py-1 text-[13px] font-medium text-background transition-opacity hover:opacity-90"
           >
-            Ok
+            确定
           </button>
         </div>
       </div>

@@ -58,7 +58,7 @@ export const VariableNode = memo(({ data, selected }: VariableNodeProps) => {
             <Variable className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Variable</div>
+            <div className="text-xs font-medium leading-tight">变量</div>
             <div className="text-[9px] text-muted-foreground">
               {operationDescriptions[data.operation] || 'Set'}
             </div>
@@ -66,7 +66,7 @@ export const VariableNode = memo(({ data, selected }: VariableNodeProps) => {
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Name</span>
+            <span className="text-[10px] text-muted-foreground">名称</span>
             <span className="mono-data text-[10px] font-medium text-primary">
               {data.variableName || 'var'}
             </span>

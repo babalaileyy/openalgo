@@ -15,52 +15,52 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export default function LogsIndex() {
   const logCards = [
     {
-      title: 'Live Logs',
-      description: 'View real-time API order logs with request and response data',
+      title: '实时日志',
+      description: '查看实时 API 委托日志、请求和响应数据',
       icon: ClipboardList,
       href: '/logs/live',
       color: 'bg-blue-500',
-      countLabel: 'orders',
+      countLabel: '委托',
     },
     {
-      title: 'Sandbox Logs',
-      description: 'Track and test your trading strategies before going live',
+      title: '模拟盘日志',
+      description: '在实盘前追踪和测试交易策略',
       icon: FlaskConical,
       href: '/logs/sandbox',
       color: 'bg-purple-500',
-      countLabel: 'testing',
+      countLabel: '测试',
     },
     {
-      title: 'Latency Monitor',
-      description: 'Track order execution latency and performance metrics',
+      title: '延迟监控',
+      description: '追踪委托执行延迟及性能指标',
       icon: Clock,
       href: '/logs/latency',
       color: 'bg-orange-500',
-      countLabel: 'monitoring',
+      countLabel: '监控',
     },
     {
-      title: 'Traffic Monitor',
-      description: 'Monitor HTTP requests, endpoints, and response times',
+      title: '流量监控',
+      description: '监控 HTTP 请求、接口及响应时间',
       icon: Activity,
       href: '/logs/traffic',
       color: 'bg-cyan-500',
-      countLabel: 'monitoring',
+      countLabel: '监控',
     },
     {
-      title: 'Security Logs',
-      description: 'Monitor security events, banned IPs, and threat activity',
+      title: '安全日志',
+      description: '监控安全事件、封禁 IP 和威胁活动',
       icon: Shield,
       href: '/logs/security',
       color: 'bg-red-500',
-      countLabel: 'security',
+      countLabel: '安全',
     },
     {
-      title: 'Health Monitor',
-      description: 'Track system health, file descriptors, memory, and connections',
+      title: '健康监控',
+      description: '追踪系统健康状况、文件描述符、内存及连接',
       icon: HeartPulse,
       href: '/health',
       color: 'bg-green-500',
-      countLabel: 'health',
+      countLabel: '健康',
     },
   ]
 
@@ -70,10 +70,10 @@ export default function LogsIndex() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <FileText className="h-6 w-6" />
-          Logs & Monitoring
+          日志与监控
         </h1>
         <p className="text-muted-foreground mt-1">
-          Access trading logs, monitor system performance, and track security events
+          查看交易日志、监控系统性能并追踪安全事件
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export default function LogsIndex() {
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-muted-foreground">
-                  Click to view {card.title.toLowerCase()}
+                  点击查看{card.title}
                 </div>
               </CardContent>
             </Card>

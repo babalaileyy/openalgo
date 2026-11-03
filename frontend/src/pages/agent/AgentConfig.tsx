@@ -94,20 +94,19 @@ export default function AgentConfig() {
             <Button asChild variant="ghost" size="sm">
               <Link to="/agent">
                 <ArrowLeft className="h-4 w-4" aria-hidden />
-                Back to chat
+                返回聊天
               </Link>
             </Button>
             <div className="space-y-0.5">
-              <h1 className="text-base font-semibold leading-none">Agent configuration</h1>
+              <h1 className="text-base font-semibold leading-none">智能体配置</h1>
               <p className="text-xs text-muted-foreground">
-                Models, keys, web search and voice, stored encrypted in this instance's own
-                database.
+                模型、密钥、网络搜索和语音设置，数据加密保存在当前实例的数据库中。
               </p>
             </div>
           </div>
           <Button size="sm" onClick={() => setAddOpen(true)}>
             <Plus className="h-4 w-4" aria-hidden />
-            Add model
+            添加模型
           </Button>
         </header>
 
@@ -121,11 +120,10 @@ export default function AgentConfig() {
               <section aria-labelledby="agent-models-heading" className="space-y-4">
                 <div>
                   <h2 id="agent-models-heading" className="text-base font-semibold">
-                    Models
+                    模型
                   </h2>
                   <p className="text-sm text-muted-foreground">
-                    Every model the agent may run. Exactly one is the default, and the chat picker
-                    offers every enabled row.
+                    智能体可运行的所有模型。只能设置一个默认模型；聊天选择器会显示所有已启用的模型。
                   </p>
                 </div>
                 <RegisteredModelsTable />

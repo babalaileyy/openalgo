@@ -9,9 +9,9 @@
  */
 
 export const DOCK_TABS = [
-  { id: 'orders', label: 'Orders' },
-  { id: 'positions', label: 'Positions' },
-  { id: 'trades', label: 'Trades' },
+  { id: 'orders', label: '委托' },
+  { id: 'positions', label: '持仓' },
+  { id: 'trades', label: '成交' },
   { id: 'gtt', label: 'GTT' },
 ] as const
 

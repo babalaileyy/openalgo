@@ -28,27 +28,27 @@ export const TimeWindowNode = memo(({ data, selected }: TimeWindowNodeProps) => 
             <Clock className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Time</div>
-            <div className="text-[9px] text-muted-foreground">Window</div>
+            <div className="text-xs font-medium leading-tight">时间</div>
+            <div className="text-[9px] text-muted-foreground">时间区间</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Start</span>
+            <span className="text-[10px] text-muted-foreground">开始</span>
             <span className="mono-data text-[10px] font-medium">{data.startTime || '09:15'}</span>
           </div>
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">End</span>
+            <span className="text-[10px] text-muted-foreground">结束</span>
             <span className="mono-data text-[10px] font-medium">{data.endTime || '15:30'}</span>
           </div>
           {data.invertCondition && (
-            <div className="text-center text-[9px] text-muted-foreground">Outside window</div>
+            <div className="text-center text-[9px] text-muted-foreground">时间区间外</div>
           )}
         </div>
         {/* Handle labels */}
         <div className="mt-2 flex justify-between px-1 text-[8px]">
-          <span className="text-buy">True</span>
-          <span className="text-sell">False</span>
+          <span className="text-buy">真</span>
+          <span className="text-sell">假</span>
         </div>
       </div>
       {/* True output (left) - Within time window */}

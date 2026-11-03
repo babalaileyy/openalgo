@@ -34,7 +34,7 @@ export const TimeConditionNode = memo(({ data, selected }: TimeConditionNodeProp
             <Clock className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Time</div>
+            <div className="text-xs font-medium leading-tight">时间</div>
             <div className="text-[9px] text-muted-foreground">
               {data.conditionType === 'entry'
                 ? 'Entry'
@@ -46,7 +46,7 @@ export const TimeConditionNode = memo(({ data, selected }: TimeConditionNodeProp
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Time</span>
+            <span className="text-[10px] text-muted-foreground">时间</span>
             <span className="mono-data text-[10px] font-medium">
               {operatorLabel} {data.targetTime || '09:30'}
             </span>
@@ -59,8 +59,8 @@ export const TimeConditionNode = memo(({ data, selected }: TimeConditionNodeProp
         </div>
         {/* Handle labels */}
         <div className="mt-2 flex justify-between px-1 text-[8px]">
-          <span className="text-buy">Yes</span>
-          <span className="text-sell">No</span>
+          <span className="text-buy">是</span>
+          <span className="text-sell">否</span>
         </div>
       </div>
       {/* True output (left) - Condition met */}

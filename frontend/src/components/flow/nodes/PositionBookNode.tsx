@@ -24,8 +24,8 @@ export const PositionBookNode = memo(({ data, selected }: PositionBookNodeProps)
             <Briefcase className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Position Book</div>
-            <div className="text-[9px] text-muted-foreground">All positions</div>
+            <div className="text-xs font-medium leading-tight">持仓列表</div>
+            <div className="text-[9px] text-muted-foreground">所有持仓</div>
           </div>
         </div>
         {data.outputVariable && (

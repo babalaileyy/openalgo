@@ -121,7 +121,7 @@ const chartFor = (symbol: string) => {
 }
 
 async function addChart(symbol: string) {
-  fireEvent.change(screen.getByPlaceholderText(/Search symbol/), { target: { value: symbol } })
+  fireEvent.change(screen.getByPlaceholderText(/搜索品种/), { target: { value: symbol } })
   const option = await screen.findByText(symbol, { selector: 'div' })
   fireEvent.mouseDown(option)
   await waitFor(() => expect(chartFor(symbol).series[0].setData).toHaveBeenCalled())
@@ -223,14 +223,14 @@ describe('ChartTest charts', () => {
     const reliance = chartFor('RELIANCE')
     const infy = chartFor('INFY')
 
-    fireEvent.click(screen.getAllByTitle('Remove')[0])
+    fireEvent.click(screen.getAllByTitle('移除')[0])
 
     expect(reliance.destroyed).toBe(1)
     expect(reliance.host.innerHTML).toBe('')
     expect(infy.destroyed).toBe(0)
     expect(infy.host.childElementCount).toBe(1)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Remove all' }))
+    fireEvent.click(screen.getByRole('button', { name: '全部移除' }))
 
     expect(reliance.destroyed).toBe(1)
     expect(infy.destroyed).toBe(1)

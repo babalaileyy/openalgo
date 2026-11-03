@@ -24,22 +24,22 @@ export const OptionChainNode = memo(({ data, selected }: OptionChainNodeProps) =
             <Grid3X3 className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Option Chain</div>
+            <div className="text-xs font-medium leading-tight">期权链</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NSE_INDEX'}</div>
           </div>
         </div>
         <div className="space-y-0.5 rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Underlying</span>
+            <span className="text-[10px] text-muted-foreground">标的</span>
             <span className="mono-data text-[10px] font-medium">{data.underlying || '-'}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Expiry</span>
+            <span className="text-[10px] text-muted-foreground">到期日</span>
             <span className="mono-data text-[10px] font-medium">{data.expiryDate || '-'}</span>
           </div>
           {data.strikeCount && (
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-muted-foreground">Strikes</span>
+              <span className="text-[10px] text-muted-foreground">行权价</span>
               <span className="mono-data text-[10px] font-medium">{data.strikeCount}</span>
             </div>
           )}

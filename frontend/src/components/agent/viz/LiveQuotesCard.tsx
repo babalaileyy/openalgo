@@ -262,7 +262,7 @@ function Ladder({
         {total !== undefined && <span className="truncate normal-case">{compact(total)}</span>}
       </div>
       {rows.length === 0 ? (
-        <p className="mt-1 text-[11px] text-muted-foreground">No resting orders.</p>
+        <p className="mt-1 text-[11px] text-muted-foreground">暂无挂单。</p>
       ) : (
         <table className="mt-1 w-full font-mono text-[11px] tabular-nums">
           <tbody>
@@ -409,7 +409,7 @@ export function LiveQuotesCard({ spec, title, source, className }: LiveQuotesCar
             <Chip>{`${rows.length} instrument${rows.length === 1 ? '' : 's'}`}</Chip>
             {parsed.analyze && (
               <Chip className="border-amber-500/40 text-amber-600 dark:text-amber-400">
-                Analyze
+                分析
               </Chip>
             )}
           </div>
@@ -443,14 +443,14 @@ export function LiveQuotesCard({ spec, title, source, className }: LiveQuotesCar
                 <span className="ml-auto font-mono text-[15px] leading-none font-semibold tabular-nums text-foreground">
                   {values.ltp === undefined ? (
                     <span className="text-[12px] font-normal text-muted-foreground">
-                      No price yet
+                      暂无价格
                     </span>
                   ) : values.ltp === 0 ? (
                     <span
                       className="text-[12px] font-normal text-muted-foreground"
                       title="The last traded price is zero, so nothing has printed on this instrument yet."
                     >
-                      No trade yet
+                      暂无成交
                     </span>
                   ) : (
                     <Tick value={values.ltp} className="px-1">

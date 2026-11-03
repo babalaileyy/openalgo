@@ -1,0 +1,10 @@
+{
+    "Plugin Name": "binance",
+    "Description": "Public USD-M perpetual market data",
+    "Version": "0.1",
+    "supported_exchanges": ["CRYPTO"],
+    "broker_type": "crypto",
+    "leverage_config": false,
+    "market_data_only": true,
+    "default_chart": {"symbol": "BTCUSDT.P", "exchange": "CRYPTO"}
+}

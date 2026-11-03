@@ -47,7 +47,7 @@ function renderSmartOrder(quantity: number) {
     </MemoryRouter>
   )
 
-  const field = screen.getByText('Quantity').parentElement?.querySelector('input')
+  const field = screen.getByText('数量').parentElement?.querySelector('input')
   if (!field) throw new Error('SmartOrder quantity input was not rendered')
   return field
 }
@@ -110,8 +110,8 @@ describe('custom options common pricing contract', () => {
       screen.getByText(/custom legs inherit these common product and price fields/i)
     ).toBeInTheDocument()
 
-    fireEvent.change(screen.getByLabelText('Price'), { target: { value: '101.5' } })
-    fireEvent.change(screen.getByLabelText('Trigger Price'), { target: { value: '100.5' } })
+    fireEvent.change(screen.getByLabelText('委托价格'), { target: { value: '101.5' } })
+    fireEvent.change(screen.getByLabelText('触发价格'), { target: { value: '100.5' } })
 
     expect(useFlowWorkflowStore.getState().nodes[0].data.price).toBe(101.5)
     expect(useFlowWorkflowStore.getState().nodes[0].data.triggerPrice).toBe(100.5)
@@ -162,7 +162,7 @@ describe('imported basket editing contract', () => {
     )
 
     const textarea = screen
-      .getByText('Orders (SYMBOL,EXCHANGE,ACTION,QTY)')
+      .getByText('订单（品种代码、交易所、买卖方向、数量）')
       .parentElement?.querySelector('textarea')
     if (!textarea) throw new Error('Basket orders textarea was not rendered')
 
@@ -170,7 +170,7 @@ describe('imported basket editing contract', () => {
     expect(textarea).toHaveAttribute('readonly')
     expect(useFlowWorkflowStore.getState().nodes[0].data.orders).toEqual(importedOrders)
 
-    fireEvent.click(screen.getByRole('button', { name: /convert imported orders to csv/i }))
+    fireEvent.click(screen.getByRole('button', { name: /将导入的订单转换为 CSV/i }))
 
     expect(useFlowWorkflowStore.getState().nodes[0].data.orders).toBe(
       'SBIN,NSE,BUY,2\nINFY,NSE,SELL,1'
@@ -215,7 +215,7 @@ describe('the options node strike offset', () => {
       </MemoryRouter>
     )
 
-    const trigger = screen.getByText('Strike Offset').parentElement?.querySelector('button')
+    const trigger = screen.getByText('行权价偏移').parentElement?.querySelector('button')
     if (!trigger) throw new Error('Strike Offset control was not rendered')
     return trigger
   }

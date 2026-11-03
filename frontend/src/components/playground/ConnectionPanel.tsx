@@ -35,9 +35,7 @@ export function ConnectionPanel({
     if (isConnecting) {
       return (
         <Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30">
-          <div className="h-2 w-2 rounded-full bg-amber-400 mr-2 animate-pulse" />
-          Connecting...
-        </Badge>
+          <div className="h-2 w-2 rounded-full bg-amber-400 mr-2 animate-pulse" />正在连接…</Badge>
       )
     }
 
@@ -47,26 +45,20 @@ export function ConnectionPanel({
           variant="outline"
           className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
         >
-          <div className="h-2 w-2 rounded-full bg-emerald-400 mr-2" />
-          Authenticated
-        </Badge>
+          <div className="h-2 w-2 rounded-full bg-emerald-400 mr-2" />已验证</Badge>
       )
     }
 
     if (isConnected) {
       return (
         <Badge variant="outline" className="bg-sky-500/20 text-sky-400 border-sky-500/30">
-          <div className="h-2 w-2 rounded-full bg-sky-400 mr-2 animate-pulse" />
-          Connected
-        </Badge>
+          <div className="h-2 w-2 rounded-full bg-sky-400 mr-2 animate-pulse" />已连接</Badge>
       )
     }
 
     return (
       <Badge variant="outline" className="bg-muted/50 text-muted-foreground">
-        <div className="h-2 w-2 rounded-full bg-muted-foreground mr-2" />
-        Disconnected
-      </Badge>
+        <div className="h-2 w-2 rounded-full bg-muted-foreground mr-2" />已断开</Badge>
     )
   }
 
@@ -89,9 +81,7 @@ export function ConnectionPanel({
               className="h-7 px-3 bg-emerald-600 hover:bg-emerald-700 text-white"
               onClick={onConnect}
             >
-              <Plug className="h-3 w-3 mr-1.5" />
-              Connect
-            </Button>
+              <Plug className="h-3 w-3 mr-1.5" />连接</Button>
           ) : (
             <Button
               size="sm"
@@ -100,9 +90,7 @@ export function ConnectionPanel({
               onClick={onDisconnect}
               disabled={isConnecting}
             >
-              <Unplug className="h-3 w-3 mr-1.5" />
-              Disconnect
-            </Button>
+              <Unplug className="h-3 w-3 mr-1.5" />断开连接</Button>
           )}
           {isAuthenticated && (
             <Button
@@ -152,7 +140,7 @@ export function ConnectionPanel({
 
       {/* Auto-reconnect toggle */}
       <div className="flex items-center justify-between pt-2 border-t border-border/50">
-        <span className="text-xs text-muted-foreground">Auto-reconnect</span>
+        <span className="text-xs text-muted-foreground">自动重连</span>
         <Switch
           checked={autoReconnect}
           onCheckedChange={onAutoReconnectChange}

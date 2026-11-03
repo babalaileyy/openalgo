@@ -31,10 +31,10 @@ import { QuoteHeader } from './QuoteHeader'
 // Price types for order dialog
 // Backend API accepts: MARKET, LIMIT, SL (Stop Loss Limit), SL-M (Stop Loss Market)
 const PRICE_TYPES = [
-  { value: 'MARKET', label: 'Market' },
-  { value: 'LIMIT', label: 'Limit' },
-  { value: 'SL-M', label: 'SL-M' }, // Stop Loss Market (trigger only)
-  { value: 'SL', label: 'SL-L' }, // Stop Loss Limit (trigger + price)
+  { value: 'MARKET', label: '市价' },
+  { value: 'LIMIT', label: '限价' },
+  { value: 'SL-M', label: '止损市价 (SL-M)' }, // Stop Loss Market (trigger only)
+  { value: 'SL', label: '止损限价 (SL-L)' }, // Stop Loss Limit (trigger + price)
 ] as const
 
 // Product types based on exchange
@@ -282,12 +282,12 @@ export function PlaceOrderDialog({
   // Submit order
   const handleSubmit = async () => {
     if (!isValid()) {
-      showToast.error('Please fill all required fields')
+      showToast.error('请填写所有必填项')
       return
     }
 
     if (!apiKey) {
-      showToast.error('API key not found. Please set up your API key.')
+      showToast.error('未找到 API 密钥，请先设置。')
       onError?.('API key not found')
       return
     }
@@ -328,13 +328,13 @@ export function PlaceOrderDialog({
         onSuccess?.(orderid)
         onOpenChange(false)
       } else {
-        const errorMsg = response.message || 'Order placement failed'
+        const errorMsg = response.message || '下单失败'
         showToast.error(errorMsg, 'orders')
         onError?.(errorMsg)
       }
     } catch (err: unknown) {
       // Extract error message from axios error response or fallback to error message
-      let errorMsg = 'Order placement failed'
+      let errorMsg = '下单失败'
       if (err && typeof err === 'object') {
         const axiosError = err as { response?: { data?: { message?: string } }; message?: string }
         if (axiosError.response?.data?.message) {
@@ -380,9 +380,9 @@ export function PlaceOrderDialog({
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span>Place Order -</span>
+            <span>下单 -</span>
             <span className={formAction === 'BUY' ? 'text-green-500' : 'text-red-500'}>
-              {formAction}
+              {formAction === 'BUY' ? '买入' : '卖出'}
             </span>
             <span className="text-muted-foreground font-normal text-sm truncate">{symbol}</span>
           </DialogTitle>
@@ -413,7 +413,7 @@ export function PlaceOrderDialog({
 
           {/* Action Toggle */}
           <div className="space-y-2">
-            <Label className="text-xs">Action</Label>
+            <Label className="text-xs">买卖方向</Label>
             <div className="flex gap-2">
               <Button
                 type="button"
@@ -421,7 +421,7 @@ export function PlaceOrderDialog({
                 className={cn('flex-1', formAction === 'BUY' && 'bg-green-600 hover:bg-green-700')}
                 onClick={() => setFormAction('BUY')}
               >
-                BUY
+                买入
               </Button>
               <Button
                 type="button"
@@ -429,7 +429,7 @@ export function PlaceOrderDialog({
                 className={cn('flex-1', formAction === 'SELL' && 'bg-red-600 hover:bg-red-700')}
                 onClick={() => setFormAction('SELL')}
               >
-                SELL
+                卖出
               </Button>
             </div>
           </div>
@@ -437,7 +437,7 @@ export function PlaceOrderDialog({
           {/* Quantity with Mode Toggle */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="text-xs">Quantity</Label>
+              <Label className="text-xs">数量</Label>
               {/* Cash equity trades in shares - there is no lot. Showing a
                   Lots/Shares toggle and "Lot size: 1" on NSE/BSE is noise that
                   implies a concept the segment does not have. */}
@@ -453,7 +453,7 @@ export function PlaceOrderDialog({
                         : 'bg-muted text-muted-foreground hover:bg-muted/80'
                     )}
                   >
-                    Lots
+                    手数
                   </button>
                   <button
                     type="button"
@@ -465,7 +465,7 @@ export function PlaceOrderDialog({
                         : 'bg-muted text-muted-foreground hover:bg-muted/80'
                     )}
                   >
-                    Shares
+                    单位数
                   </button>
                 </div>
               )}
@@ -478,8 +478,8 @@ export function PlaceOrderDialog({
             />
             {usesLots && (
               <div className="flex justify-between text-[10px] text-muted-foreground">
-                <span>Lot size: {lotSize}</span>
-                <span>Total qty: {formQuantity}</span>
+                <span>每手数量：{lotSize}</span>
+                <span>总数量：{formQuantity}</span>
               </div>
             )}
           </div>
@@ -489,7 +489,7 @@ export function PlaceOrderDialog({
               contract-specific and stay on the exchange they came from. */}
           {isEquityExchange && (
             <div className="space-y-2">
-              <Label className="text-xs">Exchange</Label>
+              <Label className="text-xs">交易所</Label>
               <Select value={exchange_} onValueChange={setFormExchange}>
                 <SelectTrigger>
                   <SelectValue />
@@ -505,7 +505,7 @@ export function PlaceOrderDialog({
           {/* Price Type and Product in row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label className="text-xs">Price Type</Label>
+              <Label className="text-xs">价格类型</Label>
               <Select
                 value={formPriceType}
                 onValueChange={(v) => setFormPriceType(v as typeof formPriceType)}
@@ -523,7 +523,7 @@ export function PlaceOrderDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs">Product</Label>
+              <Label className="text-xs">产品类型</Label>
               <Select
                 value={formProduct}
                 onValueChange={(v) => setFormProduct(v as typeof formProduct)}
@@ -545,7 +545,7 @@ export function PlaceOrderDialog({
           {/* Price Input (conditional) */}
           {needsPrice && (
             <div className="space-y-2">
-              <Label className="text-xs">Price</Label>
+              <Label className="text-xs">委托价格</Label>
               <div className="flex gap-2">
                 <Button
                   type="button"
@@ -575,14 +575,14 @@ export function PlaceOrderDialog({
                   +
                 </Button>
               </div>
-              <p className="text-[10px] text-muted-foreground">Tick size: {tickSize}</p>
+              <p className="text-[10px] text-muted-foreground">最小价格变动：{tickSize}</p>
             </div>
           )}
 
           {/* Trigger Price Input (conditional) */}
           {needsTrigger && (
             <div className="space-y-2">
-              <Label className="text-xs">Trigger Price</Label>
+              <Label className="text-xs">触发价格</Label>
               <div className="flex gap-2">
                 <Button
                   type="button"
@@ -620,7 +620,7 @@ export function PlaceOrderDialog({
 
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
-            Cancel
+            取消
           </Button>
           <Button
             onClick={handleSubmit}
@@ -631,7 +631,7 @@ export function PlaceOrderDialog({
                 : 'bg-red-600 hover:bg-red-700'
             )}
           >
-            {isSubmitting ? 'Placing...' : `Place ${formAction} Order`}
+            {isSubmitting ? '正在提交…' : `提交${formAction === 'BUY' ? '买入' : '卖出'}委托`}
           </Button>
         </DialogFooter>
       </DialogContent>

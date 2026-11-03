@@ -104,8 +104,8 @@ export function WorkspaceReplayBar({
             className="rounded border bg-background px-2 py-1"
             onChange={(event) => onScopeChange(event.target.value as 'focused' | 'all')}
           >
-            <option value="focused">Selected chart</option>
-            <option value="all">All charts</option>
+            <option value="focused">选中图表</option>
+            <option value="all">所有图表</option>
           </select>
           {(phase === 'picking' || phase === 'loading') && (
             <output>
@@ -125,9 +125,7 @@ export function WorkspaceReplayBar({
                 aria-label="Previous observation"
                 disabled={state.index < 0}
                 onClick={onStepBack}
-              >
-                Prev
-              </button>
+              >上一根</button>
               <button
                 type="button"
                 className={button}
@@ -142,12 +140,10 @@ export function WorkspaceReplayBar({
                 aria-label="Next observation"
                 disabled={state.index >= state.total - 1}
                 onClick={onStep}
-              >
-                Next
-              </button>
+              >下一根</button>
               <input
                 type="range"
-                aria-label="Replay position"
+                aria-label="回放位置"
                 min={-1}
                 max={Math.max(-1, state.total - 1)}
                 value={state.index}
@@ -174,10 +170,8 @@ export function WorkspaceReplayBar({
               {focused?.simulated && (
                 <span
                   className="rounded border border-amber-500/50 px-1 text-amber-600 dark:text-amber-400"
-                  title="No finer bars for this candle: it forms along a path through its own open, high, low and close, and closes on the real candle"
-                >
-                  Simulated
-                </span>
+                  title="此 K 线没有更细周期的数据：回放路径根据该 K 线的开盘价、最高价、最低价和收盘价模拟，最终收于真实收盘价"
+                >模拟</span>
               )}
               {clock && (
                 <span className="tabular-nums font-medium" data-replay-clock>
@@ -185,7 +179,7 @@ export function WorkspaceReplayBar({
                 </span>
               )}
               <select
-                aria-label="Replay speed"
+                aria-label="回放速度"
                 value={state.speed}
                 onChange={(event) => onPlay(Number(event.target.value))}
                 className="rounded border bg-background px-1 py-1"
@@ -218,17 +212,11 @@ export function WorkspaceReplayBar({
           container={fullscreen instanceof HTMLElement ? fullscreen : null}
           className="sm:max-w-sm"
         >
-          <DialogTitle>Leave replay?</DialogTitle>
-          <DialogDescription>
-            The charts return to their live sessions and the playhead is lost.
-          </DialogDescription>
+          <DialogTitle>退出回放？</DialogTitle>
+          <DialogDescription>图表将返回实时行情，回放进度会丢失。</DialogDescription>
           <div className="flex justify-end gap-2">
-            <button type="button" className={button} onClick={onCancelExit}>
-              Stay
-            </button>
-            <button type="button" className={button} onClick={onConfirmExit}>
-              Leave
-            </button>
+            <button type="button" className={button} onClick={onCancelExit}>继续回放</button>
+            <button type="button" className={button} onClick={onConfirmExit}>退出回放</button>
           </div>
         </DialogContent>
       </Dialog>

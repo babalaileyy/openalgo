@@ -282,7 +282,7 @@ export function StrategyChartShell({
     if (document.fullscreenElement) void document.exitFullscreen()
     else {
       void el.requestFullscreen().catch(() => {
-        showToast.error('Full screen is not available in this browser.')
+        showToast.error('此浏览器不支持全屏。')
       })
     }
   }
@@ -430,12 +430,12 @@ export function StrategyChartShell({
           variant="outline"
           size="sm"
           className="h-7 gap-1 px-2 text-xs"
-          title="Indicators"
+          title="指标"
           disabled={!widget}
           onClick={() => setIndicatorsOpen(true)}
         >
           <BarChart3 className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Indicators</span>
+          <span className="hidden sm:inline">指标</span>
           {activeIndicators.length > 0 ? (
             <span className="rounded bg-primary/15 px-1 font-medium text-[10px] text-primary">
               {activeIndicators.length}
@@ -464,7 +464,7 @@ export function StrategyChartShell({
             variant="ghost"
             size="icon"
             className="h-7 w-7"
-            title="Chart settings"
+            title="图表设置"
             disabled={!widget}
             onClick={() => widget?.openSettings()}
           >
@@ -552,7 +552,7 @@ export function StrategyChartShell({
           <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/50">
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              Loading
+              加载中
             </div>
           </div>
         ) : null}

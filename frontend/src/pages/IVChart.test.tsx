@@ -160,8 +160,8 @@ describe('IVChart', () => {
       expect(chart.series).toHaveLength(1)
       expect(chart.series[0].type).toBe('line')
     }
-    const ce = chartFor('CE IV chart')
-    const pe = chartFor('PE IV chart')
+    const ce = chartFor('CE IV（看涨隐含波动率） 图表')
+    const pe = chartFor('PE IV（看跌隐含波动率） 图表')
     expect(ce.series[0].options.style).toMatchObject({ color: CANDLE_PAIRS.light.up })
     expect(pe.series[0].options.style).toMatchObject({ color: CANDLE_PAIRS.light.down })
     // The value tag carries the side's colour, not the last move's.
@@ -176,20 +176,20 @@ describe('IVChart', () => {
     const format = (label: string) =>
       (chartFor(label).series[0].options.priceFormat as { formatter: (v: number) => string })
         .formatter
-    expect(format('CE IV chart')(12.3456)).toBe('12.35%')
-    expect(format('PE Gamma chart')(0.0012347)).toBe('0.001235')
+    expect(format('CE IV（看涨隐含波动率） 图表')(12.3456)).toBe('12.35%')
+    expect(format('PE Gamma（看跌伽马） 图表')(0.0012347)).toBe('0.001235')
   })
 
   it('hands the engine real UTC seconds, sorted, with the gaps left out', async () => {
     render(<IVChart />)
-    const ce = chartFor('CE IV chart')
+    const ce = chartFor('CE IV（看涨隐含波动率） 图表')
     await waitFor(() => expect(ce.series[0].setData).toHaveBeenCalled())
     expect(ce.series[0].setData).toHaveBeenLastCalledWith([
       { time: T0, value: 12.25 },
       { time: T0 + 300, value: 13.5 },
     ])
     expect(ce.fitContent).toHaveBeenCalled()
-    expect(chartFor('PE IV chart').series[0].setData).toHaveBeenLastCalledWith([
+    expect(chartFor('PE IV（看跌隐含波动率） 图表').series[0].setData).toHaveBeenLastCalledWith([
       { time: T0, value: 14 },
       { time: T0 + 300, value: 14.75 },
     ])
@@ -198,8 +198,8 @@ describe('IVChart', () => {
   it('re-themes the charts in place when the theme changes', async () => {
     render(<IVChart />)
     const created = harness.createChart.mock.calls.length
-    const ce = chartFor('CE IV chart')
-    const pe = chartFor('PE IV chart')
+    const ce = chartFor('CE IV（看涨隐含波动率） 图表')
+    const pe = chartFor('PE IV（看跌隐含波动率） 图表')
 
     act(() => useThemeStore.setState({ mode: 'dark' }))
 

@@ -17,9 +17,9 @@ import { BacktestChart, type CurveKind, type CurvePoint, seriesFrom } from './Ba
 type Tab = 'equity' | 'drawdown' | 'trades'
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'equity', label: 'Equity' },
-  { id: 'drawdown', label: 'Drawdown' },
-  { id: 'trades', label: 'Trades' },
+  { id: 'equity', label: '权益' },
+  { id: 'drawdown', label: '回撤' },
+  { id: 'trades', label: '交易' },
 ]
 
 const TAB_KEY = 'trading.panel.backtest.tab'
@@ -63,25 +63,25 @@ export function BacktestResultTabs({ outcome, money }: Props) {
   if (tab === 'trades') {
     body =
       trades.length === 0 ? (
-        <Empty>This run took no trades.</Empty>
+        <Empty>本次回测没有交易。</Empty>
       ) : (
         <div className="max-h-60 overflow-y-auto rounded border border-border">
           <table className="w-full text-[10px]">
             <thead className="sticky top-0 bg-muted/60 text-muted-foreground">
               <tr>
-                <th className="px-1.5 py-1 text-left font-normal">Side</th>
-                <th className="px-1.5 py-1 text-right font-normal">Entry</th>
-                <th className="px-1.5 py-1 text-right font-normal">Exit</th>
-                <th className="px-1.5 py-1 text-right font-normal">Net</th>
+                <th className="px-1.5 py-1 text-left font-normal">方向</th>
+                <th className="px-1.5 py-1 text-right font-normal">开仓价</th>
+                <th className="px-1.5 py-1 text-right font-normal">平仓价</th>
+                <th className="px-1.5 py-1 text-right font-normal">净盈亏</th>
               </tr>
             </thead>
             <tbody className="font-mono tabular-nums">
               {trades.map((t) => (
                 <tr key={String(t.index)} className="border-t border-border">
-                  <td className="px-1.5 py-1">{String(t.side)}</td>
+                  <td className="px-1.5 py-1">{t.side === 'long' ? '多头' : t.side === 'short' ? '空头' : String(t.side)}</td>
                   <td className="px-1.5 py-1 text-right">{money(t.entryPrice)}</td>
                   <td className="px-1.5 py-1 text-right">
-                    {t.isOpen ? 'open' : money(t.exitPrice)}
+                    {t.isOpen ? '未平仓' : money(t.exitPrice)}
                   </td>
                   <td
                     className={cn(
@@ -101,8 +101,8 @@ export function BacktestResultTabs({ outcome, money }: Props) {
     body = (
       <Empty>
         {tab === 'equity'
-          ? 'This run has too few bars to draw an equity curve.'
-          : 'This run has too few bars to draw its drawdown.'}
+          ? '本次回测的 K 线数量不足，无法绘制权益曲线。'
+          : '本次回测的 K 线数量不足，无法绘制回撤曲线。'}
       </Empty>
     )
   } else {
@@ -125,7 +125,7 @@ export function BacktestResultTabs({ outcome, money }: Props) {
 
   return (
     <div className="flex flex-col gap-1.5">
-      <div role="tablist" aria-label="Backtest results" className="flex gap-1">
+      <div role="tablist" aria-label="回测结果" className="flex gap-1">
         {TABS.map(({ id, label }) => (
           <button
             key={id}
@@ -179,27 +179,27 @@ export function headline(
     const pct = first.value !== 0 ? (change / first.value) * 100 : 0
     return (
       <>
-        <span className="font-medium text-foreground">Equity {moneyText(last.value, currency)}</span>
+        <span className="font-medium text-foreground">权益 {moneyText(last.value, currency)}</span>
         <span className={change >= 0 ? 'text-emerald-500' : 'text-destructive'}>
           {` ${signedMoney(change, currency)} (${signedPercent(pct)})`}
         </span>
-        {` from ${moneyText(first.value, currency)} at the start`}
+        {`，初始权益 ${moneyText(first.value, currency)}`}
       </>
     )
   }
   let deepest: { time: number; value: number } | null = null
   for (const point of series.drawdown) if (!deepest || point.value < deepest.value) deepest = point
-  if (!deepest || deepest.value >= 0) return 'No drawdown: equity never fell below an earlier high.'
+  if (!deepest || deepest.value >= 0) return '无回撤：权益未低于此前高点。'
   const at = deepest.time
   const pct = series.drawdownPercent.find((point) => point.time === at)?.value
   return (
     <>
-      <span className="font-medium text-foreground">Deepest drawdown </span>
+      <span className="font-medium text-foreground">最大回撤 </span>
       <span className="text-destructive">
         {moneyText(deepest.value, currency)}
         {pct !== undefined ? ` (${signedPercent(pct)})` : ''}
       </span>
-      {` on ${momentText(at, timeZone)}`}
+      {`，发生于 ${momentText(at, timeZone)}`}
     </>
   )
 }

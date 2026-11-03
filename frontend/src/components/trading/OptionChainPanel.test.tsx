@@ -159,30 +159,30 @@ describe('OptionChainPanel', () => {
 
   it('charts the leg that was clicked', async () => {
     const onPick = renderPanel()
-    await userEvent.click(await screen.findByTitle('Chart NIFTY01SEP2624200CE'))
+    await userEvent.click(await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表'))
 
     expect(onPick).toHaveBeenCalledWith({ symbol: 'NIFTY01SEP2624200CE', exchange: 'NFO' })
   })
 
   it('disables a leg the chain does not carry rather than charting nothing', async () => {
     renderPanel()
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
     // The 24200 put is absent from this chain.
-    expect(screen.queryByTitle('Chart NIFTY01SEP2624200PE')).not.toBeInTheDocument()
+    expect(screen.queryByTitle('查看 NIFTY01SEP2624200PE 的图表')).not.toBeInTheDocument()
   })
 
   it('names the metric in the column header', async () => {
     const { container } = render(<OptionChainPanel apiKey="k" onPick={vi.fn()} />)
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
     // The notation sits in its own span (it must escape the container's
     // text-transform), so match on the header's rendered text rather than a
     // single node.
     const header = Array.from(container.querySelectorAll('div')).find((el) =>
-      /^Calls .*Strike.*Puts /.test(el.textContent ?? '')
+      /^看涨 .*行权价.*看跌 /.test(el.textContent ?? '')
     )
-    expect(header?.textContent).toBe('Calls LTPStrikePuts LTP')
+    expect(header?.textContent).toBe('看涨 LTP行权价看跌 LTP')
   })
 
   it('shows a dash for a leg with no implied volatility rather than a zero', async () => {
@@ -261,18 +261,18 @@ describe('OptionChainPanel', () => {
     // "97.20".
     renderPanel()
     // The name carries the value too, so the number is not lost to the label.
-    expect(await screen.findByLabelText('Chart NIFTY01SEP2624200CE, LTP 97.20')).toBeInTheDocument()
+    expect(await screen.findByLabelText('查看 NIFTY01SEP2624200CE 的图表，LTP 97.20')).toBeInTheDocument()
   })
 
   it('colours calls green and puts red, matching the platform option chain', async () => {
     // pages/OptionChain.tsx paints CE green and PE red. The same chain with the
     // colours swapped in another tab is a way to read resistance as support.
     const { container } = render(<OptionChainPanel apiKey="k" onPick={vi.fn()} />)
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
-    const metric = screen.getAllByRole('combobox').find((el) => el.textContent === 'LTP')
+    const metric = screen.getAllByRole('combobox').find((el) => el.textContent === 'LTP（最新价）')
     await userEvent.click(metric as HTMLElement)
-    await userEvent.click(await screen.findByRole('option', { name: 'OI' }))
+    await userEvent.click(await screen.findByRole('option', { name: 'OI（持仓量）' }))
 
     await waitFor(() => {
       expect(container.querySelector('[class*="from-emerald-500"]')).not.toBeNull()
@@ -286,15 +286,15 @@ describe('OptionChainPanel', () => {
 
     expect(await screen.findByText('network down')).toBeInTheDocument()
     // Never blame the user's expiry or master contracts for a network failure.
-    expect(screen.queryByText(/master contracts are downloaded/)).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
+    expect(screen.queryByText(/合约数据已下载/)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '重试' })).toBeInTheDocument()
   })
 
   it('does not paint the ATM strike as a solid slab', async () => {
     // --primary is near-black in light and near-white in dark, so bg-primary
     // would put the loudest element on the page inside a 21-row table.
     const { container } = render(<OptionChainPanel apiKey="k" onPick={vi.fn()} />)
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
     const atm = Array.from(container.querySelectorAll('span')).find(
       (el) => el.textContent === '24200' && el.className.includes('ring-inset')
@@ -316,9 +316,9 @@ describe('OptionChainPanel', () => {
     ['Vega', '8.09'],
   ])('renders %s at a precision that shows the number', async (name, expected) => {
     const { container } = render(<OptionChainPanel apiKey="k" onPick={vi.fn()} />)
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
-    const trigger = screen.getAllByRole('combobox').find((el) => el.textContent === 'LTP')
+    const trigger = screen.getAllByRole('combobox').find((el) => el.textContent === 'LTP（最新价）')
     await userEvent.click(trigger as HTMLElement)
     await userEvent.click(await screen.findByRole('option', { name: new RegExp(name) }))
 
@@ -332,16 +332,16 @@ describe('OptionChainPanel', () => {
 
   it('offers every Greek, grouped away from the price metrics', async () => {
     renderPanel()
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
-    const trigger = screen.getAllByRole('combobox').find((el) => el.textContent === 'LTP')
+    const trigger = screen.getAllByRole('combobox').find((el) => el.textContent === 'LTP（最新价）')
     await userEvent.click(trigger as HTMLElement)
 
     for (const name of ['LTP', 'OI', 'Volume', 'IV', 'Delta', 'Gamma', 'Theta', 'Vega']) {
       expect(await screen.findByRole('option', { name: new RegExp(name) })).toBeInTheDocument()
     }
-    expect(screen.getByText('Greeks')).toBeInTheDocument()
-    expect(screen.getByText('Price')).toBeInTheDocument()
+    expect(screen.getByText('希腊值')).toBeInTheDocument()
+    expect(screen.getByText('价格与持仓')).toBeInTheDocument()
   })
 
   it('marks the charted leg without erasing its moneyness', async () => {
@@ -350,19 +350,19 @@ describe('OptionChainPanel', () => {
     // at-the-money. It is a ring now, and the fact is stated in aria-current
     // rather than left to a class jsdom cannot evaluate.
     render(<OptionChainPanel apiKey="k" onPick={vi.fn()} activeSymbol="NFO:NIFTY01SEP2624200CE" />)
-    const leg = await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    const leg = await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
     expect(leg).toHaveAttribute('aria-current', 'true')
     expect(leg.className).not.toContain('!bg-accent')
-    expect(screen.getByTitle('Chart NIFTY01SEP2624150CE')).not.toHaveAttribute('aria-current')
+    expect(screen.getByTitle('查看 NIFTY01SEP2624150CE 的图表')).not.toHaveAttribute('aria-current')
   })
 
   it('offers buy and sell on every leg without nesting a button in a button', async () => {
     const { container } = render(<OptionChainPanel apiKey="k" onPick={vi.fn()} />)
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
-    expect(screen.getByLabelText('Buy NIFTY01SEP2624200CE')).toBeInTheDocument()
-    expect(screen.getByLabelText('Sell NIFTY01SEP2624200CE')).toBeInTheDocument()
+    expect(screen.getByLabelText('买入 NIFTY01SEP2624200CE')).toBeInTheDocument()
+    expect(screen.getByLabelText('卖出 NIFTY01SEP2624200CE')).toBeInTheDocument()
 
     // A button inside a button is invalid HTML and behaves like it, which is
     // why the pills are siblings of the chart button rather than children.
@@ -371,22 +371,22 @@ describe('OptionChainPanel', () => {
 
   it('opens the shared order dialog rather than placing anything itself', async () => {
     render(<OptionChainPanel apiKey="k" onPick={vi.fn()} />)
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
-    await userEvent.click(screen.getByLabelText('Sell NIFTY01SEP2624200CE'))
+    await userEvent.click(screen.getByLabelText('卖出 NIFTY01SEP2624200CE'))
 
     // Quantity, product and price type are confirmed in the dialog, so a pill
     // starts an order and never places one.
     const dialog = await screen.findByRole('dialog')
     expect(dialog.textContent).toContain('NIFTY01SEP2624200CE')
-    expect(dialog.textContent).toContain('SELL')
+    expect(dialog.textContent).toContain('卖出')
   })
 
   it('does not offer an order on a leg the chain does not carry', async () => {
     renderPanel()
-    await screen.findByTitle('Chart NIFTY01SEP2624200CE')
+    await screen.findByTitle('查看 NIFTY01SEP2624200CE 的图表')
 
     // The 24200 put is absent from this fixture.
-    expect(screen.queryByLabelText('Buy NIFTY01SEP2624200PE')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('买入 NIFTY01SEP2624200PE')).not.toBeInTheDocument()
   })
 })

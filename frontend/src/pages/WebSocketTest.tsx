@@ -532,7 +532,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
   // Order-update stream toggle (account-level, no symbols)
   const toggleOrderUpdates = () => {
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
-      showToast.error('Not connected')
+      showToast.error('未连接')
       return
     }
     const action = ordersSubscribed ? 'unsubscribe_orders' : 'subscribe_orders'
@@ -546,7 +546,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
   // Subscription controls
   const subscribe = (symbol: string, exchange: string, mode: string) => {
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
-      showToast.error('Not connected')
+      showToast.error('未连接')
       return
     }
 
@@ -791,9 +791,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
-                    WebSocket Console
-                    <Badge
+                  <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">WebSocket 控制台<Badge
                       variant="outline"
                       className="text-[9px] border-cyan-500/30 text-cyan-400 font-mono"
                     >
@@ -812,7 +810,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Switch checked={autoReconnect} onCheckedChange={setAutoReconnect} />
-                  <span>Auto-reconnect</span>
+                  <span>自动重连</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -835,9 +833,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                       variant="outline"
                       className="gap-2 border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
                     >
-                      <Link2Off className="w-4 h-4" />
-                      Disconnect
-                    </Button>
+                      <Link2Off className="w-4 h-4" />断开连接</Button>
                   )}
                 </div>
 
@@ -903,7 +899,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder="Search symbols..."
+                    placeholder="搜索交易品种..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onFocus={() => searchQuery.length >= 2 && setShowSearchResults(true)}
@@ -948,7 +944,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                   <SelectValue placeholder="All Exchanges" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
-                  <SelectItem value="_all">All Exchanges</SelectItem>
+                  <SelectItem value="_all">所有交易所</SelectItem>
                   {tradingExchanges.map((ex) => (
                     <SelectItem key={ex.value} value={ex.value}>
                       {ex.label}
@@ -983,7 +979,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                 </Badge>
               ))}
               {activeSymbols.size === 0 && (
-                <span className="text-sm text-muted-foreground/60">No symbols. Search to add.</span>
+                <span className="text-sm text-muted-foreground/60">暂无交易品种，请搜索添加。</span>
               )}
             </div>
 
@@ -1005,8 +1001,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                 size="sm"
                 className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 disabled:opacity-30"
               >
-                <Activity className="w-3.5 h-3.5 mr-1.5" /> Quote All
-              </Button>
+                <Activity className="w-3.5 h-3.5 mr-1.5" />全部订阅行情</Button>
               <Button
                 onClick={() => subscribeAll('Depth')}
                 variant="outline"
@@ -1024,16 +1019,14 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                 size="sm"
                 className="border-rose-500/30 text-rose-400 hover:bg-rose-500/10 disabled:opacity-30"
               >
-                <ZapOff className="w-3.5 h-3.5 mr-1.5" /> Unsub All
-              </Button>
+                <ZapOff className="w-3.5 h-3.5 mr-1.5" />全部取消订阅</Button>
               <Button
                 onClick={clearAllSymbols}
                 variant="outline"
                 size="sm"
                 className="border-border/50 text-muted-foreground hover:bg-muted/50"
               >
-                <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Clear All
-              </Button>
+                <Trash2 className="w-3.5 h-3.5 mr-1.5" />全部清除</Button>
             </div>
           </div>
 
@@ -1042,7 +1035,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Radio className="w-4 h-4 text-cyan-400" />
-                <h2 className="text-sm font-semibold text-foreground">Order Updates</h2>
+                <h2 className="text-sm font-semibold text-foreground">委托更新</h2>
                 {ordersSubscribed && <StatusOrb status="success" size="sm" />}
                 <span className="text-xs text-muted-foreground">
                   {ordersSubscribed
@@ -1058,8 +1051,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                     size="sm"
                     className="border-border/50 text-muted-foreground hover:bg-muted/50"
                   >
-                    <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Clear
-                  </Button>
+                    <Trash2 className="w-3.5 h-3.5 mr-1.5" />清除</Button>
                 )}
                 <Button
                   onClick={toggleOrderUpdates}
@@ -1075,12 +1067,10 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                 >
                   {ordersSubscribed ? (
                     <>
-                      <ZapOff className="w-3.5 h-3.5 mr-1.5" /> Unsubscribe
-                    </>
+                      <ZapOff className="w-3.5 h-3.5 mr-1.5" />取消订阅</>
                   ) : (
                     <>
-                      <Zap className="w-3.5 h-3.5 mr-1.5" /> Subscribe
-                    </>
+                      <Zap className="w-3.5 h-3.5 mr-1.5" />订阅</>
                   )}
                 </Button>
               </div>
@@ -1097,15 +1087,15 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-left text-muted-foreground border-b border-border/50">
-                      <th className="py-2 pr-3 font-medium">Time</th>
-                      <th className="py-2 pr-3 font-medium">Order ID</th>
-                      <th className="py-2 pr-3 font-medium">Symbol</th>
-                      <th className="py-2 pr-3 font-medium">Action</th>
-                      <th className="py-2 pr-3 font-medium">Type</th>
-                      <th className="py-2 pr-3 font-medium">Status</th>
-                      <th className="py-2 pr-3 font-medium text-right">Filled</th>
-                      <th className="py-2 pr-3 font-medium text-right">Avg Price</th>
-                      <th className="py-2 font-medium">Info</th>
+                      <th className="py-2 pr-3 font-medium">时间</th>
+                      <th className="py-2 pr-3 font-medium">委托编号</th>
+                      <th className="py-2 pr-3 font-medium">交易品种</th>
+                      <th className="py-2 pr-3 font-medium">操作</th>
+                      <th className="py-2 pr-3 font-medium">类型</th>
+                      <th className="py-2 pr-3 font-medium">状态</th>
+                      <th className="py-2 pr-3 font-medium text-right">已成交</th>
+                      <th className="py-2 pr-3 font-medium text-right">成交均价</th>
+                      <th className="py-2 font-medium">信息</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1328,8 +1318,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                           <div className="grid grid-cols-2 gap-4 p-3 bg-muted/30 rounded-lg border border-border/40 max-h-[400px] overflow-y-auto">
                             <div>
                               <div className="text-[9px] uppercase tracking-wider text-emerald-400 mb-2 flex items-center gap-1 sticky top-0 bg-muted/30 py-1">
-                                <ArrowUp className="w-3 h-3" /> Bids
-                              </div>
+                                <ArrowUp className="w-3 h-3" />买盘</div>
                               {symbolData.data.depth.buy.slice(0, depthLevel).map((level, i) => (
                                 <DepthLevel
                                   key={i}
@@ -1345,8 +1334,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                             </div>
                             <div>
                               <div className="text-[9px] uppercase tracking-wider text-rose-400 mb-2 flex items-center gap-1 sticky top-0 bg-muted/30 py-1">
-                                <ArrowDown className="w-3 h-3" /> Asks
-                              </div>
+                                <ArrowDown className="w-3 h-3" />卖盘</div>
                               {symbolData.data.depth.sell.slice(0, depthLevel).map((level, i) => (
                                 <DepthLevel
                                   key={i}
@@ -1380,7 +1368,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
               <div className="flex items-center gap-3">
                 <Terminal className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium text-muted-foreground">Console</span>
+                <span className="text-sm font-medium text-muted-foreground">控制台</span>
                 <Badge variant="outline" className="text-[9px] border-border text-muted-foreground">
                   {showRawLogs ? rawMessages.length : logs.length}
                 </Badge>
@@ -1418,7 +1406,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
             >
               {showRawLogs ? (
                 rawMessages.length === 0 ? (
-                  <div className="text-muted-foreground/60">No raw messages...</div>
+                  <div className="text-muted-foreground/60">暂无原始消息...</div>
                 ) : (
                   rawMessages.map((msg, i) => (
                     <div key={i} className="text-muted-foreground break-all">
@@ -1427,7 +1415,7 @@ export default function WebSocketTest({ depthLevel = 5 }: WebSocketTestProps) {
                   ))
                 )
               ) : logs.length === 0 ? (
-                <div className="text-muted-foreground/60">Waiting for events...</div>
+                <div className="text-muted-foreground/60">等待事件...</div>
               ) : (
                 logs.map((log, i) => (
                   <div

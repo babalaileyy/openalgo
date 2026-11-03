@@ -31,6 +31,25 @@ export function toneClass(value: number): string {
   return 'text-muted-foreground'
 }
 
+export function sideLabel(action: string): string {
+  return action === 'BUY' ? '买入' : action === 'SELL' ? '卖出' : action
+}
+
+export function priceTypeLabel(type: string): string {
+  const labels: Record<string, string> = { MARKET: '市价', LIMIT: '限价', SL: '止损限价', 'SL-M': '止损市价' }
+  return labels[type] ?? type
+}
+
+function statusLabel(status: string): string {
+  const labels: Record<string, string> = {
+    open: '待成交', pending: '处理中', 'trigger pending': '待触发',
+    complete: '已成交', completed: '已成交', filled: '已成交',
+    rejected: '已拒绝', cancelled: '已撤销', canceled: '已撤销',
+    expired: '已过期', 'partially filled': '部分成交',
+  }
+  return labels[status.toLowerCase()] ?? (status || '未知')
+}
+
 export function sideClass(action: string): string {
   if (action === 'BUY') return 'text-emerald-600 dark:text-emerald-400'
   if (action === 'SELL') return 'text-rose-600 dark:text-rose-400'
@@ -75,7 +94,7 @@ export function SymbolCell({
       <button
         type="button"
         onClick={() => onPick({ symbol, exchange })}
-        aria-label={`Chart ${symbol} on ${exchange}`}
+        aria-label={`查看 ${exchange} ${symbol} 的图表`}
         aria-current={active ? true : undefined}
         className="rounded-sm text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
       >
@@ -107,7 +126,7 @@ export function StatusBadge({ status }: { status: string }) {
         tone === 'unknown' && 'border-border text-foreground'
       )}
     >
-      {status || 'unknown'}
+      {statusLabel(status)}
     </span>
   )
 }

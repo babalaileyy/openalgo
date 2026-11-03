@@ -65,33 +65,33 @@ const VARSITY_COURSES = 13
 const platformDesks = [
   {
     icon: Server,
-    title: 'Self-hosted algo trading',
-    desc: 'A unified broker API and execution engine on your own server, driven from TradingView, Amibroker, ChartInk, Excel, Python or MCP.',
+    title: '自托管算法交易',
+    desc: '在自己的服务器上运行统一交易商 API 和执行引擎，支持 TradingView、Amibroker、ChartInk、Excel、Python 和 MCP。',
   },
   {
     icon: CandlestickChart,
-    title: 'Charting platform',
-    desc: 'Chart-based trading in the built-in terminal: fire and manage orders from the chart itself, with 102 indicators on real market data.',
+    title: '图表交易平台',
+    desc: '在内置终端的图表上提交和管理委托，并使用 102 个指标分析真实行情。',
   },
   {
     icon: Blocks,
-    title: 'No-code strategy builder',
-    desc: 'Flow is a drag-and-drop canvas: wire 61 node types from triggers to indicators, conditions and orders, then activate it to run on its own.',
+    title: '无代码策略构建',
+    desc: 'Flow 提供拖放画布，可连接 61 种触发器、指标、条件和委托节点，启用后自动运行。',
   },
   {
     icon: Sigma,
-    title: 'Options trading platform',
-    desc: `${tools.length} built-in tools: option chain, Greeks, OI tracker, max pain, vol surface, GEX, IV smile, straddles and arbitrage, plus portfolio and SIP backtesters.`,
+    title: '期权交易平台',
+    desc: `内置 ${tools.length} 个工具，涵盖期权链、希腊值、持仓量追踪、最大痛点、波动率曲面、GEX、IV 微笑、跨式组合和套利，以及投资组合与定投回测。`,
   },
   {
     icon: Zap,
-    title: 'Scalping platform',
-    desc: 'A keyboard-driven scalping terminal: arrow keys fire CE and PE orders, F6 flattens every position and F7 cancels every pending order.',
+    title: '短线交易平台',
+    desc: '键盘驱动的短线交易终端：方向键提交看涨或看跌委托，F6 平仓，F7 撤销未成交委托。',
   },
   {
     icon: ShieldCheck,
-    title: 'Sandbox testing',
-    desc: 'Analyzer mode runs any strategy against real market data with 1 crore of sandbox capital and exchange-aligned auto square-off.',
+    title: '模拟盘测试',
+    desc: '分析模式使用真实行情和 1 千万模拟资金运行策略，并按交易所时间自动平仓。',
   },
 ]
 
@@ -100,12 +100,12 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navLinks = [
-    { href: '/', label: 'Home', internal: true },
-    { href: '/faq', label: 'FAQ', internal: true },
-    { href: 'https://www.openalgo.in/learn', label: 'Varsity', internal: false },
-    { href: 'https://openalgo.in/discord', label: 'Community', internal: false },
-    { href: 'https://openalgo.in/roadmap', label: 'Roadmap', internal: false },
-    { href: 'https://docs.openalgo.in', label: 'Docs', internal: false },
+    { href: '/', label: '首页', internal: true },
+    { href: '/faq', label: '常见问题', internal: true },
+    { href: 'https://www.openalgo.in/learn', label: '学习中心', internal: false },
+    { href: 'https://openalgo.in/discord', label: '社区', internal: false },
+    { href: 'https://openalgo.in/roadmap', label: '路线图', internal: false },
+    { href: 'https://docs.openalgo.in', label: '文档', internal: false },
   ]
 
   return (
@@ -118,14 +118,14 @@ export default function Home() {
             {/* Mobile menu button */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon" aria-label="Open menu">
+                <Button variant="ghost" size="icon" aria-label="打开菜单">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-80">
                 <SheetHeader className="sr-only">
-                  <SheetTitle>Navigation Menu</SheetTitle>
-                  <SheetDescription>Main navigation and quick access links</SheetDescription>
+                  <SheetTitle>导航菜单</SheetTitle>
+                  <SheetDescription>主导航和快捷链接</SheetDescription>
                 </SheetHeader>
                 <div className="flex items-center gap-2 mb-8">
                   <img src="/logo.png" alt="OpenAlgo" className="h-8 w-8" />
@@ -151,7 +151,7 @@ export default function Home() {
                         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                       />
                     </svg>
-                    Home
+                    首页
                   </Link>
                   <Link
                     to="/faq"
@@ -159,7 +159,7 @@ export default function Home() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <HelpCircle className="h-5 w-5" />
-                    FAQ
+                    常见问题
                   </Link>
                   <Link
                     to="/download"
@@ -167,7 +167,7 @@ export default function Home() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Download className="h-5 w-5" />
-                    Download
+                    下载
                   </Link>
                   <a
                     href="https://www.openalgo.in/learn"
@@ -176,7 +176,7 @@ export default function Home() {
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
                   >
                     <GraduationCap className="h-5 w-5" />
-                    Varsity
+                    学习中心
                   </a>
                   <a
                     href="https://openalgo.in/discord"
@@ -185,7 +185,7 @@ export default function Home() {
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
                   >
                     <MessageCircle className="h-5 w-5" />
-                    Community
+                    社区
                   </a>
                   <a
                     href="https://openalgo.in/roadmap"
@@ -194,7 +194,7 @@ export default function Home() {
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
                   >
                     <ClipboardList className="h-5 w-5" />
-                    Roadmap
+                    路线图
                   </a>
                   <a
                     href="https://docs.openalgo.in"
@@ -203,7 +203,7 @@ export default function Home() {
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
                   >
                     <BookOpen className="h-5 w-5" />
-                    Docs
+                    文档
                   </a>
                 </div>
               </SheetContent>
@@ -237,13 +237,13 @@ export default function Home() {
           {/* Right side */}
           <div className="flex items-center gap-2">
             <Link to="/download">
-              <Button size="sm">Download</Button>
+              <Button size="sm">下载</Button>
             </Link>
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleMode}
-              aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={mode === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
             >
               {mode === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
@@ -262,37 +262,33 @@ export default function Home() {
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] mb-8 shadow-sm transition-colors hover:border-emerald-500/40 hover:bg-card"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px] shadow-emerald-400/60" />
-              <span className="text-amber-700 dark:text-amber-500">New Here</span>
+              <span className="text-amber-700 dark:text-amber-500">初次使用</span>
               <span className="text-muted-foreground">
-                - Learn Free on Open Varsity, {VARSITY_COURSES} Courses
+                - 在 Open Varsity 免费学习，共 {VARSITY_COURSES} 门课程
               </span>
               <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
             </a>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-              <span className="block text-foreground">Your Personal</span>
-              <span className="block text-primary">Trading Platform</span>
+              <span className="block text-foreground">你的个人</span>
+              <span className="block text-primary">交易平台</span>
             </h1>
             <p className="text-lg sm:text-xl font-semibold mb-6 text-primary">
-              For algo, options and discretionary traders. Open source, community driven,
-              self-hosted.
+              面向算法、期权和自主交易者。开源、社区驱动、自行部署。
             </p>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-              Connect TradingView, Amibroker or your own Python code, or build strategies visually
-              with no code. Trade options from the chain to multi-leg execution with built-in risk
-              management. Chart, scalp and analyse on one live feed, and test everything in Sandbox
-              mode first, across 30+ brokers on your own server.
+              连接 TradingView、Amibroker 或自己的 Python 代码，也可以无代码构建策略。从期权链到多腿执行均可使用内置风控；在统一实时行情下进行图表交易、短线交易和分析，并可先在模拟盘测试。支持在自己的服务器上连接 30 多家交易商。
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link to="/login">
                   <LogIn className="mr-2 h-5 w-5" />
-                  Login
+                  登录
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link to="/download">
                   <Download className="mr-2 h-5 w-5" />
-                  Download
+                  下载
                 </Link>
               </Button>
             </div>
@@ -302,7 +298,7 @@ export default function Home() {
         {/* Integrates With */}
         <section className="container mx-auto px-4 py-12 sm:py-16">
           <p className="text-center text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-amber-700 dark:text-amber-500 mb-6">
-            Integrates With
+            支持集成
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto">
             {integrations.map((name) => (
@@ -321,15 +317,14 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-500 mb-6">
               <Server className="h-3.5 w-3.5" />
-              One platform, many desks
+              一个平台，多种交易工作台
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-              Not just an algo trading platform.
-              <span className="block text-muted-foreground">A complete trading desk.</span>
+              不仅是算法交易平台。
+              <span className="block text-muted-foreground">完整的交易工作台。</span>
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground">
-              Execution is only the starting point. Charting, no-code strategy building, options
-              analytics, scalping and sandbox testing all run inside the same self-hosted stack.
+              交易执行只是起点。图表、无代码策略构建、期权分析、短线交易和模拟盘测试都运行在同一个自托管平台中。
             </p>
           </div>
 
@@ -353,14 +348,13 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 mb-6">
               <Sparkles className="h-3.5 w-3.5" />
-              Made for AI
+              为 AI 而设计
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-              Trade & Research With Your AI
+              使用 AI 进行交易与研究
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground">
-              Two simple ways to bring AI into your trading - talk to your account like a trading
-              desk, or give your AI a toolkit to chart, scan, and backtest for you.
+              通过对话查询交易账户，或为 AI 配备图表、筛选和回测工具，让 AI 协助交易与研究。
             </p>
           </div>
 
@@ -378,20 +372,18 @@ export default function Home() {
                       <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
                     </h3>
                     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-1">
-                      Trade by Chatting
+                      通过对话交易
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Connect your OpenAlgo account to Claude, Cursor, Windsurf, or ChatGPT. Place
-                  orders, check positions, and pull live prices by simply asking - no dashboards, no
-                  clicks.
+                  将 OpenAlgo 账户连接到 Claude、Cursor、Windsurf 或 ChatGPT，通过对话提交委托、查询持仓和获取实时价格。
                 </p>
                 <div className="flex flex-wrap gap-2 pt-2">
                   {[
-                    '25+ built-in actions',
+                    '25 项以上内置操作',
                     'Claude / Cursor / Windsurf / ChatGPT',
-                    'Runs on your computer',
+                    '在你的电脑上运行',
                   ].map((tag) => (
                     <span
                       key={tag}
@@ -417,17 +409,15 @@ export default function Home() {
                       <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
                     </h3>
                     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-1">
-                      Chart, Scan & Backtest
+                      图表、筛选与回测
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Ready-made trading abilities you can drop into your AI assistant - charts,
-                  scanners, custom indicators, and backtests with real brokerage costs. Works with
-                  40+ AI apps.
+                  为 AI 助手提供现成交易能力，包括图表、扫描器、自定义指标以及计入实际交易成本的回测，支持 40 多款 AI 应用。
                 </p>
                 <div className="flex flex-wrap gap-2 pt-2">
-                  {['100+ indicators', '12 ready-made strategies', 'India / US / Crypto'].map(
+                  {['100 多个指标', '12 个现成策略', '印度 / 美国 / 加密货币'].map(
                     (tag) => (
                       <span
                         key={tag}

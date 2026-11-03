@@ -67,7 +67,7 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center p-6 bg-background">
           <div className="max-w-md w-full text-center space-y-2">
             <h1 className="text-base font-medium">Loading new version…</h1>
-            <p className="text-xs text-muted-foreground">A fresh build is available.</p>
+            <p className="text-xs text-muted-foreground">有新版本可用。</p>
           </div>
         </div>
       )
@@ -76,12 +76,12 @@ export class ErrorBoundary extends Component<Props, State> {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <div className="max-w-md w-full text-center space-y-4">
-          <h1 className="text-xl font-semibold">Something went wrong</h1>
+          <h1 className="text-xl font-semibold">出现错误</h1>
           <p className="text-sm text-muted-foreground break-words">{this.state.message}</p>
           <p className="text-xs text-muted-foreground">
             The error has been logged. You can reload the page or visit{' '}
             <a className="underline" href="/admin/diagnostics">
-              Diagnostics
+              诊断信息
             </a>{' '}
             to view recent errors.
           </p>
@@ -90,7 +90,7 @@ export class ErrorBoundary extends Component<Props, State> {
             onClick={this.handleReload}
             className="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 bg-primary text-primary-foreground hover:bg-primary/90"
           >
-            Reload
+            重新加载
           </button>
         </div>
       </div>

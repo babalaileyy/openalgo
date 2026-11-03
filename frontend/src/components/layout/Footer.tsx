@@ -43,7 +43,7 @@ export function Footer({ className }: FooterProps) {
               www.openalgo.in
             </a>
           </div>
-          <span className="text-center">Open Source Algo Platform for Everyone</span>
+          <span className="text-center">面向所有人的开源量化交易平台</span>
           {version && (
             <>
               <span className="hidden md:inline">|</span>

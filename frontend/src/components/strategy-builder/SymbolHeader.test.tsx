@@ -38,7 +38,7 @@ describe('SymbolHeader selectors', () => {
     expect(selectors).toHaveClass('grid', 'w-full', 'min-w-0', 'grid-cols-1', 'sm:w-auto')
     expect(selectors).not.toHaveClass('overflow-hidden')
     expect(screen.getByTestId('symbol-metrics')).toHaveClass('overflow-hidden', 'rounded-b-xl')
-    for (const name of ['Derivative exchange', 'Underlying', 'Option expiry']) {
+    for (const name of ['衍生品交易所', 'Underlying', '期权到期日']) {
       expect(screen.getByRole('combobox', { name })).toHaveClass('w-full', 'min-w-0')
     }
   })
@@ -73,10 +73,10 @@ describe('SymbolHeader selectors', () => {
       />
     )
 
-    expect(screen.getByRole('combobox', { name: 'Derivative exchange' })).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: '衍生品交易所' })).toBeInTheDocument()
     expect(screen.getByRole('combobox', { name: 'Underlying' })).toHaveTextContent('NIFTY')
 
-    fireEvent.keyDown(screen.getByRole('combobox', { name: 'Option expiry' }), {
+    fireEvent.keyDown(screen.getByRole('combobox', { name: '期权到期日' }), {
       key: 'ArrowDown',
     })
     fireEvent.click(await screen.findByRole('option', { name: '18AUG26' }))

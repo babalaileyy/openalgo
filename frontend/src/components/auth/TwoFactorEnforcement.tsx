@@ -24,18 +24,18 @@ type PurposeKey =
 const PURPOSES: { key: PurposeKey; label: string; help: string }[] = [
   {
     key: 'totp_required_for_login',
-    label: 'Dashboard sign-in',
-    help: 'Require a 6-digit code after password on every login.',
+    label: '仪表盘登录',
+    help: '每次登录输入密码后都需要输入 6 位验证码。',
   },
   {
     key: 'totp_required_for_mcp',
-    label: 'Remote MCP authorization',
-    help: 'Require a fresh code at the OAuth consent screen when an MCP client requests order-placement scope.',
+    label: '远程 MCP 授权',
+    help: 'MCP 客户端请求下单权限时，需要在 OAuth 授权页面输入当前验证码。',
   },
   {
     key: 'totp_required_for_password_reset',
-    label: 'Password reset',
-    help: 'Disable the email reset path; force the authenticator app for every password reset.',
+    label: '密码重置',
+    help: '禁用邮件重置方式，每次重置密码都必须使用身份验证器应用。',
   },
 ]
 
@@ -68,7 +68,7 @@ export default function TwoFactorEnforcement() {
         totp_required_for_password_reset: r.data.totp_required_for_password_reset,
       })
     } catch {
-      showToast.error('Failed to load 2FA settings', 'system')
+      showToast.error('加载双重验证设置失败', 'system')
     } finally {
       setLoading(false)
     }
@@ -115,7 +115,7 @@ export default function TwoFactorEnforcement() {
 
   const handleSave = async () => {
     if (!totpCode || totpCode.length !== 6) {
-      showToast.error('Enter your 6-digit authenticator code to confirm.', 'system')
+      showToast.error('请输入身份验证器中的 6 位验证码以确认。', 'system')
       return
     }
     setSaving(true)
@@ -148,20 +148,19 @@ export default function TwoFactorEnforcement() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5" />
-          2FA Enforcement
+          双重验证设置
         </CardTitle>
         <CardDescription>
-          Choose where 2FA is required. Default is off — when on, pick which purposes.
+          选择需要双重验证的操作。默认关闭；开启后可选择适用范围。
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Master switch */}
         <div className="flex items-start justify-between gap-4 rounded-lg border p-4">
           <div className="flex-1">
-            <Label className="font-semibold">Enable 2FA</Label>
+            <Label className="font-semibold">启用双重验证</Label>
             <p className="text-sm text-muted-foreground mt-1">
-              Master switch. When off, every per-purpose toggle below is ignored and the install
-              behaves as it did before this feature.
+              双重验证总开关。关闭后，下方各项开关均不生效，系统按原有方式运行。
             </p>
           </div>
           <Switch checked={draft.totp_enabled} onCheckedChange={setMaster} />
@@ -171,13 +170,13 @@ export default function TwoFactorEnforcement() {
         {draft.totp_enabled ? (
           <div className="space-y-3 rounded-lg border p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Apply 2FA to:</span>
+              <span className="text-sm font-medium">双重验证适用于：</span>
               <button
                 type="button"
                 className="text-xs text-primary hover:underline"
                 onClick={() => setAll(!allOn)}
               >
-                {allOn ? 'Clear all' : 'Select all'}
+                {allOn ? '全部取消' : '全选'}
               </button>
             </div>
             {PURPOSES.map((p) => (
@@ -199,11 +198,10 @@ export default function TwoFactorEnforcement() {
         {isDirty ? (
           <div className="space-y-2 rounded-lg border border-amber-300 bg-amber-50 p-4 dark:bg-amber-950/30">
             <Label htmlFor="confirm-totp" className="text-sm font-semibold">
-              Confirm with TOTP code
+              使用 TOTP 验证码确认
             </Label>
             <p className="text-xs text-muted-foreground">
-              Enter the current 6-digit code from your authenticator app to apply this change.
-              Required whether you are turning 2FA on or off.
+              输入身份验证器应用中的当前 6 位验证码以应用更改。开启或关闭双重验证均需要验证码。
             </p>
             <Input
               id="confirm-totp"
@@ -219,7 +217,7 @@ export default function TwoFactorEnforcement() {
             <div className="flex gap-2 pt-1">
               <Button onClick={handleSave} disabled={saving || totpCode.length !== 6}>
                 {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}
-                Save 2FA settings
+                保存双重验证设置
               </Button>
               <Button
                 variant="outline"
@@ -236,7 +234,7 @@ export default function TwoFactorEnforcement() {
                 }}
                 disabled={saving}
               >
-                Cancel
+                取消
               </Button>
             </div>
           </div>

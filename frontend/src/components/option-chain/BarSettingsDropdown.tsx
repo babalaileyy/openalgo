@@ -29,28 +29,28 @@ export function BarSettingsDropdown({
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="h-9 w-9">
           <BarChart3 className="h-4 w-4" />
-          <span className="sr-only">Bar settings</span>
+          <span className="sr-only">柱状图设置</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>Bar Data</DropdownMenuLabel>
+        <DropdownMenuLabel>柱状图数据</DropdownMenuLabel>
         <DropdownMenuRadioGroup
           value={barDataSource}
           onValueChange={(v) => onBarDataSourceChange(v as BarDataSource)}
         >
-          <DropdownMenuRadioItem value="oi">Open Interest</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="volume">Volume</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="oi">持仓量</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="volume">成交量</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuLabel>Bar Style</DropdownMenuLabel>
+        <DropdownMenuLabel>柱状图样式</DropdownMenuLabel>
         <DropdownMenuRadioGroup
           value={barStyle}
           onValueChange={(v) => onBarStyleChange(v as BarStyle)}
         >
-          <DropdownMenuRadioItem value="gradient">Gradient</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="solid">Solid</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="gradient">渐变</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="solid">纯色</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

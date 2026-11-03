@@ -13,12 +13,12 @@ import { cn } from '@/lib/utils'
  * expression is almost never what was meant.
  */
 const OPERATORS = [
-  { label: '÷', insert: '/', title: 'Divide' },
-  { label: '−', insert: '-', title: 'Subtract' },
-  { label: '+', insert: '+', title: 'Add' },
-  { label: '×', insert: '*', title: 'Multiply' },
-  { label: '^', insert: '^', title: 'Exponentiation' },
-  { label: '1/', insert: '1/', title: 'Reciprocal' },
+  { label: '÷', insert: '/', title: '除' },
+  { label: '−', insert: '-', title: '减' },
+  { label: '+', insert: '+', title: '加' },
+  { label: '×', insert: '*', title: '乘' },
+  { label: '^', insert: '^', title: '乘方' },
+  { label: '1/', insert: '1/', title: '倒数' },
 ] as const
 
 /**
@@ -496,11 +496,11 @@ export function SymbolSearchDialog({
             onKeyDown={onKeyDown}
             placeholder={
               mode === 'comparison'
-                ? 'Search comparison symbol'
-                : 'Search symbol, or build an expression…'
+                ? '搜索对比品种'
+                : '搜索交易品种，或输入计算表达式…'
             }
             className="w-full bg-transparent text-base outline-none placeholder:text-muted-foreground"
-            aria-label={mode === 'comparison' ? 'Search comparison symbol' : 'Search symbol'}
+            aria-label={mode === 'comparison' ? '搜索对比品种' : '搜索交易品种'}
           />
           {/* Each key carries its own label, so the row needs no group role of its
               own: a wrapper role here would only add a landmark with nothing to say. */}
@@ -550,16 +550,16 @@ export function SymbolSearchDialog({
                   : 'bg-muted text-muted-foreground hover:bg-muted/70'
               )}
             >
-              {c}
+              {({ ALL: '全部', Index: '指数', Cash: '现货', 'F&O': '期货与期权', Currency: '外汇', Commodity: '商品', Crypto: '加密货币' } as Record<Chip, string>)[c]}
             </button>
           ))}
         </div>
 
         {/* Column headers */}
         <div className="grid grid-cols-[1fr_1fr_auto] gap-3 border-b px-5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-          <span>Symbol</span>
-          <span>Description</span>
-          <span className="text-right">Exchange</span>
+          <span>交易品种</span>
+          <span>名称</span>
+          <span className="text-right">交易所</span>
         </div>
 
         {/* Results */}
@@ -567,10 +567,10 @@ export function SymbolSearchDialog({
           {filtered.length === 0 ? (
             <div className="px-5 py-10 text-center text-sm text-muted-foreground">
               {loading
-                ? 'Searching…'
+                ? '搜索中…'
                 : query.trim().length < 1
-                  ? 'Type to search symbols'
-                  : 'No matching symbols'}
+                  ? '输入交易品种进行搜索'
+                  : '没有匹配的交易品种'}
             </div>
           ) : (
             filtered.map((r, i) => (

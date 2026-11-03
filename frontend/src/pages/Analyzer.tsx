@@ -168,10 +168,8 @@ export default function Analyzer() {
     <div className="container mx-auto py-6 px-4">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Sandbox Request Monitor</h1>
-        <p className="text-muted-foreground mt-1">
-          Review and validate your sandbox API requests before going live
-        </p>
+        <h1 className="text-3xl font-bold">模拟盘请求监控</h1>
+        <p className="text-muted-foreground mt-1">实盘前检查并验证模拟环境中的 API 请求</p>
       </div>
 
       {/* Date Filter */}
@@ -179,15 +177,13 @@ export default function Analyzer() {
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center gap-2">
             <Filter className="h-4 w-4" />
-            Filters
+            筛选条件
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleFilter} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div className="space-y-2">
-              <Label htmlFor="start_date" className="text-sm font-medium">
-                Start Date
-              </Label>
+              <Label htmlFor="start_date" className="text-sm font-medium">开始日期</Label>
               <Input
                 id="start_date"
                 type="date"
@@ -197,9 +193,7 @@ export default function Analyzer() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="end_date" className="text-sm font-medium">
-                End Date
-              </Label>
+              <Label htmlFor="end_date" className="text-sm font-medium">结束日期</Label>
               <Input
                 id="end_date"
                 type="date"
@@ -211,12 +205,10 @@ export default function Analyzer() {
             <div className="flex gap-2 pt-6">
               <Button type="submit">
                 <Filter className="h-4 w-4 mr-2" />
-                Filter
+                筛选
               </Button>
               <Button type="button" variant="secondary" onClick={handleExport}>
-                <Download className="h-4 w-4 mr-2" />
-                Export CSV
-              </Button>
+                <Download className="h-4 w-4 mr-2" />导出 CSV</Button>
             </div>
           </form>
         </CardContent>
@@ -227,42 +219,34 @@ export default function Analyzer() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              Total Requests
-            </CardTitle>
+              <Activity className="h-4 w-4" />请求总数</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-primary">{stats.total_requests}</div>
-            <Badge className="mt-1">Last 24 hours</Badge>
+            <Badge className="mt-1">最近 24 小时</Badge>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4" />
-              Issues Found
-            </CardTitle>
+              <AlertTriangle className="h-4 w-4" />发现问题</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-yellow-500">{stats.issues.total}</div>
-            <Badge variant="secondary" className="mt-1">
-              Needs Attention
-            </Badge>
+            <Badge variant="secondary" className="mt-1">需要关注</Badge>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <BarChart3 className="h-4 w-4" />
-              Unique Symbols
-            </CardTitle>
+              <BarChart3 className="h-4 w-4" />交易品种数</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{stats.symbols.length}</div>
             <Badge variant="outline" className="mt-1">
-              Tracked
+              已跟踪
             </Badge>
           </CardContent>
         </Card>
@@ -270,14 +254,12 @@ export default function Analyzer() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Active Sources
-            </CardTitle>
+              <Users className="h-4 w-4" />活跃来源</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{stats.sources.length}</div>
             <Badge variant="outline" className="mt-1">
-              Connected
+              已连接
             </Badge>
           </CardContent>
         </Card>
@@ -290,22 +272,20 @@ export default function Analyzer() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Timestamp</TableHead>
-                  <TableHead>API Type</TableHead>
-                  <TableHead>Source</TableHead>
-                  <TableHead>Details</TableHead>
-                  <TableHead>Exchange</TableHead>
-                  <TableHead>Action</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>View</TableHead>
+                  <TableHead>时间戳</TableHead>
+                  <TableHead>API 类型</TableHead>
+                  <TableHead>来源</TableHead>
+                  <TableHead>详情</TableHead>
+                  <TableHead>交易所</TableHead>
+                  <TableHead>操作</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead>查看</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {requests.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      No requests found
-                    </TableCell>
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">未找到请求</TableCell>
                   </TableRow>
                 ) : (
                   requests.map((request, index) => (
@@ -343,24 +323,18 @@ export default function Analyzer() {
                             variant="secondary"
                             className="bg-yellow-500/10 text-yellow-600 border-yellow-500/30"
                           >
-                            <AlertTriangle className="h-3 w-3 mr-1" />
-                            Error
-                          </Badge>
+                            <AlertTriangle className="h-3 w-3 mr-1" />错误</Badge>
                         ) : (
                           <Badge
                             variant="secondary"
                             className="bg-green-500/10 text-green-600 border-green-500/30"
                           >
-                            <CheckCircle className="h-3 w-3 mr-1" />
-                            Success
-                          </Badge>
+                            <CheckCircle className="h-3 w-3 mr-1" />成功</Badge>
                         )}
                       </TableCell>
                       <TableCell>
                         <Button size="sm" onClick={() => viewDetails(request)}>
-                          <Eye className="h-4 w-4 mr-1" />
-                          View
-                        </Button>
+                          <Eye className="h-4 w-4 mr-1" />查看</Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -375,7 +349,7 @@ export default function Analyzer() {
       <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
         <DialogContent className="max-w-[98vw] w-[98vw] sm:max-w-[98vw] p-4">
           <DialogHeader>
-            <DialogTitle>Request Details</DialogTitle>
+            <DialogTitle>请求详情</DialogTitle>
           </DialogHeader>
           {selectedRequest &&
             (() => {
@@ -398,13 +372,13 @@ export default function Analyzer() {
               return (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-h-[85vh] overflow-y-auto">
                   <div className="min-w-0 overflow-hidden">
-                    <h4 className="font-semibold mb-2">Request Data</h4>
+                    <h4 className="font-semibold mb-2">请求数据</h4>
                     <div className="rounded-lg border bg-card/50 overflow-auto" style={{ height }}>
                       <JsonEditor value={requestJson} readOnly={true} lineWrapping={false} />
                     </div>
                   </div>
                   <div className="min-w-0 overflow-hidden">
-                    <h4 className="font-semibold mb-2">Response Data</h4>
+                    <h4 className="font-semibold mb-2">响应数据</h4>
                     <div className="rounded-lg border bg-card/50 overflow-auto" style={{ height }}>
                       <JsonEditor value={responseJson} readOnly={true} lineWrapping={false} />
                     </div>

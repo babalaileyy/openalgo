@@ -195,6 +195,33 @@ def _try_resume_broker_session(username):
     Returns a JSON response if session was resumed, or None to proceed
     with normal broker OAuth flow.
     """
+    # Public-data providers still use the existing app session and API-key
+    # checks. The marker is an internal adapter token, not exchange credentials.
+    public_broker = os.getenv("OPENALGO_MARKET_DATA_BROKER", "").strip().lower()
+    if public_broker:
+        from utils.plugin_loader import get_broker_capabilities
+
+        capabilities = get_broker_capabilities(public_broker) or {}
+        if capabilities.get("market_data_only") is True:
+            from utils.auth_utils import handle_auth_success
+
+            try:
+                result = handle_auth_success("public-market-data", username, public_broker)
+                completed = make_response(result)
+                if completed.status_code >= 400 or (
+                    completed.status_code in (301, 302, 303, 307, 308)
+                    and completed.headers.get("Location") != url_for("dashboard_bp.dashboard")
+                ):
+                    raise RuntimeError("Public market-data session setup failed")
+                return jsonify({"status": "success", "message": "Market-data session ready",
+                                "redirect": "/trading", "broker": public_broker}), 200
+            except Exception:
+                logger.exception("Public market-data session setup failed")
+                session.pop("logged_in", None)
+                session.pop("broker", None)
+                session.pop("session_id", None)
+                return None
+
     from database.auth_db import Auth, decrypt_token, get_auth_token_dbquery
 
     try:

@@ -196,32 +196,22 @@ export function PnLTab({ legs, fnoExchange, fallbackPrices, formatCurrency }: Pn
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              </span>
-              Streaming
-            </span>
+              </span>实时推送</span>
           )}
           {streamingState === 'paused' && (
             <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-              <Radio className="h-2.5 w-2.5" />
-              Paused
-            </span>
+              <Radio className="h-2.5 w-2.5" />已暂停</span>
           )}
           {streamingState === 'fallback' && (
             <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">
-              <Wifi className="h-2.5 w-2.5" />
-              Polling
-            </span>
+              <Wifi className="h-2.5 w-2.5" />轮询中</span>
           )}
           {streamingState === 'connecting' && (
             <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              <WifiOff className="h-2.5 w-2.5" />
-              Connecting
-            </span>
+              <WifiOff className="h-2.5 w-2.5" />连接中</span>
           )}
           {streamingState === 'idle' && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Idle
-            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">空闲</span>
           )}
         </div>
         <span className="text-[10px] tabular-nums text-muted-foreground">
@@ -238,24 +228,12 @@ export function PnLTab({ legs, fnoExchange, fallbackPrices, formatCurrency }: Pn
       <Table className="table-fixed">
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead className="w-[72px] text-center text-[10px] font-semibold uppercase tracking-wider">
-              Action
-            </TableHead>
-            <TableHead className="w-[56px] text-right text-[10px] font-semibold uppercase tracking-wider">
-              Lots
-            </TableHead>
-            <TableHead className="text-[10px] font-semibold uppercase tracking-wider">
-              Position
-            </TableHead>
-            <TableHead className="w-[96px] text-right text-[10px] font-semibold uppercase tracking-wider">
-              Entry
-            </TableHead>
-            <TableHead className="w-[112px] text-right text-[10px] font-semibold uppercase tracking-wider">
-              Current
-            </TableHead>
-            <TableHead className="w-[96px] text-right text-[10px] font-semibold uppercase tracking-wider">
-              Exit
-            </TableHead>
+            <TableHead className="w-[72px] text-center text-[10px] font-semibold uppercase tracking-wider">买卖方向</TableHead>
+            <TableHead className="w-[56px] text-right text-[10px] font-semibold uppercase tracking-wider">手数</TableHead>
+            <TableHead className="text-[10px] font-semibold uppercase tracking-wider">持仓</TableHead>
+            <TableHead className="w-[96px] text-right text-[10px] font-semibold uppercase tracking-wider">入场价</TableHead>
+            <TableHead className="w-[112px] text-right text-[10px] font-semibold uppercase tracking-wider">当前价</TableHead>
+            <TableHead className="w-[96px] text-right text-[10px] font-semibold uppercase tracking-wider">平仓价</TableHead>
             <TableHead className="w-[128px] text-right text-[10px] font-semibold uppercase tracking-wider">
               P&amp;L
             </TableHead>
@@ -299,9 +277,7 @@ export function PnLTab({ legs, fnoExchange, fallbackPrices, formatCurrency }: Pn
                   </span>
                   <span className="tabular-nums text-muted-foreground">{leg.expiry}</span>
                   {isClosed && (
-                    <span className="rounded bg-rose-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400">
-                      Closed
-                    </span>
+                    <span className="rounded bg-rose-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400">已平仓</span>
                   )}
                 </span>
               </TableCell>

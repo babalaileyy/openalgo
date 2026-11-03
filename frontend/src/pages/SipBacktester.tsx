@@ -30,10 +30,10 @@ import { useAuthStore } from '@/stores/authStore'
 import { useSipBacktestStore } from '@/stores/sipBacktestStore'
 
 const FREQUENCIES: { value: SipFrequency; label: string; note: string }[] = [
-  { value: 'weekly', label: 'Weekly', note: '52x per year' },
-  { value: 'fortnightly', label: 'Fortnightly', note: '26x per year' },
-  { value: 'monthly', label: 'Monthly', note: '12x per year' },
-  { value: 'quarterly', label: 'Quarterly', note: '4x per year' },
+  { value: 'weekly', label: '每周', note: '每年 52 次' },
+  { value: 'fortnightly', label: '每两周', note: '每年 26 次' },
+  { value: 'monthly', label: '每月', note: '每年 12 次' },
+  { value: 'quarterly', label: '每季度', note: '每年 4 次' },
 ]
 
 function todayISO(offsetYears = 0): string {
@@ -83,11 +83,11 @@ export default function SipBacktester() {
 
   const run = async () => {
     if (!apiKey) {
-      setError('No API key found. Generate one on the API Key page.')
+      setError('未找到 API 密钥，请在 API 密钥页面生成。')
       return
     }
     if (!symbol.trim()) {
-      setError('Pick a symbol to invest in.')
+      setError('请选择要投资的交易品种。')
       return
     }
     setBusy(true)
@@ -144,11 +144,9 @@ export default function SipBacktester() {
   return (
     <div className="container mx-auto space-y-4 p-4">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">SIP Backtester</h1>
+        <h1 className="text-2xl font-bold tracking-tight">SIP（定投计划）回测</h1>
         <p className="text-sm text-muted-foreground">
-          What a systematic investment plan would actually have returned. Measured with XIRR,
-          because money paid in month 60 has not compounded for five years — a single CAGR would
-          overstate it.
+          计算定期定额投资计划的历史收益。由于各期投入的持有时间不同，使用 XIRR（内部收益率）衡量，避免单独使用 CAGR 高估收益。
         </p>
       </div>
 
@@ -156,7 +154,7 @@ export default function SipBacktester() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Benchmark</CardTitle>
+            <CardTitle className="text-sm">基准</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <Select value={benchmark} onValueChange={setBenchmark}>
@@ -164,7 +162,7 @@ export default function SipBacktester() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="none">无</SelectItem>
                 {benchmarks.map((b) => (
                   <SelectItem key={`${b.exchange}-${b.symbol}`} value={b.symbol}>
                     {b.symbol}{' '}
@@ -176,15 +174,14 @@ export default function SipBacktester() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              The same schedule is run into the index, so it is SIP against SIP — not SIP against an
-              index CAGR.
+              基准指数使用相同的定投计划进行比较，而非直接与指数 CAGR 比较。
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">SIP Schedule</CardTitle>
+            <CardTitle className="text-sm">定投计划</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <Select value={frequency} onValueChange={(v) => setFrequency(v as SipFrequency)}>
@@ -201,7 +198,7 @@ export default function SipBacktester() {
             </Select>
             <div className="flex gap-2">
               <div className="flex-1 space-y-1">
-                <Label className="text-xs">SIP date</Label>
+                <Label className="text-xs">定投日期</Label>
                 <Input
                   type="number"
                   min={1}
@@ -212,7 +209,7 @@ export default function SipBacktester() {
                 />
               </div>
               <div className="flex-1 space-y-1">
-                <Label className="text-xs">Step-up %/yr</Label>
+                <Label className="text-xs">每年递增比例 %</Label>
                 <Input
                   type="number"
                   min={0}
@@ -224,20 +221,20 @@ export default function SipBacktester() {
             </div>
             <p className="text-xs text-muted-foreground">
               {usesDayOfMonth
-                ? 'Days 1–28 only; later dates do not exist in every month.'
-                : 'SIP date does not apply to this frequency.'}
+                ? '只能选择每月 1 至 28 日，之后的日期并非每月都有。'
+                : '此定投频率不使用每月定投日期。'}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Analysis Period</CardTitle>
+            <CardTitle className="text-sm">分析区间</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="flex gap-2">
               <div className="flex-1 space-y-1">
-                <Label className="text-xs">Start</Label>
+                <Label className="text-xs">开始</Label>
                 <Input
                   type="date"
                   value={startDate}
@@ -245,12 +242,12 @@ export default function SipBacktester() {
                 />
               </div>
               <div className="flex-1 space-y-1">
-                <Label className="text-xs">End</Label>
+                <Label className="text-xs">结束</Label>
                 <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              The first installment lands on the start date, or the next trading session after it.
+              首次投入发生在开始日期；若当天不是交易日，则顺延至下一个交易日。
             </p>
           </CardContent>
         </Card>
@@ -260,13 +257,13 @@ export default function SipBacktester() {
       <div className="grid gap-4 lg:grid-cols-4">
         <Card className="lg:col-span-3">
           <CardHeader className="pb-2">
-            <CardTitle>Systematic Investment Plan</CardTitle>
-            <CardDescription>NSE and BSE cash equity and ETFs.</CardDescription>
+            <CardTitle>定期定额投资计划</CardTitle>
+            <CardDescription>NSE 和 BSE 现货股票及 ETF。</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex flex-wrap items-end gap-3">
               <div className="space-y-1">
-                <Label className="text-xs">Symbol</Label>
+                <Label className="text-xs">交易品种</Label>
                 <SymbolSearchInput
                   className="w-56"
                   value={symbol}
@@ -275,7 +272,7 @@ export default function SipBacktester() {
                 />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs">Exchange</Label>
+                <Label className="text-xs">交易所</Label>
                 <Select value={exchange} onValueChange={(v) => setExchange(v as 'NSE' | 'BSE')}>
                   <SelectTrigger className="w-28">
                     <SelectValue />
@@ -287,7 +284,7 @@ export default function SipBacktester() {
                 </Select>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs">Amount per installment (₹)</Label>
+                <Label className="text-xs">每期投入金额（₹）</Label>
                 <Input
                   className="w-40"
                   type="number"
@@ -297,33 +294,33 @@ export default function SipBacktester() {
                 />
               </div>
               <div className="pb-2 text-sm text-muted-foreground">
-                about <span className="font-medium">₹{inr(yearlyOutlay)}</span> a year
+                每年约 <span className="font-medium">₹{inr(yearlyOutlay)}</span>
               </div>
             </div>
 
             <div className="flex flex-wrap items-end gap-4 border-t pt-3">
               <div>
-                <Label className="text-xs">Data source</Label>
+                <Label className="text-xs">数据来源</Label>
                 <Select value={source} onValueChange={(v) => setSource(v as PriceSource)}>
                   <SelectTrigger className="w-40">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="db">Historify (local)</SelectItem>
-                    <SelectItem value="api">Broker API</SelectItem>
+                    <SelectItem value="db">Historify（本地）</SelectItem>
+                    <SelectItem value="api">交易商 API</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="ml-auto flex items-center gap-3">
                 <Button onClick={run} disabled={busy}>
-                  {busy ? 'Running…' : 'Run SIP Backtest'}
+                  {busy ? '运行中…' : '运行定投回测'}
                 </Button>
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
               {source === 'api'
-                ? 'Broker history is adjusted for corporate actions and needs an active session.'
-                : 'Historify works without a broker login, so backtesting at the weekend is fine.'}
+                ? '交易商历史数据已按公司行为调整，需要有效的交易商会话。'
+                : 'Historify 无需登录交易商，周末也可进行回测。'}
             </p>
           </CardContent>
         </Card>

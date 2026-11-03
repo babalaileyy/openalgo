@@ -259,10 +259,10 @@ export default function HealthMonitor() {
       setAlerts(alertsData)
 
       if (displayToast) {
-        showToast.success('Metrics refreshed', 'monitoring')
+        showToast.success('指标已刷新', 'monitoring')
       }
     } catch (_error) {
-      showToast.error('Failed to fetch health metrics', 'monitoring')
+      showToast.error('获取健康监控指标失败', 'monitoring')
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -367,16 +367,16 @@ export default function HealthMonitor() {
   const handleAcknowledgeAlert = async (alertId: number) => {
     try {
       await acknowledgeAlert(alertId)
-      showToast.success('Alert acknowledged', 'monitoring')
+      showToast.success('告警已确认', 'monitoring')
       fetchData()
     } catch (_error) {
-      showToast.error('Failed to acknowledge alert', 'monitoring')
+      showToast.error('确认告警失败', 'monitoring')
     }
   }
 
   const handleExport = () => {
     window.open(exportMetricsCSV(24), '_blank')
-    showToast.success('Exporting metrics to CSV', 'monitoring')
+    showToast.success('正在将指标导出为 CSV', 'monitoring')
   }
 
   if (loading) {
@@ -392,7 +392,7 @@ export default function HealthMonitor() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">System Health Monitor</h1>
+          <h1 className="text-3xl font-bold tracking-tight">系统健康监控</h1>
           <p className="text-muted-foreground mt-1">
             Real-time infrastructure monitoring • Updates every 10 seconds
           </p>
@@ -462,7 +462,7 @@ export default function HealthMonitor() {
           loading={!currentMetrics}
         />
         <MetricCard
-          title="Memory Usage"
+          title="内存使用量"
           icon={MemoryStick}
           value={currentMetrics ? `${(currentMetrics.memory.rss_mb ?? 0).toFixed(1)} MB` : '-'}
           subtitle={
@@ -474,15 +474,15 @@ export default function HealthMonitor() {
           loading={!currentMetrics}
         />
         <MetricCard
-          title="Database Connections"
+          title="数据库连接"
           icon={Database}
           value={currentMetrics?.database.total || 0}
-          subtitle="Active connections"
+          subtitle="活动连接"
           status={currentMetrics?.database.status || 'unknown'}
           loading={!currentMetrics}
         />
         <MetricCard
-          title="WebSocket Connections"
+          title="WebSocket 连接"
           icon={Network}
           value={currentMetrics?.websocket.total || 0}
           subtitle={
@@ -492,7 +492,7 @@ export default function HealthMonitor() {
           loading={!currentMetrics}
         />
         <MetricCard
-          title="Active Threads"
+          title="活动线程"
           icon={Server}
           value={currentMetrics?.threads.count || 0}
           subtitle={
@@ -510,7 +510,7 @@ export default function HealthMonitor() {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">File Descriptors (6h)</CardTitle>
-            <CardDescription>Historical FD usage over the last 6 hours</CardDescription>
+            <CardDescription>过去 6 小时的文件描述符使用情况</CardDescription>
           </CardHeader>
           <CardContent>
             <div ref={fdChartContainerRef} className="w-full h-[300px]" />
@@ -520,9 +520,7 @@ export default function HealthMonitor() {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Memory Usage (6h)</CardTitle>
-            <CardDescription>
-              Historical memory consumption in MB over the last 6 hours
-            </CardDescription>
+            <CardDescription>过去 6 小时的内存使用情况（MB）</CardDescription>
           </CardHeader>
           <CardContent>
             <div ref={memoryChartContainerRef} className="w-full h-[300px]" />
@@ -535,32 +533,32 @@ export default function HealthMonitor() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">File Descriptor Stats</CardTitle>
+              <CardTitle className="text-base">文件描述符统计</CardTitle>
             </CardHeader>
             <CardContent>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Current:</dt>
+                  <dt className="text-muted-foreground">当前：</dt>
                   <dd className="font-medium">{stats.fd.current}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Average:</dt>
+                  <dt className="text-muted-foreground">平均：</dt>
                   <dd className="font-medium">{stats.fd.avg.toFixed(1)}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Min / Max:</dt>
+                  <dt className="text-muted-foreground">最小 / 最大：</dt>
                   <dd className="font-medium">
                     {stats.fd.min} / {stats.fd.max}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Warnings:</dt>
+                  <dt className="text-muted-foreground">警告：</dt>
                   <dd className="font-medium text-yellow-600 dark:text-yellow-400">
                     {stats.fd.warn_count}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Failures:</dt>
+                  <dt className="text-muted-foreground">失败：</dt>
                   <dd className="font-medium text-red-600 dark:text-red-400">
                     {stats.fd.fail_count}
                   </dd>
@@ -571,32 +569,32 @@ export default function HealthMonitor() {
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Memory Stats</CardTitle>
+              <CardTitle className="text-base">内存统计</CardTitle>
             </CardHeader>
             <CardContent>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Current:</dt>
+                  <dt className="text-muted-foreground">当前：</dt>
                   <dd className="font-medium">{stats.memory.current_mb.toFixed(1)} MB</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Average:</dt>
+                  <dt className="text-muted-foreground">平均：</dt>
                   <dd className="font-medium">{stats.memory.avg_mb.toFixed(1)} MB</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Min / Max:</dt>
+                  <dt className="text-muted-foreground">最小 / 最大：</dt>
                   <dd className="font-medium">
                     {stats.memory.min_mb.toFixed(1)} / {stats.memory.max_mb.toFixed(1)} MB
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Warnings:</dt>
+                  <dt className="text-muted-foreground">警告：</dt>
                   <dd className="font-medium text-yellow-600 dark:text-yellow-400">
                     {stats.memory.warn_count}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Failures:</dt>
+                  <dt className="text-muted-foreground">失败：</dt>
                   <dd className="font-medium text-red-600 dark:text-red-400">
                     {stats.memory.fail_count}
                   </dd>
@@ -607,28 +605,28 @@ export default function HealthMonitor() {
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Connection Stats</CardTitle>
+              <CardTitle className="text-base">连接统计</CardTitle>
             </CardHeader>
             <CardContent>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">DB Current:</dt>
+                  <dt className="text-muted-foreground">数据库当前：</dt>
                   <dd className="font-medium">{stats.database.current}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">DB Average:</dt>
+                  <dt className="text-muted-foreground">数据库平均：</dt>
                   <dd className="font-medium">{stats.database.avg.toFixed(1)}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">WS Current:</dt>
+                  <dt className="text-muted-foreground">WebSocket 当前：</dt>
                   <dd className="font-medium">{stats.websocket.current}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">WS Average:</dt>
+                  <dt className="text-muted-foreground">WebSocket 平均：</dt>
                   <dd className="font-medium">{stats.websocket.avg.toFixed(1)}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Threads:</dt>
+                  <dt className="text-muted-foreground">线程：</dt>
                   <dd className="font-medium">{stats.threads.current}</dd>
                 </div>
               </dl>
@@ -637,12 +635,12 @@ export default function HealthMonitor() {
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Status Summary</CardTitle>
+              <CardTitle className="text-base">状态汇总</CardTitle>
             </CardHeader>
             <CardContent>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Overall (Pass/Warn/Fail):</dt>
+                  <dt className="text-muted-foreground">总体（通过 / 警告 / 失败）：</dt>
                   <dd className="font-medium">
                     {stats.status?.overall
                       ? `${stats.status.overall.pass}/${stats.status.overall.warn}/${stats.status.overall.fail}`
@@ -650,7 +648,7 @@ export default function HealthMonitor() {
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">DB Warn/Fail:</dt>
+                  <dt className="text-muted-foreground">数据库警告 / 失败：</dt>
                   <dd className="font-medium">
                     {stats.status?.database
                       ? `${stats.status.database.warn}/${stats.status.database.fail}`
@@ -658,7 +656,7 @@ export default function HealthMonitor() {
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">WS Warn/Fail:</dt>
+                  <dt className="text-muted-foreground">WebSocket 警告 / 失败：</dt>
                   <dd className="font-medium">
                     {stats.status?.websocket
                       ? `${stats.status.websocket.warn}/${stats.status.websocket.fail}`
@@ -666,7 +664,7 @@ export default function HealthMonitor() {
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-muted-foreground">Threads Warn/Fail:</dt>
+                  <dt className="text-muted-foreground">线程警告 / 失败：</dt>
                   <dd className="font-medium">
                     {stats.status?.threads
                       ? `${stats.status.threads.warn}/${stats.status.threads.fail}`
@@ -682,19 +680,19 @@ export default function HealthMonitor() {
       {/* Top Memory Processes */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Top Memory Processes</CardTitle>
-          <CardDescription>Highest RSS memory usage across the host</CardDescription>
+          <CardTitle className="text-lg">内存占用最高的进程</CardTitle>
+          <CardDescription>主机上驻留内存占用最高的进程</CardDescription>
         </CardHeader>
         <CardContent>
           {currentMetrics?.processes && currentMetrics.processes.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Process</TableHead>
+                  <TableHead>进程</TableHead>
                   <TableHead className="text-right">PID</TableHead>
                   <TableHead className="text-right">RSS (MB)</TableHead>
                   <TableHead className="text-right">VMS (MB)</TableHead>
-                  <TableHead className="text-right">Mem %</TableHead>
+                  <TableHead className="text-right">内存占比 %</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -712,7 +710,7 @@ export default function HealthMonitor() {
               </TableBody>
             </Table>
           ) : (
-            <div className="text-sm text-muted-foreground">No process data available.</div>
+            <div className="text-sm text-muted-foreground">暂无进程数据。</div>
           )}
         </CardContent>
       </Card>
@@ -720,18 +718,18 @@ export default function HealthMonitor() {
       {/* Thread Details */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Thread Details</CardTitle>
-          <CardDescription>Recent thread snapshot from the application</CardDescription>
+          <CardTitle className="text-lg">线程详情</CardTitle>
+          <CardDescription>应用近期线程快照</CardDescription>
         </CardHeader>
         <CardContent>
           {currentMetrics?.threads.details && currentMetrics.threads.details.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Thread</TableHead>
+                  <TableHead>线程</TableHead>
                   <TableHead className="text-right">ID</TableHead>
-                  <TableHead className="text-right">Daemon</TableHead>
-                  <TableHead className="text-right">Alive</TableHead>
+                  <TableHead className="text-right">守护线程</TableHead>
+                  <TableHead className="text-right">运行中</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -748,7 +746,7 @@ export default function HealthMonitor() {
               </TableBody>
             </Table>
           ) : (
-            <div className="text-sm text-muted-foreground">No thread details available.</div>
+            <div className="text-sm text-muted-foreground">暂无线程详情。</div>
           )}
         </CardContent>
       </Card>
@@ -761,7 +759,7 @@ export default function HealthMonitor() {
               <AlertCircle className="h-5 w-5" />
               Active Alerts ({alerts.length})
             </CardTitle>
-            <CardDescription>System health alerts requiring attention</CardDescription>
+            <CardDescription>需要关注的系统健康告警</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -788,9 +786,7 @@ export default function HealthMonitor() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleAcknowledgeAlert(alert.id)}
-                    >
-                      Acknowledge
-                    </Button>
+                    >确认</Button>
                   )}
                 </div>
               ))}
@@ -802,20 +798,20 @@ export default function HealthMonitor() {
       {/* Recent Metrics Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Recent Metrics</CardTitle>
-          <CardDescription>Last 20 samples from the monitoring system</CardDescription>
+          <CardTitle className="text-lg">近期指标</CardTitle>
+          <CardDescription>监控系统最近的 20 个采样数据</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Time</TableHead>
+                <TableHead>时间</TableHead>
                 <TableHead className="text-right">FDs</TableHead>
-                <TableHead className="text-right">Memory (MB)</TableHead>
-                <TableHead className="text-right">DB Conns</TableHead>
-                <TableHead className="text-right">WS Conns</TableHead>
-                <TableHead className="text-right">Threads</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="text-right">内存（MB）</TableHead>
+                <TableHead className="text-right">数据库连接</TableHead>
+                <TableHead className="text-right">WebSocket 连接</TableHead>
+                <TableHead className="text-right">线程</TableHead>
+                <TableHead>状态</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

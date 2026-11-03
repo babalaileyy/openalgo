@@ -24,13 +24,13 @@ export const WaitUntilNode = memo(({ data, selected }: WaitUntilNodeProps) => {
             <Hourglass className="h-3 w-3 text-amber-500" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Wait Until</div>
-            <div className="text-[9px] text-muted-foreground">Pause execution</div>
+            <div className="text-xs font-medium leading-tight">等待至指定时间</div>
+            <div className="text-[9px] text-muted-foreground">暂停执行</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Time</span>
+            <span className="text-[10px] text-muted-foreground">时间</span>
             <span className="mono-data text-[10px] font-medium text-amber-500">
               {data.targetTime || '09:30'}
             </span>

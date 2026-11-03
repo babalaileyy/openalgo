@@ -126,7 +126,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
         } else {
           // 501 (broker lacks native GTT, or analyze mode) — treat as empty, show hint
           setGtts([])
-          setError(response.message || 'GTT orders are not available')
+          setError(response.message || '条件单不可用')
         }
       } catch (e) {
         const axiosError = e as { response?: { data?: { message?: string }; status?: number } }
@@ -134,8 +134,8 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
         const msg =
           axiosError.response?.data?.message ||
           (status === 501
-            ? 'GTT orders are not supported for this broker yet'
-            : 'Failed to fetch GTT orders')
+            ? '当前券商暂不支持条件单'
+            : '获取条件单失败')
         setGtts([])
         setError(msg)
       } finally {
@@ -161,15 +161,15 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
     try {
       const response = await tradingApi.cancelGttOrder(triggerId)
       if (response.status === 'success') {
-        showToast.success(`GTT cancelled: ${triggerId}`, 'orders')
+        showToast.success(`条件单已撤销：${triggerId}`, 'orders')
         // Give the broker a moment to reflect the change.
         setTimeout(() => fetchGtts(true), 800)
       } else {
-        showToast.error(response.message || 'Failed to cancel GTT', 'orders')
+        showToast.error(response.message || '撤销条件单失败', 'orders')
       }
     } catch (e) {
       const axiosError = e as { response?: { data?: { message?: string } } }
-      showToast.error(axiosError.response?.data?.message || 'Failed to cancel GTT', 'orders')
+      showToast.error(axiosError.response?.data?.message || '撤销条件单失败', 'orders')
     } finally {
       setCancellingId(null)
     }
@@ -214,12 +214,12 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
     // Asked again here: a replay can start while the dialog stands open.
     if (refuse?.()) return
     if (modifyForm.quantity <= 0 || modifyForm.price < 0) {
-      showToast.error('Quantity and limit price must be positive', 'orders')
+      showToast.error('数量必须大于零，限价不能为负数', 'orders')
       return
     }
     if (modifyForm.trigger_type === 'SINGLE') {
       if (modifyForm.triggerprice_sl <= 0 && modifyForm.triggerprice_tg <= 0) {
-        showToast.error('triggerprice_sl or triggerprice_tg is required for SINGLE', 'orders')
+        showToast.error('单条件单需要填写触发价格', 'orders')
         return
       }
     } else {
@@ -230,13 +230,13 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
         modifyForm.target <= 0
       ) {
         showToast.error(
-          'All four (triggerprice_sl, stoploss, triggerprice_tg, target) are required for OCO',
+          'OCO 条件单需要填写止损触发价、止损限价、止盈触发价和止盈限价',
           'orders'
         )
         return
       }
       if (modifyForm.triggerprice_sl >= modifyForm.triggerprice_tg) {
-        showToast.error('Stoploss trigger must be less than target trigger', 'orders')
+        showToast.error('止损触发价必须小于止盈触发价', 'orders')
         return
       }
     }
@@ -260,15 +260,15 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
       })
 
       if (response.status === 'success') {
-        showToast.success(`GTT modified: ${modifyingGtt.trigger_id}`, 'orders')
+        showToast.success(`条件单已修改：${modifyingGtt.trigger_id}`, 'orders')
         setModifyOpen(false)
         setTimeout(() => fetchGtts(true), 800)
       } else {
-        showToast.error(response.message || 'Failed to modify GTT', 'orders')
+        showToast.error(response.message || '修改条件单失败', 'orders')
       }
     } catch (e) {
       const axiosError = e as { response?: { data?: { message?: string } } }
-      showToast.error(axiosError.response?.data?.message || 'Failed to modify GTT', 'orders')
+      showToast.error(axiosError.response?.data?.message || '修改条件单失败', 'orders')
     } finally {
       setIsSavingModify(false)
     }
@@ -276,7 +276,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
 
   const exportToCSV = () => {
     if (gtts.length === 0) {
-      showToast.error('No data to export', 'system')
+      showToast.error('没有可导出的数据', 'system')
       return
     }
     try {
@@ -317,9 +317,9 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
       a.download = filename
       a.click()
       URL.revokeObjectURL(url)
-      showToast.success(`Downloaded ${filename}`, 'clipboard')
+      showToast.success(`已下载 ${filename}`, 'clipboard')
     } catch {
-      showToast.error('Failed to export CSV', 'system')
+      showToast.error('导出 CSV 失败', 'system')
     }
   }
 
@@ -334,11 +334,11 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
       <div className="flex items-center justify-end gap-2 flex-wrap">
         <Button variant="outline" size="sm" onClick={() => fetchGtts(true)} disabled={isRefreshing}>
           <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
-          Refresh
+          刷新
         </Button>
         <Button variant="outline" size="sm" onClick={exportToCSV} disabled={gtts.length === 0}>
           <Download className="h-4 w-4 mr-2" />
-          Export
+          导出
         </Button>
       </div>
 
@@ -351,24 +351,24 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
           ) : error && gtts.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">{error}</div>
           ) : gtts.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">No GTT orders</div>
+            <div className="text-center py-12 text-muted-foreground">暂无条件单</div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[120px]">Trigger ID</TableHead>
-                    <TableHead className="w-[80px]">Type</TableHead>
-                    <TableHead className="w-[130px]">Symbol</TableHead>
-                    <TableHead className="w-[80px]">Exchange</TableHead>
-                    <TableHead className="w-[140px] text-right">Trigger Prices</TableHead>
-                    <TableHead className="w-[100px] text-right">Last Price</TableHead>
-                    <TableHead>Legs</TableHead>
-                    <TableHead className="w-[100px]">Status</TableHead>
-                    <TableHead className="w-[120px]">Created</TableHead>
-                    <TableHead className="w-[120px]">Expires</TableHead>
-                    <TableHead className="w-[70px]">Modify</TableHead>
-                    <TableHead className="w-[70px]">Cancel</TableHead>
+                    <TableHead className="w-[120px]">触发单号</TableHead>
+                    <TableHead className="w-[80px]">类型</TableHead>
+                    <TableHead className="w-[130px]">交易品种</TableHead>
+                    <TableHead className="w-[80px]">交易所</TableHead>
+                    <TableHead className="w-[140px] text-right">触发价格</TableHead>
+                    <TableHead className="w-[100px] text-right">最新价</TableHead>
+                    <TableHead>委托腿</TableHead>
+                    <TableHead className="w-[100px]">状态</TableHead>
+                    <TableHead className="w-[120px]">创建时间</TableHead>
+                    <TableHead className="w-[120px]">到期时间</TableHead>
+                    <TableHead className="w-[70px]">修改</TableHead>
+                    <TableHead className="w-[70px]">撤单</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -380,7 +380,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                         <TableCell className="font-mono text-xs">{g.trigger_id}</TableCell>
                         <TableCell>
                           <Badge variant="secondary">
-                            {g.trigger_type === 'two-leg' ? 'OCO' : 'Single'}
+                            {g.trigger_type === 'two-leg' ? 'OCO' : '单条件'}
                           </Badge>
                         </TableCell>
                         <TableCell className="font-medium">{g.symbol}</TableCell>
@@ -409,7 +409,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                                     leg.action.toUpperCase() === 'BUY' && 'bg-green-500'
                                   )}
                                 >
-                                  {leg.action.toUpperCase()}
+                                  {leg.action.toUpperCase() === 'BUY' ? '买入' : leg.action.toUpperCase() === 'SELL' ? '卖出' : leg.action}
                                 </Badge>
                                 <span className="font-mono">
                                   {leg.quantity} @ {formatCurrency(leg.price)}
@@ -419,7 +419,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                                 </span>
                                 {leg.triggered_order_id && (
                                   <span className="font-mono text-xs text-muted-foreground">
-                                    order {leg.triggered_order_id}
+                                    委托 {leg.triggered_order_id}
                                   </span>
                                 )}
                               </div>
@@ -428,7 +428,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                         </TableCell>
                         <TableCell>
                           <Badge className={cn('capitalize text-white', statusClass)}>
-                            {g.status}
+                            {({ active: '有效', disabled: '已停用', triggered: '已触发', cancelled: '已撤销', canceled: '已撤销', expired: '已到期', rejected: '已拒绝' } as Record<string, string>)[(g.status || '').toLowerCase()] ?? g.status}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-xs text-muted-foreground">
@@ -444,7 +444,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                               size="icon"
                               className="h-8 w-8 text-blue-500 hover:text-blue-600"
                               onClick={() => openModify(g)}
-                              aria-label={`Modify GTT ${g.trigger_id}`}
+                              aria-label={`修改条件单 ${g.trigger_id}`}
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
@@ -459,7 +459,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                                   size="icon"
                                   className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                                   disabled={cancellingId === g.trigger_id}
-                                  aria-label={`Cancel GTT ${g.trigger_id}`}
+                                  aria-label={`撤销条件单 ${g.trigger_id}`}
                                 >
                                   {cancellingId === g.trigger_id ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -470,17 +470,16 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Cancel GTT?</AlertDialogTitle>
+                                  <AlertDialogTitle>确认撤销条件单？</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    GTT <span className="font-mono">{g.trigger_id}</span> on{' '}
-                                    <span className="font-medium">{g.symbol}</span> will be removed.
-                                    This cannot be undone.
+                                    将撤销 <span className="font-medium">{g.symbol}</span> 的条件单{' '}
+                                    <span className="font-mono">{g.trigger_id}</span>，此操作无法撤销。
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Keep</AlertDialogCancel>
+                                  <AlertDialogCancel>保留条件单</AlertDialogCancel>
                                   <AlertDialogAction onClick={() => handleCancel(g.trigger_id)}>
-                                    Cancel GTT
+                                    确认撤单
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -502,14 +501,14 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <span>Modify GTT</span>
+              <span>修改条件单</span>
               {modifyingGtt && (
                 <Badge variant="secondary">
-                  {modifyingGtt.trigger_type === 'two-leg' ? 'OCO' : 'Single'}
+                  {modifyingGtt.trigger_type === 'two-leg' ? 'OCO' : '单条件'}
                 </Badge>
               )}
             </DialogTitle>
-            <DialogDescription className="sr-only">Modify GTT trigger details</DialogDescription>
+            <DialogDescription className="sr-only">修改条件单触发信息</DialogDescription>
           </DialogHeader>
 
           {modifyingGtt && (
@@ -521,7 +520,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                   <div className="text-sm text-muted-foreground">{modifyingGtt.exchange}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs text-muted-foreground">Trigger ID</div>
+                  <div className="text-xs text-muted-foreground">触发单号</div>
                   <div className="font-mono text-sm">{modifyingGtt.trigger_id}</div>
                 </div>
               </div>
@@ -534,7 +533,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                       variant={modifyForm.action === 'BUY' ? 'default' : 'destructive'}
                       className={modifyForm.action === 'BUY' ? 'bg-green-500' : ''}
                     >
-                      {modifyForm.action}
+                      {modifyForm.action === 'BUY' ? '买入' : modifyForm.action === 'SELL' ? '卖出' : modifyForm.action}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
                       {modifyForm.pricetype} · {modifyForm.product}
@@ -543,7 +542,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label className="text-xs">Quantity</Label>
+                      <Label className="text-xs">数量</Label>
                       <Input
                         type="number"
                         step="1"
@@ -561,7 +560,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                   {modifyForm.trigger_type === 'SINGLE' ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label className="text-xs">Trigger Price</Label>
+                        <Label className="text-xs">触发价格</Label>
                         <Input
                           type="number"
                           step="0.05"
@@ -575,7 +574,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                         />
                       </div>
                       <div>
-                        <Label className="text-xs">Limit Price</Label>
+                        <Label className="text-xs">限价</Label>
                         <Input
                           type="number"
                           step="0.05"
@@ -592,7 +591,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <Label className="text-xs">Stoploss Trigger</Label>
+                        <Label className="text-xs">止损触发价</Label>
                         <Input
                           type="number"
                           step="0.05"
@@ -606,7 +605,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                         />
                       </div>
                       <div>
-                        <Label className="text-xs">Stoploss Limit</Label>
+                        <Label className="text-xs">止损限价</Label>
                         <Input
                           type="number"
                           step="0.05"
@@ -620,7 +619,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                         />
                       </div>
                       <div>
-                        <Label className="text-xs">Target Trigger</Label>
+                        <Label className="text-xs">止盈触发价</Label>
                         <Input
                           type="number"
                           step="0.05"
@@ -634,7 +633,7 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
                         />
                       </div>
                       <div>
-                        <Label className="text-xs">Target Limit</Label>
+                        <Label className="text-xs">止盈限价</Label>
                         <Input
                           type="number"
                           step="0.05"
@@ -660,11 +659,11 @@ export default function GttTab({ refuse }: GttTabProps = {}) {
               onClick={() => setModifyOpen(false)}
               disabled={isSavingModify}
             >
-              Cancel
+              取消
             </Button>
             <Button onClick={saveModify} disabled={isSavingModify}>
               {isSavingModify && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Save
+              保存
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -38,16 +38,16 @@ const brokerFields: Record<string, BrokerConfig> = {
     fields: [
       {
         name: 'userid',
-        label: 'Client ID / Mobile No',
+        label: '客户 ID / 手机号',
         type: 'text',
-        placeholder: 'Enter Client ID or Mobile Number',
+        placeholder: '输入客户 ID 或手机号',
       },
-      { name: 'pin', label: 'PIN', type: 'password', placeholder: 'Enter your PIN' },
+      { name: 'pin', label: 'PIN', type: 'password', placeholder: '输入 PIN' },
       {
         name: 'totp',
         label: 'TOTP',
         type: 'password',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
@@ -59,26 +59,26 @@ const brokerFields: Record<string, BrokerConfig> = {
     fields: [
       {
         name: 'userid',
-        label: 'User ID',
+        label: '用户 ID',
         type: 'text',
-        placeholder: 'Enter your User ID (alphanumeric)',
+        placeholder: '输入用户 ID（字母或数字）',
       },
     ],
     callbackUrl: '/aliceblue/callback',
   },
   angel: {
     fields: [
-      { name: 'userid', label: 'Client ID', type: 'text', placeholder: 'Enter your Client ID' },
-      { name: 'pin', label: 'PIN', type: 'password', placeholder: 'Enter your PIN (min 4 digits)' },
+      { name: 'userid', label: '客户 ID', type: 'text', placeholder: '输入客户 ID' },
+      { name: 'pin', label: 'PIN', type: 'password', placeholder: '输入 PIN（至少 4 位）' },
       {
         name: 'totp',
         label: 'TOTP',
         type: 'text',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
-        hint: 'Get TOTP from your authenticator app',
+        hint: '从身份验证器应用获取 TOTP',
       },
     ],
     callbackUrl: '/angel/callback',
@@ -89,26 +89,26 @@ const brokerFields: Record<string, BrokerConfig> = {
         name: 'otp',
         label: 'OTP',
         type: 'password',
-        placeholder: 'Enter OTP sent to your registered mobile/email',
+        placeholder: '输入发送至已登记手机或邮箱的一次性验证码',
         inputMode: 'numeric',
-        hint: 'OTP has been sent to your registered mobile/email',
+        hint: '一次性验证码已发送至登记手机或邮箱',
       },
     ],
     callbackUrl: '/definedge/callback',
   },
   firstock: {
     fields: [
-      { name: 'userid', label: 'User ID', type: 'text', placeholder: 'Enter your User ID' },
-      { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter your Password' },
+      { name: 'userid', label: '用户 ID', type: 'text', placeholder: '输入用户 ID' },
+      { name: 'password', label: '密码', type: 'password', placeholder: '输入密码' },
       {
         name: 'totp',
         label: 'TOTP',
         type: 'password',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
-        hint: 'Get TOTP from your authenticator app',
+        hint: '从身份验证器应用获取 TOTP',
       },
     ],
     callbackUrl: '/firstock/callback',
@@ -119,52 +119,52 @@ const brokerFields: Record<string, BrokerConfig> = {
         name: 'mpin',
         label: 'MPIN',
         type: 'password',
-        placeholder: 'Enter your account MPIN',
+        placeholder: '输入账户 MPIN',
         inputMode: 'numeric',
-        hint: 'The MPIN you use to log in to INDstocks',
+        hint: '用于登录 INDstocks 的 MPIN',
       },
       {
         name: 'totp',
-        label: 'TOTP Code',
+        label: 'TOTP 动态验证码',
         type: 'text',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
-        hint: 'Get TOTP from your authenticator app. Use a fresh code - a code that has already been submitted will be rejected.',
+        hint: '从身份验证器应用获取新的 TOTP，已提交过的验证码会被拒绝。',
       },
     ],
     callbackUrl: '/indmoney/callback',
     warning:
-      'Set up TOTP once at indstocks.com > API Trading > Access Tokens, and put the Client ID shown there in BROKER_API_KEY. Token generation is limited to 1 request per 60 seconds, and 5 wrong codes in 15 minutes locks it for 15 minutes.',
+      '请先在 indstocks.com > API Trading > Access Tokens 设置 TOTP，并将显示的客户 ID 填入 BROKER_API_KEY。令牌每 60 秒最多生成一次；15 分钟内输错 5 次会锁定 15 分钟。',
   },
   kotak: {
     fields: [
       {
         name: 'mobile',
-        label: 'Mobile Number',
+        label: '手机号',
         type: 'tel',
-        placeholder: 'Enter 10-digit mobile number',
+        placeholder: '输入 10 位手机号',
         maxLength: 10,
         pattern: '[0-9]{10}',
         inputMode: 'numeric',
         prefix: '+91',
-        hint: 'Mobile number registered with Kotak NEO',
+        hint: 'Kotak NEO 登记手机号',
       },
       {
         name: 'mpin',
         label: 'MPIN',
         type: 'password',
-        placeholder: 'Enter 6-digit MPIN',
+        placeholder: '输入 6 位 MPIN',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
       },
       {
         name: 'totp',
-        label: 'TOTP Code',
+        label: 'TOTP 动态验证码',
         type: 'text',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
@@ -172,39 +172,39 @@ const brokerFields: Record<string, BrokerConfig> = {
     ],
     callbackUrl: '/kotak/callback',
     warning:
-      'Make sure TOTP is registered in your Kotak NEO mobile app. Go to Settings > Security > Enable TOTP.',
+      '请确认已在 Kotak NEO 手机应用中注册 TOTP，可在 Settings > Security > Enable TOTP 中设置。',
   },
   motilal: {
     fields: [
-      { name: 'userid', label: 'User ID', type: 'text', placeholder: 'Enter your User ID' },
-      { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter your Password' },
+      { name: 'userid', label: '用户 ID', type: 'text', placeholder: '输入用户 ID' },
+      { name: 'password', label: '密码', type: 'password', placeholder: '输入密码' },
       {
         name: 'dob',
-        label: 'Date of Birth',
+        label: '出生日期',
         type: 'text',
         placeholder: 'DD/MM/YYYY',
-        hint: 'Format: DD/MM/YYYY',
+        hint: '格式：DD/MM/YYYY',
       },
       {
         name: 'totp',
         label: 'TOTP',
         type: 'password',
-        placeholder: 'Enter TOTP (optional)',
+        placeholder: '输入 TOTP（可选）',
         maxLength: 6,
         optional: true,
-        hint: 'Leave blank to receive OTP via SMS/Email',
+        hint: '留空以通过短信或邮箱接收一次性验证码',
       },
     ],
     callbackUrl: '/motilal/callback',
   },
   mstock: {
     fields: [
-      { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter your Password' },
+      { name: 'password', label: '密码', type: 'password', placeholder: '输入密码' },
       {
         name: 'totp',
         label: 'TOTP',
         type: 'text',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
@@ -218,11 +218,11 @@ const brokerFields: Record<string, BrokerConfig> = {
         name: 'otp',
         label: 'OTP',
         type: 'text',
-        placeholder: 'Enter 6-digit OTP',
+        placeholder: '输入 6 位一次性验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
-        hint: 'An OTP has been sent to your registered mobile number. For a new code, start the Nubra login again from the broker page.',
+        hint: '一次性验证码已发送至登记手机号。如需新验证码，请在交易商页面重新开始 Nubra 登录。',
       },
     ],
     callbackUrl: '/nubra/callback',
@@ -231,30 +231,30 @@ const brokerFields: Record<string, BrokerConfig> = {
     fields: [
       {
         name: 'yob',
-        label: 'Year of Birth',
+        label: '出生年份',
         type: 'text',
         placeholder: 'YYYY',
         maxLength: 4,
         pattern: '[0-9]{4}',
         inputMode: 'numeric',
-        hint: 'Client ID and Password are configured in environment',
+        hint: '客户 ID 和密码在环境配置中设置',
       },
     ],
     callbackUrl: '/samco/callback',
   },
   shoonya: {
     fields: [
-      { name: 'userid', label: 'User ID', type: 'text', placeholder: 'Enter your User ID' },
-      { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter your Password' },
+      { name: 'userid', label: '用户 ID', type: 'text', placeholder: '输入用户 ID' },
+      { name: 'password', label: '密码', type: 'password', placeholder: '输入密码' },
       {
         name: 'totp',
         label: 'TOTP',
         type: 'password',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
-        hint: 'Get TOTP from your authenticator app',
+        hint: '从身份验证器应用获取 TOTP',
       },
     ],
     callbackUrl: '/shoonya/callback',
@@ -265,15 +265,15 @@ const brokerFields: Record<string, BrokerConfig> = {
         name: 'password',
         label: 'PIN',
         type: 'password',
-        placeholder: 'Enter your login PIN',
-        hint: 'The PIN you use to log in to CubePlus, not your account password',
+        placeholder: '输入登录 PIN',
+        hint: '用于登录 CubePlus 的 PIN，并非账户密码',
       },
       {
         name: 'twofa',
-        label: '2FA Code / TOTP',
+        label: '双因素验证码 / TOTP',
         type: 'text',
-        placeholder: 'Enter your 2FA code or TOTP',
-        hint: 'You can get TOTP from Tradejini web app under Profile > Security',
+        placeholder: '输入双因素验证码或 TOTP',
+        hint: '在 Tradejini 网页应用的 Profile > Security 中获取 TOTP',
       },
     ],
     callbackUrl: '/tradejini/callback',
@@ -281,27 +281,27 @@ const brokerFields: Record<string, BrokerConfig> = {
   },
   zebu: {
     fields: [
-      { name: 'userid', label: 'User ID', type: 'text', placeholder: 'Enter your User ID' },
-      { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter your Password' },
+      { name: 'userid', label: '用户 ID', type: 'text', placeholder: '输入用户 ID' },
+      { name: 'password', label: '密码', type: 'password', placeholder: '输入密码' },
       {
         name: 'totp',
-        label: 'TOTP / DOB / PAN',
+        label: 'TOTP / 出生日期 / PAN 税号',
         type: 'password',
-        placeholder: 'Enter TOTP (6 digits), DOB (DDMMYYYY), or PAN',
-        hint: 'Enter 6-digit TOTP, Date of Birth (DDMMYYYY), or PAN number',
+        placeholder: '输入 6 位 TOTP、出生日期（DDMMYYYY）或 PAN 税号',
+        hint: '输入 6 位 TOTP、出生日期（DDMMYYYY）或 PAN 税号',
       },
     ],
     callbackUrl: '/zebu/callback',
   },
   default: {
     fields: [
-      { name: 'userid', label: 'User ID', type: 'text', placeholder: 'Enter your User ID' },
-      { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter your Password' },
+      { name: 'userid', label: '用户 ID', type: 'text', placeholder: '输入用户 ID' },
+      { name: 'password', label: '密码', type: 'password', placeholder: '输入密码' },
       {
         name: 'totp',
         label: 'TOTP',
         type: 'text',
-        placeholder: 'Enter 6-digit TOTP',
+        placeholder: '输入 6 位 TOTP 动态验证码',
         maxLength: 6,
         pattern: '[0-9]{6}',
         inputMode: 'numeric',
@@ -353,7 +353,7 @@ export default function BrokerTOTP() {
 
     // Validate broker parameter
     if (!broker && !normalizedBroker) {
-      setError('Invalid broker selected.')
+      setError('选择的交易商无效。')
       setIsLoading(false)
       return
     }
@@ -362,7 +362,7 @@ export default function BrokerTOTP() {
     const requiredFields = config.fields.filter((f) => !f.optional).map((f) => f.name)
     const missingFields = requiredFields.filter((f) => !formData[f]?.trim())
     if (missingFields.length > 0) {
-      setError('Please fill in all required fields.')
+      setError('请填写所有必填项。')
       setIsLoading(false)
       return
     }
@@ -404,13 +404,13 @@ export default function BrokerTOTP() {
 
       if (data.status === 'success' || response.ok) {
         login(formData.userid || formData.mobile || '', broker || '')
-        showToast.success('Authentication successful')
+        showToast.success('身份验证成功')
         navigate('/dashboard')
       } else {
-        setError(data.message || 'Authentication failed. Please try again.')
+        setError(data.message || '验证失败，请重试。')
       }
     } catch {
-      setError('Authentication failed. Please check your credentials and try again.')
+      setError('身份验证失败，请检查凭据后重试。')
     } finally {
       setIsLoading(false)
     }
@@ -513,36 +513,28 @@ export default function BrokerTOTP() {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Authenticating...
-                  </>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />正在验证…</>
                 ) : (
                   <>
-                    <Shield className="mr-2 h-4 w-4" />
-                    Authenticate
-                  </>
+                    <Shield className="mr-2 h-4 w-4" />验证</>
                 )}
               </Button>
             </form>
 
             <div className="mt-6 space-y-3 text-center text-sm text-muted-foreground">
-              <p>Your credentials are securely transmitted and encrypted.</p>
+              <p>您的凭据会经过安全传输和加密处理。</p>
               <div className="flex items-center justify-center gap-4">
                 <Link
                   to="/broker"
                   className="text-primary hover:underline inline-flex items-center gap-1"
                 >
-                  <ArrowLeft className="h-3 w-3" />
-                  Back to Broker Selection
-                </Link>
+                  <ArrowLeft className="h-3 w-3" />返回选择交易商</Link>
                 <a
                   href="https://docs.openalgo.in"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline inline-flex items-center gap-1"
-                >
-                  Documentation
-                  <ExternalLink className="h-3 w-3" />
+                >文档<ExternalLink className="h-3 w-3" />
                 </a>
                 <BrokerAuthSignOut />
               </div>

@@ -62,7 +62,7 @@ function panel(openFile: string | null = A) {
 }
 
 async function editorFor(file: string): Promise<HTMLTextAreaElement> {
-  return (await screen.findByLabelText(`Source of ${file}`)) as HTMLTextAreaElement
+  return (await screen.findByLabelText(`${file} 的源代码`)) as HTMLTextAreaElement
 }
 
 /** The coloured layer drawn behind the text, which must show the same text. */
@@ -75,12 +75,12 @@ describe('the new script form', () => {
     server.files.clear()
     const user = userEvent.setup()
     render(panel(null))
-    await user.click(await screen.findByRole('button', { name: 'New script' }))
-    await user.click(screen.getByRole('button', { name: 'strategy' }))
+    await user.click(await screen.findByRole('button', { name: '新建脚本' }))
+    await user.click(screen.getByRole('button', { name: '策略' }))
     expect(screen.getByText(KIND_HINT.strategy)).toBeInTheDocument()
     expect(screen.queryByText(/not built/i)).toBeNull()
-    expect(KIND_HINT.strategy).toMatch(/Backtest/)
-    expect(KIND_HINT.strategy).toMatch(/Strategies panel/)
+    expect(KIND_HINT.strategy).toMatch(/回测/)
+    expect(KIND_HINT.strategy).toMatch(/策略面板/)
   })
 })
 
@@ -123,10 +123,10 @@ describe('Tab in the editor', () => {
     render(panel())
     const area = await editorFor(A)
     act(() => area.focus())
-    expect(screen.getByText('Esc then Tab to leave')).toBeInTheDocument()
+    expect(screen.getByText('按 Esc 再按 Tab 离开')).toBeInTheDocument()
 
     await user.keyboard('{Escape}')
-    expect(screen.getByText('Tab now leaves the editor')).toBeInTheDocument()
+    expect(screen.getByText('现在按 Tab 可离开编辑器')).toBeInTheDocument()
     await user.keyboard('{Tab}')
 
     expect(document.activeElement).not.toBe(area)
@@ -155,25 +155,25 @@ describe('an unsaved edit', () => {
     await user.click(area)
     area.setSelectionRange(area.value.length, area.value.length)
     await user.keyboard('// not saved yet')
-    expect(screen.getByText('Unsaved changes')).toBeInTheDocument()
+    expect(screen.getByText('未保存的修改')).toBeInTheDocument()
 
     rerender(panel(B))
     expect((await editorFor(B)).value).toBe(SOURCE_B)
 
     rerender(panel(A))
     await waitFor(async () => expect((await editorFor(A)).value).toContain('// not saved yet'))
-    expect(screen.getByText('Unsaved changes')).toBeInTheDocument()
+    expect(screen.getByText('未保存的修改')).toBeInTheDocument()
     // Kept, not saved: the server still holds what it held.
     expect(server.files.get(A)).toBe(SOURCE_A)
 
     // And once saved it is let go: the next visit opens the saved text, clean.
-    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: '保存' }))
     await waitFor(() => expect(server.files.get(A)).toContain('// not saved yet'))
     rerender(panel(B))
     await editorFor(B)
     rerender(panel(A))
     await waitFor(async () => expect((await editorFor(A)).value).toBe(server.files.get(A)))
-    expect(screen.queryByText('Unsaved changes')).toBeNull()
+    expect(screen.queryByText('未保存的修改')).toBeNull()
   })
 
   it('survives the panel closing and opening again', async () => {
@@ -199,14 +199,14 @@ describe('an unsaved edit', () => {
     area.setSelectionRange(area.value.length, area.value.length)
     await user.keyboard('// throw me away')
 
-    await user.click(screen.getByRole('button', { name: 'Script actions' }))
-    await user.click(await screen.findByRole('menuitem', { name: 'Discard unsaved changes' }))
+    await user.click(screen.getByRole('button', { name: '脚本操作' }))
+    await user.click(await screen.findByRole('menuitem', { name: '放弃未保存的修改' }))
     const question = await screen.findByRole('alertdialog')
-    expect(question).toHaveTextContent('Discard your unsaved changes to alpha?')
+    expect(question).toHaveTextContent('确定放弃对 alpha 未保存的修改吗？')
     // Nothing is gone until the answer is given.
     expect(area.value).toContain('// throw me away')
 
-    await user.click(screen.getByRole('button', { name: 'Discard changes' }))
+    await user.click(screen.getByRole('button', { name: '放弃修改' }))
     await waitFor(() => expect(area.value).toBe(SOURCE_A))
     expect(screen.queryByRole('alertdialog')).toBeNull()
   })
@@ -225,7 +225,7 @@ describe('an unsaved edit', () => {
       server.files.set(A, `${SOURCE_A}// theirs\n`)
     })
     render(panel(A))
-    expect(await screen.findByText(/the saved copy of alpha has changed since/)).toBeInTheDocument()
+    expect(await screen.findByText(/alpha 的已保存版本此后已发生变化/)).toBeInTheDocument()
     expect((await editorFor(A)).value).toContain('// mine')
   })
 })

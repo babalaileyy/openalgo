@@ -98,7 +98,7 @@ describe('Master Contract polling lifetime', () => {
     await act(async () => {
       await Promise.resolve()
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Force Download' }))
+    fireEvent.click(screen.getByRole('button', { name: '强制下载' }))
     await act(async () => {
       await Promise.resolve()
     })

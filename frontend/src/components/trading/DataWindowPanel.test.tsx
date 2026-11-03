@@ -65,8 +65,13 @@ describe('data window panel', () => {
     const live = chart([100, 101, 102, 103, 104, 105])
     const sma = live.addIndicator('sma', { length: 3 })
     render(<DataWindowPanel chart={live} paneLabel="Pane 1 · NSE:SBIN" />)
-    expect(screen.getByRole('complementary', { name: 'Data window' })).toBeVisible()
+    expect(screen.getByRole('complementary', { name: '数据窗口' })).toBeVisible()
     expect(screen.getByText('NSE:SBIN')).toBeVisible()
+    expect(screen.getByText('开盘价')).toBeVisible()
+    expect(screen.getByText('最高价')).toBeVisible()
+    expect(screen.getByText('最低价')).toBeVisible()
+    expect(screen.getByText('收盘价')).toBeVisible()
+    expect(screen.getByText('成交量')).toBeVisible()
     // With no crosshair the latest bar is read.
     expect(value('close')).toBe(105)
     expect(value('volume')).toBe(1105)
@@ -103,6 +108,6 @@ describe('data window panel', () => {
 
   it('asks for a chart when the pane has none', () => {
     render(<DataWindowPanel chart={null} paneLabel="Pane 2" />)
-    expect(screen.getByText('Load a chart in this pane to read its values here.')).toBeVisible()
+    expect(screen.getByText('请先在此窗格加载图表，再查看数值。')).toBeVisible()
   })
 })

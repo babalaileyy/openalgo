@@ -73,7 +73,7 @@ function renderDialog(
 }
 
 async function chooseInDialog(selectName: string, optionName: string) {
-  const dialog = screen.getByRole('dialog', { name: 'Edit Position' })
+  const dialog = screen.getByRole('dialog', { name: '编辑持仓' })
   fireEvent.keyDown(within(dialog).getByRole('combobox', { name: selectName }), {
     key: 'ArrowDown',
   })
@@ -91,7 +91,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
     const { onSave } = renderDialog(resolveContract)
 
     expect(resolveContract).toHaveBeenCalledWith('04AUG26', 'OPTION', 24000, 'CE')
-    expect(screen.getByRole('button', { name: 'Modify' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '修改' })).toBeDisabled()
     expect(screen.queryByText(original.symbol)).not.toBeInTheDocument()
 
     await act(async () =>
@@ -108,7 +108,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
 
     expect(await screen.findByText('NIFTY04AUG2624000CE-CANONICAL')).toBeVisible()
     expect(screen.getByLabelText('Entry price')).toHaveValue('100')
-    fireEvent.click(screen.getByRole('button', { name: 'Modify' }))
+    fireEvent.click(screen.getByRole('button', { name: '修改' }))
     expect(onSave).toHaveBeenCalledWith(
       expect.objectContaining({
         symbol: 'NIFTY04AUG2624000CE-CANONICAL',
@@ -129,8 +129,8 @@ describe('EditLegDialog listed contracts and price validation', () => {
     )
 
     expect(await screen.findByText('Contract is not listed for this selection')).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Modify' })).toBeDisabled()
-    fireEvent.click(screen.getByRole('button', { name: 'Modify' }))
+    expect(screen.getByRole('button', { name: '修改' })).toBeDisabled()
+    fireEvent.click(screen.getByRole('button', { name: '修改' }))
     expect(onSave).not.toHaveBeenCalled()
   })
 
@@ -159,7 +159,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
     const { onSave } = renderDialog(resolveContract)
     await screen.findByText(original.symbol)
 
-    await chooseInDialog('Expiry', '18AUG26')
+    await chooseInDialog('到期日', '18AUG26')
     expect(screen.getByLabelText('Entry price')).toHaveValue('')
     expect(screen.queryByText(original.symbol)).not.toBeInTheDocument()
 
@@ -176,7 +176,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
     expect(await screen.findByText('NIFTY18AUG2624600CE')).toBeVisible()
     expect(screen.getByLabelText('Entry price')).toHaveValue('225')
 
-    fireEvent.click(screen.getByRole('button', { name: 'Modify' }))
+    fireEvent.click(screen.getByRole('button', { name: '修改' }))
     expect(onSave).toHaveBeenCalledWith(
       expect.objectContaining({
         symbol: 'NIFTY18AUG2624600CE',
@@ -208,11 +208,11 @@ describe('EditLegDialog listed contracts and price validation', () => {
     renderDialog(resolveContract)
     await screen.findByText(original.symbol)
 
-    await chooseInDialog('Option type', 'PE')
-    await chooseInDialog('Option type', 'CE')
+    await chooseInDialog('期权类型', 'PE')
+    await chooseInDialog('期权类型', 'CE')
     await act(async () => resolveCe(null))
     expect(await screen.findByText('Contract is not listed for this selection')).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Modify' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '修改' })).toBeDisabled()
 
     await act(async () => resolvePe(market({ symbol: 'STALE-PE' })))
     await waitFor(() => expect(screen.queryByText('STALE-PE')).not.toBeInTheDocument())
@@ -230,7 +230,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
     const input = screen.getByLabelText('Entry price')
     await user.clear(input)
     if (raw) fireEvent.change(input, { target: { value: raw } })
-    fireEvent.click(screen.getByRole('button', { name: 'Modify' }))
+    fireEvent.click(screen.getByRole('button', { name: '修改' }))
 
     expect(await screen.findByText(message)).toBeVisible()
     expect(input).toHaveAttribute('aria-invalid', 'true')
@@ -244,7 +244,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
     const input = screen.getByLabelText('Entry price')
     await user.clear(input)
     await user.type(input, '0')
-    fireEvent.click(screen.getByRole('button', { name: 'Modify' }))
+    fireEvent.click(screen.getByRole('button', { name: '修改' }))
 
     expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ price: 0 }))
   })
@@ -254,7 +254,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
     await screen.findByText(original.symbol)
     const input = screen.getByLabelText('Exit price')
     fireEvent.change(input, { target: { value: 'Infinity' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Modify' }))
+    fireEvent.click(screen.getByRole('button', { name: '修改' }))
 
     expect(await screen.findByText('Enter a finite price')).toBeVisible()
     expect(input).toHaveAttribute('aria-invalid', 'true')
@@ -266,7 +266,7 @@ describe('EditLegDialog listed contracts and price validation', () => {
     const { onSave } = renderDialog()
     await screen.findByText(original.symbol)
     fireEvent.change(screen.getByLabelText('Exit price'), { target: { value: '0' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Modify' }))
+    fireEvent.click(screen.getByRole('button', { name: '修改' }))
 
     expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ exitPrice: 0 }))
   })

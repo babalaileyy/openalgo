@@ -64,16 +64,16 @@ interface CustomLegsFieldsProps {
 }
 
 const STRIKE_MODES: Array<{ value: StrikeMode; label: string; hint: string }> = [
-  { value: 'OFFSET', label: 'Offset', hint: 'Re-resolved against the underlying on every run' },
-  { value: 'STRIKE', label: 'Strike', hint: 'One named contract, used exactly as entered' },
+  { value: 'OFFSET', label: '偏移', hint: '每次运行时根据标的重新计算' },
+  { value: 'STRIKE', label: '行权价', hint: '使用指定合约，完全按输入值执行' },
 ]
 
 const TEMPLATES: Array<{ value: string; label: string }> = [
-  { value: 'straddle', label: 'Straddle' },
-  { value: 'strangle', label: 'Strangle' },
-  { value: 'iron_condor', label: 'Iron Condor' },
-  { value: 'bull_call_spread', label: 'Bull Call Spread' },
-  { value: 'bear_put_spread', label: 'Bear Put Spread' },
+  { value: 'straddle', label: 'Straddle（跨式组合）' },
+  { value: 'strangle', label: 'Strangle（宽跨式组合）' },
+  { value: 'iron_condor', label: 'Iron Condor（铁鹰式组合）' },
+  { value: 'bull_call_spread', label: 'Bull Call Spread（看涨期权牛市价差）' },
+  { value: 'bear_put_spread', label: 'Bear Put Spread（看跌期权熊市价差）' },
 ]
 
 export function CustomLegsFields({
@@ -130,7 +130,7 @@ export function CustomLegsFields({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <Label className="text-xs">Legs</Label>
+        <Label className="text-xs">策略腿</Label>
         <span className="text-[10px] text-muted-foreground">
           {legs.length}/{MAX_CUSTOM_LEGS}
         </span>
@@ -138,8 +138,8 @@ export function CustomLegsFields({
 
       <div className="space-y-1">
         <Select value="" onValueChange={loadTemplate}>
-          <SelectTrigger className="h-8" aria-label="Load legs from a readymade strategy">
-            <SelectValue placeholder="Start from a readymade strategy" />
+          <SelectTrigger className="h-8" aria-label="从预设策略加载策略腿">
+            <SelectValue placeholder="从预设策略开始" />
           </SelectTrigger>
           <SelectContent>
             {TEMPLATES.map((template) => (
@@ -150,15 +150,12 @@ export function CustomLegsFields({
           </SelectContent>
         </Select>
         <p className="text-[10px] text-muted-foreground">
-          Loads that strategy&apos;s legs here so you can change strikes, expiries and sides.
-          Replaces the legs below.
+          将预设策略腿加载到此处，便于修改行权价、到期日和买卖方向。加载后会替换下方现有策略腿。
         </p>
       </div>
 
       {legs.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-border p-3 text-center text-[10px] text-muted-foreground">
-          No legs yet. Add one, or load a readymade strategy above and edit it.
-        </p>
+        <p className="rounded-lg border border-dashed border-border p-3 text-center text-[10px] text-muted-foreground">暂无策略腿。请添加一条，或加载上方的预设策略进行编辑。</p>
       ) : (
         legs.map((leg, index) => (
           <LegRow
@@ -194,15 +191,12 @@ export function CustomLegsFields({
         disabled={legs.length >= MAX_CUSTOM_LEGS}
         onClick={addLeg}
       >
-        <Plus className="mr-1 h-3 w-3" />
-        Add Leg
-      </Button>
+        <Plus className="mr-1 h-3 w-3" />添加策略腿</Button>
 
       {basketProblem && <p className="text-[10px] text-destructive">{basketProblem}</p>}
 
       <p className="text-[10px] text-muted-foreground">
-        Every leg is placed against the node&apos;s underlying. A leg that names its own expiry is
-        how a calendar or diagonal spread is built; leave it on Same as node otherwise.
+        每条策略腿都使用节点的标的。为策略腿指定不同到期日可构建日历价差或对角价差；否则保持与节点一致。
       </p>
     </div>
   )
@@ -433,9 +427,7 @@ function LegRow({
           </fieldset>
 
           <div className="space-y-1">
-            <Label htmlFor={id('strikeMode')} className="text-[10px] text-muted-foreground">
-              Strike
-            </Label>
+            <Label htmlFor={id('strikeMode')} className="text-[10px] text-muted-foreground">行权价模式</Label>
             <Select
               value={leg.strikeMode}
               onValueChange={(mode) =>
@@ -462,7 +454,7 @@ function LegRow({
             </Select>
             {leg.strikeMode === 'OFFSET' ? (
               <Select value={leg.offset} onValueChange={(v) => onUpdate({ offset: v })}>
-                <SelectTrigger className="h-8" aria-label="Strike offset">
+                <SelectTrigger className="h-8" aria-label="行权价偏移">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -475,8 +467,8 @@ function LegRow({
               </Select>
             ) : pickStrike ? (
               <Select value={leg.strike} onValueChange={(v) => onUpdate({ strike: v })}>
-                <SelectTrigger id={id('strike')} className="h-8" aria-label="Strike price">
-                  <SelectValue placeholder="Pick a listed strike" />
+                <SelectTrigger id={id('strike')} className="h-8" aria-label="行权价">
+                  <SelectValue placeholder="选择已上市的行权价" />
                 </SelectTrigger>
                 <SelectContent>
                   {strikeOptions.map((row) => (
@@ -502,7 +494,7 @@ function LegRow({
                 className="h-8"
                 placeholder="24500"
                 value={leg.strike}
-                aria-label="Strike price"
+                aria-label="行权价"
                 aria-invalid={Boolean(problems.strike)}
                 aria-describedby={describedBy('strike')}
                 onChange={(e) => onUpdate({ strike: e.target.value })}
@@ -515,7 +507,7 @@ function LegRow({
                 className="text-[10px] text-muted-foreground underline"
                 onClick={() => setTypeStrike((current) => !current)}
               >
-                {pickStrike ? 'Type a strike or {{variable}}' : 'Pick a listed strike'}
+                {pickStrike ? '输入行权价或 {{variable}}' : '选择已上市的行权价'}
               </button>
             )}
             <p className="text-[10px] text-muted-foreground">
@@ -524,16 +516,14 @@ function LegRow({
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor={id('expiry')} className="text-[10px] text-muted-foreground">
-              Expiry
-            </Label>
+            <Label htmlFor={id('expiry')} className="text-[10px] text-muted-foreground">到期日</Label>
             {typeExpiry || hasVariableReference(leg.expiry) ? (
               <Input
                 id={id('expiry')}
                 className="h-8 font-mono"
                 placeholder="28OCT25"
                 value={leg.expiry}
-                aria-label="Expiry date"
+                aria-label="到期日"
                 aria-invalid={Boolean(problems.expiry)}
                 aria-describedby={describedBy('expiry')}
                 onChange={(e) =>
@@ -545,8 +535,8 @@ function LegRow({
                 value={effectiveExpiry}
                 onValueChange={(value) => onUpdate({ expiryMode: 'DATE', expiry: value })}
               >
-                <SelectTrigger id={id('expiry')} className="h-8" aria-label="Expiry">
-                  <SelectValue placeholder="Pick an expiry" />
+                <SelectTrigger id={id('expiry')} className="h-8" aria-label="到期日">
+                  <SelectValue placeholder="选择到期日" />
                 </SelectTrigger>
                 <SelectContent>
                   {expiryOptions.map((value) => (
@@ -561,22 +551,20 @@ function LegRow({
             {!pinnedExpiry && effectiveExpiry && (
               // Only shown while the leg is still following the node, because
               // that is the state whose behaviour is not visible from the date.
-              <p className="text-[10px] text-muted-foreground">
-                Follows the node, so it rolls to the next expiry.
-              </p>
+              <p className="text-[10px] text-muted-foreground">跟随节点设置，自动切换到下一个到期日。</p>
             )}
             <button
               type="button"
               className="text-[10px] text-muted-foreground underline"
               onClick={() => setTypeExpiry((current) => !current)}
             >
-              {typeExpiry ? 'Pick a listed expiry' : 'Type a date or {{variable}}'}
+              {typeExpiry ? '选择已上市的到期日' : '输入日期或 {{variable}}'}
             </button>
           </div>
 
           <div className="space-y-1">
             <Label htmlFor={id('quantity')} className="text-[10px] text-muted-foreground">
-              Quantity (Lots)
+              数量（手）
             </Label>
             <Input
               id={id('quantity')}
@@ -590,14 +578,12 @@ function LegRow({
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor={id('product')} className="text-[10px] text-muted-foreground">
-              Product
-            </Label>
+            <Label htmlFor={id('product')} className="text-[10px] text-muted-foreground">产品类型</Label>
             <Select
               value={effectiveProduct}
               onValueChange={(value) => onUpdate({ product: value })}
             >
-              <SelectTrigger id={id('product')} className="h-8" aria-label="Product">
+              <SelectTrigger id={id('product')} className="h-8" aria-label="产品类型">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -611,14 +597,12 @@ function LegRow({
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor={id('priceType')} className="text-[10px] text-muted-foreground">
-              Price Type
-            </Label>
+            <Label htmlFor={id('priceType')} className="text-[10px] text-muted-foreground">价格类型</Label>
             <Select
               value={effectivePriceType}
               onValueChange={(value) => onUpdate({ priceType: value })}
             >
-              <SelectTrigger id={id('priceType')} className="h-8" aria-label="Price type">
+              <SelectTrigger id={id('priceType')} className="h-8" aria-label="价格类型">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -633,9 +617,7 @@ function LegRow({
 
           {NEEDS_PRICE.has(effectivePriceType) && (
             <div className="space-y-1">
-              <Label htmlFor={id('price')} className="text-[10px] text-muted-foreground">
-                Price
-              </Label>
+              <Label htmlFor={id('price')} className="text-[10px] text-muted-foreground">价格</Label>
               <Input
                 id={id('price')}
                 className="h-8"
@@ -650,9 +632,7 @@ function LegRow({
 
           {NEEDS_TRIGGER.has(effectivePriceType) && (
             <div className="space-y-1">
-              <Label htmlFor={id('triggerPrice')} className="text-[10px] text-muted-foreground">
-                Trigger Price
-              </Label>
+              <Label htmlFor={id('triggerPrice')} className="text-[10px] text-muted-foreground">触发价格</Label>
               <Input
                 id={id('triggerPrice')}
                 className="h-8"
@@ -666,9 +646,7 @@ function LegRow({
           )}
 
           <div className="space-y-1">
-            <Label htmlFor={id('splitSize')} className="text-[10px] text-muted-foreground">
-              Split Size
-            </Label>
+            <Label htmlFor={id('splitSize')} className="text-[10px] text-muted-foreground">拆单数量</Label>
             <Input
               id={id('splitSize')}
               className="h-8"
@@ -723,16 +701,13 @@ function ContractHint({
   underlyingSymbol,
 }: ContractHintProps) {
   if (loading) {
-    return <p className="text-[10px] text-muted-foreground">Loading listed contracts...</p>
+    return <p className="text-[10px] text-muted-foreground">正在加载上市合约…</p>
   }
   if (failed) {
     // Not an error state for the leg: the workflow is still editable by hand,
     // and this is the ordinary case when no broker session is live.
     return (
-      <p className="text-[10px] text-muted-foreground">
-        Listed contracts unavailable, so strike and expiry are typed here. They are checked when the
-        workflow is saved.
-      </p>
+      <p className="text-[10px] text-muted-foreground">无法获取上市合约，请在此输入行权价和到期日；保存工作流时会进行校验。</p>
     )
   }
 

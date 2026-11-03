@@ -190,10 +190,10 @@ export default function TradeBook() {
           setTrades(response.data)
           setError(null)
         } else {
-          setError(response.message || 'Failed to fetch trades')
+          setError(response.message || '获取成交记录失败')
         }
       } catch {
-        setError('Failed to fetch trades')
+        setError('获取成交记录失败')
       } finally {
         setIsLoading(false)
         setIsRefreshing(false)
@@ -221,7 +221,7 @@ export default function TradeBook() {
 
   const exportToCSV = () => {
     if (sortedAndFilteredTrades.length === 0) {
-      showToast.error('No data to export', 'system')
+      showToast.error('没有可导出的数据', 'system')
       return
     }
 
@@ -260,7 +260,7 @@ export default function TradeBook() {
       URL.revokeObjectURL(url)
       showToast.success(`Downloaded ${filename}`, 'clipboard')
     } catch {
-      showToast.error('Failed to export CSV', 'system')
+      showToast.error('导出 CSV 失败', 'system')
     }
   }
 
@@ -297,8 +297,8 @@ export default function TradeBook() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Trade Book</h1>
-          <p className="text-muted-foreground">View your executed trades</p>
+          <h1 className="text-3xl font-bold tracking-tight">成交记录</h1>
+          <p className="text-muted-foreground">查看已成交的交易</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {/* Settings Button */}
@@ -308,10 +308,10 @@ export default function TradeBook() {
                 variant={hasActiveFilters ? 'default' : 'outline'}
                 size="sm"
                 className="relative"
-                aria-label="Open trade filters"
+                aria-label="打开成交筛选"
               >
                 <Settings2 className="h-4 w-4 mr-2" />
-                Filters
+                筛选
                 {hasActiveFilters && (
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full" />
                 )}
@@ -319,26 +319,26 @@ export default function TradeBook() {
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Trade Filters</DialogTitle>
-                <DialogDescription>Filter trades by action, exchange, or product</DialogDescription>
+                <DialogTitle>成交筛选</DialogTitle>
+                <DialogDescription>按买卖方向、交易所或产品类型筛选成交</DialogDescription>
               </DialogHeader>
 
               <div className="space-y-6 py-4">
                 {/* Action */}
                 <div className="space-y-3">
                   <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Action
+                    买卖方向
                   </Label>
                   <div className="flex flex-wrap gap-2">
-                    <FilterChip type="action" value="BUY" label="Buy" />
-                    <FilterChip type="action" value="SELL" label="Sell" />
+                    <FilterChip type="action" value="BUY" label="买入" />
+                    <FilterChip type="action" value="SELL" label="卖出" />
                   </div>
                 </div>
 
                 {/* Exchange */}
                 <div className="space-y-3">
                   <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Exchange
+                    交易所
                   </Label>
                   <div className="flex flex-wrap gap-2">
                     <FilterChip type="exchange" value="NSE" label="NSE" />
@@ -354,7 +354,7 @@ export default function TradeBook() {
                 {!isCrypto && (
                   <div className="space-y-3">
                     <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Product
+                      产品类型
                     </Label>
                     <div className="flex flex-wrap gap-2">
                       <FilterChip type="product" value="CNC" label="CNC" />
@@ -367,9 +367,9 @@ export default function TradeBook() {
 
               <DialogFooter>
                 <Button variant="ghost" onClick={clearFilters}>
-                  Clear All
+                  清除全部
                 </Button>
-                <Button onClick={() => setSettingsOpen(false)}>Done</Button>
+                <Button onClick={() => setSettingsOpen(false)}>完成</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -379,19 +379,19 @@ export default function TradeBook() {
             size="sm"
             onClick={() => fetchTrades(true)}
             disabled={isRefreshing}
-            aria-label="Refresh tradebook"
+            aria-label="刷新成交记录"
           >
             <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
-            Refresh
+            刷新
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={exportToCSV}
-            aria-label="Export tradebook to CSV"
+            aria-label="将成交记录导出为 CSV"
           >
             <Download className="h-4 w-4 mr-2" />
-            Export
+            导出
           </Button>
         </div>
       </div>
@@ -399,7 +399,7 @@ export default function TradeBook() {
       {/* Active Filters Bar */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm text-muted-foreground">Active Filters:</span>
+          <span className="text-sm text-muted-foreground">已启用的筛选：</span>
           {filters.action.map((v) => (
             <Badge
               key={v}
@@ -433,9 +433,9 @@ export default function TradeBook() {
             size="sm"
             className="text-red-500 border-red-500/50 hover:bg-red-500/10"
             onClick={clearFilters}
-            aria-label="Clear active filters"
+            aria-label="清除已启用的筛选"
           >
-            Clear All
+            清除全部
           </Button>
         </div>
       )}
@@ -444,13 +444,13 @@ export default function TradeBook() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Trades</CardDescription>
+            <CardDescription>成交总数</CardDescription>
             <CardTitle className="text-2xl">{stats.total}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Buy Trades</CardDescription>
+            <CardDescription>买入成交</CardDescription>
             <CardTitle className="text-2xl text-green-600 flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
               {stats.buyTrades}
@@ -459,7 +459,7 @@ export default function TradeBook() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Sell Trades</CardDescription>
+            <CardDescription>卖出成交</CardDescription>
             <CardTitle className="text-2xl text-red-600 flex items-center gap-2">
               <TrendingDown className="h-5 w-5" />
               {stats.sellTrades}
@@ -481,13 +481,13 @@ export default function TradeBook() {
             <div className="text-center py-12 text-muted-foreground">
               {hasActiveFilters ? (
                 <div>
-                  <p className="mb-4">No trades match your filters</p>
+                  <p className="mb-4">没有符合筛选条件的成交</p>
                   <Button variant="ghost" size="sm" onClick={clearFilters}>
-                    Clear Filters
+                    清除筛选
                   </Button>
                 </div>
               ) : (
-                'No trades today'
+                '今日暂无成交'
               )}
             </div>
           ) : (
@@ -500,7 +500,7 @@ export default function TradeBook() {
                       className="cursor-pointer hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-1">
-                        Symbol
+                        交易品种
                         {sortConfig.key === 'symbol' &&
                           (sortConfig.direction === 'asc' ? (
                             <ArrowUp className="h-3 w-3" />
@@ -509,14 +509,14 @@ export default function TradeBook() {
                           ))}
                       </div>
                     </TableHead>
-                    <TableHead>Exchange</TableHead>
-                    {!isCrypto && <TableHead>Product</TableHead>}
+                    <TableHead>交易所</TableHead>
+                    {!isCrypto && <TableHead>产品类型</TableHead>}
                     <TableHead
                       onClick={() => requestSort('action')}
                       className="cursor-pointer hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-1">
-                        Action
+                        买卖方向
                         {sortConfig.key === 'action' &&
                           (sortConfig.direction === 'asc' ? (
                             <ArrowUp className="h-3 w-3" />
@@ -525,16 +525,16 @@ export default function TradeBook() {
                           ))}
                       </div>
                     </TableHead>
-                    <TableHead className="text-right">Qty</TableHead>
-                    <TableHead className="text-right">Price</TableHead>
-                    <TableHead className="text-right">Trade Value</TableHead>
-                    <TableHead>Order ID</TableHead>
+                    <TableHead className="text-right">数量</TableHead>
+                    <TableHead className="text-right">价格</TableHead>
+                    <TableHead className="text-right">成交金额</TableHead>
+                    <TableHead>订单编号</TableHead>
                     <TableHead
                       onClick={() => requestSort('timestamp')}
                       className="cursor-pointer hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-1">
-                        Time
+                        时间
                         {sortConfig.key === 'timestamp' &&
                           (sortConfig.direction === 'asc' ? (
                             <ArrowUp className="h-3 w-3" />
@@ -569,7 +569,7 @@ export default function TradeBook() {
                           ) : (
                             <TrendingDown className="h-3 w-3" />
                           )}
-                          {trade.action}
+                          {trade.action === 'BUY' ? '买入' : trade.action === 'SELL' ? '卖出' : trade.action}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right font-mono">{trade.quantity}</TableCell>

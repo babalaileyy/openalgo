@@ -34,12 +34,8 @@ export default function Platforms() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Layers className="h-6 w-6" />
-          Trading Platforms
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Connect your favorite charting platforms with OpenAlgo for automated trading
-        </p>
+          <Layers className="h-6 w-6" />交易平台</h1>
+        <p className="text-muted-foreground mt-1">将常用图表平台连接至 OpenAlgo，进行自动化交易</p>
       </div>
 
       {/* Platform Cards Grid */}
@@ -74,17 +70,13 @@ export default function Platforms() {
       {/* Information Section */}
       <Alert>
         <Lightbulb className="h-4 w-4" />
-        <AlertTitle className="font-bold">Getting Started</AlertTitle>
+        <AlertTitle className="font-bold">快速入门</AlertTitle>
         <AlertDescription className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <span>
-            Each platform requires webhook configuration. Click on a platform to generate your
-            webhook URLs and JSON payloads. Make sure you have set up your API key before
-            configuring webhooks.
+            每个平台都需要配置 Webhook。点击平台可生成 Webhook 地址和 JSON 请求内容。配置 Webhook 前请先设置 API 密钥。
           </span>
           <Button asChild variant="outline" size="sm" className="gap-1 flex-shrink-0">
-            <a href="https://docs.openalgo.in" target="_blank" rel="noopener noreferrer">
-              View Documentation
-            </a>
+            <a href="https://docs.openalgo.in" target="_blank" rel="noopener noreferrer">查看文档</a>
           </Button>
         </AlertDescription>
       </Alert>

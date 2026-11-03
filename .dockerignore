@@ -6,6 +6,9 @@ tmp/
 # Personal workspace and audit reports -- never belong in a shipped image.
 # The Dockerfile does `COPY . .`, so anything not listed here is baked in.
 workspace/
+crypto-runtime/
+.agents/
+.codex/
 
 # Byte-compiled / cache files
 __pycache__/

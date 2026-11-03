@@ -79,14 +79,14 @@ type Exchange = (typeof EXCHANGES)[number]
  * Greek letter at all, whatever the family is called.
  */
 const METRICS = [
-  { id: 'ltp', label: 'LTP', symbol: 'LTP', group: 'Price', dp: 2 },
-  { id: 'oi', label: 'OI', symbol: 'OI', group: 'Price', dp: 0 },
-  { id: 'volume', label: 'Volume', symbol: 'Vol', group: 'Price', dp: 0 },
-  { id: 'iv', label: 'IV', symbol: 'σ', group: 'Greeks', dp: 1 },
-  { id: 'delta', label: 'Delta', symbol: 'Δ', group: 'Greeks', dp: 2 },
-  { id: 'gamma', label: 'Gamma', symbol: 'Γ', group: 'Greeks', dp: 4 },
-  { id: 'theta', label: 'Theta', symbol: 'Θ', group: 'Greeks', dp: 2 },
-  { id: 'vega', label: 'Vega', symbol: 'V', group: 'Greeks', dp: 2 },
+  { id: 'ltp', label: 'LTP（最新价）', symbol: 'LTP', group: 'Price', dp: 2 },
+  { id: 'oi', label: 'OI（持仓量）', symbol: 'OI', group: 'Price', dp: 0 },
+  { id: 'volume', label: 'Volume（成交量）', symbol: 'Vol', group: 'Price', dp: 0 },
+  { id: 'iv', label: 'IV（隐含波动率）', symbol: 'σ', group: 'Greeks', dp: 1 },
+  { id: 'delta', label: 'Delta（德尔塔）', symbol: 'Δ', group: 'Greeks', dp: 2 },
+  { id: 'gamma', label: 'Gamma（伽马）', symbol: 'Γ', group: 'Greeks', dp: 4 },
+  { id: 'theta', label: 'Theta（西塔）', symbol: 'Θ', group: 'Greeks', dp: 2 },
+  { id: 'vega', label: 'Vega（维加）', symbol: 'V', group: 'Greeks', dp: 2 },
 ] as const
 type Metric = (typeof METRICS)[number]['id']
 
@@ -212,10 +212,10 @@ function OrderPills({
               ? 'bg-emerald-600 hover:bg-emerald-700'
               : 'bg-amber-600 hover:bg-amber-700'
           )}
-          aria-label={`${action === 'BUY' ? 'Buy' : 'Sell'} ${leg.symbol}`}
-          title={`${action === 'BUY' ? 'Buy' : 'Sell'} ${leg.symbol}`}
+          aria-label={`${action === 'BUY' ? '买入' : '卖出'} ${leg.symbol}`}
+          title={`${action === 'BUY' ? '买入' : '卖出'} ${leg.symbol}`}
         >
-          {action === 'BUY' ? 'B' : 'S'}
+          {action === 'BUY' ? '买' : '卖'}
         </button>
       ))}
     </span>
@@ -285,7 +285,7 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
         // Reported rather than swallowed. Silently emptying the list left a
         // combobox saying "No underlying found", which reads as "this segment
         // has no options" rather than "the request failed".
-        setUnderlyingError(`Could not load ${prefs.exchange} underlyings`)
+        setUnderlyingError(`无法加载 ${prefs.exchange} 的标的`)
       }
     })()
     return () => {
@@ -311,7 +311,7 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
       } catch {
         if (!alive) return
         setExpiries([])
-        setExpiryError(`Could not load expiries for ${prefs.underlying}`)
+        setExpiryError(`无法加载 ${prefs.underlying} 的到期日`)
       }
     })()
     return () => {
@@ -404,7 +404,7 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
   return (
     <PanelShell
       id="oa-panel-options"
-      label="Option chain"
+      label="期权链"
       storageKey="oa-trading-optionchain-width"
       defaultWidth={340}
     >
@@ -417,7 +417,7 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
             setPrefs((p) => ({ ...p, exchange: value as Exchange, expiry: '' }))
           }
         >
-          <SelectTrigger className="h-8 w-[76px] text-[12px]" aria-label="Exchange segment">
+          <SelectTrigger className="h-8 w-[76px] text-[12px]" aria-label="交易所市场">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -437,21 +437,21 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
               variant="outline"
               role="combobox"
               aria-expanded={pickerOpen}
-              aria-label="Underlying"
+              aria-label="标的"
               className="h-8 min-w-0 flex-1 justify-between px-2 text-[12px] font-medium"
             >
-              <span className="truncate">{prefs.underlying || 'Select'}</span>
+              <span className="truncate">{prefs.underlying || '选择标的'}</span>
               <ChevronsUpDown className="h-3 w-3 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[220px] p-0" align="start">
             <Command>
-              <CommandInput placeholder="Search underlying..." className="h-8 text-[12px]" />
+              <CommandInput placeholder="搜索标的…" className="h-8 text-[12px]" />
               <CommandList>
                 <CommandEmpty className="py-4 text-center text-[12px]">
                   {/* "No underlying found" reads as "this segment has none".
                       When the request failed, say that instead. */}
-                  {underlyingError ?? 'No underlying found.'}
+                  {underlyingError ?? '未找到标的。'}
                 </CommandEmpty>
                 <CommandGroup>
                   {underlyings.map((name) => (
@@ -484,8 +484,8 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
           size="icon"
           className="h-8 w-8 shrink-0"
           onClick={() => refetch()}
-          title="Refresh"
-          aria-label="Refresh option chain"
+          title="刷新"
+          aria-label="刷新期权链"
         >
           <RefreshCw className={cn('h-3.5 w-3.5', loading && 'animate-spin')} />
         </Button>
@@ -502,10 +502,10 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
               'h-8 min-w-0 flex-1 text-[12px]',
               expiryError && 'border-destructive text-destructive'
             )}
-            aria-label="Expiry"
+            aria-label="到期日"
             title={expiryError ?? undefined}
           >
-            <SelectValue placeholder={expiryError ? 'Expiry unavailable' : 'Expiry'} />
+            <SelectValue placeholder={expiryError ? '到期日不可用' : '到期日'} />
           </SelectTrigger>
           <SelectContent>
             {expiries.map((date) => (
@@ -517,21 +517,21 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
         </Select>
 
         <Select value={metric} onValueChange={(value) => setMetric(value as Metric)}>
-          <SelectTrigger className="h-8 w-[104px] text-[12px]" aria-label="Metric shown">
+          <SelectTrigger className="h-8 w-[104px] text-[12px]" aria-label="显示指标">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             {METRIC_GROUPS.map((group) => (
               <SelectGroup key={group}>
                 <SelectLabel className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-                  {group}
+                  {group === 'Price' ? '价格与持仓' : '希腊值'}
                 </SelectLabel>
                 {METRICS.filter((m) => m.group === group).map((m) => (
                   <SelectItem key={m.id} value={m.id} className="text-[12px]">
                     {/* Notation and name together: the column header carries
                         only the notation, so this is where the two are tied. */}
                     <span className="inline-flex w-4 shrink-0 justify-center font-medium">
-                      {m.symbol === m.label ? '' : m.symbol}
+                      {m.id === 'ltp' || m.id === 'oi' ? '' : m.symbol}
                     </span>
                     <span>{m.label}</span>
                   </SelectItem>
@@ -546,7 +546,7 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
       {chain && (
         <div className="flex shrink-0 items-center justify-between border-b px-2 py-1 text-[11px]">
           <span className="flex items-center gap-1">
-            <span className="text-muted-foreground">Spot</span>
+            <span className="text-muted-foreground">现货</span>
             <span
               className={cn(
                 'font-medium tabular-nums',
@@ -559,14 +559,14 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
             </span>
           </span>
           <span className="flex items-center gap-1">
-            <span className="text-muted-foreground">ATM</span>
+            <span className="text-muted-foreground">平值</span>
             <span className="font-medium tabular-nums">{chain.atm_strike}</span>
           </span>
           {/* Labelled with the strike count, because this is the ratio across
               the strikes on screen, not the whole chain a trader may expect. */}
           <span
             className="flex items-center gap-1"
-            title={`Across ${rows.length} strikes on screen`}
+            title={`按当前显示的 ${rows.length} 个行权价计算`}
           >
             <span className="text-muted-foreground">PCR({rows.length})</span>
             <span className="font-medium tabular-nums">{pcr ? pcr.toFixed(2) : '-'}</span>
@@ -590,11 +590,11 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
             sigma, which in this domain reads as a sum rather than volatility,
             so selecting IV rendered "CALLS Σ". */}
         <span className="text-right">
-          Calls <span className="normal-case">{metricLabel}</span>
+          看涨 <span className="normal-case">{metricLabel}</span>
         </span>
-        <span className="text-center">Strike</span>
+        <span className="text-center">行权价</span>
         <span className="text-left">
-          Puts <span className="normal-case">{metricLabel}</span>
+          看跌 <span className="normal-case">{metricLabel}</span>
         </span>
       </div>
 
@@ -604,14 +604,14 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
             <p className="text-[12px] text-muted-foreground">{chainError}</p>
             <Button variant="outline" size="sm" className="h-7 gap-1.5" onClick={retry}>
               <RefreshCw className="h-3.5 w-3.5" />
-              Retry
+              重试
             </Button>
           </div>
         ) : loading && rows.length === 0 ? (
-          <p className="p-3 text-[12px] text-muted-foreground">Loading chain...</p>
+          <p className="p-3 text-[12px] text-muted-foreground">正在加载期权链…</p>
         ) : rows.length === 0 ? (
           <p className="p-3 text-[12px] text-muted-foreground">
-            No chain for this contract. Check the expiry, or that master contracts are downloaded.
+            该合约暂无期权链，请检查到期日或确认合约数据已下载。
           </p>
         ) : (
           rows.map((row) => {
@@ -663,13 +663,13 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
                     onClick={() => chartLeg(row.ce)}
                     disabled={!row.ce?.symbol}
                     className="absolute inset-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring disabled:pointer-events-none"
-                    title={row.ce?.symbol ? `Chart ${row.ce.symbol}` : undefined}
+                    title={row.ce?.symbol ? `查看 ${row.ce.symbol} 的图表` : undefined}
                     aria-current={
                       activeSymbol === `${prefs.exchange}:${row.ce?.symbol}` ? true : undefined
                     }
                     aria-label={
                       row.ce?.symbol
-                        ? `Chart ${row.ce.symbol}, ${metricLabel} ${metricOf(row.ce, metric)}`
+                        ? `查看 ${row.ce.symbol} 的图表，${metricLabel} ${metricOf(row.ce, metric)}`
                         : undefined
                     }
                   />
@@ -724,13 +724,13 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
                     onClick={() => chartLeg(row.pe)}
                     disabled={!row.pe?.symbol}
                     className="absolute inset-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring disabled:pointer-events-none"
-                    title={row.pe?.symbol ? `Chart ${row.pe.symbol}` : undefined}
+                    title={row.pe?.symbol ? `查看 ${row.pe.symbol} 的图表` : undefined}
                     aria-current={
                       activeSymbol === `${prefs.exchange}:${row.pe?.symbol}` ? true : undefined
                     }
                     aria-label={
                       row.pe?.symbol
-                        ? `Chart ${row.pe.symbol}, ${metricLabel} ${metricOf(row.pe, metric)}`
+                        ? `查看 ${row.pe.symbol} 的图表，${metricLabel} ${metricOf(row.pe, metric)}`
                         : undefined
                     }
                   />
@@ -751,21 +751,21 @@ export function OptionChainPanel({ apiKey, onPick, activeSymbol }: Props) {
       {rows.length > 0 &&
         (chainError && lastUpdate ? (
           <p className="shrink-0 border-t px-2 py-1 text-[10px] text-amber-600 dark:text-amber-400">
-            Not updating. Last loaded {lastUpdate.toLocaleTimeString()}
+            行情未更新。最后加载时间 {lastUpdate.toLocaleTimeString()}
           </p>
         ) : marketOpen && !isStreaming && lastUpdate ? (
           // Streaming is the point of this panel. If the socket is not up the
           // numbers are still refreshed by the structural poll, just far more
           // slowly, and saying so beats letting them read as live.
           <p className="shrink-0 border-t px-2 py-1 text-[10px] text-amber-600 dark:text-amber-400">
-            Not streaming. Last update {lastUpdate.toLocaleTimeString()}
+            实时推送已断开。最后更新时间 {lastUpdate.toLocaleTimeString()}
           </p>
         ) : !marketOpen ? (
           // The panel already backs the poll off to a minute when the market is
           // shut; saying so is what stops a static chain reading as a stalled
           // one. The watchlist has carried this caption from the start.
           <p className="shrink-0 border-t px-2 py-1 text-[10px] text-muted-foreground">
-            Market closed. Showing last traded prices.
+            市场已休市，显示最近成交价。
           </p>
         ) : null)}
 

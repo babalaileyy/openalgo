@@ -88,7 +88,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
     mutationFn: () => activateWorkflow(workflow.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flowQueryKeys.workflows() })
-      showToast.success('Workflow activated', 'flow')
+      showToast.success('工作流已启用', 'flow')
     },
     onError: (error: Error) => {
       showToast.error(error.message, 'flow')
@@ -99,7 +99,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
     mutationFn: () => deactivateWorkflow(workflow.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flowQueryKeys.workflows() })
-      showToast.success('Workflow deactivated', 'flow')
+      showToast.success('工作流已停用', 'flow')
     },
     onError: (error: Error) => {
       showToast.error(error.message, 'flow')
@@ -110,7 +110,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
     mutationFn: () => deleteWorkflow(workflow.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flowQueryKeys.workflows() })
-      showToast.success('Workflow deleted', 'flow')
+      showToast.success('工作流已删除', 'flow')
     },
     onError: (error: Error) => {
       showToast.error(error.message, 'flow')
@@ -128,7 +128,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
     mutationFn: () => enableWebhook(workflow.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flowQueryKeys.webhook(workflow.id) })
-      showToast.success('Webhook enabled', 'flow')
+      showToast.success('Webhook 已启用', 'flow')
     },
     onError: (error: Error) => {
       showToast.error(error.message, 'flow')
@@ -139,7 +139,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
     mutationFn: () => disableWebhook(workflow.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flowQueryKeys.webhook(workflow.id) })
-      showToast.success('Webhook disabled', 'flow')
+      showToast.success('Webhook 已停用', 'flow')
     },
     onError: (error: Error) => {
       showToast.error(error.message, 'flow')
@@ -150,7 +150,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
     mutationFn: () => regenerateWebhook(workflow.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flowQueryKeys.webhook(workflow.id) })
-      showToast.success('Webhook URL and secret regenerated', 'flow')
+      showToast.success('Webhook 地址和密钥已重新生成', 'flow')
     },
     onError: (error: Error) => {
       showToast.error(error.message, 'flow')
@@ -161,7 +161,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
     mutationFn: (authType: 'payload' | 'url') => updateWebhookAuthType(workflow.id, authType),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flowQueryKeys.webhook(workflow.id) })
-      showToast.success('Authentication type updated', 'flow')
+      showToast.success('认证方式已更新', 'flow')
     },
     onError: (error: Error) => {
       showToast.error(error.message, 'flow')
@@ -170,7 +170,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text)
-    showToast.success(`${label} copied to clipboard`, 'clipboard')
+    showToast.success(`已复制${label}到剪贴板`, 'clipboard')
   }
 
   return (
@@ -182,7 +182,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
       <Card
         role="link"
         tabIndex={0}
-        aria-label={`Open workflow ${workflow.name}`}
+        aria-label={`打开工作流 ${workflow.name}`}
         className={cn(
           'group cursor-pointer transition-all duration-200 hover:border-primary/50',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -213,7 +213,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  aria-label="Workflow actions"
+                  aria-label="工作流操作"
                 >
                   <MoreVertical className="h-4 w-4" />
                 </Button>
@@ -225,7 +225,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     navigate(`/flow/editor/${workflow.id}`)
                   }}
                 >
-                  Edit
+                  编辑
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => {
@@ -244,7 +244,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     }}
                   >
                     <Pause className="mr-2 h-4 w-4" />
-                    Deactivate
+                    停用
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem
@@ -254,7 +254,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     }}
                   >
                     <Play className="mr-2 h-4 w-4" />
-                    Activate
+                    启用
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
@@ -266,7 +266,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                   }}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
+                  删除
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -281,8 +281,8 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
               <StatusIcon status={workflow.last_execution_status} />
               <span>
                 {workflow.last_execution_status
-                  ? `Last: ${workflow.last_execution_status}`
-                  : 'No executions'}
+                  ? `上次执行：${workflow.last_execution_status}`
+                  : '尚未执行'}
               </span>
             </div>
             <span className="text-xs text-muted-foreground">
@@ -292,15 +292,15 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
         </CardContent>
       </Card>
 
-      {/* Webhook Settings Dialog */}
+      {/* Webhook 设置 Dialog */}
       <Dialog open={isWebhookOpen} onOpenChange={setIsWebhookOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Webhook className="h-5 w-5" />
-              Webhook Settings
+              Webhook 设置
             </DialogTitle>
-            <DialogDescription>Configure webhook for "{workflow.name}"</DialogDescription>
+            <DialogDescription>配置“{workflow.name}”的 Webhook</DialogDescription>
           </DialogHeader>
 
           {webhookQuery.isLoading ? (
@@ -312,9 +312,9 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
               {/* Enable/Disable Toggle */}
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div>
-                  <Label className="text-base">Enable Webhook</Label>
+                  <Label className="text-base">启用 Webhook</Label>
                   <p className="text-sm text-muted-foreground">
-                    Allow external systems to trigger this workflow
+                    允许外部系统触发此工作流
                   </p>
                 </div>
                 <Switch
@@ -332,7 +332,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
 
               {/* Authentication Type */}
               <div className="space-y-3">
-                <Label>Authentication Method</Label>
+                <Label>认证方式</Label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
@@ -345,9 +345,9 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     onClick={() => updateAuthTypeMutation.mutate('payload')}
                     disabled={updateAuthTypeMutation.isPending}
                   >
-                    <div className="font-medium">Secret in Payload</div>
+                    <div className="font-medium">在请求内容中提供密钥</div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      For TradingView, custom scripts
+                      适用于 TradingView 和自定义脚本
                     </p>
                   </button>
                   <button
@@ -361,17 +361,17 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     onClick={() => updateAuthTypeMutation.mutate('url')}
                     disabled={updateAuthTypeMutation.isPending}
                   >
-                    <div className="font-medium">Secret in URL</div>
+                    <div className="font-medium">在网址中提供密钥</div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      For Chartink, fixed-format services
+                      适用于 Chartink 等固定格式服务
                     </p>
                   </button>
                 </div>
               </div>
 
-              {/* Webhook URL */}
+              {/* Webhook 地址 */}
               <div className="space-y-2">
-                <Label>Webhook URL</Label>
+                <Label>Webhook 地址</Label>
                 <div className="flex gap-2">
                   <Input
                     readOnly
@@ -382,16 +382,16 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     variant="outline"
                     size="icon"
                     onClick={() => copyToClipboard(webhookQuery.data.webhook_url, 'URL')}
-                    aria-label="Copy webhook URL"
+                    aria-label="复制 Webhook 地址"
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
 
-              {/* Webhook URL with Symbol */}
+              {/* Webhook 地址 with Symbol */}
               <div className="space-y-2">
-                <Label>Webhook URL (with symbol)</Label>
+                <Label>Webhook 地址（含交易品种）</Label>
                 <div className="flex gap-2">
                   <Input
                     readOnly
@@ -404,19 +404,19 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     onClick={() =>
                       copyToClipboard(webhookQuery.data.webhook_url_with_symbol, 'URL')
                     }
-                    aria-label="Copy webhook URL with symbol"
+                    aria-label="复制含交易品种的 Webhook 地址"
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Replace {'{symbol}'} with actual symbol like RELIANCE, INFY, etc.
+                  将 {'{symbol}'} 替换为实际交易品种代码，例如 RELIANCE 或 INFY。
                 </p>
               </div>
 
-              {/* Webhook Secret */}
+              {/* Webhook 密钥 */}
               <div className="space-y-2">
-                <Label>Webhook Secret</Label>
+                <Label>Webhook 密钥</Label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <Input
@@ -430,7 +430,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                       size="icon"
                       className="absolute right-0 top-0 h-full"
                       onClick={() => setShowSecret(!showSecret)}
-                      aria-label={showSecret ? 'Hide webhook secret' : 'Show webhook secret'}
+                      aria-label={showSecret ? '隐藏 Webhook 密钥' : '显示 Webhook 密钥'}
                     >
                       {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -439,15 +439,15 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                     variant="outline"
                     size="icon"
                     onClick={() => copyToClipboard(webhookQuery.data.webhook_secret, 'Secret')}
-                    aria-label="Copy webhook secret"
+                    aria-label="复制 Webhook 密钥"
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {webhookQuery.data.webhook_auth_type === 'url'
-                    ? 'Append this secret to URL as ?secret=...'
-                    : 'Include this secret in your webhook payload as "secret" field'}
+                    ? '将密钥以 ?secret=... 的形式追加到网址'
+                    : '在 Webhook 请求内容的 secret 字段中提供密钥'}
                 </p>
               </div>
 
@@ -455,7 +455,7 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
               {webhookQuery.data.webhook_auth_type === 'url' &&
                 webhookQuery.data.webhook_url_with_secret && (
                   <div className="space-y-2">
-                    <Label>Webhook URL (with secret)</Label>
+                    <Label>Webhook 地址（含密钥）</Label>
                     <div className="flex gap-2">
                       <Input
                         readOnly
@@ -475,20 +475,20 @@ function WorkflowCard({ workflow }: { workflow: WorkflowListItem }) {
                             'URL with secret'
                           )
                         }
-                        aria-label="Copy webhook URL with secret"
+                        aria-label="复制含密钥的 Webhook 地址"
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Use this URL for Chartink and other services with fixed payloads
+                      此地址适用于 Chartink 等请求内容格式固定的服务
                     </p>
                   </div>
                 )}
 
-              {/* Example Usage */}
+              {/* 使用示例 */}
               <div className="space-y-2">
-                <Label>Example Usage</Label>
+                <Label>使用示例</Label>
                 <div className="rounded-lg bg-muted p-4">
                   {webhookQuery.data.webhook_auth_type === 'url' ? (
                     <>
@@ -541,7 +541,7 @@ Chartink payload (sent as-is):
                   ) : (
                     <RefreshCw className="mr-2 h-4 w-4" />
                   )}
-                  Regenerate URL & Secret
+                  重新生成地址和密钥
                 </Button>
               </div>
             </div>
@@ -592,7 +592,7 @@ export default function FlowIndex() {
       setIsImportOpen(false)
       setImportJson('')
       setImportError(null)
-      showToast.success(`Workflow "${data.name}" imported`, 'flow')
+      showToast.success(`工作流“${data.name}”已导入`, 'flow')
       navigate(`/flow/editor/${data.id}`)
     },
     onError: (error: Error) => {
@@ -611,12 +611,12 @@ export default function FlowIndex() {
       const parsed = JSON.parse(importJson) as WorkflowExportData
       // Validate basic structure
       if (!parsed.name || !Array.isArray(parsed.nodes) || !Array.isArray(parsed.edges)) {
-        setImportError('Invalid workflow format. Must have name, nodes, and edges.')
+        setImportError('工作流格式无效，必须包含 name、nodes 和 edges。')
         return
       }
       importMutation.mutate(parsed)
     } catch {
-      setImportError('Invalid JSON format. Please check the workflow data.')
+      setImportError('JSON 格式无效，请检查工作流数据。')
     }
   }
 
@@ -631,7 +631,7 @@ export default function FlowIndex() {
       setImportError(null)
     }
     reader.onerror = () => {
-      setImportError('Failed to read file')
+      setImportError('读取文件失败')
     }
     reader.readAsText(file)
   }
@@ -648,17 +648,17 @@ export default function FlowIndex() {
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Flow Editor</h1>
-          <p className="text-muted-foreground">Create and manage your trading automations</p>
+          <h1 className="text-2xl font-bold">工作流</h1>
+          <p className="text-muted-foreground">创建和管理自动交易工作流</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => setIsImportOpen(true)}>
             <Upload className="mr-2 h-4 w-4" />
-            Import
+            导入
           </Button>
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            New Workflow
+            新建工作流
           </Button>
         </div>
       </div>
@@ -666,19 +666,19 @@ export default function FlowIndex() {
       {isError ? (
         // Without this branch a failed fetch left workflows undefined and
         // isLoading false, so an expired session or a 500 rendered the cheerful
-        // "No workflows yet" empty state - telling the user their workflows were
+        // "暂无工作流" empty state - telling the user their workflows were
         // gone. Retries are capped at 1, so this is two requests away.
         <Card className="flex flex-col items-center justify-center py-16">
           <div className="mb-4 rounded-full bg-destructive/10 p-4">
             <AlertTriangle className="h-8 w-8 text-destructive" />
           </div>
-          <h3 className="mb-2 text-lg font-medium">Could not load workflows</h3>
+          <h3 className="mb-2 text-lg font-medium">无法加载工作流</h3>
           <p className="mb-6 max-w-md text-center text-sm text-muted-foreground">
             {listError instanceof Error
               ? listError.message
-              : 'Something went wrong while loading your workflows.'}
+              : '加载工作流时发生错误。'}
           </p>
-          <Button onClick={() => refetch()}>Retry</Button>
+          <Button onClick={() => refetch()}>重试</Button>
         </Card>
       ) : workflows && workflows.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -691,13 +691,13 @@ export default function FlowIndex() {
           <div className="mb-4 rounded-full bg-muted p-4">
             <Plus className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h3 className="mb-2 text-lg font-medium">No workflows yet</h3>
+          <h3 className="mb-2 text-lg font-medium">暂无工作流</h3>
           <p className="mb-6 text-center text-sm text-muted-foreground">
-            Create your first workflow to automate your trading
+            创建第一个工作流，实现自动交易
           </p>
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Create Workflow
+            创建工作流
           </Button>
         </Card>
       )}
@@ -705,15 +705,15 @@ export default function FlowIndex() {
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New Workflow</DialogTitle>
-            <DialogDescription>Give your workflow a name to get started</DialogDescription>
+            <DialogTitle>新建工作流</DialogTitle>
+            <DialogDescription>为工作流命名以开始</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Workflow Name</Label>
+              <Label htmlFor="name">工作流名称</Label>
               <Input
                 id="name"
-                placeholder="e.g., Morning Order Automation"
+                placeholder="例如：早盘自动下单"
                 value={newWorkflowName}
                 onChange={(e) => setNewWorkflowName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
@@ -723,14 +723,14 @@ export default function FlowIndex() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button
               onClick={handleCreate}
               disabled={!newWorkflowName.trim() || createMutation.isPending}
             >
               {createMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create
+              创建
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -748,14 +748,14 @@ export default function FlowIndex() {
       >
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Import Workflow</DialogTitle>
+            <DialogTitle>导入工作流</DialogTitle>
             <DialogDescription>
-              Import a workflow from a JSON file or paste the JSON data
+              从 JSON 文件导入工作流，或粘贴 JSON 数据
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="file">Upload File</Label>
+              <Label htmlFor="file">上传文件</Label>
               <Input
                 id="file"
                 type="file"
@@ -769,11 +769,11 @@ export default function FlowIndex() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">or paste JSON</span>
+                <span className="bg-background px-2 text-muted-foreground">或粘贴 JSON</span>
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="json">Workflow JSON</Label>
+              <Label htmlFor="json">工作流 JSON</Label>
               <Textarea
                 id="json"
                 placeholder='{"name": "My Workflow", "nodes": [...], "edges": [...]}'
@@ -789,14 +789,14 @@ export default function FlowIndex() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsImportOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button
               onClick={handleImport}
               disabled={!importJson.trim() || importMutation.isPending}
             >
               {importMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Import
+              导入
             </Button>
           </DialogFooter>
         </DialogContent>

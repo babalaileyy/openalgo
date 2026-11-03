@@ -65,14 +65,14 @@ describe('the alert list on the rail', () => {
       alert({ title: 'Renamed by hand', source: { kind: 'price', price: 1290.55, paneIndex: 0 } }),
     ])
     render(<AlertsPanel {...props} view={view} />)
-    expect(screen.getByText('Crossing up 1290.55')).toBeInTheDocument()
+    expect(screen.getByText('向上穿越 1290.55')).toBeInTheDocument()
   })
 
   it('prefers the trader’s own message over the condition', () => {
     const { view } = viewOf([alert({ message: 'Take the second lot off' })])
     render(<AlertsPanel {...props} view={view} />)
     expect(screen.getByText('Take the second lot off')).toBeInTheDocument()
-    expect(screen.queryByText(/Crossing up/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/向上穿越/)).not.toBeInTheDocument()
   })
 
   it('says Active rather than the engine’s state name', () => {
@@ -80,7 +80,7 @@ describe('the alert list on the rail', () => {
     // alert they have just set.
     const { view } = viewOf([alert()])
     render(<AlertsPanel {...props} view={view} />)
-    expect(screen.getByText('Active')).toBeInTheDocument()
+    expect(screen.getByText('监测中')).toBeInTheDocument()
     expect(screen.queryByText('armed')).not.toBeInTheDocument()
   })
 
@@ -104,7 +104,7 @@ describe('the alert list on the rail', () => {
     const user = userEvent.setup()
     const { view } = viewOf(disagreeing())
     render(<AlertsPanel {...props} view={view} />)
-    await user.selectOptions(screen.getByLabelText('Sort alerts'), 'name')
+    await user.selectOptions(screen.getByLabelText('提醒排序'), 'name')
     expect(titlesOnScreen()).toEqual(['Apple stopped', 'Zebra watching'])
   })
 
@@ -115,7 +115,7 @@ describe('the alert list on the rail', () => {
       alert({ id: 'new', title: 'Zebra watching', state: 'armed', lastTriggeredAt: 100 }),
     ])
     render(<AlertsPanel {...props} view={view} />)
-    await user.selectOptions(screen.getByLabelText('Sort alerts'), 'recent')
+    await user.selectOptions(screen.getByLabelText('提醒排序'), 'recent')
     expect(titlesOnScreen()).toEqual(['Apple stopped', 'Zebra watching'])
   })
 
@@ -126,7 +126,7 @@ describe('the alert list on the rail', () => {
       alert({ id: 'b', title: 'Two', message: 'nothing to do' }),
     ])
     render(<AlertsPanel {...props} view={view} />)
-    await user.type(screen.getByLabelText('Search alerts'), 'strangle')
+    await user.type(screen.getByLabelText('搜索提醒'), 'strangle')
     expect(screen.getByText('sell the strangle')).toBeInTheDocument()
     expect(screen.queryByText('nothing to do')).not.toBeInTheDocument()
   })
@@ -135,7 +135,7 @@ describe('the alert list on the rail', () => {
     const user = userEvent.setup()
     const { view, controller } = viewOf([alert({ title: 'Watching' })])
     render(<AlertsPanel {...props} view={view} />)
-    await user.click(screen.getByLabelText('Stop Watching'))
+    await user.click(screen.getByLabelText('停止 Watching'))
     expect(controller.disable).toHaveBeenCalledWith('a1')
     expect(controller.enable).not.toHaveBeenCalled()
   })
@@ -144,7 +144,7 @@ describe('the alert list on the rail', () => {
     const user = userEvent.setup()
     const { view, controller } = viewOf([alert({ title: 'Stopped', state: 'disabled' })])
     render(<AlertsPanel {...props} view={view} />)
-    await user.click(screen.getByLabelText('Start Stopped'))
+    await user.click(screen.getByLabelText('启用 Stopped'))
     expect(controller.enable).toHaveBeenCalledWith('a1')
   })
 
@@ -153,7 +153,7 @@ describe('the alert list on the rail', () => {
     const onEdit = vi.fn()
     const { view } = viewOf([alert({ id: 'pick-me', title: 'Pick me' })])
     render(<AlertsPanel {...props} view={view} onEdit={onEdit} />)
-    await user.click(screen.getByLabelText('Edit Pick me'))
+    await user.click(screen.getByLabelText('编辑 Pick me'))
     expect(onEdit).toHaveBeenCalledWith('pick-me')
   })
 
@@ -173,21 +173,21 @@ describe('the alert list on the rail', () => {
     const { view } = viewOf([])
     render(<AlertsPanel {...props} view={view} />)
     expect(
-      screen.getByText(/Right-click the chart at a price to set one there and then/)
+      screen.getByText(/可在图表价格处点击右键设置/)
     ).toBeInTheDocument()
   })
 
   it('waits rather than claiming there are no alerts before a chart is ready', () => {
     render(<AlertsPanel {...props} view={null} />)
-    expect(screen.queryByText(/No alerts on this chart yet/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/当前图表暂无提醒/)).not.toBeInTheDocument()
   })
 
   it('distinguishes an empty list from a search that matched nothing', async () => {
     const user = userEvent.setup()
     const { view } = viewOf([alert({ title: 'Something' })])
     render(<AlertsPanel {...props} view={view} />)
-    await user.type(screen.getByLabelText('Search alerts'), 'zzz')
-    expect(screen.getByText('No alert matches that search.')).toBeInTheDocument()
+    await user.type(screen.getByLabelText('搜索提醒'), 'zzz')
+    expect(screen.getByText('没有找到匹配的提醒。')).toBeInTheDocument()
   })
 })
 
@@ -195,7 +195,7 @@ describe('the log of what has fired', () => {
   it('counts the firings on its tab', () => {
     const { view } = viewOf([alert()])
     render(<AlertsPanel {...props} view={view} log={[fire(), fire({ key: 'a1-2' })]} />)
-    const tab = screen.getByRole('tab', { name: /^Log/ })
+    const tab = screen.getByRole('tab', { name: /^触发记录/ })
     expect(within(tab).getByText('2')).toBeInTheDocument()
   })
 
@@ -252,7 +252,7 @@ describe('the log of what has fired', () => {
         log={[fire({ key: '1', title: 'First' }), fire({ key: '2', title: 'Second' })]}
       />
     )
-    await user.click(screen.getByRole('tab', { name: /^Log/ }))
+    await user.click(screen.getByRole('tab', { name: /^触发记录/ }))
     const titles = screen.getAllByText(/^First$|^Second$/).map((node) => node.textContent)
     expect(titles).toEqual(['Second', 'First'])
   })
@@ -261,8 +261,8 @@ describe('the log of what has fired', () => {
     const user = userEvent.setup()
     const { view } = viewOf([alert()])
     render(<AlertsPanel {...props} view={view} log={[fire({ price: 1243.45 })]} />)
-    await user.click(screen.getByRole('tab', { name: /^Log/ }))
-    expect(screen.getByText('at 1243.45')).toBeInTheDocument()
+    await user.click(screen.getByRole('tab', { name: /^触发记录/ }))
+    expect(screen.getByText('价格 1243.45')).toBeInTheDocument()
   })
 
   it('clears the log from the tab that shows it', async () => {
@@ -270,8 +270,8 @@ describe('the log of what has fired', () => {
     const onClearLog = vi.fn()
     const { view } = viewOf([alert()])
     render(<AlertsPanel {...props} view={view} log={[fire()]} onClearLog={onClearLog} />)
-    await user.click(screen.getByRole('tab', { name: /^Log/ }))
-    await user.click(screen.getByRole('button', { name: 'Clear' }))
+    await user.click(screen.getByRole('tab', { name: /^触发记录/ }))
+    await user.click(screen.getByRole('button', { name: '清空' }))
     expect(onClearLog).toHaveBeenCalled()
   })
 
@@ -280,7 +280,7 @@ describe('the log of what has fired', () => {
     // action pointing at something the trader is not looking at.
     const { view } = viewOf([alert()])
     render(<AlertsPanel {...props} view={view} log={[fire()]} />)
-    expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '清空' })).not.toBeInTheDocument()
   })
 
   it('shows Clear greyed rather than absent when nothing has fired', async () => {
@@ -289,8 +289,8 @@ describe('the log of what has fired', () => {
     const user = userEvent.setup()
     const { view } = viewOf([alert()])
     render(<AlertsPanel {...props} view={view} />)
-    await user.click(screen.getByRole('tab', { name: /^Log/ }))
-    expect(screen.getByRole('button', { name: 'Clear' })).toBeDisabled()
+    await user.click(screen.getByRole('tab', { name: /^触发记录/ }))
+    expect(screen.getByRole('button', { name: '清空' })).toBeDisabled()
   })
 
   it('says an alert only fires while the chart is open, and that firings are kept', async () => {
@@ -301,11 +301,11 @@ describe('the log of what has fired', () => {
     const user = userEvent.setup()
     const { view } = viewOf([alert()])
     render(<AlertsPanel {...props} view={view} />)
-    await user.click(screen.getByRole('tab', { name: /^Log/ }))
+    await user.click(screen.getByRole('tab', { name: /^触发记录/ }))
 
-    const empty = screen.getByText(/Nothing has fired yet/)
-    expect(empty).toHaveTextContent(/only fires while/i)
-    expect(empty).toHaveTextContent(/kept here afterwards/i)
+    const empty = screen.getByText(/暂无触发记录/)
+    expect(empty).toHaveTextContent(/仅在交易终端运行时触发/)
+    expect(empty).toHaveTextContent(/触发后记录会保留在这里/)
   })
 
   it('shows which channels took a firing', async () => {
@@ -329,7 +329,7 @@ describe('the log of what has fired', () => {
         ]}
       />
     )
-    await user.click(screen.getByRole('tab', { name: /^Log/ }))
+    await user.click(screen.getByRole('tab', { name: /^触发记录/ }))
 
     expect(screen.getByText('sound')).toBeInTheDocument()
     expect(screen.getByText('telegram')).toBeInTheDocument()
@@ -358,7 +358,7 @@ describe('the log of what has fired', () => {
         ]}
       />
     )
-    await user.click(screen.getByRole('tab', { name: /^Log/ }))
+    await user.click(screen.getByRole('tab', { name: /^触发记录/ }))
 
     expect(screen.getByText('RELIANCE crossing 1264.7')).toBeInTheDocument()
     expect(screen.queryByText(/none/i)).not.toBeInTheDocument()

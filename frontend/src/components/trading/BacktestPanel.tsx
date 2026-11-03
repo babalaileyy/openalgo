@@ -173,11 +173,11 @@ export function stoppedAt(
   barCount: number | undefined,
   zone: string | undefined
 ): string {
-  if (stop.barIndex === null) return 'This run stopped part way through'
+  if (stop.barIndex === null) return '本次回测中途停止'
   const bar = (stop.barIndex + 1).toLocaleString()
-  const of = barCount ? ` of ${barCount.toLocaleString()}` : ''
+  const of = barCount ? `（共 ${barCount.toLocaleString()} 根）` : ''
   const when = stop.barTime === null ? '' : `, ${barClock(stop.barTime, zone)}`
-  return `This run stopped on bar ${bar}${of}${when}`
+  return `本次回测在第 ${bar} 根 K 线停止${of}${when}`
 }
 
 function Figure({
@@ -575,21 +575,21 @@ export function BacktestPanel({
   return (
     <PanelShell
       id="trading-backtest-panel"
-      label="Backtest"
+      label="回测"
       storageKey="trading.panel.backtest.width"
       defaultWidth={400}
       minWidth={320}
     >
       <div className={PANEL_HEADER}>
-        <span className="text-xs font-medium">Backtest</span>
+        <span className="text-xs font-medium">回测</span>
         <span className="ml-auto truncate font-mono text-[11px] text-muted-foreground">
-          {target ? `${target.symbol} ${target.interval}` : 'No chart'}
+          {target ? `${target.symbol} ${target.interval}` : '未打开图表'}
         </span>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-2">
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Strategy</span>
+          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">策略</span>
           <select
             className="h-8 rounded border border-border bg-background px-2 text-xs"
             value={file}
@@ -601,7 +601,7 @@ export function BacktestPanel({
             }}
             disabled={scripts.length === 0}
           >
-            {scripts.length === 0 && <option value="">No strategies saved</option>}
+            {scripts.length === 0 && <option value="">尚未保存策略</option>}
             {scripts.map((one) => (
               <option key={one.file} value={one.file}>
                 {one.file}
@@ -612,7 +612,7 @@ export function BacktestPanel({
 
         <div className="grid grid-cols-2 gap-2">
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">From</span>
+            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">开始日期</span>
             <input
               type="date"
               className="h-8 rounded border border-border bg-background px-2 text-xs"
@@ -625,7 +625,7 @@ export function BacktestPanel({
             />
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">To</span>
+            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">结束日期</span>
             <input
               type="date"
               className="h-8 rounded border border-border bg-background px-2 text-xs"
@@ -645,7 +645,7 @@ export function BacktestPanel({
           onClick={() => void run()}
           disabled={!ready}
         >
-          {running ? 'Running' : 'Run backtest'}
+          {running ? '回测中' : '运行回测'}
         </button>
 
         {onMarkChart && (
@@ -657,7 +657,7 @@ export function BacktestPanel({
                 checked={showMarks}
                 onChange={(event) => toggleMarks(event.target.checked)}
               />
-              Show trades on chart
+              在图表上显示交易
             </label>
             {marked !== null && marked > 0 && (
               <button
@@ -665,7 +665,7 @@ export function BacktestPanel({
                 className="ml-auto rounded border border-border px-2 py-0.5 hover:bg-accent"
                 onClick={clearMarks}
               >
-                Clear marks ({marked})
+                清除标记（{marked}）
               </button>
             )}
           </div>
@@ -677,16 +677,16 @@ export function BacktestPanel({
           <>
             <div className="grid grid-cols-2 gap-1.5">
               <Figure
-                label="Net profit"
+                label="净利润"
                 value={money(summary.netProfit)}
                 tone={Number(summary.netProfit) >= 0 ? 'good' : 'bad'}
               />
-              <Figure label="Return" value={percent(summary.returnPercent)} />
-              <Figure label="Trades" value={String(summary.tradeCount ?? '-')} />
-              <Figure label="Win rate" value={orDash(summary.winRate, percent)} />
-              <Figure label="Profit factor" value={orDash(summary.profitFactor, (v) => money(v))} />
-              <Figure label="Expectancy" value={money(summary.expectancy)} />
-              <Figure label="Max drawdown" value={money(summary.maxDrawdown)} tone="bad" />
+              <Figure label="收益率" value={percent(summary.returnPercent)} />
+              <Figure label="交易次数" value={String(summary.tradeCount ?? '-')} />
+              <Figure label="胜率" value={orDash(summary.winRate, percent)} />
+              <Figure label="盈利因子" value={orDash(summary.profitFactor, (v) => money(v))} />
+              <Figure label="期望收益" value={money(summary.expectancy)} />
+              <Figure label="最大回撤" value={money(summary.maxDrawdown)} tone="bad" />
               {/* Shown only when the engine reports it. The run-up is a newer
                   figure than the pinned engine computes, so on that engine this
                   tile was a dash on every run: an empty box beside real numbers
@@ -694,7 +694,7 @@ export function BacktestPanel({
                   this version does not have. Rendering it conditionally means it
                   appears on its own the day the engine supplies it. */}
               {summary.maxRunUp !== undefined && summary.maxRunUp !== null && (
-                <Figure label="Max run-up" value={money(summary.maxRunUp)} tone="good" />
+                <Figure label="最大收益增长" value={money(summary.maxRunUp)} tone="good" />
               )}
             </div>
 
@@ -702,27 +702,26 @@ export function BacktestPanel({
 
             <p className="text-[10px] text-muted-foreground">
               {marked !== null && marked > 0
-                ? `${marked} fills marked on the chart. `
+                ? `已在图表上标记 ${marked} 笔成交。`
                 : marked === null && onMarkChart
-                  ? 'The chart has no price series to mark yet. '
+                  ? '图表尚无可标记的价格序列。'
                   : ''}
-              {outcome?.barCount?.toLocaleString()} bars, {Math.round(outcome?.ranMs ?? 0)}ms
+              {outcome?.barCount?.toLocaleString()} 根 K 线，耗时 {Math.round(outcome?.ranMs ?? 0)} 毫秒
               {outcome?.contract?.usedFallback
-                ? '. This instrument has no stored tick or lot size, so the run used a tick of ' +
-                  `${outcome.contract.tickSize} and a lot of ${outcome.contract.lotSize}. Every figure in money rests on those.`
-                : `. Tick ${outcome?.contract?.tickSize}, lot ${outcome?.contract?.lotSize}.`}
+                ? '。此品种未保存最小变动价位或每手数量，回测使用的最小变动价位为 ' +
+                  `${outcome.contract.tickSize}，每手数量为 ${outcome.contract.lotSize}。所有金额结果均基于这些数值。`
+                : `。最小变动价位 ${outcome?.contract?.tickSize}，每手数量 ${outcome?.contract?.lotSize}。`}
               {/* Said because the absence is otherwise invisible: a session
                   strategy with no hours to read never trades, and its report
                   looks like a strategy that found nothing to do. */}
               {outcome?.instrument && !outcome.instrument.session
-                ? ' No trading hours were available for this instrument, so everything the script reads from its session was empty in this run.'
+                ? ' 此品种没有可用的交易时段，本次回测中脚本读取的交易时段数据为空。'
                 : ''}
             </p>
 
             {Number(summary.openTradeCount) > 0 && (
               <p className="text-[10px] text-muted-foreground">
-                {String(summary.openTradeCount)} trade(s) were still open at the last bar. Their
-                charges are counted and their profit is not, because it has not been realised.
+                最后一根 K 线时仍有 {String(summary.openTradeCount)} 笔交易未平仓。相关费用已计入，未实现盈亏未计入。
               </p>
             )}
 
@@ -741,58 +740,53 @@ export function BacktestPanel({
               }}
               aria-expanded={showControls}
             >
-              Settings
-              <span className="ml-auto">{showControls ? 'hide' : 'show'}</span>
+              设置
+              <span className="ml-auto">{showControls ? '收起' : '展开'}</span>
             </button>
 
             {showControls && (
               <div className="flex flex-col gap-2 border-t border-border p-2">
                 {declarations.length === 0 ? (
                   <p className="text-[10px] leading-relaxed text-muted-foreground">
-                    This script declares no settings, so there is nothing to change here. Its
-                    numbers are written into it: to make one adjustable, give it a name with
-                    input(), as in length = input(9, "Fast length", min = 1).
+                    此脚本未声明可调整的参数，数值写在脚本中。如需调整，请用 input() 声明参数，例如 length = input(9, "Fast length", min = 1)。
                   </p>
                 ) : (
                   <StrategyInputs
                     declarations={declarations}
                     edited={edited}
                     onChange={(key, value) => setEdited((held) => ({ ...held, [key]: value }))}
-                    note="A box left empty uses the script's own default. Run again to apply a change. These are for testing on this chart only and never reach a strategy that is running live: set those under Strategies."
+                    note="留空时使用脚本默认值，修改后需重新回测。这里的设置仅用于当前图表回测，不影响实盘运行的策略；实盘参数请在“策略”中设置。"
                   />
                 )}
 
                 {declared && (
                   <div className="flex flex-col gap-1">
                     <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                      Declared by the script
+                      脚本声明的设置
                     </span>
                     <dl className="grid grid-cols-2 gap-x-2 gap-y-0.5 font-mono text-[10px] text-muted-foreground">
-                      <dt>Capital</dt>
+                      <dt>初始资金</dt>
                       <dd className="text-right">
                         {declared.capital.toLocaleString()} {declared.currency}
                       </dd>
-                      <dt>Order size</dt>
+                      <dt>下单数量</dt>
                       <dd className="text-right">
                         {sending === null ? `${declared.qty} ${declared.qtyType}` : `${sending} ${declared.qtyType}`}
-                        {quantity.kind === 'input' && ' (yours)'}
+                        {quantity.kind === 'input' && '（自定义）'}
                       </dd>
-                      <dt>Pyramiding</dt>
+                      <dt>允许加仓次数</dt>
                       <dd className="text-right">{declared.pyramiding}</dd>
-                      <dt>Commission</dt>
+                      <dt>手续费</dt>
                       <dd className="text-right">
                         {declared.commission} {declared.commissionType}
                       </dd>
-                      <dt>Slippage</dt>
-                      <dd className="text-right">{declared.slippage} ticks</dd>
-                      <dt>Fills on</dt>
+                      <dt>滑点</dt>
+                      <dd className="text-right">{declared.slippage} 个最小变动价位</dd>
+                      <dt>成交时点</dt>
                       <dd className="text-right">{declared.fillOn}</dd>
                     </dl>
                     <p className="text-[10px] leading-relaxed text-muted-foreground">
-                      These are the script's own, set in its `strategy()` line, and are shown
-                      rather than offered: a commission supplied here beside a declared one
-                      describes the same money twice and is refused before the first bar. Edit
-                      the script to change them.
+                      这些设置由脚本的 strategy() 声明，此处仅供查看。重复设置手续费会导致回测在开始时被拒绝；如需修改，请编辑脚本。
                     </p>
                   </div>
                 )}
@@ -803,7 +797,7 @@ export function BacktestPanel({
 
         {!target && (
           <p className="text-[11px] text-muted-foreground">
-            Open a chart first. A run is of the instrument and interval on the chart beside it.
+            请先打开图表。回测使用图表中的交易品种和周期。
           </p>
         )}
 
@@ -816,7 +810,7 @@ export function BacktestPanel({
         {outcome?.diagnostics && outcome.diagnostics.length > 0 && (
           <div className="flex flex-col gap-1 rounded border border-destructive/40 p-2">
             <span className="text-[11px] font-medium text-destructive">
-              This script does not compile
+              脚本编译失败
             </span>
             {outcome.diagnostics.slice(0, 5).map((d) => (
               <span key={`${d.code}-${d.line}-${d.column}`} className="font-mono text-[10px] text-muted-foreground">
@@ -844,8 +838,7 @@ export function BacktestPanel({
               {outcome.stopped.line}:{outcome.stopped.column} {outcome.stopped.code}
             </span>
             <span className="text-[10px] leading-relaxed text-muted-foreground">
-              The figures below are of the run up to that bar. Correct the script and run it again
-              to test the whole range.
+              结果仅包含截至停止时的数据。请修正脚本并重新运行，以回测完整区间。
             </span>
           </div>
         )}
@@ -853,7 +846,7 @@ export function BacktestPanel({
         {quantity.kind !== 'unknown' && (
           <p className="rounded border border-border px-2 py-1.5 text-[10px] leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">
-              Order size {sending === null ? '' : sending}
+              下单数量 {sending === null ? '' : sending}
             </span>
             {' - '}
             {quantityNote(quantity)}
@@ -864,7 +857,7 @@ export function BacktestPanel({
           <div className="flex flex-col gap-1 rounded border border-border p-2">
             <div className="flex items-baseline gap-1.5">
               <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                Position now
+                当前持仓
               </span>
               <span
                 className={cn(
@@ -872,15 +865,15 @@ export function BacktestPanel({
                   isLive && livePrice !== null ? 'text-emerald-500' : 'text-muted-foreground'
                 )}
               >
-                {livePrice === null ? 'No price yet' : isLive ? 'Live' : 'Last known'}
+                {livePrice === null ? '暂无价格' : isLive ? '实时' : '最近价格'}
               </span>
             </div>
 
             <div className="flex items-baseline gap-2 font-mono text-[12px] tabular-nums">
               <span className={holding.side === 'short' ? 'text-destructive' : 'text-emerald-500'}>
-                {holding.side === 'short' ? 'Short' : 'Long'} {holding.units}
+                {holding.side === 'short' ? '空头' : '多头'} {holding.units}
               </span>
-              <span className="text-muted-foreground">at {holding.entryPrice.toFixed(2)}</span>
+              <span className="text-muted-foreground">开仓价 {holding.entryPrice.toFixed(2)}</span>
               {valued && (
                 <span
                   className={cn(
@@ -896,18 +889,16 @@ export function BacktestPanel({
 
             <p className="text-[10px] leading-relaxed text-muted-foreground">
               {valued
-                ? `Marked at ${valued.price.toFixed(2)}. `
-                : 'No price has arrived for this instrument yet, so it is not valued. '}
-              {alsoOpen > 0 && `${alsoOpen} more open ${alsoOpen === 1 ? 'trade' : 'trades'}. `}
-              This strategy is on the chart, which draws and does not trade. Nothing is held at
-              your broker because of it. Add it under Strategies to trade it.
+                ? `按 ${valued.price.toFixed(2)} 估值。`
+                : '尚未收到此品种的价格，暂无法估值。'}
+              {alsoOpen > 0 && `另有 ${alsoOpen} 笔交易未平仓。`}
+              此策略仅在图表上绘制，不会实际交易，也不会在券商账户建立持仓。如需交易，请在“策略”中部署。
             </p>
           </div>
         )}
 
         <p className="mt-auto text-[10px] leading-relaxed text-muted-foreground">
-          A run covers up to {MAX_BARS.toLocaleString()} bars and happens here in the browser, on
-          the same engine the platform runs a strategy with. Nothing is sent to a broker.
+          回测在浏览器中运行，最多覆盖 {MAX_BARS.toLocaleString()} 根 K 线，使用与平台策略相同的引擎。回测不会向券商发送订单。
         </p>
       </div>
     </PanelShell>

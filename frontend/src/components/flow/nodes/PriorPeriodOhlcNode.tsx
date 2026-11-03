@@ -40,7 +40,7 @@ export const PriorPeriodOhlcNode = memo(({ data, selected }: PriorPeriodOhlcNode
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
         </div>

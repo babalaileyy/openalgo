@@ -60,11 +60,11 @@ export function EoyChart({ rows, benchmarkLabel = 'Benchmark', height = 300 }: P
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-4 rounded-sm bg-blue-500" />
-          Portfolio
+          投资组合
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-px w-4 border-t border-dashed border-rose-500" />
-          average year
+          年均
         </span>
       </div>
 
@@ -89,7 +89,7 @@ export function EoyChart({ rows, benchmarkLabel = 'Benchmark', height = 300 }: P
           role="img"
           aria-label="End-of-year returns against the benchmark"
         >
-          <title>Portfolio and benchmark return for each calendar year</title>
+          <title>投资组合与基准各自然年的收益率</title>
 
           {ticks.map((t) => (
             <line

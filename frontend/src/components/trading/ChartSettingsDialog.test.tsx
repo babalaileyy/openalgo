@@ -120,12 +120,12 @@ describe('ChartSettingsDialog', () => {
       values: { 'statusLine.openInterest': true },
       defaults: { 'statusLine.openInterest': false },
     })
-    const checkbox = screen.getByRole('checkbox', { name: 'Open interest' })
+    const checkbox = screen.getByRole('checkbox', { name: '持仓量' })
     expect(checkbox).toBeChecked()
     expect(checkbox).toBeDisabled()
-    expect(screen.getByText('Open interest')).toHaveAttribute(
+    expect(screen.getByText('持仓量')).toHaveAttribute(
       'title',
-      'Open interest is unavailable for this instrument.'
+      '该交易品种不提供持仓量。'
     )
     await userEvent.click(checkbox)
     expect(checkbox).toBeChecked()
@@ -153,33 +153,33 @@ describe('ChartSettingsDialog', () => {
       defaults: { 'pnf.boxMode': 'atr', 'pnf.boxSize': 1 },
     })
     expect(screen.queryByText('Box size')).not.toBeInTheDocument()
-    expect(screen.getByText('Nothing to configure here.')).toBeInTheDocument()
+    expect(screen.getByText('此处没有可配置的选项。')).toBeInTheDocument()
   })
 
   it('renders a tab per schema entry and opens on the first', () => {
     renderDialog()
-    expect(screen.getByRole('button', { name: 'Price' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Axes' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '价格' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '坐标轴' })).toBeInTheDocument()
     // Price is first, so its group heading and rows are the ones on screen.
-    expect(screen.getByText('Candles')).toBeInTheDocument()
-    expect(screen.getByText('Body')).toBeInTheDocument()
+    expect(screen.getByText('K 线')).toBeInTheDocument()
+    expect(screen.getByText('实体')).toBeInTheDocument()
   })
 
   it('draws a colorPair as two swatches, and a checkbox only when the pair has one', () => {
     renderDialog()
     // Body has no visibility flag behind it (a candle body is always painted),
     // so it must not offer a checkbox that would do nothing. Borders has one.
-    expect(screen.getByRole('checkbox', { name: 'Borders' })).toBeInTheDocument()
-    expect(screen.queryByRole('checkbox', { name: 'Body' })).not.toBeInTheDocument()
-    expect(screen.getByLabelText('Body Up')).toBeInTheDocument()
-    expect(screen.getByLabelText('Body Down')).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: '边框' })).toBeInTheDocument()
+    expect(screen.queryByRole('checkbox', { name: '实体' })).not.toBeInTheDocument()
+    expect(screen.getByLabelText('实体 上涨')).toBeInTheDocument()
+    expect(screen.getByLabelText('实体 下跌')).toBeInTheDocument()
   })
 
   it('offers the timezone select on the Axes tab, defaulted to IST', async () => {
     const user = userEvent.setup()
     renderDialog()
-    await user.click(screen.getByRole('button', { name: 'Axes' }))
-    const tz = screen.getByLabelText('Timezone') as HTMLSelectElement
+    await user.click(screen.getByRole('button', { name: '坐标轴' }))
+    const tz = screen.getByLabelText('时区') as HTMLSelectElement
     expect(tz.value).toBe('Asia/Kolkata')
     expect(screen.getByRole('option', { name: 'America/New_York' })).toBeInTheDocument()
   })
@@ -187,9 +187,9 @@ describe('ChartSettingsDialog', () => {
   it('sends only the keys that changed', async () => {
     const user = userEvent.setup()
     const onApply = renderDialog()
-    await user.click(screen.getByRole('button', { name: 'Axes' }))
-    await user.selectOptions(screen.getByLabelText('Timezone'), 'America/New_York')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '坐标轴' }))
+    await user.selectOptions(screen.getByLabelText('时区'), 'America/New_York')
+    await user.click(screen.getByRole('button', { name: '确定' }))
     // Not a snapshot of every default -- one control changed, one key sent, so
     // that is all this pane persists.
     expect(onApply).toHaveBeenCalledWith({ 'axes.timezone': 'America/New_York' })
@@ -198,31 +198,31 @@ describe('ChartSettingsDialog', () => {
   it('sends nothing when the user changes nothing', async () => {
     const user = userEvent.setup()
     const onApply = renderDialog()
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).not.toHaveBeenCalled()
   })
 
   it('disables reset while every control already sits at its default', () => {
     renderDialog()
     // Not hidden: the disabled control IS the answer to "am I at defaults".
-    expect(screen.getByRole('button', { name: 'Reset to defaults' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '恢复默认设置' })).toBeDisabled()
   })
 
   it('enables reset as soon as a control deviates, without leaving the dialog', async () => {
     const user = userEvent.setup()
     renderDialog()
-    expect(screen.getByRole('button', { name: 'Reset to defaults' })).toBeDisabled()
-    await user.click(screen.getByRole('button', { name: 'Axes' }))
-    await user.selectOptions(screen.getByLabelText('Timezone'), 'America/New_York')
-    expect(screen.getByRole('button', { name: 'Reset to defaults' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: '恢复默认设置' })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: '坐标轴' }))
+    await user.selectOptions(screen.getByLabelText('时区'), 'America/New_York')
+    expect(screen.getByRole('button', { name: '恢复默认设置' })).toBeEnabled()
   })
 
   it('resets every tab, not the one on screen', async () => {
     const user = userEvent.setup()
     const onApply = renderDialog(vi.fn(), REQ_DEVIATED)
     // Price is the open tab. Axes is never visited.
-    await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '恢复默认设置' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({
       'symbol.upColor': '#26a69a',
       'symbol.borderVisible': true,
@@ -233,8 +233,8 @@ describe('ChartSettingsDialog', () => {
   it('leaves a reset uncommitted when the user cancels', async () => {
     const user = userEvent.setup()
     const onApply = renderDialog(vi.fn(), REQ_DEVIATED)
-    await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
-    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    await user.click(screen.getByRole('button', { name: '恢复默认设置' }))
+    await user.click(screen.getByRole('button', { name: '取消' }))
     expect(onApply).not.toHaveBeenCalled()
   })
 })
@@ -256,12 +256,12 @@ describe('profile chart settings', () => {
   it('edits custom session hours as text without discarding the time separator', async () => {
     const user = userEvent.setup()
     const onApply = renderDialog(vi.fn(), profileRequest('session-volume-profile'))
-    await user.selectOptions(screen.getByLabelText('Sessions'), 'custom')
-    const start = screen.getByRole('textbox', { name: 'Session start (HH:mm)' })
+    await user.selectOptions(screen.getByLabelText('交易时段'), 'custom')
+    const start = screen.getByRole('textbox', { name: '时段开始（时:分）' })
     expect(start).toHaveValue('09:15')
     await user.clear(start)
     await user.type(start, '23:00')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({
       'profiles.svp.sessionMode': 'custom',
       'profiles.svp.sessionStart': '23:00',
@@ -275,13 +275,13 @@ describe('profile chart settings', () => {
     const { rerender } = render(
       <ChartSettingsDialog req={REQ} onApply={onApply} onClose={onClose} />
     )
-    expect(screen.getByLabelText('Body Up')).toBeInTheDocument()
+    expect(screen.getByLabelText('实体 上涨')).toBeInTheDocument()
     rerender(
       <ChartSettingsDialog req={profileRequest('tpo')} onApply={onApply} onClose={onClose} />
     )
-    expect(screen.queryByLabelText('Body Up')).not.toBeInTheDocument()
-    expect(screen.getByRole('combobox', { name: 'Block size' })).toHaveValue('30')
-    expect(screen.getByLabelText('Period')).toHaveValue('day')
+    expect(screen.queryByLabelText('实体 上涨')).not.toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: '时间块大小' })).toHaveValue('30')
+    expect(screen.getByLabelText('周期')).toHaveValue('day')
     expect(screen.queryByLabelText('Width (%)')).not.toBeInTheDocument()
     rerender(
       <ChartSettingsDialog
@@ -290,11 +290,11 @@ describe('profile chart settings', () => {
         onClose={onClose}
       />
     )
-    expect(screen.queryByRole('combobox', { name: 'Block size' })).not.toBeInTheDocument()
-    expect(screen.getByLabelText('Width (%)')).toHaveValue(100)
-    expect(screen.getByLabelText('Number of rows')).toHaveValue(24)
-    await user.click(screen.getByRole('button', { name: 'Axes' }))
-    expect(screen.getByLabelText('Timezone')).toHaveValue('Asia/Kolkata')
+    expect(screen.queryByRole('combobox', { name: '时间块大小' })).not.toBeInTheDocument()
+    expect(screen.getByLabelText('宽度（%）')).toHaveValue(100)
+    expect(screen.getByLabelText('行数')).toHaveValue(24)
+    await user.click(screen.getByRole('button', { name: '坐标轴' }))
+    expect(screen.getByLabelText('时区')).toHaveValue('Asia/Kolkata')
   })
 
   it('applies only the edited profile keys and restores each type when reopened', async () => {
@@ -309,9 +309,9 @@ describe('profile chart settings', () => {
         onClose={onClose}
       />
     )
-    expect(screen.getByRole('combobox', { name: 'Block size' })).toHaveValue('45')
-    await user.selectOptions(screen.getByLabelText('Period'), 'week')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    expect(screen.getByRole('combobox', { name: '时间块大小' })).toHaveValue('45')
+    await user.selectOptions(screen.getByLabelText('周期'), 'week')
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'profiles.tpo.periodUnit': 'week' })
     rerender(
       <ChartSettingsDialog
@@ -320,7 +320,7 @@ describe('profile chart settings', () => {
         onClose={onClose}
       />
     )
-    expect(screen.getByLabelText('Width (%)')).toHaveValue(65)
+    expect(screen.getByLabelText('宽度（%）')).toHaveValue(65)
     rerender(
       <ChartSettingsDialog
         req={profileRequest('tpo', stored)}
@@ -328,7 +328,7 @@ describe('profile chart settings', () => {
         onClose={onClose}
       />
     )
-    expect(screen.getByRole('combobox', { name: 'Block size' })).toHaveValue('45')
+    expect(screen.getByRole('combobox', { name: '时间块大小' })).toHaveValue('45')
   })
 
   it('resets the active profile without replacing the saved other profile', async () => {
@@ -340,16 +340,16 @@ describe('profile chart settings', () => {
         'profiles.svp.widthPercent': 65,
       })
     )
-    await user.click(screen.getByRole('button', { name: 'Reset to defaults' }))
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '恢复默认设置' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'profiles.svp.widthPercent': 100 })
   })
 
   it('preserves a block size selected through the string-emitting control', async () => {
     const user = userEvent.setup()
     const onApply = renderDialog(vi.fn(), profileRequest('tpo', {}))
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Block size' }), '60')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.selectOptions(screen.getByRole('combobox', { name: '时间块大小' }), '60')
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'profiles.tpo.blockMinutes': '60' })
     expect(profileValues('tpo', onApply.mock.calls[0][0])['profiles.tpo.blockMinutes']).toBe(60)
   })
@@ -363,8 +363,8 @@ describe('profile chart settings', () => {
         'profiles.svp.upColor': 'invalid',
       })
     )
-    expect(screen.getByLabelText('Number of rows')).toHaveValue(10)
-    expect(screen.getByLabelText('Placement')).toHaveValue('left')
-    expect(screen.getByLabelText('Outside value area Up')).toHaveValue('#248fa0')
+    expect(screen.getByLabelText('行数')).toHaveValue(10)
+    expect(screen.getByLabelText('位置')).toHaveValue('left')
+    expect(screen.getByLabelText('价值区域外 上涨')).toHaveValue('#248fa0')
   })
 })

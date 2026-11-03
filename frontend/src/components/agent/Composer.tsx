@@ -441,9 +441,7 @@ export function Composer({
                   onSelect={() => fileInputRef.current?.click()}
                   className="text-xs"
                 >
-                  <Paperclip className="h-3.5 w-3.5" aria-hidden />
-                  Attach files
-                </DropdownMenuItem>
+                  <Paperclip className="h-3.5 w-3.5" aria-hidden />添加附件</DropdownMenuItem>
                 {/* Only where there is a chart. A menu item that cannot do its
                     one job is worse than an absent one. */}
                 {onCaptureChart && (
@@ -452,9 +450,7 @@ export function Composer({
                     onSelect={() => void captureChart()}
                     className="text-xs"
                   >
-                    <Camera className="h-3.5 w-3.5" aria-hidden />
-                    Attach chart screenshot
-                  </DropdownMenuItem>
+                    <Camera className="h-3.5 w-3.5" aria-hidden />添加图表截图</DropdownMenuItem>
                 )}
                 {!canSee && (
                   <p className="px-2 py-1.5 text-[11px] leading-relaxed text-muted-foreground">
@@ -470,9 +466,7 @@ export function Composer({
                   onCheckedChange={(next) => setWebSearch(next === true)}
                   className="text-xs"
                 >
-                  <Globe className="h-3.5 w-3.5" aria-hidden />
-                  Web search
-                </DropdownMenuCheckboxItem>
+                  <Globe className="h-3.5 w-3.5" aria-hidden />网络搜索</DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
             {controls}
@@ -525,15 +519,13 @@ export function Composer({
       <p className="px-1 text-[11px] text-muted-foreground">
         {running ? (
           <span className="inline-flex items-center gap-1.5">
-            <Loader2 className="h-3 w-3 animate-spin" aria-hidden />
-            Running. Stop ends the turn on the server, not just here.
-          </span>
+            <Loader2 className="h-3 w-3 animate-spin" aria-hidden />正在运行。停止会结束服务器上的本轮任务。</span>
         ) : attachments.length > 0 && !hasText ? (
           'A file is not a question. Say what you want done with it.'
         ) : (
           'Enter to send, Shift and Enter for a new line.'
         )}
-        {!webSearch && <span className="ml-2">Web search is off for this conversation.</span>}
+        {!webSearch && <span className="ml-2">本次会话的网络搜索已关闭。</span>}
       </p>
     </div>
   )

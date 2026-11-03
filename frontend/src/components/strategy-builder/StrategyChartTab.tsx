@@ -398,7 +398,7 @@ export default function StrategyChartTab({
     return (
       <div className="rounded-xl border bg-card p-8 text-center shadow-sm">
         <div className="text-muted-foreground text-sm">
-          Add at least one active option leg to see the Strategy Chart.
+          请至少添加一条有效期权策略腿，以查看策略图表。
         </div>
       </div>
     )
@@ -433,7 +433,7 @@ export default function StrategyChartTab({
         chartData ? (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs">
             <div>
-              <span className="text-muted-foreground">Spot </span>
+              <span className="text-muted-foreground">现货价 </span>
               <span className="font-medium" style={{ color: colors.underlying }}>
                 {money(chartData.underlying_ltp)}
               </span>
@@ -446,7 +446,7 @@ export default function StrategyChartTab({
             </div>
             {point ? (
               <div>
-                <span className="text-muted-foreground">Current </span>
+                <span className="text-muted-foreground">当前 </span>
                 <span className="font-semibold" style={{ color: colors.combined }}>
                   {money(livePremium ?? point.combined_premium)}
                 </span>
@@ -464,7 +464,7 @@ export default function StrategyChartTab({
           ) : null}
           {hasFuturesLeg ? (
             <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-[11px] text-amber-700 dark:text-amber-400">
-              Futures legs are excluded from the combined premium: price levels are not premia.
+              期货策略腿不计入组合权利金，因为期货价格并非权利金。
             </div>
           ) : null}
           {chartData && !chartData.underlying_available ? (

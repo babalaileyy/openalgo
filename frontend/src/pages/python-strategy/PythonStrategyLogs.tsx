@@ -60,7 +60,7 @@ export default function PythonStrategyLogs() {
         setSelectedLog(logsData[0].name)
       }
     } catch (_error) {
-      showToast.error('Failed to load logs', 'pythonStrategy')
+      showToast.error('加载日志失败', 'pythonStrategy')
     } finally {
       setLoading(false)
     }
@@ -125,10 +125,10 @@ export default function PythonStrategyLogs() {
         setSelectedLog(null)
         setLogContent(null)
       } else {
-        showToast.error(response.message || 'Failed to clear logs', 'pythonStrategy')
+        showToast.error(response.message || '清除日志失败', 'pythonStrategy')
       }
     } catch (_error) {
-      showToast.error('Failed to clear logs', 'pythonStrategy')
+      showToast.error('清除日志失败', 'pythonStrategy')
     } finally {
       setClearing(false)
       setClearDialogOpen(false)
@@ -190,15 +190,13 @@ export default function PythonStrategyLogs() {
       {/* Back Button */}
       <Button variant="ghost" asChild>
         <Link to="/python">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Python Strategies
-        </Link>
+          <ArrowLeft className="h-4 w-4 mr-2" />返回 Python 策略</Link>
       </Button>
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Strategy Logs</h1>
+          <h1 className="text-2xl font-bold tracking-tight">策略日志</h1>
           <p className="text-muted-foreground">{strategy.name}</p>
         </div>
         <div className="flex gap-2">
@@ -208,23 +206,17 @@ export default function PythonStrategyLogs() {
               checked={autoRefresh}
               onCheckedChange={(checked) => setAutoRefresh(checked as boolean)}
             />
-            <Label htmlFor="auto-refresh" className="text-sm">
-              Auto-refresh
-            </Label>
+            <Label htmlFor="auto-refresh" className="text-sm">自动刷新</Label>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() => selectedLog && fetchLogContent(selectedLog)}
           >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
+            <RefreshCw className="h-4 w-4 mr-2" />刷新</Button>
           <Button variant="outline" size="sm" asChild>
             <Link to={`/python/${strategy.id}/edit`}>
-              <Code2 className="h-4 w-4 mr-2" />
-              Edit Code
-            </Link>
+              <Code2 className="h-4 w-4 mr-2" />编辑代码</Link>
           </Button>
           <Button
             variant="destructive"
@@ -233,9 +225,7 @@ export default function PythonStrategyLogs() {
             disabled={logFiles.length === 0 || strategy.status === 'running'}
             title={strategy.status === 'running' ? 'Stop strategy first to clear logs' : undefined}
           >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Clear All
-          </Button>
+            <Trash2 className="h-4 w-4 mr-2" />全部清除</Button>
         </div>
       </div>
 
@@ -244,14 +234,12 @@ export default function PythonStrategyLogs() {
         <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle className="text-sm flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Log Files
-            </CardTitle>
+              <FileText className="h-4 w-4" />日志文件</CardTitle>
             <CardDescription>{logFiles.length} file(s)</CardDescription>
           </CardHeader>
           <CardContent>
             {logFiles.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No log files found</p>
+              <p className="text-sm text-muted-foreground text-center py-8">未找到日志文件</p>
             ) : (
               <ScrollArea className="h-[500px]">
                 <div className="space-y-2">
@@ -293,9 +281,7 @@ export default function PythonStrategyLogs() {
           <CardHeader>
             <CardTitle className="text-sm flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <ScrollText className="h-4 w-4" />
-                Log Content
-              </span>
+                <ScrollText className="h-4 w-4" />日志内容</span>
               <span className="flex items-center gap-2">
                 {logContent && (
                   <>
@@ -305,18 +291,14 @@ export default function PythonStrategyLogs() {
                       onClick={handleCopyLog}
                       title="Copy log content"
                     >
-                      <Copy className="h-3.5 w-3.5 mr-1.5" />
-                      Copy
-                    </Button>
+                      <Copy className="h-3.5 w-3.5 mr-1.5" />复制</Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={handleDownloadLog}
                       title="Download log file"
                     >
-                      <Download className="h-3.5 w-3.5 mr-1.5" />
-                      Download
-                    </Button>
+                      <Download className="h-3.5 w-3.5 mr-1.5" />下载</Button>
                   </>
                 )}
                 {strategy.status === 'running' && (
@@ -333,9 +315,7 @@ export default function PythonStrategyLogs() {
           </CardHeader>
           <CardContent>
             {!selectedLog ? (
-              <div className="flex items-center justify-center h-[500px] text-muted-foreground">
-                Select a log file to view its contents
-              </div>
+              <div className="flex items-center justify-center h-[500px] text-muted-foreground">选择日志文件以查看内容</div>
             ) : loadingContent ? (
               <div className="flex items-center justify-center h-[500px]">
                 <RefreshCw className="h-6 w-6 animate-spin" />
@@ -347,9 +327,7 @@ export default function PythonStrategyLogs() {
                 followTail={strategy?.status === 'running' && autoRefresh}
               />
             ) : (
-              <div className="flex items-center justify-center h-[500px] text-muted-foreground">
-                No content available
-              </div>
+              <div className="flex items-center justify-center h-[500px] text-muted-foreground">没有可显示的内容</div>
             )}
           </CardContent>
         </Card>
@@ -359,16 +337,14 @@ export default function PythonStrategyLogs() {
       <Dialog open={clearDialogOpen} onOpenChange={setClearDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Clear All Logs</DialogTitle>
+            <DialogTitle>清除全部日志</DialogTitle>
             <DialogDescription>
               Are you sure you want to clear all log files for "{strategy.name}"? This action cannot
               be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setClearDialogOpen(false)}>
-              Cancel
-            </Button>
+            <Button variant="outline" onClick={() => setClearDialogOpen(false)}>取消</Button>
             <Button variant="destructive" onClick={handleClearLogs} disabled={clearing}>
               {clearing ? 'Clearing...' : 'Clear All Logs'}
             </Button>

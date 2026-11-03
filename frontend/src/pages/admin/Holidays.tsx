@@ -161,11 +161,11 @@ export default function HolidaysPage() {
         })
         fetchHolidays(currentYear)
       } else {
-        showToast.error(response.message || 'Failed to add holiday', 'admin')
+        showToast.error(response.message || '添加休市日失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to add holiday', 'admin')
+      showToast.error(err.response?.data?.message || '添加休市日失败', 'admin')
     } finally {
       setIsAdding(false)
     }
@@ -183,11 +183,11 @@ export default function HolidaysPage() {
         setDeleteHoliday(null)
         fetchHolidays(currentYear)
       } else {
-        showToast.error(response.message || 'Failed to delete holiday', 'admin')
+        showToast.error(response.message || '删除休市日失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to delete holiday', 'admin')
+      showToast.error(err.response?.data?.message || '删除休市日失败', 'admin')
     } finally {
       setIsDeleting(false)
     }
@@ -256,11 +256,11 @@ export default function HolidaysPage() {
   const getHolidayTypeBadge = (type: string) => {
     switch (type) {
       case 'TRADING_HOLIDAY':
-        return <Badge variant="destructive">Trading Holiday</Badge>
+        return <Badge variant="destructive">交易假日</Badge>
       case 'SETTLEMENT_HOLIDAY':
-        return <Badge variant="secondary">Settlement Holiday</Badge>
+        return <Badge variant="secondary">结算假日</Badge>
       case 'SPECIAL_SESSION':
-        return <Badge className="bg-purple-500 hover:bg-purple-600">Special Session</Badge>
+        return <Badge className="bg-purple-500 hover:bg-purple-600">特殊交易时段</Badge>
       default:
         return <Badge variant="outline">{type}</Badge>
     }
@@ -284,17 +284,13 @@ export default function HolidaysPage() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Calendar className="h-6 w-6" />
-              Market Holidays
-            </h1>
+              <Calendar className="h-6 w-6" />市场假日</h1>
           </div>
-          <p className="text-muted-foreground">
-            Manage trading holidays for all supported exchanges
-          </p>
+          <p className="text-muted-foreground">管理所有受支持交易所的休市日</p>
         </div>
         <Button onClick={() => setShowAddDialog(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Add Holiday
+          添加休市日
         </Button>
       </div>
 
@@ -311,7 +307,7 @@ export default function HolidaysPage() {
             <p className="text-2xl font-bold">
               {holidays.filter((h) => h.holiday_type === 'TRADING_HOLIDAY').length}
             </p>
-            <p className="text-sm text-muted-foreground">Trading Holidays</p>
+            <p className="text-sm text-muted-foreground">交易假日</p>
           </CardContent>
         </Card>
         <Card>
@@ -319,7 +315,7 @@ export default function HolidaysPage() {
             <p className="text-2xl font-bold">
               {holidays.filter((h) => h.holiday_type !== 'TRADING_HOLIDAY').length}
             </p>
-            <p className="text-sm text-muted-foreground">Special Days</p>
+            <p className="text-sm text-muted-foreground">特殊日期</p>
           </CardContent>
         </Card>
       </div>
@@ -328,15 +324,15 @@ export default function HolidaysPage() {
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle>Holiday Calendar</CardTitle>
+            <CardTitle>假日日历</CardTitle>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="icon"
                 onClick={() => setCurrentYear((y) => y - 1)}
                 disabled={!years.includes(currentYear - 1)}
-                title="Previous year"
-                aria-label="Previous year"
+                title="上一年"
+                aria-label="上一年"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -360,8 +356,8 @@ export default function HolidaysPage() {
                 size="icon"
                 onClick={() => setCurrentYear((y) => y + 1)}
                 disabled={!years.includes(currentYear + 1)}
-                title="Next year"
-                aria-label="Next year"
+                title="下一年"
+                aria-label="下一年"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -377,12 +373,12 @@ export default function HolidaysPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
+                  <TableHead>日期</TableHead>
                   <TableHead>Day</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Closed Exchanges</TableHead>
-                  <TableHead className="w-[80px]">Actions</TableHead>
+                  <TableHead>说明</TableHead>
+                  <TableHead>类型</TableHead>
+                  <TableHead>休市交易所</TableHead>
+                  <TableHead className="w-[80px]">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -418,7 +414,7 @@ export default function HolidaysPage() {
                           variant="ghost"
                           className="h-8 w-8 text-destructive hover:text-destructive"
                           onClick={() => setDeleteHoliday(holiday)}
-                          title="Delete holiday"
+                          title="删除休市日"
                           aria-label={`Delete holiday ${holiday.description}`}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -437,12 +433,12 @@ export default function HolidaysPage() {
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Add Holiday</DialogTitle>
-            <DialogDescription>Add a new market holiday entry.</DialogDescription>
+            <DialogTitle>添加假日</DialogTitle>
+            <DialogDescription>添加市场假日。</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Date</Label>
+              <Label>日期</Label>
               <Input
                 type="date"
                 value={newHoliday.date}
@@ -450,15 +446,15 @@ export default function HolidaysPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label>Description</Label>
+              <Label>说明</Label>
               <Input
-                placeholder="e.g., Republic Day"
+                placeholder="例如：国庆日"
                 value={newHoliday.description}
                 onChange={(e) => setNewHoliday({ ...newHoliday, description: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>Holiday Type</Label>
+              <Label>假日类型</Label>
               <Select
                 value={newHoliday.holiday_type}
                 onValueChange={(
@@ -480,15 +476,13 @@ export default function HolidaysPage() {
             {newHoliday.holiday_type === 'TRADING_HOLIDAY' && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label>Closed Exchanges</Label>
+                  <Label>休市交易所</Label>
                   <Button
                     variant="link"
                     size="sm"
                     className="h-auto p-0"
                     onClick={selectAllExchanges}
-                  >
-                    Select All
-                  </Button>
+                  >全选</Button>
                 </div>
                 <div className="grid grid-cols-4 gap-2">
                   {exchanges.map((exchange) => (
@@ -512,15 +506,13 @@ export default function HolidaysPage() {
             {newHoliday.holiday_type === 'SPECIAL_SESSION' && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label>Exchanges with Special Timings</Label>
+                  <Label>有特殊交易时间的交易所</Label>
                   <Button
                     variant="link"
                     size="sm"
                     className="h-auto p-0"
                     onClick={addAllExchangesForSpecialSession}
-                  >
-                    Add All
-                  </Button>
+                  >全部添加</Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Set trading hours for each exchange during this special session (e.g., Muhurat
@@ -530,7 +522,7 @@ export default function HolidaysPage() {
                 <div className="flex gap-2">
                   <Select onValueChange={(value) => addSpecialSessionExchange(value)} value="">
                     <SelectTrigger className="flex-1">
-                      <SelectValue placeholder="Select exchange to add..." />
+                      <SelectValue placeholder="选择要添加的交易所…" />
                     </SelectTrigger>
                     <SelectContent>
                       {exchanges
@@ -575,7 +567,7 @@ export default function HolidaysPage() {
                           size="icon"
                           className="h-8 w-8 text-destructive hover:text-destructive"
                           onClick={() => removeSpecialSessionExchange(ex.exchange)}
-                          title="Remove exchange"
+                          title="移除交易所"
                           aria-label={`Remove ${ex.exchange} from special session`}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -589,7 +581,7 @@ export default function HolidaysPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowAddDialog(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={handleAdd} disabled={isAdding}>
               {isAdding ? 'Adding...' : 'Add Holiday'}
@@ -602,14 +594,14 @@ export default function HolidaysPage() {
       <AlertDialog open={!!deleteHoliday} onOpenChange={() => setDeleteHoliday(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Holiday?</AlertDialogTitle>
+            <AlertDialogTitle>删除休市日？</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete &quot;{deleteHoliday?.description}&quot; on{' '}
               {deleteHoliday?.date}? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>

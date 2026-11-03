@@ -51,7 +51,7 @@ async function clickSignOut() {
 }
 
 async function confirmLogout() {
-  await userEvent.click(screen.getByRole('button', { name: /Yes, Logout/i }))
+  await userEvent.click(screen.getByRole('button', { name: /确认退出/ }))
 }
 
 describe('BrokerAuthSignOut', () => {
@@ -70,7 +70,7 @@ describe('BrokerAuthSignOut', () => {
 
     await clickSignOut()
 
-    expect(await screen.findByText(/Confirm Logout/i)).toBeInTheDocument()
+    expect(await screen.findByText(/确认退出登录/)).toBeInTheDocument()
     expect(apiLogout).not.toHaveBeenCalled()
   })
 
@@ -80,10 +80,10 @@ describe('BrokerAuthSignOut', () => {
     await clickSignOut()
 
     expect(
-      await screen.findByText(/All devices connected to this account will be logged out/i)
+      await screen.findByText(/连接此账户的所有设备将立即退出登录/)
     ).toBeInTheDocument()
     expect(
-      screen.getByText(/All automated orders and running strategies will stop working/i)
+      screen.getByText(/所有自动下单和运行中的策略将停止工作/)
     ).toBeInTheDocument()
   })
 
@@ -123,7 +123,7 @@ describe('BrokerAuthSignOut', () => {
     renderSignOut()
 
     await clickSignOut()
-    await userEvent.click(screen.getByRole('button', { name: /^Cancel$/i }))
+    await userEvent.click(screen.getByRole('button', { name: /^取消$/ }))
 
     expect(apiLogout).not.toHaveBeenCalled()
     expect(logout).not.toHaveBeenCalled()

@@ -107,18 +107,16 @@ export default function ChartinkIndex() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Chartink Strategies</h1>
-          <p className="text-muted-foreground">Manage your Chartink webhook integrations</p>
+          <h1 className="text-2xl font-bold tracking-tight">Chartink 策略</h1>
+          <p className="text-muted-foreground">管理 Chartink Webhook 集成</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={fetchStrategies}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            刷新
           </Button>
           <Button onClick={() => navigate('/chartink/new')}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Strategy
-          </Button>
+            <Plus className="h-4 w-4 mr-2" />新建策略</Button>
         </div>
       </div>
 
@@ -126,12 +124,9 @@ export default function ChartinkIndex() {
       {hostConfig?.is_localhost && (
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Webhook URL not accessible!</AlertTitle>
+          <AlertTitle>无法访问 Webhook 地址！</AlertTitle>
           <AlertDescription>
-            Chartink cannot send alerts to localhost. Use <strong>ngrok</strong>,{' '}
-            <strong>Cloudflare Tunnel</strong>, <strong>VS Code Dev Tunnel</strong>, or a{' '}
-            <strong>custom domain</strong> to expose your OpenAlgo instance to the internet. Update{' '}
-            <code>HOST_SERVER</code> in your <code>.env</code> file with your external URL.
+            Chartink 无法向本机地址发送提醒。请使用 <strong>ngrok</strong>、<strong>Cloudflare Tunnel</strong>、<strong>VS Code Dev Tunnel</strong> 或<strong>自定义域名</strong>使 OpenAlgo 可从外网访问，并将外网地址填入 <code>.env</code> 文件中的 <code>HOST_SERVER</code>。
           </AlertDescription>
         </Alert>
       )}
@@ -140,12 +135,10 @@ export default function ChartinkIndex() {
       <Alert>
         <Webhook className="h-4 w-4" />
         <AlertTitle>Chartink Webhook</AlertTitle>
-        <AlertDescription>
-          Receive alerts from Chartink screeners. Use these keywords in your alert name:
-          <code className="bg-muted px-1 mx-1 rounded">BUY</code>,
-          <code className="bg-muted px-1 mx-1 rounded">SELL</code>,
-          <code className="bg-muted px-1 mx-1 rounded">SHORT</code>,
-          <code className="bg-muted px-1 mx-1 rounded">COVER</code>
+        <AlertDescription>接收 Chartink 选股器提醒。请在提醒名称中使用以下关键词：<code className="bg-muted px-1 mx-1 rounded">BUY</code>（买入）、
+          <code className="bg-muted px-1 mx-1 rounded">SELL</code>（卖出）、
+          <code className="bg-muted px-1 mx-1 rounded">SHORT</code>（卖空）、
+          <code className="bg-muted px-1 mx-1 rounded">COVER</code>（买入平空）。
         </AlertDescription>
       </Alert>
 
@@ -154,14 +147,10 @@ export default function ChartinkIndex() {
         <Card className="py-12">
           <CardContent className="flex flex-col items-center justify-center text-center">
             <Zap className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Chartink Strategies</h3>
-            <p className="text-muted-foreground mb-4">
-              Create your first Chartink strategy to receive screener alerts.
-            </p>
+            <h3 className="text-lg font-semibold mb-2">暂无 Chartink 策略</h3>
+            <p className="text-muted-foreground mb-4">创建第一个 Chartink 策略以接收选股器提醒。</p>
             <Button onClick={() => navigate('/chartink/new')}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Strategy
-            </Button>
+              <Plus className="h-4 w-4 mr-2" />创建策略</Button>
           </CardContent>
         </Card>
       ) : (
@@ -193,9 +182,7 @@ export default function ChartinkIndex() {
                   <Badge variant="outline" className="font-normal">
                     {strategy.is_intraday ? 'Intraday' : 'Positional'}
                   </Badge>
-                  <Badge variant="outline" className="font-normal">
-                    NSE/BSE Only
-                  </Badge>
+                  <Badge variant="outline" className="font-normal">仅支持 NSE/BSE</Badge>
                 </div>
 
                 {/* Trading Hours (if intraday) */}
@@ -231,13 +218,13 @@ export default function ChartinkIndex() {
                   <Button variant="outline" size="sm" className="flex-1" asChild>
                     <Link to={`/chartink/${strategy.id}/configure`}>
                       <Settings className="h-4 w-4 mr-2" />
-                      Symbols
+                      交易品种
                     </Link>
                   </Button>
                   <Button variant="default" size="sm" className="flex-1" asChild>
                     <Link to={`/chartink/${strategy.id}`}>
                       <Eye className="h-4 w-4 mr-2" />
-                      View
+                      查看
                     </Link>
                   </Button>
                 </div>
@@ -250,33 +237,31 @@ export default function ChartinkIndex() {
       {/* Keywords Reference */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Alert Keywords Reference</CardTitle>
-          <CardDescription>
-            Include these keywords in your Chartink alert name to trigger orders
-          </CardDescription>
+          <CardTitle className="text-lg">提醒关键词参考</CardTitle>
+          <CardDescription>在 Chartink 提醒名称中加入以下关键词以触发订单</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="space-y-1">
               <Badge className="bg-green-500">BUY</Badge>
-              <p className="text-sm text-muted-foreground">Open long position</p>
+              <p className="text-sm text-muted-foreground">开多仓</p>
             </div>
             <div className="space-y-1">
-              <Badge className="bg-red-500">SELL</Badge>
-              <p className="text-sm text-muted-foreground">Close long position</p>
+              <Badge className="bg-red-500">SELL（卖出）</Badge>
+              <p className="text-sm text-muted-foreground">平多仓</p>
             </div>
             <div className="space-y-1">
-              <Badge className="bg-orange-500">SHORT</Badge>
-              <p className="text-sm text-muted-foreground">Open short position</p>
+              <Badge className="bg-orange-500">SHORT（卖空）</Badge>
+              <p className="text-sm text-muted-foreground">开空仓</p>
             </div>
             <div className="space-y-1">
-              <Badge className="bg-blue-500">COVER</Badge>
-              <p className="text-sm text-muted-foreground">Close short position</p>
+              <Badge className="bg-blue-500">COVER（买入平空）</Badge>
+              <p className="text-sm text-muted-foreground">平空仓</p>
             </div>
           </div>
           <div className="mt-4 p-3 bg-muted rounded-lg">
             <p className="text-sm">
-              <strong>Example Alert Names:</strong>
+              <strong>提醒名称示例：</strong>
             </p>
             <ul className="text-sm text-muted-foreground mt-2 space-y-1">
               <li>• "BUY - RSI Oversold Stocks" → triggers BUY orders</li>

@@ -92,11 +92,11 @@ export default function TelegramIndex() {
         showToast.success(response.data.message || 'Bot started successfully', 'telegram')
         fetchData()
       } else {
-        showToast.error(response.data.message || 'Failed to start bot', 'telegram')
+        showToast.error(response.data.message || '启动机器人失败', 'telegram')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to start bot', 'telegram')
+      showToast.error(err.response?.data?.message || '启动机器人失败', 'telegram')
     } finally {
       setIsStarting(false)
     }
@@ -112,11 +112,11 @@ export default function TelegramIndex() {
         showToast.success(response.data.message || 'Bot stopped successfully', 'telegram')
         fetchData()
       } else {
-        showToast.error(response.data.message || 'Failed to stop bot', 'telegram')
+        showToast.error(response.data.message || '停止机器人失败', 'telegram')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to stop bot', 'telegram')
+      showToast.error(err.response?.data?.message || '停止机器人失败', 'telegram')
     } finally {
       setIsStopping(false)
     }
@@ -131,11 +131,11 @@ export default function TelegramIndex() {
       if (response.data.status === 'success') {
         showToast.success(response.data.message || 'Test message sent', 'telegram')
       } else {
-        showToast.error(response.data.message || 'Failed to send test message', 'telegram')
+        showToast.error(response.data.message || '发送测试消息失败', 'telegram')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to send test message', 'telegram')
+      showToast.error(err.response?.data?.message || '发送测试消息失败', 'telegram')
     } finally {
       setIsSendingTest(false)
     }
@@ -164,11 +164,11 @@ export default function TelegramIndex() {
         showToast.success(response.data.message || 'Broadcast sent successfully', 'telegram')
         setBroadcastMessage('')
       } else {
-        showToast.error(response.data.message || 'Failed to send broadcast', 'telegram')
+        showToast.error(response.data.message || '发送广播失败', 'telegram')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to send broadcast', 'telegram')
+      showToast.error(err.response?.data?.message || '发送广播失败', 'telegram')
     } finally {
       setIsBroadcasting(false)
     }
@@ -185,7 +185,7 @@ export default function TelegramIndex() {
   if (!data) {
     return (
       <div className="flex items-center justify-center py-16">
-        <p className="text-muted-foreground">Failed to load Telegram data</p>
+        <p className="text-muted-foreground">加载 Telegram 数据失败</p>
       </div>
     )
   }
@@ -204,9 +204,7 @@ export default function TelegramIndex() {
             <MessageSquare className="h-6 w-6" />
             Telegram Bot
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your Telegram bot for trade notifications
-          </p>
+          <p className="text-muted-foreground mt-1">管理用于交易通知的 Telegram 机器人</p>
         </div>
         <div className="flex gap-2">
           {bot_status.is_running ? (
@@ -222,9 +220,7 @@ export default function TelegramIndex() {
           )}
           <Link to="/telegram/config">
             <Button variant="outline">
-              <Settings className="h-4 w-4 mr-2" />
-              Configuration
-            </Button>
+              <Settings className="h-4 w-4 mr-2" />配置</Button>
           </Link>
         </div>
       </div>
@@ -262,11 +258,11 @@ export default function TelegramIndex() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-3 bg-muted rounded-lg">
               <p className="text-2xl font-bold">{safeUsers.length}</p>
-              <p className="text-sm text-muted-foreground">Total Users</p>
+              <p className="text-sm text-muted-foreground">用户总数</p>
             </div>
             <div className="text-center p-3 bg-muted rounded-lg">
               <p className="text-2xl font-bold">{activeUsers}</p>
-              <p className="text-sm text-muted-foreground">Active Users</p>
+              <p className="text-sm text-muted-foreground">活跃用户</p>
             </div>
             <div className="text-center p-3 bg-muted rounded-lg">
               <p className="text-2xl font-bold">{safeStats.reduce((sum, s) => sum + s.count, 0)}</p>
@@ -274,7 +270,7 @@ export default function TelegramIndex() {
             </div>
             <div className="text-center p-3 bg-muted rounded-lg">
               <p className="text-2xl font-bold">{config.rate_limit_per_minute}</p>
-              <p className="text-sm text-muted-foreground">Rate Limit/min</p>
+              <p className="text-sm text-muted-foreground">每分钟速率限制</p>
             </div>
           </div>
         </CardContent>
@@ -290,11 +286,9 @@ export default function TelegramIndex() {
               </div>
             </CardHeader>
             <CardContent>
-              <h3 className="font-semibold group-hover:text-primary transition-colors flex items-center gap-2">
-                Configuration
-                <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <h3 className="font-semibold group-hover:text-primary transition-colors flex items-center gap-2">配置<ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </h3>
-              <p className="text-sm text-muted-foreground">Configure bot settings</p>
+              <p className="text-sm text-muted-foreground">配置机器人设置</p>
             </CardContent>
           </Card>
         </Link>
@@ -311,7 +305,7 @@ export default function TelegramIndex() {
                 Users
                 <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </h3>
-              <p className="text-sm text-muted-foreground">Manage linked users</p>
+              <p className="text-sm text-muted-foreground">管理已关联用户</p>
             </CardContent>
           </Card>
         </Link>
@@ -324,11 +318,9 @@ export default function TelegramIndex() {
               </div>
             </CardHeader>
             <CardContent>
-              <h3 className="font-semibold group-hover:text-primary transition-colors flex items-center gap-2">
-                Analytics
-                <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <h3 className="font-semibold group-hover:text-primary transition-colors flex items-center gap-2">分析<ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </h3>
-              <p className="text-sm text-muted-foreground">View usage statistics</p>
+              <p className="text-sm text-muted-foreground">查看使用统计</p>
             </CardContent>
           </Card>
         </Link>
@@ -340,8 +332,8 @@ export default function TelegramIndex() {
             </div>
           </CardHeader>
           <CardContent>
-            <h3 className="font-semibold">Test Message</h3>
-            <p className="text-sm text-muted-foreground mb-3">Send a test notification</p>
+            <h3 className="font-semibold">测试消息</h3>
+            <p className="text-sm text-muted-foreground mb-3">发送测试通知</p>
             <Button
               size="sm"
               variant="outline"
@@ -359,9 +351,7 @@ export default function TelegramIndex() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5" />
-              Your Telegram Link
-            </CardTitle>
+              <Bell className="h-5 w-5" />您的 Telegram 绑定链接</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
@@ -386,16 +376,16 @@ export default function TelegramIndex() {
         <Card>
           <CardHeader>
             <CardTitle>Popular Commands (Last 7 Days)</CardTitle>
-            <CardDescription>Most used bot commands</CardDescription>
+            <CardDescription>最常用机器人命令</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="border rounded-md">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Command</TableHead>
-                    <TableHead>Count</TableHead>
-                    <TableHead>Percentage</TableHead>
+                    <TableHead>命令</TableHead>
+                    <TableHead>数量</TableHead>
+                    <TableHead>百分比</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -435,10 +425,8 @@ export default function TelegramIndex() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Radio className="h-5 w-5" />
-            Broadcast Message
-          </CardTitle>
-          <CardDescription>Send a message to all users</CardDescription>
+            <Radio className="h-5 w-5" />广播消息</CardTitle>
+          <CardDescription>向所有用户发送消息</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
@@ -457,9 +445,7 @@ export default function TelegramIndex() {
             </Button>
           </div>
           {!config.broadcast_enabled && (
-            <p className="text-sm text-muted-foreground">
-              Broadcast is disabled. Enable it in Configuration.
-            </p>
+            <p className="text-sm text-muted-foreground">广播功能已禁用，请在配置中启用。</p>
           )}
         </CardContent>
       </Card>
@@ -468,10 +454,8 @@ export default function TelegramIndex() {
       <AlertDialog open={showBroadcastConfirm} onOpenChange={setShowBroadcastConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Broadcast</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to send this message to all users?
-            </AlertDialogDescription>
+            <AlertDialogTitle>确认广播</AlertDialogTitle>
+            <AlertDialogDescription>确定向所有用户发送此消息吗？</AlertDialogDescription>
           </AlertDialogHeader>
           <div className="bg-muted p-3 rounded-lg my-4">
             <p className="text-sm whitespace-pre-wrap">{broadcastMessage}</p>
@@ -480,8 +464,8 @@ export default function TelegramIndex() {
             This will be sent to {activeUsers} active users ({safeUsers.length} total users)
           </p>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmBroadcast}>Send Broadcast</AlertDialogAction>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmBroadcast}>发送广播</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

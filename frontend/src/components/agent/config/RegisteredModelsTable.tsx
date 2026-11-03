@@ -322,7 +322,7 @@ export function RegisteredModelsTable() {
   if (isPending) {
     return (
       <div className="space-y-2" aria-busy="true">
-        <span className="sr-only">Loading configured models</span>
+        <span className="sr-only">正在加载已配置的模型</span>
         {Array.from({ length: SKELETON_ROWS }, (_, index) => (
           <Skeleton key={`model-row-${index}`} className="h-12 w-full" />
         ))}
@@ -338,7 +338,7 @@ export function RegisteredModelsTable() {
           <span>{agentErrorMessage(listError, 'Could not load your configured models')}</span>
         </p>
         <Button type="button" variant="outline" size="sm" onClick={() => void refetch()}>
-          Try again
+          重试
         </Button>
       </div>
     )
@@ -362,14 +362,14 @@ export function RegisteredModelsTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Model</TableHead>
-              <TableHead>Provider</TableHead>
+              <TableHead>模型</TableHead>
+              <TableHead>服务商</TableHead>
               <TableHead>Key</TableHead>
-              <TableHead>Capabilities</TableHead>
-              <TableHead>Last test</TableHead>
-              <TableHead className="text-center">Enabled</TableHead>
-              <TableHead className="text-center">Default</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>能力</TableHead>
+              <TableHead>最近测试</TableHead>
+              <TableHead className="text-center">已启用</TableHead>
+              <TableHead className="text-center">默认</TableHead>
+              <TableHead className="text-right">操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -440,9 +440,7 @@ export function RegisteredModelsTable() {
                             </div>
                           </>
                         ) : (
-                          <span className="text-xs text-muted-foreground">
-                            No plan connected yet
-                          </span>
+                          <span className="text-xs text-muted-foreground">尚未连接套餐</span>
                         )
                       ) : model.has_api_key ? (
                         <>
@@ -471,22 +469,18 @@ export function RegisteredModelsTable() {
                           </Badge>
                         )}
                         {model.supports_vision && (
-                          <Badge variant="secondary" className="font-normal">
-                            Vision
-                          </Badge>
+                          <Badge variant="secondary" className="font-normal">视觉</Badge>
                         )}
                         {model.tools_unreliable && (
                           <Badge
                             variant="outline"
                             className="border-amber-500/50 font-normal text-amber-700 dark:text-amber-400"
-                          >
-                            Tools unreliable
-                          </Badge>
+                          >工具调用不稳定</Badge>
                         )}
                         {!model.supports_reasoning &&
                           !model.supports_vision &&
                           !model.tools_unreliable && (
-                            <span className="text-xs text-muted-foreground">Text and tools</span>
+                            <span className="text-xs text-muted-foreground">文本和工具</span>
                           )}
                       </div>
                     </TableCell>
@@ -497,17 +491,11 @@ export function RegisteredModelsTable() {
                           <Badge
                             variant="outline"
                             className="border-emerald-500/50 font-normal text-emerald-700 dark:text-emerald-400"
-                          >
-                            Passed
-                          </Badge>
+                          >已通过</Badge>
                         ) : model.last_test_ok === false ? (
-                          <Badge variant="destructive" className="font-normal">
-                            Failed
-                          </Badge>
+                          <Badge variant="destructive" className="font-normal">未通过</Badge>
                         ) : (
-                          <Badge variant="outline" className="font-normal text-muted-foreground">
-                            Not tested
-                          </Badge>
+                          <Badge variant="outline" className="font-normal text-muted-foreground">未测试</Badge>
                         )}
                         <span
                           className="text-xs text-muted-foreground"
@@ -675,11 +663,7 @@ export function RegisteredModelsTable() {
         </Table>
       </div>
 
-      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-        Exactly one model is the default, and it is what a request that names no model resolves to.
-        A model has to be enabled and to have passed a test before it can hold it. Keys are stored
-        encrypted and are never shown again: the fingerprint is enough to tell two keys apart.
-      </p>
+      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">只能设置一个默认模型；未指定模型的请求会使用它。模型必须启用并通过测试才能设为默认。密钥加密存储且不会再次显示，可使用指纹区分不同密钥。</p>
 
       {editing && (
         <EditModelDialog
@@ -706,7 +690,7 @@ export function RegisteredModelsTable() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove this model?</AlertDialogTitle>
+            <AlertDialogTitle>移除此模型？</AlertDialogTitle>
             <AlertDialogDescription>
               {removing
                 ? `"${removing.display_name}" is removed from the registry and from every picker. `
@@ -716,15 +700,9 @@ export function RegisteredModelsTable() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           {removing && models.length === 1 ? (
-            <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm leading-relaxed text-amber-800 dark:text-amber-300">
-              This is the only model you have configured. Removing it leaves the agent unconfigured,
-              and /agent goes back to the setup screen until another one is added and tested.
-            </p>
+            <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm leading-relaxed text-amber-800 dark:text-amber-300">这是您唯一配置的模型。移除后智能体将处于未配置状态，/agent 会返回设置页面，直到添加并测试另一个模型。</p>
           ) : removing?.is_default ? (
-            <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm leading-relaxed text-amber-800 dark:text-amber-300">
-              This is the default model. The server hands the default to another enabled model that
-              has passed a test, and the agent is unconfigured until it has one.
-            </p>
+            <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm leading-relaxed text-amber-800 dark:text-amber-300">这是默认模型。服务器会将默认模型切换为另一个已启用且通过测试的模型；如果没有符合条件的模型，智能体将处于未配置状态。</p>
           ) : null}
           {removing && rowErrors[removing.id] && (
             // Inside the dialog, not only behind it. This is a modal with a
@@ -737,7 +715,7 @@ export function RegisteredModelsTable() {
             </p>
           )}
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={remove.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={remove.isPending}>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={(event) => {
                 // The dialog closes itself on action; the row is only gone once
@@ -846,7 +824,7 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
       onOpenChange(false)
     },
     onError: (cause) => {
-      setError(agentErrorMessage(cause, 'Could not save that model'))
+      setError(agentErrorMessage(cause, '无法保存该模型'))
     },
   })
 
@@ -860,10 +838,8 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
     >
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit model</DialogTitle>
-          <DialogDescription>
-            The provider and the model id cannot change. Register the other model instead.
-          </DialogDescription>
+          <DialogTitle>编辑模型</DialogTitle>
+          <DialogDescription>不能修改服务商或模型 ID，请改为注册另一个模型。</DialogDescription>
         </DialogHeader>
 
         <form
@@ -877,17 +853,17 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
         >
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="edit-model-provider">Provider</Label>
+              <Label htmlFor="edit-model-provider">服务商</Label>
               <Input id="edit-model-provider" disabled value={providerLabel(model.provider_kind)} />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="edit-model-id">Model id</Label>
+              <Label htmlFor="edit-model-id">模型 ID</Label>
               <Input id="edit-model-id" disabled className="font-mono" value={model.model_name} />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="edit-model-display">Display name</Label>
+            <Label htmlFor="edit-model-display">显示名称</Label>
             <Input
               id="edit-model-display"
               required
@@ -898,7 +874,7 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
 
           {needsBaseUrl && (
             <div className="space-y-1.5">
-              <Label htmlFor="edit-model-base-url">Base URL</Label>
+              <Label htmlFor="edit-model-base-url">基础地址</Label>
               <Input
                 id="edit-model-base-url"
                 type="url"
@@ -907,17 +883,13 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
                 value={baseUrl}
                 onChange={(event) => setBaseUrl(event.target.value)}
               />
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                The server connects to this address. Changing it clears the test result and the
-                default status: the credentials were tested against the old endpoint and say nothing
-                about this one.
-              </p>
+              <p className="text-xs leading-relaxed text-muted-foreground">服务器会连接此地址。更改地址将清除测试结果和默认状态，因为凭据只针对旧地址测试过，不能证明新地址可用。</p>
             </div>
           )}
 
           {needsKey && (
             <div className="space-y-1.5">
-              <Label htmlFor="edit-model-key">API key</Label>
+              <Label htmlFor="edit-model-key">API 密钥</Label>
               <Input
                 id="edit-model-key"
                 type="password"
@@ -936,16 +908,12 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
           )}
 
           {onPlan && (
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              This model runs on your ChatGPT plan, so it has no API key. Its credential is the
-              sign-in in the ChatGPT subscription panel, and disconnecting there stops this model
-              rather than anything typed here.
-            </p>
+            <p className="text-xs leading-relaxed text-muted-foreground">此模型使用您的 ChatGPT 套餐，无需 API 密钥。它使用 ChatGPT 订阅面板中的登录凭据；在该面板断开连接会使模型停止工作。</p>
           )}
 
           {needsKey && typedKey !== '' && (
             <div className="space-y-1.5 rounded-md border border-border p-3">
-              <Label htmlFor="edit-model-key-scope">Store this key for</Label>
+              <Label htmlFor="edit-model-key-scope">此密钥的适用范围</Label>
               <Select value={keyScope} onValueChange={(next) => setKeyScope(next as ApiKeyScope)}>
                 <SelectTrigger id="edit-model-key-scope" className="w-full">
                   <SelectValue />
@@ -954,7 +922,7 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
                   <SelectItem value="provider">
                     Every {providerLabel(model.provider_kind)} model
                   </SelectItem>
-                  <SelectItem value="model">This model only</SelectItem>
+                  <SelectItem value="model">仅此模型</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs leading-relaxed text-muted-foreground">
@@ -982,7 +950,7 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
             />
             {supportsReasoning && (
               <div className="space-y-1.5 pl-1">
-                <Label htmlFor="edit-model-effort">Default reasoning effort</Label>
+                <Label htmlFor="edit-model-effort">默认推理强度</Label>
                 <Select value={effort} onValueChange={(next) => setEffort(next as ReasoningEffort)}>
                   <SelectTrigger id="edit-model-effort" className="w-full">
                     <SelectValue />
@@ -1027,7 +995,7 @@ function EditModelDialog({ model, open, onOpenChange, onSaved }: EditModelDialog
               onClick={() => onOpenChange(false)}
               disabled={save.isPending}
             >
-              Cancel
+              取消
             </Button>
             <Button type="submit" disabled={save.isPending || !hasChanges}>
               {save.isPending ? 'Saving' : 'Save changes'}

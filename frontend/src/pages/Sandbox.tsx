@@ -64,6 +64,15 @@ const CAPITAL_OPTIONS = [
 ]
 
 function formatConfigLabel(key: string): string {
+  const labels: Record<string, string> = {
+    starting_capital: '初始资金', reset_day: '自动重置日期', reset_time: '自动重置时间',
+    equity_mis_leverage: '股票 MIS 杠杆', equity_cnc_leverage: '股票 CNC 杠杆',
+    futures_leverage: '期货杠杆', option_buy_leverage: '期权买入杠杆', option_sell_leverage: '期权卖出杠杆',
+    order_check_interval: '待成交订单检查间隔', mtm_update_interval: '盯市盈亏更新间隔',
+    expiry_settlement_timing: '到期结算时间', option_expiry_settlement: '期权到期结算价格',
+  }
+  if (labels[key]) return labels[key]
+  if (key.endsWith('_square_off_time')) return `${key.slice(0, -16).toUpperCase().replaceAll('_', ' / ')} 强制平仓时间`
   return key
     .split('_')
     .map((word) => {
@@ -103,7 +112,7 @@ export default function Sandbox() {
         }
       }
     } catch (_error) {
-      showToast.error('Failed to load configuration', 'analyzer')
+      showToast.error('加载配置失败', 'analyzer')
     } finally {
       setIsLoading(false)
     }
@@ -166,7 +175,7 @@ export default function Sandbox() {
         showToast.error(data.message, 'analyzer')
       }
     } catch (_error) {
-      showToast.error('Failed to save configuration', 'analyzer')
+      showToast.error('保存配置失败', 'analyzer')
     }
   }
 
@@ -197,7 +206,7 @@ export default function Sandbox() {
         showToast.error(data.message, 'analyzer')
       }
     } catch (_error) {
-      showToast.error('Failed to reset configuration', 'analyzer')
+      showToast.error('重置配置失败', 'analyzer')
     } finally {
       setIsResetting(false)
     }
@@ -220,7 +229,7 @@ export default function Sandbox() {
             <SelectContent>
               {DAYS_OF_WEEK.map((day) => (
                 <SelectItem key={day} value={day}>
-                  {day}
+                  {{ Never: '从不', Monday: '周一', Tuesday: '周二', Wednesday: '周三', Thursday: '周四', Friday: '周五', Saturday: '周六', Sunday: '周日' }[day] ?? day}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -231,7 +240,7 @@ export default function Sandbox() {
             onClick={() => saveConfig(configKey)}
           >
             <Save className="h-4 w-4 mr-1" />
-            Set
+            设置
           </Button>
         </div>
       )
@@ -242,12 +251,12 @@ export default function Sandbox() {
       const options =
         configKey === 'expiry_settlement_timing'
           ? [
-              { value: 'expiry_day_close', label: 'On expiry day at market close' },
-              { value: 'next_day', label: 'Next day after expiry (legacy)' },
+              { value: 'expiry_day_close', label: '到期日收盘时' },
+              { value: 'next_day', label: '到期后的次日（旧版）' },
             ]
           : [
-              { value: 'ltp', label: 'Last traded price (keeps ITM value)' },
-              { value: 'zero', label: 'Zero - all options expire worthless' },
+              { value: 'ltp', label: '最新成交价（保留实值期权价值）' },
+              { value: 'zero', label: '归零（所有期权到期价值均为零）' },
             ]
       return (
         <div className="flex gap-2">
@@ -272,7 +281,7 @@ export default function Sandbox() {
             onClick={() => saveConfig(configKey)}
           >
             <Save className="h-4 w-4 mr-1" />
-            Set
+            设置
           </Button>
         </div>
       )
@@ -294,7 +303,7 @@ export default function Sandbox() {
             onClick={() => saveConfig(configKey)}
           >
             <Save className="h-4 w-4 mr-1" />
-            Set
+            设置
           </Button>
         </div>
       )
@@ -319,7 +328,7 @@ export default function Sandbox() {
             onClick={() => saveConfig(configKey)}
           >
             <Save className="h-4 w-4 mr-1" />
-            Set
+            设置
           </Button>
         </div>
       )
@@ -348,7 +357,7 @@ export default function Sandbox() {
             onClick={() => saveConfig(configKey)}
           >
             <Save className="h-4 w-4 mr-1" />
-            Set
+            设置
           </Button>
         </div>
       )
@@ -373,7 +382,7 @@ export default function Sandbox() {
             onClick={() => saveConfig(configKey)}
           >
             <Save className="h-4 w-4 mr-1" />
-            Set
+            设置
           </Button>
         </div>
       )
@@ -394,7 +403,7 @@ export default function Sandbox() {
           onClick={() => saveConfig(configKey)}
         >
           <Save className="h-4 w-4 mr-1" />
-          Set
+          设置
         </Button>
       </div>
     )
@@ -415,20 +424,20 @@ export default function Sandbox() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Settings className="h-8 w-8" />
-            Sandbox Configuration
+            模拟盘设置
           </h1>
-          <p className="text-muted-foreground mt-1">Configure sandbox environment settings</p>
+          <p className="text-muted-foreground mt-1">配置模拟交易环境</p>
         </div>
         <div className="flex gap-3">
           <Button asChild>
             <Link to="/sandbox/mypnl">
               <BarChart3 className="h-4 w-4 mr-2" />
-              My P&L
+              我的盈亏
             </Link>
           </Button>
           <Button variant="destructive" onClick={() => setShowResetDialog(true)}>
             <RotateCcw className="h-4 w-4 mr-2" />
-            Reset to Defaults
+            恢复默认设置
           </Button>
         </div>
       </div>
@@ -440,7 +449,7 @@ export default function Sandbox() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="h-5 w-5 text-primary" />
-                {category.title}
+                {({ 'Capital Settings': '资金设置', 'Leverage Settings': '杠杆设置', 'Square-Off Times (IST)': '强制平仓时间（印度标准时间）', 'Update Intervals (seconds)': '更新间隔（秒）', 'F&O Expiry Settlement': '期货与期权到期结算' } as Record<string, string>)[category.title] ?? category.title}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -466,42 +475,42 @@ export default function Sandbox() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-destructive">
               <RotateCcw className="h-5 w-5" />
-              Reset ALL Sandbox Data
+              重置所有模拟盘数据
             </DialogTitle>
             <DialogDescription asChild>
               <div className="space-y-4 pt-4">
                 <Alert variant="destructive">
-                  <AlertDescription>This action cannot be undone!</AlertDescription>
+                  <AlertDescription>此操作无法撤销！</AlertDescription>
                 </Alert>
 
                 <div className="space-y-2">
-                  <p className="font-semibold">This action will:</p>
+                  <p className="font-semibold">此操作将：</p>
                   <ul className="list-disc list-inside space-y-1 ml-4 text-sm">
-                    <li>Delete all orders, trades, positions, and holdings</li>
-                    <li>Reset funds to starting capital (1.00 Crore)</li>
-                    <li>Reset all configuration values to defaults</li>
-                    <li>Clear all historical data</li>
+                    <li>删除所有订单、成交、持仓和持有资产</li>
+                    <li>将资金重置为初始本金（1,000 万）</li>
+                    <li>将所有配置恢复为默认值</li>
+                    <li>清除所有历史数据</li>
                   </ul>
                 </div>
 
                 <p className="text-muted-foreground">
-                  Are you absolutely sure you want to reset everything?
+                  确定要重置所有数据吗？
                 </p>
               </div>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setShowResetDialog(false)}>
-              Cancel
+              取消
             </Button>
             <Button variant="destructive" onClick={resetConfiguration} disabled={isResetting}>
               {isResetting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                  Resetting...
+                  正在重置…
                 </>
               ) : (
-                'Yes, Reset Everything'
+                '确认重置所有数据'
               )}
             </Button>
           </DialogFooter>

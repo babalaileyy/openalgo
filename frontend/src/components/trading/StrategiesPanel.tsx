@@ -131,13 +131,13 @@ function Holding({
   isLive: boolean
 }) {
   if (summary === undefined) {
-    return <div className="text-[10px] text-muted-foreground">Reading what it holds...</div>
+    return <div className="text-[10px] text-muted-foreground">正在读取持仓…</div>
   }
   if (summary === null) {
     // Said rather than left blank. A silent row is read as flat.
     return (
       <div className="text-[10px] text-muted-foreground">
-        What this is holding could not be read just now.
+        暂时无法读取此策略的持仓。
       </div>
     )
   }
@@ -148,7 +148,7 @@ function Holding({
     <div className="flex flex-col gap-0.5">
       {positions.length === 0 ? (
         <div className="flex items-baseline gap-1.5 text-[10px]">
-          <span className="text-muted-foreground">Flat</span>
+          <span className="text-muted-foreground">空仓</span>
           {profit !== null && profit !== 0 && (
             <span
               className={cn(
@@ -174,7 +174,7 @@ function Holding({
               className="flex items-baseline gap-1.5 font-mono text-[10px] tabular-nums"
             >
               <span className={one.side === 'short' ? 'text-destructive' : 'text-emerald-500'}>
-                {one.side === 'short' ? 'SHORT' : 'LONG'} {one.quantity}
+                {one.side === 'short' ? '空头' : '多头'} {one.quantity}
               </span>
               <span className="truncate text-muted-foreground">{one.symbol}</span>
               {one.averagePrice !== null && (
@@ -194,7 +194,7 @@ function Holding({
 
       {profitIsPlatforms && positions.length === 0 && profit !== null && profit !== 0 && (
         <span className="text-[9px] leading-tight text-muted-foreground">
-          Taken on positions this strategy has already closed today.
+          此盈亏来自该策略今日已平仓的持仓。
         </span>
       )}
 
@@ -203,8 +203,7 @@ function Holding({
           one a trader would act on believing it current. */}
       {positions.length > 0 && !isLive && (
         <span className="text-[9px] leading-tight text-muted-foreground">
-          Not marked to a live price just now: this is what the platform last said, and it moves
-          again when prices arrive.
+          当前未按实时价格计算：显示的是平台上次返回的数值，收到行情后会更新。
         </span>
       )}
     </div>
@@ -260,15 +259,13 @@ function DeploymentForm({
         declarations={declarations}
         edited={typed}
         onChange={(key, value) => setTyped((held) => ({ ...held, [key]: value }))}
-        note="A box left empty uses the script's own default. A running strategy reads these when it starts, so stop it and start it again to apply a change."
+        note="留空时使用脚本默认值。运行中的策略在启动时读取这些参数，修改后需停止并重新启动才能生效。"
       />
 
       {sizeNote && <p className="text-[10px] leading-relaxed text-muted-foreground">{sizeNote}</p>}
 
       <p className="text-[10px] leading-relaxed text-muted-foreground">
-        The instrument and the interval are part of what this deployment is. Changing either one
-        makes a second deployment rather than moving this one, so the strategy you are already
-        running is left exactly where it is.
+        交易品种和周期属于此部署的配置。修改其中任一项会创建新的部署，已有的运行策略保持不变。
       </p>
 
       <div className="flex gap-1.5">
@@ -276,7 +273,7 @@ function DeploymentForm({
           type="button"
           className="h-7 flex-1 rounded border border-border text-[11px] hover:bg-accent disabled:opacity-50"
           disabled={busy || !ready}
-          title={ready ? undefined : 'An instrument, an exchange and an interval are needed'}
+          title={ready ? undefined : '需要填写交易品种、交易所和周期'}
           onClick={onSave}
         >
           {saveLabel}
@@ -286,7 +283,7 @@ function DeploymentForm({
           className="h-7 rounded border border-border px-2 text-[11px] hover:bg-accent"
           onClick={onCancel}
         >
-          Cancel
+          取消
         </button>
         {onRemove && (
           <button
@@ -294,7 +291,7 @@ function DeploymentForm({
             className="h-7 rounded border border-border px-2 text-[11px] text-muted-foreground hover:border-destructive/50 hover:text-destructive"
             onClick={onRemove}
           >
-            Remove
+            移除
           </button>
         )}
       </div>
@@ -592,13 +589,13 @@ export function StrategiesPanel({ getChartContext }: Props) {
   return (
     <PanelShell
       id="trading-strategies-panel"
-      label="Strategies"
+      label="策略"
       storageKey="trading.panel.strategies.width"
       defaultWidth={400}
       minWidth={320}
     >
       <div className={PANEL_HEADER}>
-        <span className="text-xs font-medium">Strategies</span>
+        <span className="text-xs font-medium">策略</span>
         <span
           className={cn(
             'ml-auto shrink-0 rounded px-1.5 py-px text-[10px] font-medium uppercase tracking-wide',
@@ -608,13 +605,13 @@ export function StrategiesPanel({ getChartContext }: Props) {
           )}
           title={
             isLive
-              ? 'Orders from a running strategy go to your broker'
-              : 'Orders from a running strategy go to the sandbox'
+              ? '运行中策略的订单将发送至券商'
+              : '运行中策略的订单将发送至模拟盘'
           }
         >
-          {isLive ? 'Live' : 'Analyzer'}
+          {isLive ? '实盘' : '模拟盘'}
         </span>
-        <span className="shrink-0 text-[11px] text-muted-foreground">{running.length} running</span>
+        <span className="shrink-0 text-[11px] text-muted-foreground">运行中 {running.length} 个</span>
       </div>
 
       <div className="flex items-center gap-1.5 border-b border-border px-2 py-1.5">
@@ -624,22 +621,22 @@ export function StrategiesPanel({ getChartContext }: Props) {
           disabled={strategies.length === 0}
           title={
             strategies.length === 0
-              ? 'Save a strategy first. A study plots and places no orders.'
-              : 'Run a strategy on an instrument'
+              ? '请先保存策略。指标脚本仅绘图，不会下单。'
+              : '在交易品种上运行策略'
           }
           onClick={() => (editing === NEW ? setEditing(null) : openEditor(NEW, strategies[0]))}
         >
-          {editing === NEW ? 'Cancel' : 'Deploy a strategy'}
+          {editing === NEW ? '取消' : '部署策略'}
         </button>
         <span className="text-[10px] text-muted-foreground">
-          {deployments.length === 1 ? '1 deployment' : `${deployments.length} deployments`}
+          已部署 {deployments.length} 个
         </span>
       </div>
 
       {editing === NEW && draft && (
         <div className="flex flex-col gap-1.5 border-b border-border bg-muted/40 p-2">
           <label className="text-[10px] font-medium text-muted-foreground" htmlFor="deploy-script">
-            Strategy
+            策略
           </label>
           <select
             id="deploy-script"
@@ -669,7 +666,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
             onCancel={() => setEditing(null)}
             onRemove={null}
             busy={busy === NEW}
-            saveLabel="Deploy"
+            saveLabel="部署"
           />
         </div>
       )}
@@ -677,8 +674,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-2">
         {unreachable && (
           <p className="rounded border border-amber-500/40 px-2 py-1.5 text-[11px] text-amber-600 dark:text-amber-400">
-            The runner cannot be reached, so this list may be out of date. Anything already running
-            on the server is still running.
+            无法连接策略运行服务，此列表可能不是最新状态。服务器上已运行的策略仍在运行。
           </p>
         )}
 
@@ -692,7 +688,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
           <input
             type="search"
             className="h-7 rounded border border-border bg-background px-2 text-[11px]"
-            placeholder="Search by strategy or instrument"
+            placeholder="搜索策略或交易品种"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -700,16 +696,13 @@ export function StrategiesPanel({ getChartContext }: Props) {
 
         {strategies.length === 0 && (
           <p className="text-[11px] text-muted-foreground">
-            No strategies saved. A study plots and places no orders, so only a script that declares
-            itself a strategy can be run.
+            尚未保存策略。指标脚本仅绘图，不会下单；只有声明为策略的脚本可以运行。
           </p>
         )}
 
         {strategies.length > 0 && deployments.length === 0 && (
           <p className="text-[11px] text-muted-foreground">
-            Nothing deployed yet. Deploy a strategy on an instrument to run it. The same strategy
-            can be deployed on as many instruments and timeframes as you like, and each one runs,
-            holds and reports on its own.
+            尚未部署策略。请将策略部署到交易品种后运行。同一策略可部署到多个品种和周期，各部署独立运行、持仓和报告。
           </p>
         )}
 
@@ -737,7 +730,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
                     {one.file}
                   </span>
                   <span className="ml-auto shrink-0 text-[10px] text-muted-foreground">
-                    {run ? `running ${since(run.started_at)}` : 'stopped'}
+                    {run ? `运行中 ${since(run.started_at)}` : '已停止'}
                   </span>
                 </div>
 
@@ -746,7 +739,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
                     ? `${run.symbol} ${run.exchange} ${run.interval} ${run.product} · pid ${run.pid}`
                     : held
                       ? `${held.symbol} ${held.exchange} ${held.interval} ${held.product}`
-                      : 'No instrument set. Set one before this can start.'}
+                      : '尚未设置交易品种，请设置后再启动。'}
                 </div>
 
                 {run && (
@@ -794,7 +787,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
                           : null
                       }
                       busy={busy === one.id}
-                      saveLabel="Save"
+                      saveLabel="保存"
                     />
                   </div>
                 )}
@@ -806,19 +799,19 @@ export function StrategiesPanel({ getChartContext }: Props) {
                         type="button"
                         className="h-7 flex-1 rounded border border-border text-[11px] hover:bg-accent disabled:opacity-50"
                         disabled={busy === file}
-                        title="End this strategy and leave its position exactly where it is"
+                        title="结束策略，保留现有持仓"
                         onClick={() => void act(file, () => pauseStrategy(file))}
                       >
-                        {busy === file ? 'Working' : 'Pause'}
+                        {busy === file ? '处理中' : '暂停'}
                       </button>
                       <button
                         type="button"
                         className="h-7 flex-1 rounded border border-border text-[11px] hover:border-destructive/50 hover:text-destructive disabled:opacity-50"
                         disabled={busy === file}
-                        title="Close what this strategy is holding, then end it"
+                        title="先平掉该策略的持仓，再结束策略"
                         onClick={() => setConfirming(one.id)}
                       >
-                        Stop
+                        停止
                       </button>
                     </>
                   ) : (
@@ -826,10 +819,10 @@ export function StrategiesPanel({ getChartContext }: Props) {
                       type="button"
                       className="h-7 flex-1 rounded border border-border bg-accent/40 text-[11px] hover:bg-accent disabled:opacity-50"
                       disabled={busy === file || !held}
-                      title={held ? undefined : 'Set an instrument first'}
+                      title={held ? undefined : '请先设置交易品种'}
                       onClick={() => void act(file, () => startStrategy(file))}
                     >
-                      {busy === file ? 'Starting' : isLive ? 'Start live' : 'Start in sandbox'}
+                      {busy === file ? '启动中' : isLive ? '启动实盘' : '启动模拟盘'}
                     </button>
                   )}
                   <button
@@ -837,7 +830,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
                     className="h-7 rounded border border-border px-2 text-[11px] text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={() => (isEditing ? setEditing(null) : openEditor(file))}
                   >
-                    Settings
+                    设置
                   </button>
                   <button
                     type="button"
@@ -845,18 +838,18 @@ export function StrategiesPanel({ getChartContext }: Props) {
                     aria-expanded={opened === file}
                     onClick={() => setOpened((held) => (held === file ? null : file))}
                   >
-                    {opened === file ? 'Hide' : 'Activity'}
+                    {opened === file ? '隐藏' : '交易记录'}
                   </button>
                   {held && (
                     <button
                       type="button"
-                      aria-label={`Remove ${one.file} on ${where?.symbol ?? ''}`}
+                      aria-label={`移除 ${one.file} 在 ${where?.symbol ?? ''} 的部署`}
                       className="h-7 rounded border border-border px-2 text-[11px] text-muted-foreground hover:border-destructive/50 hover:text-destructive disabled:opacity-40"
                       disabled={Boolean(run)}
                       title={
                         run
-                          ? 'Pause or stop this strategy before removing it'
-                          : 'Remove this deployment'
+                          ? '移除前请先暂停或停止策略'
+                          : '移除此部署'
                       }
                       onClick={() => setRemoving(one.id)}
                     >
@@ -868,13 +861,11 @@ export function StrategiesPanel({ getChartContext }: Props) {
                 {removing === one.id && (
                   <div className="flex flex-col gap-1.5 rounded border border-border p-2">
                     <p className="text-[11px] leading-relaxed">
-                      Remove {one.file} on{' '}
-                      {[where?.symbol, where?.exchange, where?.interval].filter(Boolean).join(' ')}?
+                      确定移除 {one.file} 在{' '}
+                      {[where?.symbol, where?.exchange, where?.interval].filter(Boolean).join(' ')} 的部署吗？
                     </p>
                     <p className="text-[10px] leading-relaxed text-muted-foreground">
-                      This removes the deployment and its schedule. The strategy itself is not
-                      deleted: it stays in the editor and can be deployed again. Anything it has
-                      already traded stays in your books.
+                      这将移除部署及其计划，但不会删除策略；策略仍保留在编辑器中，可再次部署。已有交易记录也会保留。
                     </p>
                     <div className="flex gap-1.5">
                       <button
@@ -888,14 +879,14 @@ export function StrategiesPanel({ getChartContext }: Props) {
                           })
                         }
                       >
-                        {busy === file ? 'Removing' : 'Remove'}
+                        {busy === file ? '移除中' : '移除'}
                       </button>
                       <button
                         type="button"
                         className="h-7 rounded border border-border px-2 text-[11px] hover:bg-accent"
                         onClick={() => setRemoving(null)}
                       >
-                        Cancel
+                        取消
                       </button>
                     </div>
                   </div>
@@ -931,15 +922,7 @@ export function StrategiesPanel({ getChartContext }: Props) {
           })}
 
         <p className="mt-auto text-[10px] leading-relaxed text-muted-foreground">
-          Pause ends a strategy and leaves its position for you to manage. Stop closes what it is
-          holding first, which spends a spread and cannot be taken back, so it asks before it does.
-          A run is a process on the server and outlives this page: closing the browser stops
-          nothing. Orders go through this platform's own order path, so a run trades with your
-          broker while the platform is in live mode and against the sandbox while it is in analyzer
-          mode, the same as every other surface here. That setting is made elsewhere on the site and
-          is shown above. A run stops itself if it changes while the run is holding a position,
-          because an exit sent somewhere the entry never went would leave a position nothing is
-          managing.
+          暂停会结束策略并保留持仓，需由您自行管理。停止会先平仓，产生买卖价差且无法撤销，因此需要确认。策略在服务器上运行，关闭浏览器不会停止策略。订单走平台的订单通道：实盘模式发送至券商，分析模式发送至模拟盘，当前模式显示在上方。持仓期间若模式发生变化，策略会自行停止，避免平仓订单发往错误的交易环境。
         </p>
       </div>
     </PanelShell>

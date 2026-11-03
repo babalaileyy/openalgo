@@ -411,9 +411,7 @@ export function AddModelDialog({
             ) : null}
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={addAnother}>
-                Add another model
-              </Button>
+              <Button type="button" variant="outline" onClick={addAnother}>添加其他模型</Button>
               <Button
                 type="button"
                 variant="outline"
@@ -438,7 +436,7 @@ export function AddModelDialog({
             }}
           >
             <div className="space-y-2">
-              <Label htmlFor={`${fieldId}-kind`}>Provider kind</Label>
+              <Label htmlFor={`${fieldId}-kind`}>服务商类型</Label>
               <Select
                 value={kind}
                 onValueChange={(next) => {
@@ -460,7 +458,7 @@ export function AddModelDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor={`${fieldId}-name`}>Model name</Label>
+              <Label htmlFor={`${fieldId}-name`}>模型名称</Label>
               <Input
                 id={`${fieldId}-name`}
                 value={modelId}
@@ -485,7 +483,7 @@ export function AddModelDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor={`${fieldId}-display`}>Display name</Label>
+              <Label htmlFor={`${fieldId}-display`}>显示名称</Label>
               <Input
                 id={`${fieldId}-display`}
                 value={displayName}
@@ -494,14 +492,12 @@ export function AddModelDialog({
                 placeholder={modelId || 'Shown in the model picker'}
                 onChange={(event) => setDisplayName(event.target.value)}
               />
-              <p id={`${fieldId}-display-hint`} className="text-xs text-muted-foreground">
-                What the chat picker shows. Left blank, the model name is used.
-              </p>
+              <p id={`${fieldId}-display-hint`} className="text-xs text-muted-foreground">聊天模型选择器中显示的名称。留空则使用模型名称。</p>
             </div>
 
             {spec.needsBaseUrl ? (
               <div className="space-y-2">
-                <Label htmlFor={`${fieldId}-base-url`}>Base URL</Label>
+                <Label htmlFor={`${fieldId}-base-url`}>基础地址</Label>
                 <Input
                   id={`${fieldId}-base-url`}
                   type="url"
@@ -512,17 +508,14 @@ export function AddModelDialog({
                   placeholder="http://127.0.0.1:11434"
                   onChange={(event) => setBaseUrl(event.target.value)}
                 />
-                <p id={`${fieldId}-base-url-hint`} className="text-xs text-muted-foreground">
-                  This server will connect to that address. A private or loopback address is fine,
-                  which is what makes a local model possible.
-                </p>
+                <p id={`${fieldId}-base-url-hint`} className="text-xs text-muted-foreground">服务器会连接此地址。可以使用内网或回环地址，以连接本地模型。</p>
               </div>
             ) : null}
 
             {spec.needsKey ? (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor={`${fieldId}-key`}>API key</Label>
+                  <Label htmlFor={`${fieldId}-key`}>API 密钥</Label>
                   <Input
                     id={`${fieldId}-key`}
                     type="password"
@@ -548,14 +541,14 @@ export function AddModelDialog({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`${fieldId}-scope`}>Key applies to</Label>
+                  <Label htmlFor={`${fieldId}-scope`}>密钥适用范围</Label>
                   <Select value={scope} onValueChange={(next) => setScope(next as ApiKeyScope)}>
                     <SelectTrigger id={`${fieldId}-scope`} className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="provider">Every model of this provider</SelectItem>
-                      <SelectItem value="model">This model only</SelectItem>
+                      <SelectItem value="provider">此服务商的所有模型</SelectItem>
+                      <SelectItem value="model">仅此模型</SelectItem>
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground">
@@ -564,9 +557,7 @@ export function AddModelDialog({
                       : 'An override for a second account with the same provider. It wins over the shared key.'}
                   </p>
                   {scope === 'provider' && hasStoredProviderKey && apiKey.trim() ? (
-                    <p className="text-xs text-muted-foreground">
-                      Saving this replaces the stored key for every model of this provider.
-                    </p>
+                    <p className="text-xs text-muted-foreground">保存后将替换该服务商所有模型使用的已存储密钥。</p>
                   ) : null}
                 </div>
               </>
@@ -580,9 +571,7 @@ export function AddModelDialog({
                 the plan rather than billed against API credits.
               </p>
             ) : (
-              <p className="text-xs text-muted-foreground">
-                This provider takes no API key, and nothing leaves this machine to reach it.
-              </p>
+              <p className="text-xs text-muted-foreground">此服务商无需 API 密钥，访问时数据不会离开本机。</p>
             )}
 
             {formError ? (
@@ -592,9 +581,7 @@ export function AddModelDialog({
             ) : null}
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
-              </Button>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>取消</Button>
               <Button type="submit" disabled={createMutation.isPending}>
                 {createMutation.isPending ? 'Adding' : 'Add model'}
               </Button>

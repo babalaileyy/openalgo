@@ -40,8 +40,8 @@ export const HttpRequestNode = memo(({ data, selected }: HttpRequestNodeProps) =
             <Globe className="h-3 w-3 text-primary" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">HTTP Request</div>
-            <div className="text-[9px] text-muted-foreground">API Call</div>
+            <div className="text-xs font-medium leading-tight">HTTP 请求</div>
+            <div className="text-[9px] text-muted-foreground">API 调用</div>
           </div>
         </div>
         <div className="space-y-1">

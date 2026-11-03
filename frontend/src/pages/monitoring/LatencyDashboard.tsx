@@ -102,7 +102,7 @@ export default function LatencyDashboard() {
     setIsRefreshing(true)
     await fetchData()
     setIsRefreshing(false)
-    showToast.success('Data refreshed', 'monitoring')
+    showToast.success('数据已刷新', 'monitoring')
   }
 
   const handleExport = () => {
@@ -174,21 +174,17 @@ export default function LatencyDashboard() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Gauge className="h-6 w-6" />
-              Order Latency Monitor
-            </h1>
+              <Gauge className="h-6 w-6" />订单延迟监控</h1>
           </div>
-          <p className="text-muted-foreground">Track how fast brokers confirm your orders</p>
+          <p className="text-muted-foreground">追踪交易商确认委托的速度</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Refresh
+            刷新
           </Button>
           <Button onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export to CSV
-          </Button>
+            <Download className="h-4 w-4 mr-2" />导出为 CSV</Button>
         </div>
       </div>
 
@@ -198,9 +194,9 @@ export default function LatencyDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Orders Tracked</p>
+                <p className="text-sm text-muted-foreground">已追踪委托总数</p>
                 <p className="text-2xl font-bold text-primary">{stats?.total_orders || 0}</p>
-                <p className="text-xs text-muted-foreground">All time</p>
+                <p className="text-xs text-muted-foreground">全部时间</p>
               </div>
               <Zap className="h-8 w-8 text-primary opacity-20" />
             </div>
@@ -211,7 +207,7 @@ export default function LatencyDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Success Rate</p>
+                <p className="text-sm text-muted-foreground">成功率</p>
                 <p className="text-2xl font-bold text-green-500">
                   {(stats?.success_rate || 0).toFixed(1)}%
                 </p>
@@ -226,11 +222,11 @@ export default function LatencyDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Average Confirmation Time</p>
+                <p className="text-sm text-muted-foreground">平均确认时间</p>
                 <p className={`text-2xl font-bold ${getSpeedRating(stats?.avg_total || 0).color}`}>
                   {(stats?.avg_total || 0).toFixed(2)}ms
                 </p>
-                <p className="text-xs text-muted-foreground">End-to-end order confirmation</p>
+                <p className="text-xs text-muted-foreground">端到端委托确认</p>
               </div>
               <Gauge
                 className={`h-8 w-8 ${getSpeedRating(stats?.avg_total || 0).color} opacity-20`}
@@ -243,7 +239,7 @@ export default function LatencyDashboard() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Fast Orders</p>
+                <p className="text-sm text-muted-foreground">快速委托</p>
                 <p
                   className={`text-2xl font-bold ${
                     (stats?.sla_150ms || 0) >= 95
@@ -271,27 +267,25 @@ export default function LatencyDashboard() {
       {/* Performance Levels Reference */}
       <Card>
         <CardHeader>
-          <CardTitle>Performance Levels</CardTitle>
-          <CardDescription>
-            Total end-to-end time from order submission to confirmation
-          </CardDescription>
+          <CardTitle>性能等级</CardTitle>
+          <CardDescription>从提交订单到收到确认的端到端总耗时</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex items-center gap-3">
-              <Badge className="bg-green-500">Excellent</Badge>
-              <span className="text-sm text-muted-foreground">Under 150ms</span>
+              <Badge className="bg-green-500">优秀</Badge>
+              <span className="text-sm text-muted-foreground">低于 150 毫秒</span>
             </div>
             <div className="flex items-center gap-3">
-              <Badge className="bg-yellow-500">Good</Badge>
+              <Badge className="bg-yellow-500">良好</Badge>
               <span className="text-sm text-muted-foreground">150-250ms</span>
             </div>
             <div className="flex items-center gap-3">
-              <Badge className="bg-orange-500">Acceptable</Badge>
+              <Badge className="bg-orange-500">可接受</Badge>
               <span className="text-sm text-muted-foreground">250-400ms</span>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="destructive">Slow</Badge>
+              <Badge variant="destructive">较慢</Badge>
               <span className="text-sm text-muted-foreground">Over 400ms</span>
             </div>
           </div>
@@ -301,8 +295,8 @@ export default function LatencyDashboard() {
       {/* Latency Distribution */}
       <Card>
         <CardHeader>
-          <CardTitle>Latency Distribution</CardTitle>
-          <CardDescription>Breakdown of order speeds</CardDescription>
+          <CardTitle>延迟分布</CardTitle>
+          <CardDescription>委托速度明细</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-4 gap-4">
@@ -374,21 +368,21 @@ export default function LatencyDashboard() {
       {stats?.broker_stats && Object.keys(stats.broker_stats).length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Broker Performance Comparison</CardTitle>
-            <CardDescription>Latency breakdown by broker</CardDescription>
+            <CardTitle>交易商性能比较</CardTitle>
+            <CardDescription>按交易商划分的延迟明细</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="border rounded-md">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Broker</TableHead>
-                    <TableHead>Avg Latency</TableHead>
+                    <TableHead>交易商</TableHead>
+                    <TableHead>平均延迟</TableHead>
                     <TableHead>Median (P50)</TableHead>
                     <TableHead>Worst 1% (P99)</TableHead>
-                    <TableHead>Fast Orders %</TableHead>
-                    <TableHead>Total Orders</TableHead>
-                    <TableHead>Performance</TableHead>
+                    <TableHead>快速委托占比 %</TableHead>
+                    <TableHead>委托总数</TableHead>
+                    <TableHead>性能</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -432,7 +426,7 @@ export default function LatencyDashboard() {
       {/* Recent Orders Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
+          <CardTitle>最近委托</CardTitle>
           <CardDescription>{logs.length} orders tracked</CardDescription>
         </CardHeader>
         <CardContent>
@@ -440,22 +434,20 @@ export default function LatencyDashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Broker</TableHead>
-                  <TableHead>Symbol</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Latency</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>时间</TableHead>
+                  <TableHead>委托编号</TableHead>
+                  <TableHead>交易商</TableHead>
+                  <TableHead>交易品种</TableHead>
+                  <TableHead>类型</TableHead>
+                  <TableHead>延迟</TableHead>
+                  <TableHead>状态</TableHead>
                   <TableHead className="w-[80px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {logs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
-                      No order latency data available
-                    </TableCell>
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">暂无订单延迟数据</TableCell>
                   </TableRow>
                 ) : (
                   logs.map((log) => {
@@ -476,15 +468,13 @@ export default function LatencyDashboard() {
                         </TableCell>
                         <TableCell>
                           {log.status === 'SUCCESS' ? (
-                            <Badge className="bg-green-500">SUCCESS</Badge>
+                            <Badge className="bg-green-500">成功</Badge>
                           ) : (
                             <Badge variant="destructive">{log.status}</Badge>
                           )}
                         </TableCell>
                         <TableCell>
-                          <Button size="sm" variant="ghost" onClick={() => setSelectedOrder(log)}>
-                            Details
-                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => setSelectedOrder(log)}>详情</Button>
                         </TableCell>
                       </TableRow>
                     )
@@ -500,7 +490,7 @@ export default function LatencyDashboard() {
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Order Latency Breakdown</DialogTitle>
+            <DialogTitle>委托延迟明细</DialogTitle>
             <DialogDescription>
               Detailed latency analysis for order {selectedOrder?.order_id}
             </DialogDescription>
@@ -512,13 +502,13 @@ export default function LatencyDashboard() {
               <div className="grid grid-cols-2 gap-4">
                 <Card>
                   <CardContent className="p-4">
-                    <p className="text-sm text-muted-foreground">Order ID</p>
+                    <p className="text-sm text-muted-foreground">委托编号</p>
                     <p className="font-mono font-semibold">{selectedOrder.order_id}</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4">
-                    <p className="text-sm text-muted-foreground">Performance</p>
+                    <p className="text-sm text-muted-foreground">性能</p>
                     <p
                       className={`text-lg font-bold ${getSpeedRating(selectedOrder.total_latency_ms).color}`}
                     >
@@ -530,16 +520,14 @@ export default function LatencyDashboard() {
 
               {/* Latency Breakdown */}
               <div className="space-y-4">
-                <h4 className="font-semibold">Latency Breakdown</h4>
+                <h4 className="font-semibold">延迟明细</h4>
 
                 {/* Total Confirmation Time */}
                 <div className="bg-muted p-4 rounded-lg">
                   <div className="flex justify-between mb-2">
                     <div>
-                      <span className="font-semibold">Total Confirmation Time</span>
-                      <p className="text-xs text-muted-foreground">
-                        What you experience end-to-end
-                      </p>
+                      <span className="font-semibold">确认总耗时</span>
+                      <p className="text-xs text-muted-foreground">实际端到端耗时</p>
                     </div>
                     <span className="text-lg font-bold">
                       {(selectedOrder.total_latency_ms || 0).toFixed(2)}ms
@@ -550,13 +538,13 @@ export default function LatencyDashboard() {
                   />
                 </div>
 
-                <p className="text-xs text-muted-foreground">This consists of:</p>
+                <p className="text-xs text-muted-foreground">包含以下环节：</p>
 
                 {/* Broker API Call */}
                 <div className="bg-secondary/50 p-3 rounded-lg ml-4">
                   <div className="flex justify-between items-start mb-1">
                     <div>
-                      <span className="font-semibold text-sm">Broker API Call</span>
+                      <span className="font-semibold text-sm">交易商 API 调用</span>
                       <Badge variant="outline" className="ml-2 text-xs">
                         HTTP
                       </Badge>
@@ -567,9 +555,9 @@ export default function LatencyDashboard() {
                     <span className="font-bold">{(selectedOrder.rtt_ms || 0).toFixed(2)}ms</span>
                   </div>
                   <div className="text-xs text-muted-foreground mt-2 space-y-0.5">
-                    <p>Network round-trip time</p>
-                    <p>Broker risk checks & validation</p>
-                    <p>Exchange order submission</p>
+                    <p>网络往返时间</p>
+                    <p>交易商风控检查与验证</p>
+                    <p>提交交易所委托</p>
                   </div>
                 </div>
 
@@ -577,13 +565,11 @@ export default function LatencyDashboard() {
                 <div className="bg-secondary/50 p-3 rounded-lg ml-4">
                   <div className="flex justify-between items-start mb-1">
                     <div>
-                      <span className="font-semibold text-sm">Platform Processing</span>
+                      <span className="font-semibold text-sm">平台处理</span>
                       <Badge variant="outline" className="ml-2 text-xs">
                         OpenAlgo
                       </Badge>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Authentication, validation & logging
-                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">身份验证、数据校验和日志记录</p>
                     </div>
                     <span className="font-bold">
                       {(selectedOrder.overhead_ms || 0).toFixed(2)}ms
@@ -601,7 +587,7 @@ export default function LatencyDashboard() {
                 {/* Total Summary */}
                 <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary">
                   <div className="flex justify-between">
-                    <span className="font-bold">Total Latency</span>
+                    <span className="font-bold">总延迟</span>
                     <span className="text-xl font-bold text-primary">
                       {(selectedOrder.total_latency_ms || 0).toFixed(2)}ms
                     </span>

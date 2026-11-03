@@ -5,6 +5,8 @@ interface BrokerCapabilities {
   broker_type: 'IN_stock' | 'crypto'
   supported_exchanges: string[]
   leverage_config: boolean
+  market_data_only?: boolean
+  default_chart?: { symbol: string; exchange: string } | null
 }
 
 interface BrokerStore {

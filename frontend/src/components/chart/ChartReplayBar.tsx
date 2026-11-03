@@ -22,9 +22,9 @@ export function ChartReplayBar({ replay, className }: { replay: ChartReplay; cla
           className
         )}
       >
-        <span className="font-medium text-primary">Pick a starting bar</span>
+        <span className="font-medium text-primary">选择起始 K 线</span>
         <span className="text-muted-foreground">
-          Click a candle to begin there. Everything after it is hidden until you step forward.
+          点击 K 线从该处开始；后续数据将在逐步回放时显示。
         </span>
         <Button
           variant="ghost"
@@ -32,7 +32,7 @@ export function ChartReplayBar({ replay, className }: { replay: ChartReplay; cla
           className="ml-auto h-7 px-2 text-xs"
           onClick={replay.exit}
         >
-          Cancel
+          取消
         </Button>
       </div>
     )
@@ -85,7 +85,7 @@ export function ChartReplayBar({ replay, className }: { replay: ChartReplay; cla
         value={index}
         onChange={(e) => replay.seek(Number(e.target.value))}
         className="mx-1 h-1 min-w-24 flex-1 accent-primary"
-        aria-label="Replay position"
+        aria-label="回放位置"
       />
 
       <span className="shrink-0 tabular-nums text-muted-foreground">
@@ -96,7 +96,7 @@ export function ChartReplayBar({ replay, className }: { replay: ChartReplay; cla
         value={replay.speed}
         onChange={(e) => replay.setSpeed(Number(e.target.value))}
         className="h-7 shrink-0 rounded-md border bg-background px-1 text-xs"
-        aria-label="Replay speed"
+        aria-label="回放速度"
       >
         {REPLAY_SPEEDS.map((value) => (
           <option key={value} value={value}>

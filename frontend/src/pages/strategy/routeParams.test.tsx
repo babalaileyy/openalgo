@@ -85,7 +85,7 @@ describe('the strategy pages read the id the route actually supplies', () => {
     wrap(<Detail />, '/strategy/:strategyId', '/strategy/7')
 
     await waitFor(() => expect(getStrategy).toHaveBeenCalledWith(7))
-    expect(screen.queryByText(/invalid strategy id/i)).toBeNull()
+    expect(screen.queryByText(/无效的策略编号/)).toBeNull()
   })
 
   it('the edit page asks for the strategy in the URL', async () => {
@@ -101,7 +101,7 @@ describe('the strategy pages read the id the route actually supplies', () => {
     wrap(<Edit />, '/strategy/:strategyId/edit', '/strategy/42/edit')
 
     await waitFor(() => expect(getStrategy).toHaveBeenCalledWith(42))
-    expect(screen.queryByText(/invalid strategy id/i)).toBeNull()
+    expect(screen.queryByText(/无效的策略编号/)).toBeNull()
   })
 
   it('a url with no usable id is still refused', async () => {
@@ -110,7 +110,7 @@ describe('the strategy pages read the id the route actually supplies', () => {
 
     wrap(<Detail />, '/strategy/:strategyId', '/strategy/not-a-number')
 
-    expect(await screen.findByText(/invalid strategy id/i)).toBeTruthy()
+    expect(await screen.findByText(/无效的策略编号/)).toBeTruthy()
     expect(getStrategy).not.toHaveBeenCalled()
   })
 })

@@ -41,9 +41,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import type { MasterContractStatus, PythonStrategy } from '@/types/python-strategy'
 import {
   CRYPTO_EXCHANGE_VALUE,
-  SCHEDULE_DAYS,
   STATUS_COLORS,
-  STATUS_LABELS,
 } from '@/types/python-strategy'
 import { showToast } from '@/utils/toast'
 
@@ -57,7 +55,7 @@ function scheduleWindow(strategy: PythonStrategy): string {
   if (strategy.schedule_stop_time) return `${start} - ${strategy.schedule_stop_time}`
   const everyDay = new Set(strategy.schedule_days ?? []).size === 7
   if (strategy.exchange === CRYPTO_EXCHANGE_VALUE && everyDay && start === '00:00') return '24/7'
-  return `From ${start}, no stop time`
+  return `从 ${start} 开始，无停止时间`
 }
 
 export default function PythonStrategyIndex() {
@@ -80,7 +78,7 @@ export default function PythonStrategyIndex() {
       setStrategies(strategiesData)
       setMasterStatus(statusData)
     } catch (_error) {
-      if (!silent) showToast.error('Failed to load strategies', 'pythonStrategy')
+      if (!silent) showToast.error('加载策略失败', 'pythonStrategy')
     } finally {
       if (!silent) setLoading(false)
     }
@@ -125,15 +123,15 @@ export default function PythonStrategyIndex() {
       const response = await pythonStrategyApi.startStrategy(strategy.id)
       if (response.status === 'success') {
         // Use response message which differs for immediate start vs armed for schedule
-        showToast.success(response.message || `Strategy ${strategy.name} started`, 'pythonStrategy')
+        showToast.success(response.message || `策略 ${strategy.name} 已启动`, 'pythonStrategy')
         fetchData()
       } else {
-        showToast.error(response.message || 'Failed to start strategy', 'pythonStrategy')
+        showToast.error(response.message || '启动策略失败', 'pythonStrategy')
       }
     } catch (error: unknown) {
       // Extract error message from Axios response
       const axiosError = error as { response?: { data?: { message?: string } } }
-      const errorMessage = axiosError.response?.data?.message || 'Failed to start strategy'
+      const errorMessage = axiosError.response?.data?.message || '启动策略失败'
       showToast.error(errorMessage, 'pythonStrategy')
     } finally {
       setActionLoading(null)
@@ -146,13 +144,13 @@ export default function PythonStrategyIndex() {
       const response = await pythonStrategyApi.stopStrategy(strategy.id)
       if (response.status === 'success') {
         // Use response message which differs for running vs scheduled strategies
-        showToast.success(response.message || `Strategy ${strategy.name} stopped`, 'pythonStrategy')
+        showToast.success(response.message || `策略 ${strategy.name} 已停止`, 'pythonStrategy')
         fetchData()
       } else {
-        showToast.error(response.message || 'Failed to stop strategy', 'pythonStrategy')
+        showToast.error(response.message || '停止策略失败', 'pythonStrategy')
       }
     } catch (_error) {
-      showToast.error('Failed to stop strategy', 'pythonStrategy')
+      showToast.error('停止策略失败', 'pythonStrategy')
     } finally {
       setActionLoading(null)
     }
@@ -163,13 +161,13 @@ export default function PythonStrategyIndex() {
       setActionLoading(strategy.id)
       const response = await pythonStrategyApi.clearError(strategy.id)
       if (response.status === 'success') {
-        showToast.success('Error cleared', 'pythonStrategy')
+        showToast.success('错误已清除', 'pythonStrategy')
         fetchData()
       } else {
-        showToast.error(response.message || 'Failed to clear error', 'pythonStrategy')
+        showToast.error(response.message || '清除错误失败', 'pythonStrategy')
       }
     } catch (_error) {
-      showToast.error('Failed to clear error', 'pythonStrategy')
+      showToast.error('清除错误失败', 'pythonStrategy')
     } finally {
       setActionLoading(null)
     }
@@ -181,13 +179,13 @@ export default function PythonStrategyIndex() {
       setActionLoading(strategyToDelete.id)
       const response = await pythonStrategyApi.deleteStrategy(strategyToDelete.id)
       if (response.status === 'success') {
-        showToast.success('Strategy deleted', 'pythonStrategy')
+        showToast.success('策略已删除', 'pythonStrategy')
         setStrategies(strategies.filter((s) => s.id !== strategyToDelete.id))
       } else {
-        showToast.error(response.message || 'Failed to delete strategy', 'pythonStrategy')
+        showToast.error(response.message || '删除策略失败', 'pythonStrategy')
       }
     } catch (_error) {
-      showToast.error('Failed to delete strategy', 'pythonStrategy')
+      showToast.error('删除策略失败', 'pythonStrategy')
     } finally {
       setActionLoading(null)
       setDeleteDialogOpen(false)
@@ -206,9 +204,9 @@ export default function PythonStrategyIndex() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
-      showToast.success('Strategy exported', 'pythonStrategy')
+      showToast.success('策略已导出', 'pythonStrategy')
     } catch (_error) {
-      showToast.error('Failed to export strategy', 'pythonStrategy')
+      showToast.error('导出策略失败', 'pythonStrategy')
     }
   }
 
@@ -218,13 +216,13 @@ export default function PythonStrategyIndex() {
       const response = await pythonStrategyApi.checkAndStartPending()
       if (response.status === 'success') {
         const started = response.data?.started || 0
-        showToast.success(`Started ${started} pending strategies`, 'pythonStrategy')
+        showToast.success(`已启动 ${started} 个待运行策略`, 'pythonStrategy')
         fetchData()
       } else {
-        showToast.error(response.message || 'Failed to check contracts', 'pythonStrategy')
+        showToast.error(response.message || '检查合约失败', 'pythonStrategy')
       }
     } catch (_error) {
-      showToast.error('Failed to check contracts', 'pythonStrategy')
+      showToast.error('检查合约失败', 'pythonStrategy')
     } finally {
       setActionLoading(null)
     }
@@ -232,10 +230,10 @@ export default function PythonStrategyIndex() {
 
   const formatScheduleDays = (days: string[]) => {
     if (!days || days.length === 0) return ''
-    if (days.length === 7) return 'Every day'
-    if (days.length === 5 && !days.includes('sat') && !days.includes('sun')) return 'Weekdays'
+    if (days.length === 7) return '每天'
+    if (days.length === 5 && !days.includes('sat') && !days.includes('sun')) return '工作日'
     return days
-      .map((d) => SCHEDULE_DAYS.find((sd) => sd.value === d)?.label.slice(0, 3) || d)
+      .map((d) => ({ mon: '周一', tue: '周二', wed: '周三', thu: '周四', fri: '周五', sat: '周六', sun: '周日' } as Record<string, string>)[d] || d)
       .join(', ')
   }
 
@@ -282,21 +280,21 @@ export default function PythonStrategyIndex() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Python Strategies</h1>
-          <p className="text-muted-foreground">Manage and run your Python trading scripts</p>
+          <h1 className="text-2xl font-bold tracking-tight">Python 策略</h1>
+          <p className="text-muted-foreground">管理和运行 Python 交易脚本</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => navigate('/python/guide')}>
             <HelpCircle className="h-4 w-4 mr-2" />
-            Guide
+            指南
           </Button>
           <Button variant="outline" size="sm" onClick={() => fetchData()}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            刷新
           </Button>
           <Button onClick={() => navigate('/python/new')}>
             <Plus className="h-4 w-4 mr-2" />
-            Add Strategy
+            添加策略
           </Button>
         </div>
       </div>
@@ -307,7 +305,7 @@ export default function PythonStrategyIndex() {
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total</p>
+                <p className="text-sm text-muted-foreground">总数</p>
                 <p className="text-2xl font-bold">{stats.total}</p>
               </div>
               <FileCode className="h-8 w-8 text-muted-foreground" />
@@ -318,7 +316,7 @@ export default function PythonStrategyIndex() {
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Running</p>
+                <p className="text-sm text-muted-foreground">运行中</p>
                 <p className="text-2xl font-bold text-green-500">{stats.running}</p>
               </div>
               <Play className="h-8 w-8 text-green-500" />
@@ -329,7 +327,7 @@ export default function PythonStrategyIndex() {
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Scheduled</p>
+                <p className="text-sm text-muted-foreground">已定时</p>
                 <p className="text-2xl font-bold text-blue-500">{stats.scheduled}</p>
               </div>
               <Calendar className="h-8 w-8 text-blue-500" />
@@ -340,9 +338,9 @@ export default function PythonStrategyIndex() {
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Master Contract</p>
+                <p className="text-sm text-muted-foreground">主合约</p>
                 <Badge variant={masterStatus?.ready ? 'default' : 'secondary'}>
-                  {masterStatus?.ready ? 'Ready' : 'Not Ready'}
+                  {masterStatus?.ready ? '已就绪' : '未就绪'}
                 </Badge>
               </div>
               {!masterStatus?.ready && (
@@ -352,7 +350,7 @@ export default function PythonStrategyIndex() {
                   onClick={handleCheckContracts}
                   disabled={actionLoading === 'master'}
                 >
-                  Check
+                  检查
                 </Button>
               )}
             </div>
@@ -363,7 +361,7 @@ export default function PythonStrategyIndex() {
       {/* Current Time */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Clock className="h-4 w-4" />
-        Current IST: {currentTime.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+        当前印度标准时间（IST）： {currentTime.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
       </div>
 
       {/* Strategies Grid */}
@@ -371,13 +369,13 @@ export default function PythonStrategyIndex() {
         <Card className="py-12">
           <CardContent className="flex flex-col items-center justify-center text-center">
             <FileCode className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Python Strategies</h3>
+            <h3 className="text-lg font-semibold mb-2">暂无 Python 策略</h3>
             <p className="text-muted-foreground mb-4">
-              Upload your first Python trading script to get started.
+              上传第一个 Python 交易脚本，即可开始使用。
             </p>
             <Button onClick={() => navigate('/python/new')}>
               <Plus className="h-4 w-4 mr-2" />
-              Add Strategy
+              添加策略
             </Button>
           </CardContent>
         </Card>
@@ -405,23 +403,23 @@ export default function PythonStrategyIndex() {
                           variant={strategy.status === 'running' ? 'default' : 'secondary'}
                           className={`${STATUS_COLORS[strategy.status] || ''} whitespace-nowrap`}
                         >
-                          {STATUS_LABELS[strategy.status] || strategy.status}
+                          {({ running: '运行中', stopped: '已停止', error: '出错', scheduled: '已定时', paused: '已暂停', manually_stopped: '手动停止' } as Record<string, string>)[strategy.status] || strategy.status}
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent>
-                        {strategy.status_message || STATUS_LABELS[strategy.status]}
+                        {strategy.status_message || ({ running: '运行中', stopped: '已停止', error: '出错', scheduled: '已定时', paused: '已暂停', manually_stopped: '手动停止' } as Record<string, string>)[strategy.status] || strategy.status}
                       </TooltipContent>
                     </Tooltip>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" aria-label="Strategy actions menu">
+                        <Button variant="ghost" size="icon" aria-label="策略操作菜单">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleExport(strategy)}>
                           <Download className="h-4 w-4 mr-2" />
-                          Export
+                          导出
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -433,7 +431,7 @@ export default function PythonStrategyIndex() {
                           }}
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          Delete
+                          删除
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -474,7 +472,7 @@ export default function PythonStrategyIndex() {
                         className="p-0 h-auto ml-2"
                         onClick={() => handleClearError(strategy)}
                       >
-                        Clear
+                        清除
                       </Button>
                     </AlertDescription>
                   </Alert>
@@ -483,11 +481,11 @@ export default function PythonStrategyIndex() {
                 {/* Timestamps */}
                 <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mt-auto">
                   <div>
-                    <span className="block">Last Started</span>
+                    <span className="block">上次启动</span>
                     <span>{formatTime(strategy.last_started)}</span>
                   </div>
                   <div>
-                    <span className="block">Last Stopped</span>
+                    <span className="block">上次停止</span>
                     <span>{formatTime(strategy.last_stopped)}</span>
                   </div>
                 </div>
@@ -505,13 +503,13 @@ export default function PythonStrategyIndex() {
                           disabled={actionLoading === strategy.id}
                         >
                           <Square className="h-4 w-4 mr-2" />
-                          {strategy.status === 'running' ? 'Stop' : 'Cancel'}
+                          {strategy.status === 'running' ? '停止' : '取消'}
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
                         {strategy.status === 'running'
-                          ? 'Stop running strategy'
-                          : 'Cancel scheduled auto-start'}
+                          ? '停止运行中的策略'
+                          : '取消定时自动启动'}
                       </TooltipContent>
                     </Tooltip>
                   ) : (
@@ -525,10 +523,10 @@ export default function PythonStrategyIndex() {
                           disabled={actionLoading === strategy.id}
                         >
                           <Play className="h-4 w-4 mr-2" />
-                          Start
+                          启动
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>Start strategy</TooltipContent>
+                      <TooltipContent>启动策略</TooltipContent>
                     </Tooltip>
                   )}
 
@@ -543,12 +541,12 @@ export default function PythonStrategyIndex() {
                       >
                         <Link to={`/python/${strategy.id}/schedule`}>
                           <Pencil className="h-4 w-4 mr-1" />
-                          <span className="text-xs">Schedule</span>
+                          <span className="text-xs">定时</span>
                         </Link>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      {strategy.schedule_start_time ? scheduleWindow(strategy) : 'Edit schedule'}
+                      {strategy.schedule_start_time ? scheduleWindow(strategy) : '编辑定时设置'}
                     </TooltipContent>
                   </Tooltip>
 
@@ -560,7 +558,7 @@ export default function PythonStrategyIndex() {
                         </Link>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>View logs</TooltipContent>
+                    <TooltipContent>查看日志</TooltipContent>
                   </Tooltip>
 
                   <Tooltip>
@@ -571,7 +569,7 @@ export default function PythonStrategyIndex() {
                         </Link>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Edit code</TooltipContent>
+                    <TooltipContent>编辑代码</TooltipContent>
                   </Tooltip>
                 </div>
               </CardContent>
@@ -584,18 +582,17 @@ export default function PythonStrategyIndex() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Strategy</DialogTitle>
+            <DialogTitle>删除策略</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{strategyToDelete?.name}"? This will remove the
-              strategy file and all associated logs.
+              确定删除“{strategyToDelete?.name}”吗？这将删除策略文件及所有相关日志。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
-              Delete Strategy
+              删除策略
             </Button>
           </DialogFooter>
         </DialogContent>

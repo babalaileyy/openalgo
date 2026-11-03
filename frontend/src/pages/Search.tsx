@@ -129,17 +129,17 @@ export default function Search() {
         setResults(rows)
         setTotal(typeof data.total === 'number' ? data.total : rows.length)
       } else if (response.status === 401 || response.status === 403) {
-        setError('Session expired. Please log in again.')
-        showToast.error('Session expired. Please log in again.', 'system')
+        setError('会话已过期，请重新登录。')
+        showToast.error('会话已过期，请重新登录。', 'system')
         setResults([])
       } else {
         setError('Search failed. Please try again.')
-        showToast.error('Failed to search symbols', 'system')
+        showToast.error('搜索交易品种失败', 'system')
         setResults([])
       }
     } catch (_err) {
       setError('Failed to search symbols. Please check your connection.')
-      showToast.error('Failed to search symbols', 'system')
+      showToast.error('搜索交易品种失败', 'system')
       setResults([])
     } finally {
       setIsLoading(false)
@@ -263,7 +263,7 @@ export default function Search() {
         )
       })
       .catch(() => {
-        showToast.error('Failed to copy', 'clipboard')
+        showToast.error('复制失败', 'clipboard')
       })
   }
 
@@ -355,12 +355,10 @@ export default function Search() {
       <Card>
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            <h1 className="text-3xl font-bold">Search Results</h1>
+            <h1 className="text-3xl font-bold">搜索结果</h1>
             <Button asChild>
               <Link to="/search/token">
-                <SearchIcon className="h-5 w-5 mr-2" />
-                New Search
-              </Link>
+                <SearchIcon className="h-5 w-5 mr-2" />重新搜索</Link>
             </Button>
           </div>
           <div className="inline-flex flex-col items-center bg-muted p-4 rounded-lg">
@@ -368,7 +366,7 @@ export default function Search() {
             <div className="text-3xl font-bold text-primary">
               {total !== null ? total.toLocaleString() : results.length.toLocaleString()}
             </div>
-            <div className="text-sm text-muted-foreground">matching symbols</div>
+            <div className="text-sm text-muted-foreground">个匹配的交易品种</div>
           </div>
         </CardContent>
       </Card>
@@ -378,16 +376,14 @@ export default function Search() {
         <CardContent className="p-4 flex flex-wrap items-center gap-3">
           <div className="text-sm">
             <span className="font-semibold">{selected.size}</span>
-            <span className="text-muted-foreground"> selected</span>
+            <span className="text-muted-foreground">已选</span>
             {selected.size > 0 ? (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={clearSelection}
                 className="ml-2 h-7 px-2 text-xs"
-              >
-                Clear
-              </Button>
+              >清除</Button>
             ) : null}
           </div>
 
@@ -409,21 +405,17 @@ export default function Search() {
               size="sm"
               onClick={copySelected}
               disabled={selected.size === 0}
-              title="Copy selected rows to clipboard"
+              title="将选中行复制到剪贴板"
             >
-              <Copy className="h-4 w-4 mr-1" />
-              Copy selected
-            </Button>
+              <Copy className="h-4 w-4 mr-1" />复制所选</Button>
             <Button
               variant="outline"
               size="sm"
               onClick={copyAllVisible}
               disabled={sortedResults.length === 0}
-              title="Copy all rows currently displayed (after filters/sort)"
+              title="复制当前显示的所有行（筛选和排序后）"
             >
-              <Copy className="h-4 w-4 mr-1" />
-              Copy all
-            </Button>
+              <Copy className="h-4 w-4 mr-1" />复制全部</Button>
           </div>
 
           <div className="ml-auto">
@@ -458,7 +450,7 @@ export default function Search() {
                         allOnPageSelected ? true : someOnPageSelected ? 'indeterminate' : false
                       }
                       onCheckedChange={togglePageSelection}
-                      aria-label="Select all rows on this page"
+                      aria-label="选择本页所有行"
                     />
                   </TableHead>
                   <SortableHeader column="symbol" label="Symbol" />
@@ -500,8 +492,8 @@ export default function Search() {
                             size="icon"
                             className="h-6 w-6 opacity-60 hover:opacity-100"
                             onClick={() => copyToClipboard(row.symbol)}
-                            title="Copy symbol"
-                            aria-label="Copy symbol"
+                            title="复制品种代码"
+                            aria-label="复制品种代码"
                           >
                             <Copy className="h-3 w-3" />
                           </Button>

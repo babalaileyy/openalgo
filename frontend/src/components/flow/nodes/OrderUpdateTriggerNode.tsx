@@ -27,7 +27,7 @@ export const OrderUpdateTriggerNode = memo(({ data, selected }: OrderUpdateTrigg
             <PackageCheck className="h-3 w-3 text-node-trigger" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Order Update</div>
+            <div className="text-xs font-medium leading-tight">订单更新</div>
             <div className="text-[9px] text-muted-foreground">{data.status || 'complete'}</div>
           </div>
         </div>

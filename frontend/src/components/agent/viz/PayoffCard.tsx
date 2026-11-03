@@ -202,7 +202,7 @@ export function PayoffCard({ spec, title }: PayoffCardProps) {
     return (
       <Alert className="my-3">
         <AlertDescription>
-          The payoff could not be drawn: the frame carried no priced legs or no underlying price.
+          无法绘制损益图：数据中没有带价格的策略腿或标的价格。
         </AlertDescription>
       </Alert>
     )
@@ -257,7 +257,7 @@ export function PayoffCard({ spec, title }: PayoffCardProps) {
             </span>
             {leg.origin === 'position' && (
               <span className="text-[10px] tracking-wide text-muted-foreground uppercase">
-                held
+                持有
               </span>
             )}
           </li>
@@ -314,7 +314,7 @@ export function PayoffCard({ spec, title }: PayoffCardProps) {
       ) : (
         <Alert className="m-3">
           <AlertDescription>
-            The legs are listed above, but the curve could not be computed for this structure.
+            策略腿已列于上方，但无法计算此结构的损益曲线。
           </AlertDescription>
         </Alert>
       )}

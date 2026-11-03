@@ -25,17 +25,17 @@ describe('custom interval controls', () => {
         onSelect={select}
       />
     )
-    fireEvent.click(screen.getByRole('button', { name: 'Interval 5m' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Add custom interval' }))
-    fireEvent.change(screen.getByLabelText('Interval'), { target: { value: '7' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Add', exact: true }))
+    fireEvent.click(screen.getByRole('button', { name: '周期 5m' }))
+    fireEvent.click(screen.getByRole('button', { name: '添加自定义周期' }))
+    fireEvent.change(screen.getByLabelText('周期'), { target: { value: '7' } })
+    fireEvent.click(screen.getByRole('button', { name: '添加', exact: true }))
     expect(select).toHaveBeenLastCalledWith('7m')
-    fireEvent.click(screen.getByRole('button', { name: 'Interval 5m' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Add 7 minutes to favorites' }))
+    fireEvent.click(screen.getByRole('button', { name: '周期 5m' }))
+    fireEvent.click(screen.getByRole('button', { name: '收藏 7 分钟' }))
     expect(preferences.favorites()).toContain('7m')
     expect(store().custom()).toContain('7m')
     select.mockClear()
-    fireEvent.click(screen.getByRole('button', { name: 'Remove 7 minutes' }))
+    fireEvent.click(screen.getByRole('button', { name: '移除 7 分钟' }))
     expect(preferences.custom()).not.toContain('7m')
     expect(preferences.favorites()).not.toContain('7m')
     expect(select).not.toHaveBeenCalled()
@@ -72,7 +72,7 @@ describe('custom interval controls', () => {
       </>
     )
     fireEvent.click(
-      within(screen.getByTestId('b')).getByRole('button', { name: 'Favorite interval 7m' })
+      within(screen.getByTestId('b')).getByRole('button', { name: '收藏的周期 7m' })
     )
     expect(a).not.toHaveBeenCalled()
     expect(b).toHaveBeenCalledWith('7m')
@@ -92,9 +92,9 @@ describe('custom interval controls', () => {
         onSelect={select}
       />
     )
-    expect(screen.queryByRole('button', { name: /Favorite interval/ })).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: 'Interval 5m' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Add 5 minutes to favorites' }))
+    expect(screen.queryByRole('button', { name: /收藏的周期/ })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: '周期 5m' }))
+    fireEvent.click(screen.getByRole('button', { name: '收藏 5 分钟' }))
     view.rerender(
       <TimeframeMenu
         current="5m"
@@ -104,7 +104,7 @@ describe('custom interval controls', () => {
         onSelect={select}
       />
     )
-    expect(screen.getByRole('button', { name: 'Favorite interval 5m' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '收藏的周期 5m' })).toBeDisabled()
     expect(store().favorites()).toEqual(['5m'])
     preferences.destroy()
   })
@@ -120,14 +120,14 @@ describe('custom interval controls', () => {
         onSelect={vi.fn()}
       />
     )
-    fireEvent.click(screen.getByRole('button', { name: 'Interval 5m' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Add custom interval' }))
-    fireEvent.change(screen.getByLabelText('Interval'), { target: { value: '1.5' } })
-    expect(screen.getByRole('button', { name: 'Add', exact: true })).toBeDisabled()
-    fireEvent.change(screen.getByLabelText('Type'), { target: { value: 'seconds' } })
-    fireEvent.change(screen.getByLabelText('Interval'), { target: { value: '5' } })
-    expect(screen.getByRole('button', { name: 'Add', exact: true })).toBeDisabled()
-    expect(screen.getByRole('status')).toHaveTextContent('data source')
+    fireEvent.click(screen.getByRole('button', { name: '周期 5m' }))
+    fireEvent.click(screen.getByRole('button', { name: '添加自定义周期' }))
+    fireEvent.change(screen.getByLabelText('周期'), { target: { value: '1.5' } })
+    expect(screen.getByRole('button', { name: '添加', exact: true })).toBeDisabled()
+    fireEvent.change(screen.getByLabelText('类型'), { target: { value: 'seconds' } })
+    fireEvent.change(screen.getByLabelText('周期'), { target: { value: '5' } })
+    expect(screen.getByRole('button', { name: '添加', exact: true })).toBeDisabled()
+    expect(screen.getByRole('status')).toHaveTextContent('数据源')
     expect(preferences.custom()).toEqual([])
     preferences.destroy()
   })

@@ -13,18 +13,18 @@ describe('Navigation Config', () => {
       expect(navItems).toHaveLength(9)
 
       const labels = navItems.map((item) => item.label)
-      expect(labels).toContain('Dashboard')
-      expect(labels).toContain('Tools')
-      expect(labels).toContain('Orderbook')
-      expect(labels).toContain('Positions')
-      expect(labels).toContain('Platforms')
-      expect(labels).toContain('Trading')
-      expect(labels).toContain('Strategies')
+      expect(labels).toContain('仪表盘')
+      expect(labels).toContain('工具')
+      expect(labels).toContain('委托')
+      expect(labels).toContain('持仓')
+      expect(labels).toContain('交易平台')
+      expect(labels).toContain('图表交易')
+      expect(labels).toContain('策略')
 
       // Strategies sits directly after Platforms. Asserting the position, not
       // just its presence, is the point: it is where the user expects to find
       // it, and a later insertion that pushed it elsewhere should fail here.
-      expect(labels.indexOf('Strategies')).toBe(labels.indexOf('Platforms') + 1)
+      expect(labels.indexOf('策略')).toBe(labels.indexOf('交易平台') + 1)
     })
 
     it('all items have required properties', () => {
@@ -45,7 +45,7 @@ describe('Navigation Config', () => {
 
     it('has the correct order: Dashboard, Orderbook, Tradebook, Positions', () => {
       const labels = bottomNavItems.map((item) => item.label)
-      expect(labels).toEqual(['Dashboard', 'Orderbook', 'Tradebook', 'Positions'])
+      expect(labels).toEqual(['仪表盘', '委托', '成交', '持仓'])
     })
   })
 
@@ -61,22 +61,22 @@ describe('Navigation Config', () => {
 
     it('contains remaining nav items', () => {
       const sheetLabels = mobileSheetItems.map((item) => item.label)
-      expect(sheetLabels).toContain('Trading')
-      expect(sheetLabels).toContain('Platforms')
-      expect(sheetLabels).toContain('Logs')
+      expect(sheetLabels).toContain('图表交易')
+      expect(sheetLabels).toContain('交易平台')
+      expect(sheetLabels).toContain('日志')
     })
   })
 
   describe('profileMenuItems', () => {
     it('contains profile-related menu items', () => {
       const labels = profileMenuItems.map((item) => item.label)
-      expect(labels).toContain('Profile')
-      expect(labels).toContain('API Key')
-      expect(labels).toContain('Holdings')
+      expect(labels).toContain('个人资料')
+      expect(labels).toContain('API 密钥')
+      expect(labels).toContain('资产')
       // Action Center moved from the main navbar into the profile dropdown,
       // positioned right after API Key.
-      expect(labels).toContain('Action Center')
-      expect(labels.indexOf('Action Center')).toBe(labels.indexOf('API Key') + 1)
+      expect(labels).toContain('操作中心')
+      expect(labels.indexOf('操作中心')).toBe(labels.indexOf('API 密钥') + 1)
     })
   })
 

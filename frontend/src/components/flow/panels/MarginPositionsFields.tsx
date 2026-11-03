@@ -183,7 +183,7 @@ export function MarginPositionsFields({ value, onChange }: MarginPositionsFields
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <Label className="text-xs" id="margin-positions-label">
-          Positions
+          持仓
         </Label>
         <Button
           type="button"
@@ -195,21 +195,21 @@ export function MarginPositionsFields({ value, onChange }: MarginPositionsFields
           disabled={templated || error !== null}
           title={
             templated
-              ? 'A basket using {{variable}} references can only be edited as JSON'
+              ? '使用 {{variable}} 引用的组合只能以 JSON 编辑'
               : error !== null
-                ? 'Fix the JSON before switching to fields'
+                ? '请先修正 JSON，再切换到表单编辑'
                 : undefined
           }
           onClick={() => setJsonMode((m) => !m)}
         >
-          {showJson ? 'Use fields' : 'Edit as JSON'}
+          {showJson ? '使用表单' : '编辑 JSON'}
         </Button>
       </div>
 
       {showJson ? (
         <div className="space-y-2">
           <Textarea
-            aria-label="Positions JSON"
+            aria-label="持仓 JSON"
             aria-invalid={error !== null}
             aria-describedby="margin-json-help"
             className="min-h-[100px] font-mono text-xs"
@@ -225,14 +225,11 @@ export function MarginPositionsFields({ value, onChange }: MarginPositionsFields
             </p>
           ) : templated ? (
             <p id="margin-json-help" className="text-[10px] text-muted-foreground">
-              This basket uses {'{{variable}}'} references, which are interpolated before the JSON
-              is parsed at run time. Field editing is unavailable so the references are not lost.
+              此组合使用 {'{{variable}}'} 引用，运行时会先替换变量，再解析 JSON。为避免丢失引用，无法使用表单编辑。
             </p>
           ) : (
             <p id="margin-json-help" className="text-[10px] text-muted-foreground">
-              Every leg needs symbol, exchange, action, quantity, product and pricetype. Use this
-              view for {'{{variable}}'} references, which are interpolated before the JSON is
-              parsed.
+              每条策略腿都需要 symbol、exchange、action、quantity、product 和 pricetype 字段。使用 {'{{variable}}'} 引用时请在此编辑；变量会在解析 JSON 前替换。
             </p>
           )}
         </div>
@@ -240,7 +237,7 @@ export function MarginPositionsFields({ value, onChange }: MarginPositionsFields
         <>
           {legs.length === 0 ? (
             <p className="text-[10px] text-muted-foreground">
-              No positions yet. Margin is estimated for the basket as a whole.
+              暂无持仓。保证金按整个组合估算。
             </p>
           ) : (
             legs.map((leg, index) => (
@@ -267,7 +264,7 @@ export function MarginPositionsFields({ value, onChange }: MarginPositionsFields
             onClick={addLeg}
           >
             <Plus className="mr-1 h-3 w-3" />
-            Add Position
+            添加持仓
           </Button>
           {basketProblems.length > 0 && (
             <ul className="space-y-0.5">
@@ -279,8 +276,7 @@ export function MarginPositionsFields({ value, onChange }: MarginPositionsFields
             </ul>
           )}
           <p className="text-[10px] text-muted-foreground">
-            Up to {MAX_LEGS} legs. Margin is estimated for the basket as a whole, so offsetting legs
-            get the hedged requirement.
+            最多 {MAX_LEGS} 条策略腿。保证金按整个组合估算，因此对冲的策略腿按对冲后的要求计算。
           </p>
         </>
       )}
@@ -340,14 +336,14 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
   return (
     <div className="space-y-2 rounded-lg border border-border p-2">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-medium text-muted-foreground">Leg {index + 1}</span>
+        <span className="text-[10px] font-medium text-muted-foreground">策略腿 {index + 1}</span>
         <Button
           type="button"
           variant="ghost"
           size="icon"
           className="h-6 w-6 text-destructive hover:text-destructive"
           onClick={onRemove}
-          aria-label={`Remove leg ${index + 1}`}
+          aria-label={`移除策略腿 ${index + 1}`}
         >
           <Trash2 className="h-3 w-3" />
         </Button>
@@ -355,7 +351,7 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
 
       <div className="space-y-1">
         <Label htmlFor={id('symbol')} className="text-[10px] text-muted-foreground">
-          Symbol
+          交易品种
         </Label>
         <Input
           id={id('symbol')}
@@ -376,13 +372,13 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
       <div className="grid grid-cols-2 gap-2">
         <div className="space-y-1">
           <Label htmlFor={id('exchange')} className="text-[10px] text-muted-foreground">
-            Exchange
+            交易所
           </Label>
           <Select
             value={leg.exchange}
             onValueChange={(v) => onUpdate({ exchange: v, ...productForExchange(leg, v) })}
           >
-            <SelectTrigger id={id('exchange')} className="h-8" aria-label="Exchange">
+            <SelectTrigger id={id('exchange')} className="h-8" aria-label="交易所">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -396,7 +392,7 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
         </div>
         <div className="space-y-1">
           <Label htmlFor={id('quantity')} className="text-[10px] text-muted-foreground">
-            {inLots ? 'Quantity (Lots)' : 'Quantity'}
+            {inLots ? '数量（手）' : '数量'}
           </Label>
           <Input
             id={id('quantity')}
@@ -438,7 +434,7 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
       />
 
       <fieldset className="grid grid-cols-2 gap-2">
-        <legend className="sr-only">Action for leg {index + 1}</legend>
+        <legend className="sr-only">策略腿 {index + 1} 的买卖方向</legend>
         {ORDER_ACTIONS.map((a) => (
           <button
             key={a.value}
@@ -462,10 +458,10 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
       <div className="grid grid-cols-2 gap-2">
         <div className="space-y-1">
           <Label htmlFor={id('product')} className="text-[10px] text-muted-foreground">
-            Product
+            产品类型
           </Label>
           <Select value={leg.product} onValueChange={(v) => onUpdate({ product: v })}>
-            <SelectTrigger id={id('product')} className="h-8" aria-label="Product">
+            <SelectTrigger id={id('product')} className="h-8" aria-label="产品类型">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -479,10 +475,10 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
         </div>
         <div className="space-y-1">
           <Label htmlFor={id('pricetype')} className="text-[10px] text-muted-foreground">
-            Price Type
+            价格类型
           </Label>
           <Select value={leg.pricetype} onValueChange={(v) => onUpdate({ pricetype: v })}>
-            <SelectTrigger id={id('pricetype')} className="h-8" aria-label="Price type">
+            <SelectTrigger id={id('pricetype')} className="h-8" aria-label="价格类型">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -499,7 +495,7 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
       {NEEDS_PRICE.has(leg.pricetype) && (
         <div className="space-y-1">
           <Label htmlFor={id('price')} className="text-[10px] text-muted-foreground">
-            Price
+            价格
           </Label>
           <Input
             id={id('price')}
@@ -522,7 +518,7 @@ function LegRow({ leg, index, lot, onRetryLookup, onUpdate, onRemove }: LegRowPr
       {NEEDS_TRIGGER.has(leg.pricetype) && (
         <div className="space-y-1">
           <Label htmlFor={id('trigger_price')} className="text-[10px] text-muted-foreground">
-            Trigger Price
+            触发价格
           </Label>
           <Input
             id={id('trigger_price')}
@@ -560,14 +556,14 @@ function LotHint({ lot, units, lots, onRetryLookup, onRound }: LotHintProps) {
   if (lot.kind === 'not-applicable') return null
 
   if (lot.kind === 'loading') {
-    return <p className="text-[10px] text-muted-foreground">Looking up lot size...</p>
+    return <p className="text-[10px] text-muted-foreground">正在查询每手数量…</p>
   }
 
   if (lot.kind === 'failed') {
     return (
       <div className="flex items-center justify-between gap-2">
         <p className="text-[10px] text-destructive">
-          Lot-size lookup failed. Quantity is in units.
+          查询每手数量失败，数量按实际单位填写。
         </p>
         <Button
           type="button"
@@ -576,7 +572,7 @@ function LotHint({ lot, units, lots, onRetryLookup, onRound }: LotHintProps) {
           className="h-6 shrink-0 px-2 text-[10px]"
           onClick={onRetryLookup}
         >
-          Retry
+          重试
         </Button>
       </div>
     )
@@ -585,7 +581,7 @@ function LotHint({ lot, units, lots, onRetryLookup, onRound }: LotHintProps) {
   if (lot.lotSize === null) {
     return (
       <p className="text-[10px] text-muted-foreground">
-        No lot size is available for this contract; quantity is in units.
+        此合约没有可用的每手数量，数量按实际单位填写。
       </p>
     )
   }
@@ -593,8 +589,8 @@ function LotHint({ lot, units, lots, onRetryLookup, onRound }: LotHintProps) {
   if (lots !== null) {
     return (
       <p className="text-[10px] text-muted-foreground">
-        {lots} lot{lots === 1 ? '' : 's'} x {lot.lotSize} ={' '}
-        <span className="font-medium text-foreground">{lots * lot.lotSize} units</span>
+        {lots} 手 × {lot.lotSize} ={' '}
+        <span className="font-medium text-foreground">{lots * lot.lotSize} 个单位</span>
       </p>
     )
   }
@@ -605,7 +601,7 @@ function LotHint({ lot, units, lots, onRetryLookup, onRound }: LotHintProps) {
   return (
     <div className="flex items-center justify-between gap-2">
       <p className="text-[10px] text-destructive">
-        {units} units is not a multiple of the {lot.lotSize}-unit lot.
+        {units} 个单位不是每手 {lot.lotSize} 个单位的整数倍。
       </p>
       <Button
         type="button"
@@ -614,7 +610,7 @@ function LotHint({ lot, units, lots, onRetryLookup, onRound }: LotHintProps) {
         className="h-6 shrink-0 px-2 text-[10px]"
         onClick={() => onRound(rounded)}
       >
-        Round to {rounded / lot.lotSize} lot{rounded / lot.lotSize === 1 ? '' : 's'}
+        向上调整至 {rounded / lot.lotSize} 手
       </Button>
     </div>
   )

@@ -68,8 +68,8 @@ export function ChartLayoutPicker({ layoutId, onChange, className }: ChartLayout
           variant="ghost"
           size="icon"
           className={cn('h-9 w-9', className)}
-          title="Chart layout"
-          aria-label="Chart layout"
+          title="图表布局"
+          aria-label="图表布局"
         >
           <LayoutGrid className="h-4 w-4" />
         </Button>

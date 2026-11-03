@@ -91,7 +91,7 @@ function rowOf(symbol: string) {
   return row
 }
 
-const NOTICE_TITLE = 'This order may still be sending'
+const NOTICE_TITLE = '此订单可能仍在发送'
 
 describe('Action Center: a send without a broker answer', () => {
   beforeEach(() => {
@@ -105,10 +105,10 @@ describe('Action Center: a send without a broker answer', () => {
 
     expect(await screen.findByText(NOTICE_TITLE)).toBeInTheDocument()
     const notice = screen.getByText(NOTICE_TITLE).closest('[role="alert"]') as HTMLElement
-    expect(notice).toHaveTextContent('A split or basket order can take longer than two minutes.')
-    expect(notice).toHaveTextContent('Do not place this order again while its status is unclear.')
+    expect(notice).toHaveTextContent('拆分订单或篮子订单可能需要超过两分钟')
+    expect(notice).toHaveTextContent('在状态未确认前，请勿重复下单。')
     expect(notice).not.toHaveTextContent('will not send it again')
-    expect(within(rowOf('SBIN')).getByText('Status unclear')).toBeInTheDocument()
+    expect(within(rowOf('SBIN')).getByText('状态未确认')).toBeInTheDocument()
   })
 
   it('offers no way to send it again', async () => {
@@ -124,7 +124,7 @@ describe('Action Center: a send without a broker answer', () => {
     expect(within(rowOf('INFY')).getAllByRole('button')).toHaveLength(3)
     const buttons = within(rowOf('SBIN')).getAllByRole('button')
     expect(buttons).toHaveLength(2)
-    expect(buttons[0]).toHaveAccessibleName('Expand order details')
+    expect(buttons[0]).toHaveAccessibleName('展开订单详情')
     expect(http.post).not.toHaveBeenCalled()
   })
 
@@ -140,10 +140,10 @@ describe('Action Center: a send without a broker answer', () => {
     await screen.findAllByText(NOTICE_TITLE)
 
     expect(screen.getAllByText(NOTICE_TITLE)).toHaveLength(2)
-    expect(within(rowOf('SBIN')).getByText('Status unclear')).toBeInTheDocument()
-    expect(within(rowOf('TCS')).getByText('Status unclear')).toBeInTheDocument()
+    expect(within(rowOf('SBIN')).getByText('状态未确认')).toBeInTheDocument()
+    expect(within(rowOf('TCS')).getByText('状态未确认')).toBeInTheDocument()
     for (const symbol of ['RELIANCE', 'HDFCBANK', 'INFY']) {
-      expect(within(rowOf(symbol)).queryByText('Status unclear')).not.toBeInTheDocument()
+      expect(within(rowOf(symbol)).queryByText('状态未确认')).not.toBeInTheDocument()
     }
   })
 
@@ -156,7 +156,7 @@ describe('Action Center: a send without a broker answer', () => {
     await screen.findByText('RELIANCE')
 
     expect(screen.queryByText(NOTICE_TITLE)).not.toBeInTheDocument()
-    expect(screen.queryByText('Status unclear')).not.toBeInTheDocument()
+    expect(screen.queryByText('状态未确认')).not.toBeInTheDocument()
   })
 
   it('does not imply that long-running split and basket sends stopped', async () => {
@@ -182,11 +182,11 @@ describe('Action Center: a send without a broker answer', () => {
 
     expect(await screen.findAllByText(NOTICE_TITLE)).toHaveLength(2)
     for (const symbol of ['SBIN', 'TCS']) {
-      expect(within(rowOf(symbol)).getByText('Status unclear')).toBeInTheDocument()
+      expect(within(rowOf(symbol)).getByText('状态未确认')).toBeInTheDocument()
     }
     for (const notice of screen.getAllByText(NOTICE_TITLE)) {
       const alert = notice.closest('[role="alert"]') as HTMLElement
-      expect(alert).toHaveTextContent('Sending may still be in progress')
+      expect(alert).toHaveTextContent('订单可能仍在发送')
       expect(alert).not.toHaveTextContent('will not send it again')
     }
   })
@@ -212,9 +212,9 @@ describe('Action Center: an order that is still being sent', () => {
     ])
     render(<ActionCenterPage />)
 
-    expect(await within(await findRow('SBIN')).findByText('Sending')).toBeInTheDocument()
+    expect(await within(await findRow('SBIN')).findByText('发送中')).toBeInTheDocument()
     expect(screen.queryByText(NOTICE_TITLE)).not.toBeInTheDocument()
-    expect(screen.queryByText('Status unclear')).not.toBeInTheDocument()
+    expect(screen.queryByText('状态未确认')).not.toBeInTheDocument()
   })
 
   it('keeps an overdue send uncertain because it may still be running', async () => {
@@ -230,14 +230,14 @@ describe('Action Center: an order that is still being sent', () => {
     ])
     render(<ActionCenterPage />)
 
-    expect(await within(await findRow('SBIN')).findByText('Sending')).toBeInTheDocument()
+    expect(await within(await findRow('SBIN')).findByText('发送中')).toBeInTheDocument()
     expect(screen.queryByText(NOTICE_TITLE)).not.toBeInTheDocument()
 
     expect(await screen.findByText(NOTICE_TITLE, {}, { timeout: 3000 })).toBeInTheDocument()
-    expect(within(rowOf('SBIN')).getByText('Status unclear')).toBeInTheDocument()
-    expect(within(rowOf('SBIN')).queryByText('Sending')).not.toBeInTheDocument()
+    expect(within(rowOf('SBIN')).getByText('状态未确认')).toBeInTheDocument()
+    expect(within(rowOf('SBIN')).queryByText('发送中')).not.toBeInTheDocument()
     expect(screen.getByText(NOTICE_TITLE).closest('[role="alert"]')).toHaveTextContent(
-      'Do not place this order again while its status is unclear.'
+      '在状态未确认前，请勿重复下单。'
     )
   })
 })
@@ -254,7 +254,7 @@ describe('Action Center: the All Orders tab', () => {
     await screen.findByText('SBIN')
     expect(http.get).toHaveBeenLastCalledWith('/action-center/api/data?status=pending')
 
-    const allTab = screen.getByRole('tab', { name: 'All Orders' })
+    const allTab = screen.getByRole('tab', { name: '全部订单' })
     fireEvent.mouseDown(allTab)
     fireEvent.click(allTab)
 

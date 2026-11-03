@@ -42,28 +42,28 @@ interface Column {
 
 const COLUMNS: Record<Tab, Column[]> = {
   orders: [
-    { keys: ['symbol', 'tradingsymbol'], label: 'Symbol' },
-    { keys: ['action', 'transaction_type', 'side'], label: 'Side' },
-    { keys: ['quantity', 'qty'], label: 'Qty', align: 'right' },
-    { keys: ['price', 'average_price', 'avgprice'], label: 'Price', align: 'right' },
-    { keys: ['order_status', 'status'], label: 'Status' },
+    { keys: ['symbol', 'tradingsymbol'], label: '品种' },
+    { keys: ['action', 'transaction_type', 'side'], label: '方向' },
+    { keys: ['quantity', 'qty'], label: '数量', align: 'right' },
+    { keys: ['price', 'average_price', 'avgprice'], label: '价格', align: 'right' },
+    { keys: ['order_status', 'status'], label: '状态' },
   ],
   trades: [
-    { keys: ['symbol', 'tradingsymbol'], label: 'Symbol' },
-    { keys: ['action', 'transaction_type', 'side'], label: 'Side' },
-    { keys: ['quantity', 'qty', 'fillsize'], label: 'Qty', align: 'right' },
-    { keys: ['average_price', 'price', 'fillprice'], label: 'Price', align: 'right' },
-    { keys: ['timestamp', 'fill_timestamp', 'trade_time'], label: 'At' },
+    { keys: ['symbol', 'tradingsymbol'], label: '品种' },
+    { keys: ['action', 'transaction_type', 'side'], label: '方向' },
+    { keys: ['quantity', 'qty', 'fillsize'], label: '数量', align: 'right' },
+    { keys: ['average_price', 'price', 'fillprice'], label: '价格', align: 'right' },
+    { keys: ['timestamp', 'fill_timestamp', 'trade_time'], label: '时间' },
   ],
   positions: [
-    { keys: ['symbol', 'tradingsymbol'], label: 'Symbol' },
-    { keys: ['quantity', 'netqty', 'net_quantity'], label: 'Net', align: 'right', signed: true },
-    { keys: ['average_price', 'avgprice', 'buy_price'], label: 'Avg', align: 'right' },
-    { keys: ['pnl', 'unrealised', 'unrealized_pnl'], label: 'P&L', align: 'right', signed: true },
+    { keys: ['symbol', 'tradingsymbol'], label: '品种' },
+    { keys: ['quantity', 'netqty', 'net_quantity'], label: '净持仓', align: 'right', signed: true },
+    { keys: ['average_price', 'avgprice', 'buy_price'], label: '均价', align: 'right' },
+    { keys: ['pnl', 'unrealised', 'unrealized_pnl'], label: '盈亏', align: 'right', signed: true },
   ],
 }
 
-const LABEL: Record<Tab, string> = { orders: 'Orders', trades: 'Trades', positions: 'Positions' }
+const LABEL: Record<Tab, string> = { orders: '委托', trades: '成交', positions: '持仓' }
 
 const READ: Record<Tab, (deployment: string, signal?: AbortSignal) => Promise<StrategyBook>> = {
   orders: strategyOrderbook,
@@ -189,7 +189,7 @@ export function StrategyBooks({ deployment, revision = 0 }: Props) {
           className="ml-auto rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:text-foreground"
           onClick={() => void load(tab)}
         >
-          {loading ? 'Reading' : 'Refresh'}
+          {loading ? '读取中' : '刷新'}
         </button>
       </div>
 
@@ -198,8 +198,8 @@ export function StrategyBooks({ deployment, revision = 0 }: Props) {
       {!book?.problem && book && book.rows.length === 0 && (
         <p className="px-1 py-1 text-[10px] text-muted-foreground">
           {tab === 'positions'
-            ? 'No contracts from this strategy.'
-            : `No ${LABEL[tab].toLowerCase()} from this strategy yet.`}
+            ? '此策略没有相关合约。'
+            : `此策略暂无${LABEL[tab]}记录。`}
         </p>
       )}
 
@@ -256,9 +256,7 @@ export function StrategyBooks({ deployment, revision = 0 }: Props) {
 
       {tab === 'positions' && book && book.rows.length > 0 && (
         <p className="px-1 text-[10px] leading-relaxed text-muted-foreground">
-          A position is held per contract and carries no strategy, so a row here may include size
-          another strategy or a manual order opened. This says what you are in because of this
-          strategy, not what the strategy is worth.
+          持仓按合约汇总，不区分策略；这里的数量可能包含其他策略或手动订单建立的持仓。此处显示的是与该策略交易过的合约相关的持仓，并非策略本身的价值。
         </p>
       )}
     </div>

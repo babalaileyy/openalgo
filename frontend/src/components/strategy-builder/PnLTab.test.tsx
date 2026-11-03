@@ -45,7 +45,7 @@ describe('PnLTab closed-leg boundary', () => {
     )
 
     expect(screen.getByText('0 open · 1 closed')).toBeVisible()
-    expect(screen.getByText('Closed')).toBeVisible()
+    expect(screen.getByText('已平仓')).toBeVisible()
     expect(screen.getByText('₹0.00')).toBeVisible()
     expect(screen.getAllByText('-₹2,500.00')).toHaveLength(2)
     expect(mocks.useMarketData).toHaveBeenCalledWith(

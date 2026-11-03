@@ -265,11 +265,7 @@ export function ProviderCatalogPanel() {
           <h2 id="agent-provider-catalog-heading" className="text-base font-semibold">
             Providers
           </h2>
-          <p className="text-sm text-muted-foreground">
-            Read from LiteLLM itself, so upgrading the package brings new providers and models with
-            it. Pick a provider to see its models, their context window, their price and whether
-            they can call tools.
-          </p>
+          <p className="text-sm text-muted-foreground">目录直接来自 LiteLLM，升级该软件包即可获取新的服务商和模型。选择服务商可查看模型、上下文窗口、价格以及是否支持工具调用。</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -278,15 +274,13 @@ export function ProviderCatalogPanel() {
             size="sm"
             onClick={() => setAddTarget({ providerKind: 'openai' })}
           >
-            <Plus aria-hidden="true" />
-            Add a model by hand
-          </Button>
+            <Plus aria-hidden="true" />手动添加模型</Button>
         </div>
       </div>
 
       {providers.isError ? (
         <Alert variant="destructive">
-          <AlertTitle>The provider catalog could not be loaded</AlertTitle>
+          <AlertTitle>无法加载服务商目录</AlertTitle>
           <AlertDescription className="flex flex-col items-start gap-2">
             <span>{agentErrorMessage(providers.error, 'The request failed')}</span>
             <Button
@@ -297,20 +291,15 @@ export function ProviderCatalogPanel() {
                 void providers.refetch()
               }}
             >
-              <RefreshCw aria-hidden="true" />
-              Try again
-            </Button>
+              <RefreshCw aria-hidden="true" />重试</Button>
           </AlertDescription>
         </Alert>
       ) : null}
 
       {!providers.isPending && !providers.isError && !catalogAvailable ? (
         <Alert variant="warning">
-          <AlertTitle>LiteLLM is not installed on this server</AlertTitle>
-          <AlertDescription>
-            The catalog is advisory, so the agent still runs a model you name yourself. Use Add a
-            model by hand above, and install litellm to get the browsable list back.
-          </AlertDescription>
+          <AlertTitle>此服务器未安装 LiteLLM</AlertTitle>
+          <AlertDescription>模型目录仅供参考，智能体仍可运行您手动指定的模型。可在上方手动添加模型，并安装 litellm 以恢复可浏览的列表。</AlertDescription>
         </Alert>
       ) : null}
 
@@ -325,9 +314,7 @@ export function ProviderCatalogPanel() {
       {!providers.isPending && catalogAvailable && selected === null ? (
         <>
           <div className="max-w-sm space-y-2">
-            <Label htmlFor="agent-provider-search" className="sr-only">
-              Search providers
-            </Label>
+            <Label htmlFor="agent-provider-search" className="sr-only">搜索服务商</Label>
             <Input
               id="agent-provider-search"
               type="search"
@@ -372,23 +359,15 @@ export function ProviderCatalogPanel() {
                           {provider.model_count} models
                         </Badge>
                         {keyed ? (
-                          <Badge variant="outline" className="font-normal">
-                            key stored
-                          </Badge>
+                          <Badge variant="outline" className="font-normal">已保存密钥</Badge>
                         ) : null}
                         {provider.id === CHATGPT_PROVIDER_ID ? (
-                          <Badge variant="outline" className="font-normal">
-                            runs on your plan
-                          </Badge>
+                          <Badge variant="outline" className="font-normal">使用您的订阅套餐</Badge>
                         ) : !provider.needs_key ? (
-                          <Badge variant="outline" className="font-normal">
-                            no key needed
-                          </Badge>
+                          <Badge variant="outline" className="font-normal">无需密钥</Badge>
                         ) : null}
                         {provider.needs_base_url ? (
-                          <Badge variant="outline" className="font-normal">
-                            needs a URL
-                          </Badge>
+                          <Badge variant="outline" className="font-normal">需要填写地址</Badge>
                         ) : null}
                       </div>
                     </button>
@@ -408,9 +387,7 @@ export function ProviderCatalogPanel() {
                     variant="outline"
                     size="sm"
                     onClick={() => setVisibleProviders((count) => count + PROVIDER_PAGE_SIZE)}
-                  >
-                    Show more providers
-                  </Button>
+                  >显示更多服务商</Button>
                 ) : null}
               </div>
             </>
@@ -492,9 +469,7 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Button type="button" variant="ghost" size="sm" onClick={onBack}>
-          <ArrowLeft aria-hidden="true" />
-          All providers
-        </Button>
+          <ArrowLeft aria-hidden="true" />全部服务商</Button>
         <ProviderIcon provider={provider.icon || provider.id} />
         <div className="min-w-0">
           <h3 className="text-sm font-semibold">{provider.display_name}</h3>
@@ -515,14 +490,12 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
           className="ml-auto"
           onClick={() => onAdd(undefined)}
         >
-          <Plus aria-hidden="true" />
-          Model not listed
-        </Button>
+          <Plus aria-hidden="true" />列表中没有该模型</Button>
       </div>
 
       {provider.id === CHATGPT_PROVIDER_ID ? (
         <Alert>
-          <AlertTitle>These bill to your plan, not to API credits</AlertTitle>
+          <AlertTitle>这些调用计入订阅计划，而非 API 额度</AlertTitle>
           <AlertDescription>
             Most of these models also exist under OpenAI with the same name and a per-token price.
             The two are told apart by the prefix, so a model added from here is stored as{' '}
@@ -535,15 +508,13 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
 
       <div className="flex flex-wrap items-center gap-4">
         <div className="min-w-[16rem] flex-1 space-y-2">
-          <Label htmlFor="agent-model-search" className="sr-only">
-            Search models from this provider
-          </Label>
+          <Label htmlFor="agent-model-search" className="sr-only">搜索该服务商的模型</Label>
           <Input
             id="agent-model-search"
             type="search"
             value={search}
             autoComplete="off"
-            placeholder="Search models"
+            placeholder="搜索模型"
             onChange={(event) => {
               setSearch(event.target.value)
               setVisible(MODEL_PAGE_SIZE)
@@ -559,15 +530,13 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
               setVisible(MODEL_PAGE_SIZE)
             }}
           />
-          <Label htmlFor="agent-model-tools-only" className="text-sm font-normal">
-            Only models that can call tools
-          </Label>
+          <Label htmlFor="agent-model-tools-only" className="text-sm font-normal">仅显示支持工具调用的模型</Label>
         </div>
       </div>
 
       {models.isError ? (
         <Alert variant="destructive">
-          <AlertTitle>This provider models could not be loaded</AlertTitle>
+          <AlertTitle>无法加载此服务商的模型</AlertTitle>
           <AlertDescription className="flex flex-col items-start gap-2">
             <span>{agentErrorMessage(models.error, 'The request failed')}</span>
             <Button
@@ -578,9 +547,7 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
                 void models.refetch()
               }}
             >
-              <RefreshCw aria-hidden="true" />
-              Try again
-            </Button>
+              <RefreshCw aria-hidden="true" />重试</Button>
           </AlertDescription>
         </Alert>
       ) : null}
@@ -627,29 +594,21 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
                       {context ? <span>{context}</span> : null}
                       <span>{priceLabel(model)}</span>
                       {model.supports_function_calling === true ? (
-                        <Badge variant="secondary" className="font-normal">
-                          tool calling
-                        </Badge>
+                        <Badge variant="secondary" className="font-normal">支持工具调用</Badge>
                       ) : null}
                       {model.supports_function_calling === false ? (
-                        <Badge variant="outline" className="font-normal">
-                          cannot call tools, so it cannot drive this agent
-                        </Badge>
+                        <Badge variant="outline" className="font-normal">不支持工具调用，无法驱动此智能体</Badge>
                       ) : null}
                       {model.supports_function_calling === null ? (
-                        <Badge variant="outline" className="font-normal">
-                          tool support unknown
-                        </Badge>
+                        <Badge variant="outline" className="font-normal">工具支持情况未知</Badge>
                       ) : null}
                       {model.supports_vision === true ? (
-                        <Badge variant="outline" className="font-normal">
-                          vision
-                        </Badge>
+                        <Badge variant="outline" className="font-normal">视觉</Badge>
                       ) : null}
                     </div>
                   </div>
                   {already ? (
-                    <Badge variant="secondary">Added</Badge>
+                    <Badge variant="secondary">已添加</Badge>
                   ) : (
                     <Button
                       type="button"
@@ -658,9 +617,7 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
                       aria-label={`Add ${model.id}`}
                       onClick={() => onAdd(stored)}
                     >
-                      <Plus aria-hidden="true" />
-                      Add
-                    </Button>
+                      <Plus aria-hidden="true" />添加</Button>
                   )}
                 </li>
               )
@@ -676,9 +633,7 @@ function ProviderDetail({ provider, registered, onBack, onAdd }: ProviderDetailP
                 variant="outline"
                 size="sm"
                 onClick={() => setVisible((count) => count + MODEL_PAGE_SIZE)}
-              >
-                Show more models
-              </Button>
+              >显示更多模型</Button>
             ) : null}
           </div>
         </>

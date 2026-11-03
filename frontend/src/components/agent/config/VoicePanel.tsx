@@ -215,7 +215,7 @@ export function VoicePanel() {
       applyConfig(next)
       setDraft(null)
       setFormError(null)
-      showToast.success('Voice settings saved')
+      showToast.success('语音设置已保存')
     },
     onError: (error) => {
       setFormError(agentErrorMessage(error, 'Could not save the voice settings.'))
@@ -233,7 +233,7 @@ export function VoicePanel() {
       showToast.success('Key saved')
     },
     onError: (error) => {
-      showToast.error(agentErrorMessage(error, 'Could not save the key.'))
+      showToast.error(agentErrorMessage(error, '无法保存密钥。'))
     },
   })
 
@@ -242,10 +242,10 @@ export function VoicePanel() {
     onSuccess: (next) => {
       applyConfig(next)
       setTest(null)
-      showToast.success('Key removed')
+      showToast.success('密钥已移除')
     },
     onError: (error) => {
-      showToast.error(agentErrorMessage(error, 'Could not remove the key.'))
+      showToast.error(agentErrorMessage(error, '无法移除密钥。'))
     },
   })
 
@@ -317,7 +317,7 @@ export function VoicePanel() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Voice</CardTitle>
+        <CardTitle>语音</CardTitle>
         <CardDescription>
           A spoken surface on the same agent. The speech model hears and speaks and decides nothing:
           every answer it reads out is produced by the model you configured above, through the same
@@ -338,7 +338,7 @@ export function VoicePanel() {
                 {agentErrorMessage(query.error, 'The voice configuration could not be loaded.')}
               </span>
               <Button size="sm" variant="outline" onClick={() => void query.refetch()}>
-                Retry
+                重试
               </Button>
             </AlertDescription>
           </Alert>
@@ -357,16 +357,16 @@ export function VoicePanel() {
                 />
                 <div className="min-w-0 flex-1">
                   <Label htmlFor={`${fieldId}-enabled`} className="text-sm font-medium">
-                    Let the agent listen and speak
+                    允许智能体听取语音并回答
                   </Label>
                   <p id={`${fieldId}-enabled-help`} className="mt-1 text-sm text-muted-foreground">
                     {config.voice_enabled
-                      ? 'The microphone is offered in the chat composer. Nothing is heard until you press it.'
-                      : 'The microphone is not offered anywhere, so the voice surface cannot be started.'}
+                      ? '聊天输入框会显示麦克风按钮，只有按下后才会开始收音。'
+                      : '麦克风按钮不会显示，无法启动语音功能。'}
                   </p>
                   {config.voice_enabled && !config.key.has_value ? (
                     <p className="mt-2 text-sm text-muted-foreground">
-                      No OpenAI key is stored yet, so a session cannot be minted. Add one below.
+                      尚未保存 OpenAI 密钥，无法创建会话。请在下方添加。
                     </p>
                   ) : null}
                 </div>
@@ -375,7 +375,7 @@ export function VoicePanel() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor={`${fieldId}-model`}>Speech model</Label>
+                <Label htmlFor={`${fieldId}-model`}>语音模型</Label>
                 <Input
                   id={`${fieldId}-model`}
                   value={form.model}
@@ -385,13 +385,13 @@ export function VoicePanel() {
                 />
                 <p className="text-xs text-muted-foreground">
                   {defaults
-                    ? `The model that hears and speaks. Default ${defaults.voice_model}.`
-                    : 'The model that hears and speaks.'}
+                    ? `用于语音识别和回答的模型，默认值为 ${defaults.voice_model}。`
+                    : '用于语音识别和回答的模型。'}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`${fieldId}-speaker`}>Voice</Label>
+                <Label htmlFor={`${fieldId}-speaker`}>语音</Label>
                 <Select
                   value={form.speaker}
                   onValueChange={(next) => setDraft({ ...form, speaker: next })}
@@ -408,8 +408,7 @@ export function VoicePanel() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Which OpenAI voice speaks the answers. The list is advisory; your account decides
-                  which of them it will actually serve.
+                  选择用于回答的 OpenAI 声音。列表仅供参考，实际可用声音取决于您的账户。
                 </p>
               </div>
             </div>
@@ -418,17 +417,15 @@ export function VoicePanel() {
 
             <div className="space-y-4">
               <div className="space-y-1">
-                <h3 className="text-sm font-semibold">What you call the agent</h3>
+                <h3 className="text-sm font-semibold">你为助手设置的称呼</h3>
                 <p className="text-xs text-muted-foreground">
-                  What you say to get the agent's attention. It carries no authority: an order is
-                  approved by confirming it out loud after the agent has read it back, or by tapping
-                  the card on screen.
+                  用于唤起智能体的称呼本身不代表授权。订单需在智能体复述后由您出声确认，或点击屏幕上的确认卡片批准。
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor={`${fieldId}-name`}>Name</Label>
+                  <Label htmlFor={`${fieldId}-name`}>名称</Label>
                   <Input
                     id={`${fieldId}-name`}
                     value={form.agentName}
@@ -438,8 +435,8 @@ export function VoicePanel() {
                     onChange={(event) => setDraft({ ...form, agentName: event.target.value })}
                   />
                   <p className="text-xs text-muted-foreground">
-                    {`Letters and spaces, up to ${MAX_NAME_CHARS} characters.`}
-                    {defaults ? ` Leave it empty to restore ${defaults.voice_agent_name}.` : ''}
+                    {`可输入字母和空格，最多 ${MAX_NAME_CHARS} 个字符。`}
+                    {defaults ? ` 留空可恢复为 ${defaults.voice_agent_name}。` : ''}
                   </p>
                 </div>
               </div>
@@ -449,11 +446,9 @@ export function VoicePanel() {
 
             <div className="space-y-4">
               <div className="space-y-1">
-                <h3 className="text-sm font-semibold">Placing orders by voice</h3>
+                <h3 className="text-sm font-semibold">语音下单</h3>
                 <p className="text-xs text-muted-foreground">
-                  Ships off. With it off the voice surface is read only: the agent answers questions
-                  and draws charts, and the tools that place, modify or cancel an order are never
-                  offered to it, so it declines rather than asking you to approve anything.
+                  此功能默认关闭。关闭时语音功能只能读取数据：智能体可以回答问题和绘制图表，但无法使用下单、修改或撤单工具，会拒绝交易请求，也不会发起审批。
                 </p>
               </div>
 
@@ -474,25 +469,22 @@ export function VoicePanel() {
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <Label htmlFor={`${fieldId}-voice-trading`} className="text-sm font-medium">
-                        Let a spoken request reach the order tools
+                        允许语音请求使用订单工具
                       </Label>
                       <Badge variant={config.trading_effective ? 'secondary' : 'outline'}>
-                        {config.trading_effective ? 'Reachable' : 'Not reachable'}
+                        {config.trading_effective ? '可用' : '不可用'}
                       </Badge>
                     </div>
                     <p
                       id={`${fieldId}-voice-trading-help`}
                       className="text-sm text-muted-foreground"
                     >
-                      Subject to the Trading switch in the section above. This one can only take
-                      capability away from the voice surface, never add it.
+                      此选项受上方交易总开关控制，只能限制语音功能的权限，不能单独赋予交易权限。
                     </p>
 
                     {config.trading_enabled_master ? null : (
                       <p className="rounded-md bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
-                        The agent's Trading switch is currently off, so turning this on has no
-                        effect. Order tools stay withheld on every surface, spoken or typed, until
-                        that switch is on.
+                        智能体的交易总开关当前已关闭，因此开启此选项不会生效。在打开总开关之前，无论语音还是文字均无法使用订单工具。
                       </p>
                     )}
                   </div>
@@ -501,7 +493,7 @@ export function VoicePanel() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor={`${fieldId}-window`}>Approval window, seconds</Label>
+                  <Label htmlFor={`${fieldId}-window`}>审批时间窗口（秒）</Label>
                   <Input
                     id={`${fieldId}-window`}
                     type="number"
@@ -512,15 +504,13 @@ export function VoicePanel() {
                     onChange={(event) => setDraft({ ...form, confirmWindow: event.target.value })}
                   />
                   <p className="text-xs text-muted-foreground">
-                    {`${MIN_CONFIRM_WINDOW} to ${MAX_CONFIRM_WINDOW}.`}
-                    {defaults ? ` Default ${defaults.voice_confirm_window_seconds}.` : ''} It opens
-                    only after an order has been staged and read back, allows one attempt, and
-                    closes on the first thing said either way.
+                    {`范围为 ${MIN_CONFIRM_WINDOW} 至 ${MAX_CONFIRM_WINDOW} 秒。`}
+                    {defaults ? ` 默认 ${defaults.voice_confirm_window_seconds} 秒。` : ''}仅在订单准备完毕并复述后打开，只允许尝试一次，听到第一句话后无论内容如何都会关闭。
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`${fieldId}-idle`}>Stop after this much quiet, seconds</Label>
+                  <Label htmlFor={`${fieldId}-idle`}>静音多久后停止（秒）</Label>
                   <Input
                     id={`${fieldId}-idle`}
                     type="number"
@@ -531,11 +521,8 @@ export function VoicePanel() {
                     onChange={(event) => setDraft({ ...form, idleTimeout: event.target.value })}
                   />
                   <p className="text-xs text-muted-foreground">
-                    {`${MIN_IDLE_TIMEOUT} to ${MAX_IDLE_TIMEOUT}.`}
-                    {defaults ? ` Default ${defaults.voice_idle_timeout_seconds}.` : ''} An open
-                    microphone is charged for as long as it is open, because silence is still audio
-                    being sent. This hangs up a session nobody is using. The thread and the
-                    transcript are kept, so starting again costs a button press.
+                    {`范围为 ${MIN_IDLE_TIMEOUT} 至 ${MAX_IDLE_TIMEOUT} 秒。`}
+                    {defaults ? ` 默认 ${defaults.voice_idle_timeout_seconds} 秒。` : ''}麦克风开启期间会持续计费，因为静音时仍会发送音频。此设置用于结束无人使用的会话；对话和转录内容会保留，重新开始只需点击按钮。
                   </p>
                 </div>
               </div>
@@ -545,15 +532,10 @@ export function VoicePanel() {
                   for, and they read it before the switch, not after. */}
               <div className="rounded-md border px-3 py-2 text-sm text-muted-foreground">
                 <p className="text-xs text-muted-foreground">
-                  What confirming out loud means: while that window is open, anyone within earshot
-                  who says yes can place the staged order. The agent cannot tell one voice from
-                  another. What stands in front of it is the read-back - the order is spoken back in
-                  full before anything is placed - and every limit above still applies afterwards.
+                  出声确认意味着：在确认窗口打开期间，附近任何人说“是”都可能提交待确认订单，智能体无法区分说话者。提交前会完整复述订单，确认后仍受上述所有限制约束。
                 </p>
                 <p className="mt-2">
-                  The on-screen confirmation card never goes away, so tapping still works and is the
-                  only way to approve once the window has closed. If your room is not one where that
-                  trade-off is acceptable, leave this off and tap.
+                  屏幕上的确认卡片始终保留，您仍可点击确认；窗口关闭后，点击是唯一的批准方式。如果所在环境不适合语音确认，请保持此功能关闭并使用点击确认。
                 </p>
               </div>
             </div>
@@ -570,7 +552,7 @@ export function VoicePanel() {
                 {saveSettings.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
                 ) : null}
-                Save settings
+                保存设置
               </Button>
               <Button
                 variant="ghost"
@@ -580,11 +562,11 @@ export function VoicePanel() {
                   setFormError(null)
                 }}
               >
-                Discard changes
+                放弃更改
               </Button>
               {dirty ? (
                 <span className="text-xs text-muted-foreground">
-                  Unsaved. The text above still describes what the agent does now.
+                  更改尚未保存；上方文字仍描述当前生效的设置。
                 </span>
               ) : null}
             </div>
@@ -593,7 +575,7 @@ export function VoicePanel() {
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <h3 className="text-sm font-semibold">OpenAI key</h3>
+                <h3 className="text-sm font-semibold">OpenAI 密钥</h3>
                 <p className="text-xs text-muted-foreground">
                   Used only to mint the speech session, and stored encrypted in this instance's own
                   database rather than in a configuration file. It is separate from any OpenAI model
@@ -650,7 +632,7 @@ export function VoicePanel() {
                       disabled={removeKey.isPending}
                       onClick={() => setClearingKey(true)}
                     >
-                      Remove key
+                      移除密钥
                     </Button>
                   ) : null}
                 </div>
@@ -662,7 +644,7 @@ export function VoicePanel() {
                       it away; no audio is involved.
                     </>
                   ) : (
-                    <>No key stored. Paste one and save it, then test it.</>
+                    <>尚未保存密钥。请粘贴并保存，然后进行测试。</>
                   )}
                 </p>
 
@@ -676,7 +658,7 @@ export function VoicePanel() {
       <AlertDialog open={clearingKey} onOpenChange={(open) => !open && setClearingKey(false)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove the OpenAI voice key</AlertDialogTitle>
+            <AlertDialogTitle>移除 OpenAI 语音密钥</AlertDialogTitle>
             <AlertDialogDescription>
               The stored key cannot be read back, so removing it means pasting it again from
               wherever you keep it. The voice surface stops working until a key is stored again; the
@@ -684,14 +666,14 @@ export function VoicePanel() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 removeKey.mutate()
                 setClearingKey(false)
               }}
             >
-              Remove key
+              移除密钥
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

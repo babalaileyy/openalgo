@@ -79,7 +79,7 @@ export default function ConfigureChartinkSymbols() {
       setStrategy(data.strategy)
       setMappings(data.mappings || [])
     } catch (_error) {
-      showToast.error('Failed to load strategy', 'chartink')
+      showToast.error('加载策略失败', 'chartink')
     } finally {
       setLoading(false)
     }
@@ -174,10 +174,10 @@ export default function ConfigureChartinkSymbols() {
         // Refresh mappings
         fetchStrategy()
       } else {
-        showToast.error(response.message || 'Failed to add symbol', 'chartink')
+        showToast.error(response.message || '添加交易品种失败', 'chartink')
       }
     } catch (_error) {
-      showToast.error('Failed to add symbol', 'chartink')
+      showToast.error('添加交易品种失败', 'chartink')
     } finally {
       setSubmitting(false)
     }
@@ -204,10 +204,10 @@ export default function ConfigureChartinkSymbols() {
         setCsvData('')
         fetchStrategy()
       } else {
-        showToast.error(response.message || 'Failed to add symbols', 'chartink')
+        showToast.error(response.message || '添加交易品种失败', 'chartink')
       }
     } catch (_error) {
-      showToast.error('Failed to add symbols', 'chartink')
+      showToast.error('添加交易品种失败', 'chartink')
     } finally {
       setSubmitting(false)
     }
@@ -222,10 +222,10 @@ export default function ConfigureChartinkSymbols() {
         setMappings(mappings.filter((m) => m.id !== mappingToDelete))
         showToast.success('Symbol removed', 'chartink')
       } else {
-        showToast.error(response.message || 'Failed to remove symbol', 'chartink')
+        showToast.error(response.message || '移除交易品种失败', 'chartink')
       }
     } catch (_error) {
-      showToast.error('Failed to remove symbol', 'chartink')
+      showToast.error('移除交易品种失败', 'chartink')
     } finally {
       setDeleteDialogOpen(false)
       setMappingToDelete(null)
@@ -259,7 +259,7 @@ export default function ConfigureChartinkSymbols() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Configure Symbols</h1>
+          <h1 className="text-2xl font-bold tracking-tight">配置交易品种</h1>
           <p className="text-muted-foreground">
             Add Chartink symbols to {strategy.name} (NSE/BSE only)
           </p>
@@ -273,7 +273,7 @@ export default function ConfigureChartinkSymbols() {
       {/* Add Symbols */}
       <Card>
         <CardHeader>
-          <CardTitle>Add Symbols</CardTitle>
+          <CardTitle>添加交易品种</CardTitle>
           <CardDescription>
             Add individual symbols or bulk import from CSV (NSE/BSE exchanges, MIS/CNC products
             only)
@@ -283,13 +283,9 @@ export default function ConfigureChartinkSymbols() {
           <Tabs defaultValue="single">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="single">
-                <Plus className="h-4 w-4 mr-2" />
-                Single Symbol
-              </TabsTrigger>
+                <Plus className="h-4 w-4 mr-2" />单个交易品种</TabsTrigger>
               <TabsTrigger value="bulk">
-                <Upload className="h-4 w-4 mr-2" />
-                Bulk Import
-              </TabsTrigger>
+                <Upload className="h-4 w-4 mr-2" />批量导入</TabsTrigger>
             </TabsList>
 
             {/* Single Symbol Tab */}
@@ -298,7 +294,7 @@ export default function ConfigureChartinkSymbols() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                   {/* Symbol Search */}
                   <div className="space-y-2">
-                    <Label>Search Symbol</Label>
+                    <Label>搜索交易品种</Label>
                     <Popover open={searchOpen} onOpenChange={setSearchOpen}>
                       <PopoverTrigger asChild>
                         <Button
@@ -314,7 +310,7 @@ export default function ConfigureChartinkSymbols() {
                       <PopoverContent className="w-[300px] p-0" align="start">
                         <Command>
                           <CommandInput
-                            placeholder="Search symbols..."
+                            placeholder="搜索交易品种..."
                             value={symbolSearch}
                             onValueChange={setSymbolSearch}
                           />
@@ -348,7 +344,7 @@ export default function ConfigureChartinkSymbols() {
 
                   {/* Chartink Symbol */}
                   <div className="space-y-2">
-                    <Label>Chartink Symbol</Label>
+                    <Label>Chartink 品种代码</Label>
                     <Input
                       placeholder="RELIANCE"
                       value={chartinkSymbol}
@@ -358,13 +354,13 @@ export default function ConfigureChartinkSymbols() {
 
                   {/* Exchange */}
                   <div className="space-y-2">
-                    <Label>Exchange</Label>
+                    <Label>交易所</Label>
                     <Select
                       value={exchange}
                       onValueChange={(value) => setExchange(value as 'NSE' | 'BSE')}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select" />
+                        <SelectValue placeholder="选择" />
                       </SelectTrigger>
                       <SelectContent>
                         {CHARTINK_EXCHANGES.map((ex) => (
@@ -378,7 +374,7 @@ export default function ConfigureChartinkSymbols() {
 
                   {/* Quantity */}
                   <div className="space-y-2">
-                    <Label>Quantity</Label>
+                    <Label>数量</Label>
                     <Input
                       type="number"
                       min="1"
@@ -390,13 +386,13 @@ export default function ConfigureChartinkSymbols() {
 
                   {/* Product Type */}
                   <div className="space-y-2">
-                    <Label>Product</Label>
+                    <Label>产品类型</Label>
                     <Select
                       value={productType}
                       onValueChange={(value) => setProductType(value as 'MIS' | 'CNC')}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select" />
+                        <SelectValue placeholder="选择" />
                       </SelectTrigger>
                       <SelectContent>
                         {CHARTINK_PRODUCTS.map((pt) => (
@@ -419,7 +415,7 @@ export default function ConfigureChartinkSymbols() {
             <TabsContent value="bulk">
               <form onSubmit={handleBulkSubmit} className="space-y-4 mt-4">
                 <div className="space-y-2">
-                  <Label>CSV Data</Label>
+                  <Label>CSV 数据</Label>
                   <Textarea
                     placeholder="ChartinkSymbol,Exchange,Quantity,Product&#10;RELIANCE,NSE,100,CNC&#10;TATAMOTORS,BSE,50,MIS"
                     value={csvData}
@@ -445,9 +441,7 @@ export default function ConfigureChartinkSymbols() {
                     variant="outline"
                     onClick={() => setCsvData('')}
                     disabled={!csvData}
-                  >
-                    Clear
-                  </Button>
+                  >清除</Button>
                 </div>
               </form>
             </TabsContent>
@@ -459,9 +453,7 @@ export default function ConfigureChartinkSymbols() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Current Symbol Mappings
-          </CardTitle>
+            <FileText className="h-5 w-5" />当前交易品种映射</CardTitle>
           <CardDescription>
             {mappings.length} symbol{mappings.length !== 1 ? 's' : ''} configured
           </CardDescription>
@@ -469,18 +461,18 @@ export default function ConfigureChartinkSymbols() {
         <CardContent>
           {mappings.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No symbols configured yet.</p>
-              <p className="text-sm">Add symbols using the form above.</p>
+              <p>尚未配置交易品种。</p>
+              <p className="text-sm">使用上方表单添加交易品种。</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Chartink Symbol</TableHead>
-                  <TableHead>Exchange</TableHead>
-                  <TableHead className="text-right">Quantity</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead className="text-right">Added</TableHead>
+                  <TableHead>Chartink 品种代码</TableHead>
+                  <TableHead>交易所</TableHead>
+                  <TableHead className="text-right">数量</TableHead>
+                  <TableHead>产品类型</TableHead>
+                  <TableHead className="text-right">已添加</TableHead>
                   <TableHead className="w-16"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -507,7 +499,7 @@ export default function ConfigureChartinkSymbols() {
                           setMappingToDelete(mapping.id)
                           setDeleteDialogOpen(true)
                         }}
-                        aria-label="Delete symbol mapping"
+                        aria-label="删除品种映射"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -524,18 +516,15 @@ export default function ConfigureChartinkSymbols() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove Symbol</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to remove this symbol from the strategy? This action cannot be
-              undone.
-            </DialogDescription>
+            <DialogTitle>移除交易品种</DialogTitle>
+            <DialogDescription>确定从策略中移除此交易品种吗？此操作无法撤销。</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteMapping}>
-              Remove Symbol
+              移除交易品种
             </Button>
           </DialogFooter>
         </DialogContent>

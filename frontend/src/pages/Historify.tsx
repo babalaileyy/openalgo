@@ -542,7 +542,7 @@ export default function Historify() {
         delete newProgress[data.job_id]
         return newProgress
       })
-      showToast.info('Job cancelled', 'historify')
+      showToast.info('任务已取消', 'historify')
     }
 
     socket.on('historify_progress', handleProgress)
@@ -758,7 +758,7 @@ export default function Historify() {
 
   const handleCreateOrUpdateSchedule = async () => {
     if (!scheduleName.trim()) {
-      showToast.warning('Please enter a schedule name', 'historify')
+      showToast.warning('请输入计划名称', 'historify')
       return
     }
 
@@ -794,15 +794,15 @@ export default function Historify() {
       const data = await response.json()
 
       if (data.status === 'success') {
-        showToast.success(editingSchedule ? 'Schedule updated' : 'Schedule created', 'historify')
+        showToast.success(editingSchedule ? '计划已更新' : '计划已创建', 'historify')
         setScheduleDialogOpen(false)
         resetScheduleForm()
         loadSchedules()
       } else {
-        showToast.error(data.message || 'Failed to save schedule', 'historify')
+        showToast.error(data.message || '保存计划失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to save schedule', 'historify')
+      showToast.error('保存计划失败', 'historify')
     } finally {
       setIsCreatingSchedule(false)
     }
@@ -818,13 +818,13 @@ export default function Historify() {
       })
       const data = await response.json()
       if (data.status === 'success') {
-        showToast.success('Schedule deleted', 'historify')
+        showToast.success('计划已删除', 'historify')
         loadSchedules()
       } else {
-        showToast.error(data.message || 'Failed to delete schedule', 'historify')
+        showToast.error(data.message || '删除计划失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to delete schedule', 'historify')
+      showToast.error('删除计划失败', 'historify')
     }
   }
 
@@ -842,10 +842,10 @@ export default function Historify() {
         showToast.success(`Schedule ${schedule.is_enabled ? 'disabled' : 'enabled'}`, 'historify')
         loadSchedules()
       } else {
-        showToast.error(data.message || 'Failed to toggle schedule', 'historify')
+        showToast.error(data.message || '切换计划状态失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to toggle schedule', 'historify')
+      showToast.error('切换计划状态失败', 'historify')
     }
   }
 
@@ -863,10 +863,10 @@ export default function Historify() {
         showToast.success(`Schedule ${schedule.is_paused ? 'resumed' : 'paused'}`, 'historify')
         loadSchedules()
       } else {
-        showToast.error(data.message || 'Failed to pause/resume schedule', 'historify')
+        showToast.error(data.message || '暂停或恢复计划失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to pause/resume schedule', 'historify')
+      showToast.error('暂停或恢复计划失败', 'historify')
     }
   }
 
@@ -880,38 +880,38 @@ export default function Historify() {
       })
       const data = await response.json()
       if (data.status === 'success') {
-        showToast.success('Schedule triggered', 'historify')
+        showToast.success('计划已触发', 'historify')
         loadSchedules()
         loadJobs()
       } else {
-        showToast.error(data.message || 'Failed to trigger schedule', 'historify')
+        showToast.error(data.message || '触发计划失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to trigger schedule', 'historify')
+      showToast.error('触发计划失败', 'historify')
     }
   }
 
   const getScheduleStatusBadge = (schedule: Schedule) => {
     if (!schedule.is_enabled) {
-      return <Badge variant="secondary">Disabled</Badge>
+      return <Badge variant="secondary">已禁用</Badge>
     }
     if (schedule.is_paused) {
       return (
         <Badge variant="outline" className="border-yellow-500 text-yellow-600">
-          Paused
+          已暂停
         </Badge>
       )
     }
     if (schedule.status === 'running') {
       return (
         <Badge variant="default" className="bg-blue-500">
-          Running
+          运行中
         </Badge>
       )
     }
     return (
       <Badge variant="default" className="bg-green-500">
-        Active
+        活跃
       </Badge>
     )
   }
@@ -944,7 +944,7 @@ export default function Historify() {
   // Watchlist operations
   const addToWatchlist = async () => {
     if (!newSymbol.trim()) {
-      showToast.warning('Please enter a symbol', 'historify')
+      showToast.warning('请输入交易品种', 'historify')
       return
     }
     try {
@@ -962,10 +962,10 @@ export default function Historify() {
         loadWatchlist()
         loadStats()
       } else {
-        showToast.error(data.message || 'Failed to add symbol', 'historify')
+        showToast.error(data.message || '添加交易品种失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to add symbol', 'historify')
+      showToast.error('添加交易品种失败', 'historify')
     }
   }
 
@@ -984,10 +984,10 @@ export default function Historify() {
         loadWatchlist()
         loadStats()
       } else {
-        showToast.error(data.message || 'Failed to remove symbol', 'historify')
+        showToast.error(data.message || '移除交易品种失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to remove symbol', 'historify')
+      showToast.error('移除交易品种失败', 'historify')
     }
   }
 
@@ -1001,7 +1001,7 @@ export default function Historify() {
       .filter((s) => s.symbol)
 
     if (symbols.length === 0) {
-      showToast.warning('No valid symbols found', 'historify')
+      showToast.warning('未找到有效的交易品种', 'historify')
       return
     }
 
@@ -1022,10 +1022,10 @@ export default function Historify() {
         loadWatchlist()
         loadStats()
       } else {
-        showToast.error(data.message || 'Failed to bulk add symbols', 'historify')
+        showToast.error(data.message || '批量添加交易品种失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to bulk add symbols', 'historify')
+      showToast.error('批量添加交易品种失败', 'historify')
     } finally {
       setIsBulkAdding(false)
     }
@@ -1064,7 +1064,7 @@ export default function Historify() {
 
   // const loadFnoChain = async () => {
   //   if (!fnoSelectedUnderlying) {
-  //     showToast.warning('Please select an underlying')
+  //     showToast.warning('请选择标的')
   //     return
   //   }
   //   setFnoLoading(true)
@@ -1082,11 +1082,11 @@ export default function Historify() {
   //       setFnoSelectedSymbols(new Set())
   //       showToast.success(`Found ${data.count} symbols`)
   //     } else {
-  //       showToast.error(data.message || 'Failed to load FNO chain')
+  //       showToast.error(data.message || '加载期货期权链失败')
   //     }
   //   } catch (error) {
   //     console.error('Error loading FNO chain:', error)
-  //     showToast.error('Failed to load FNO chain')
+  //     showToast.error('加载期货期权链失败')
   //   } finally {
   //     setFnoLoading(false)
   //   }
@@ -1098,7 +1098,7 @@ export default function Historify() {
     jobType: string = 'custom'
   ) => {
     if (symbols.length === 0) {
-      showToast.warning('No symbols selected', 'historify')
+      showToast.warning('未选择交易品种', 'historify')
       return
     }
     try {
@@ -1122,16 +1122,16 @@ export default function Historify() {
         loadJobs()
         setActiveTab('jobs')
       } else {
-        showToast.error(data.message || 'Failed to create job', 'historify')
+        showToast.error(data.message || '创建任务失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to create job', 'historify')
+      showToast.error('创建任务失败', 'historify')
     }
   }
 
   const downloadWatchlist = async () => {
     if (watchlist.length === 0) {
-      showToast.warning('Watchlist is empty', 'historify')
+      showToast.warning('自选列表为空', 'historify')
       return
     }
     const symbols = watchlist.map((item) => ({ symbol: item.symbol, exchange: item.exchange }))
@@ -1148,13 +1148,13 @@ export default function Historify() {
       })
       const data = await response.json()
       if (data.status === 'success') {
-        showToast.success('Job paused', 'historify')
+        showToast.success('任务已暂停', 'historify')
         loadJobs()
       } else {
-        showToast.error(data.message || 'Failed to pause job', 'historify')
+        showToast.error(data.message || '暂停任务失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to pause job', 'historify')
+      showToast.error('暂停任务失败', 'historify')
     }
   }
 
@@ -1168,13 +1168,13 @@ export default function Historify() {
       })
       const data = await response.json()
       if (data.status === 'success') {
-        showToast.success('Job resumed', 'historify')
+        showToast.success('任务已恢复', 'historify')
         loadJobs()
       } else {
-        showToast.error(data.message || 'Failed to resume job', 'historify')
+        showToast.error(data.message || '恢复任务失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to resume job', 'historify')
+      showToast.error('恢复任务失败', 'historify')
     }
   }
 
@@ -1188,13 +1188,13 @@ export default function Historify() {
       })
       const data = await response.json()
       if (data.status === 'success') {
-        showToast.success('Job cancellation requested', 'historify')
+        showToast.success('已请求取消任务', 'historify')
         loadJobs()
       } else {
-        showToast.error(data.message || 'Failed to cancel job', 'historify')
+        showToast.error(data.message || '取消任务失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to cancel job', 'historify')
+      showToast.error('取消任务失败', 'historify')
     }
   }
 
@@ -1211,10 +1211,10 @@ export default function Historify() {
         showToast.success(`Retrying ${data.retry_count} failed items`, 'historify')
         loadJobs()
       } else {
-        showToast.error(data.message || 'Failed to retry job', 'historify')
+        showToast.error(data.message || '重试任务失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to retry job', 'historify')
+      showToast.error('重试任务失败', 'historify')
     }
   }
 
@@ -1228,16 +1228,16 @@ export default function Historify() {
       })
       const data = await response.json()
       if (data.status === 'success') {
-        showToast.success('Job deleted', 'historify')
+        showToast.success('任务已删除', 'historify')
         loadJobs()
         if (selectedJob?.id === jobId) {
           setSelectedJob(null)
         }
       } else {
-        showToast.error(data.message || 'Failed to delete job', 'historify')
+        showToast.error(data.message || '删除任务失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to delete job', 'historify')
+      showToast.error('删除任务失败', 'historify')
     }
   }
 
@@ -1258,10 +1258,10 @@ export default function Historify() {
         loadCatalog()
         loadStats()
       } else {
-        showToast.error(data.message || 'Failed to delete data', 'historify')
+        showToast.error(data.message || '删除数据失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to delete data', 'historify')
+      showToast.error('删除数据失败', 'historify')
     } finally {
       setDeleteDialogOpen(false)
       setDeleteTarget(null)
@@ -1291,10 +1291,10 @@ export default function Historify() {
         loadCatalog()
         loadStats()
       } else {
-        showToast.error(data.message || 'Failed to delete data', 'historify')
+        showToast.error(data.message || '删除数据失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to delete data', 'historify')
+      showToast.error('删除数据失败', 'historify')
     } finally {
       setIsBulkDeleting(false)
       setBulkDeleteDialogOpen(false)
@@ -1323,10 +1323,10 @@ export default function Historify() {
         setWatchlistSelectedSymbols(new Set())
         loadWatchlist()
       } else {
-        showToast.error(data.message || 'Failed to remove from watchlist', 'historify')
+        showToast.error(data.message || '从自选列表移除失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to remove from watchlist', 'historify')
+      showToast.error('从自选列表移除失败', 'historify')
     } finally {
       setIsBulkWatchlistDeleting(false)
       setBulkWatchlistDeleteDialogOpen(false)
@@ -1339,7 +1339,7 @@ export default function Historify() {
     if (file) {
       const fileName = file.name.toLowerCase()
       if (!fileName.endsWith('.csv') && !fileName.endsWith('.parquet')) {
-        showToast.error('Please select a CSV or Parquet file', 'historify')
+        showToast.error('请选择 CSV 或 Parquet 文件', 'historify')
         return
       }
       setUploadFile(file)
@@ -1348,11 +1348,11 @@ export default function Historify() {
 
   const uploadCSVData = async () => {
     if (!uploadFile) {
-      showToast.warning('Please select a CSV or Parquet file', 'historify')
+      showToast.warning('请选择 CSV 或 Parquet 文件', 'historify')
       return
     }
     if (!uploadSymbol.trim()) {
-      showToast.warning('Please enter a symbol', 'historify')
+      showToast.warning('请输入交易品种', 'historify')
       return
     }
     setIsUploading(true)
@@ -1380,10 +1380,10 @@ export default function Historify() {
         loadCatalog()
         loadStats()
       } else {
-        showToast.error(data.message || 'Failed to upload data', 'historify')
+        showToast.error(data.message || '上传数据失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to upload CSV', 'historify')
+      showToast.error('上传 CSV 失败', 'historify')
     } finally {
       setIsUploading(false)
     }
@@ -1422,10 +1422,10 @@ export default function Historify() {
         window.location.href = '/historify/api/export/bulk/download'
         setExportDialogOpen(false)
       } else {
-        showToast.error(data.message || 'Failed to export data', 'historify')
+        showToast.error(data.message || '导出数据失败', 'historify')
       }
     } catch (_error) {
-      showToast.error('Failed to export data', 'historify')
+      showToast.error('导出数据失败', 'historify')
     } finally {
       setIsExporting(false)
     }
@@ -1477,7 +1477,7 @@ export default function Historify() {
       const newMode = useThemeStore.getState().appMode
       showToast.success(`Switched to ${newMode === 'live' ? 'Live' : 'Analyze'} mode`, 'system')
     } else {
-      showToast.error(result.message || 'Failed to toggle mode', 'system')
+      showToast.error(result.message || '切换模式失败', 'system')
     }
   }
 
@@ -1486,7 +1486,7 @@ export default function Historify() {
       await authApi.logout()
       logout()
       navigate('/login')
-      showToast.success('Logged out successfully', 'system')
+      showToast.success('已退出登录', 'system')
     } catch {
       logout()
       navigate('/login')
@@ -1504,7 +1504,7 @@ export default function Historify() {
             <div>
               <h1 className="text-lg font-semibold">Historify</h1>
               <p className="text-xs text-muted-foreground hidden sm:block">
-                Historical Data Management
+                历史数据管理
               </p>
             </div>
           </div>
@@ -1600,7 +1600,7 @@ export default function Historify() {
             >
               <Button variant="outline" size="sm">
                 <LineChart className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Charts</span>
+                <span className="hidden sm:inline">图表</span>
               </Button>
             </Link>
 
@@ -1608,7 +1608,7 @@ export default function Historify() {
             <Link to="/dashboard">
               <Button variant="outline" size="sm">
                 <Home className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Dashboard</span>
+                <span className="hidden sm:inline">概览</span>
               </Button>
             </Link>
 
@@ -1619,7 +1619,7 @@ export default function Historify() {
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 rounded-full bg-primary text-primary-foreground"
-                  aria-label="Open profile menu"
+                  aria-label="打开个人资料菜单"
                 >
                   <span className="text-sm font-medium">
                     {user?.username?.[0]?.toUpperCase() || 'O'}
@@ -1644,18 +1644,14 @@ export default function Historify() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2"
                   >
-                    <BookOpen className="h-4 w-4" />
-                    Docs
-                  </a>
+                    <BookOpen className="h-4 w-4" />文档</a>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => setShowLogoutDialog(true)}
                   className="text-destructive focus:text-destructive"
                 >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
+                  <LogOut className="h-4 w-4 mr-2" />退出登录</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -1676,8 +1672,8 @@ export default function Historify() {
             <TabsList className="h-10 bg-transparent w-max min-w-full sm:w-auto">
               <TabsTrigger value="watchlist" className="gap-1.5 data-[state=active]:bg-muted">
                 <Target className="h-4 w-4" />
-                <span className="hidden sm:inline">Watchlist</span>
-                <span className="sm:hidden">Watch</span>
+                <span className="hidden sm:inline">自选列表</span>
+                <span className="sm:hidden">关注</span>
                 {watchlist.length > 0 && (
                   <Badge variant="secondary" className="ml-1 h-5 min-w-5 text-xs">
                     {watchlist.length}
@@ -1686,8 +1682,8 @@ export default function Historify() {
               </TabsTrigger>
               <TabsTrigger value="scheduler" className="gap-1.5 data-[state=active]:bg-muted">
                 <RefreshCw className="h-4 w-4" />
-                <span className="hidden sm:inline">Scheduler</span>
-                <span className="sm:hidden">Sched</span>
+                <span className="hidden sm:inline">定时任务</span>
+                <span className="sm:hidden">计划</span>
                 {schedules.filter((s) => s.is_enabled && !s.is_paused).length > 0 && (
                   <Badge variant="default" className="ml-1 h-5 min-w-5 text-xs bg-green-500">
                     {schedules.filter((s) => s.is_enabled && !s.is_paused).length}
@@ -1696,8 +1692,8 @@ export default function Historify() {
               </TabsTrigger>
               <TabsTrigger value="jobs" className="gap-1.5 data-[state=active]:bg-muted">
                 <DownloadCloud className="h-4 w-4" />
-                <span className="hidden sm:inline">Download Jobs</span>
-                <span className="sm:hidden">Jobs</span>
+                <span className="hidden sm:inline">下载任务</span>
+                <span className="sm:hidden">任务</span>
                 {jobs.filter((j) => j.status === 'running' || j.status === 'paused').length > 0 && (
                   <Badge variant="default" className="ml-1 h-5 min-w-5 text-xs bg-blue-500">
                     {jobs.filter((j) => j.status === 'running' || j.status === 'paused').length}
@@ -1706,8 +1702,8 @@ export default function Historify() {
               </TabsTrigger>
               <TabsTrigger value="catalog" className="gap-1.5 data-[state=active]:bg-muted">
                 <Database className="h-4 w-4" />
-                <span className="hidden sm:inline">Export/Import</span>
-                <span className="sm:hidden">Export</span>
+                <span className="hidden sm:inline">导出 / 导入</span>
+                <span className="sm:hidden">导出</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -1723,7 +1719,7 @@ export default function Historify() {
                     <div className="flex flex-col sm:flex-row gap-3">
                       <div className="flex-1 relative" ref={searchContainerRef}>
                         <Input
-                          placeholder="Quick add symbol to watchlist..."
+                          placeholder="快速添加品种到自选列表..."
                           value={newSymbol}
                           onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
                           className="h-9"
@@ -1763,7 +1759,7 @@ export default function Historify() {
                       </Select>
                       <Button onClick={addToWatchlist} className="h-9" size="sm">
                         <Plus className="h-4 w-4 mr-1" />
-                        Add to Watchlist
+                        添加到自选列表
                       </Button>
                       <Button
                         variant="outline"
@@ -1771,9 +1767,7 @@ export default function Historify() {
                         className="h-9"
                         size="sm"
                       >
-                        <ListPlus className="h-4 w-4 mr-1" />
-                        Bulk
-                      </Button>
+                        <ListPlus className="h-4 w-4 mr-1" />批量操作</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -1784,7 +1778,7 @@ export default function Historify() {
                     <div className="flex flex-col sm:flex-row gap-3">
                       <div className="flex-1">
                         <Input
-                          placeholder="Filter symbols..."
+                          placeholder="筛选交易品种..."
                           value={catalogFilter.search}
                           onChange={(e) =>
                             setCatalogFilter((prev) => ({ ...prev, search: e.target.value }))
@@ -1799,10 +1793,10 @@ export default function Historify() {
                         }
                       >
                         <SelectTrigger className="w-full sm:w-32 h-9">
-                          <SelectValue placeholder="Exchange" />
+                          <SelectValue placeholder="交易所" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="__all__">All</SelectItem>
+                          <SelectItem value="__all__">全部</SelectItem>
                           {exchanges.map((ex) => (
                             <SelectItem key={ex} value={ex}>
                               {ex}
@@ -1818,12 +1812,12 @@ export default function Historify() {
                       >
                         <SelectTrigger
                           className="w-full sm:w-32 h-9"
-                          title="Filter symbols that have this interval"
+                          title="筛选具有此时间周期的品种"
                         >
-                          <SelectValue placeholder="Has Interval" />
+                          <SelectValue placeholder="具有该周期" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="__all__">All Intervals</SelectItem>
+                          <SelectItem value="__all__">所有时间周期</SelectItem>
                           {(historifyIntervals?.storage_intervals || ['1m', 'D']).map((int) => (
                             <SelectItem key={int} value={int}>
                               Has {int}
@@ -1850,18 +1844,14 @@ export default function Historify() {
                           disabled={catalog.length === 0}
                           className="h-9"
                         >
-                          <FileDown className="h-4 w-4 mr-1" />
-                          Export
-                        </Button>
+                          <FileDown className="h-4 w-4 mr-1" />导出</Button>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => setUploadDialogOpen(true)}
                           className="h-9"
                         >
-                          <Upload className="h-4 w-4 mr-1" />
-                          Import
-                        </Button>
+                          <Upload className="h-4 w-4 mr-1" />导入</Button>
                       </div>
                     </div>
                   </CardContent>
@@ -1892,13 +1882,13 @@ export default function Historify() {
                               }}
                             />
                           </TableHead>
-                          <TableHead>Symbol</TableHead>
-                          <TableHead className="hidden sm:table-cell">Exchange</TableHead>
-                          <TableHead>Available Intervals</TableHead>
+                          <TableHead>交易品种</TableHead>
+                          <TableHead className="hidden sm:table-cell">交易所</TableHead>
+                          <TableHead>可用时间周期</TableHead>
                           <TableHead className="text-right hidden sm:table-cell">
-                            Total Records
+                            记录总数
                           </TableHead>
-                          <TableHead className="hidden md:table-cell">Date Range</TableHead>
+                          <TableHead className="hidden md:table-cell">日期范围</TableHead>
                           <TableHead className="w-20"></TableHead>
                         </TableRow>
                       </TableHeader>
@@ -1909,7 +1899,7 @@ export default function Historify() {
                               colSpan={7}
                               className="text-center py-8 text-muted-foreground"
                             >
-                              No data available. Add symbols to watchlist and download data.
+                              暂无数据。请将品种添加到自选列表并下载数据。
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -2021,7 +2011,7 @@ export default function Historify() {
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="flex-1 relative" ref={searchContainerRef}>
                       <Input
-                        placeholder="Search symbol to add..."
+                        placeholder="搜索并添加交易品种..."
                         value={newSymbol}
                         onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
                         className="h-9"
@@ -2060,29 +2050,25 @@ export default function Historify() {
                       </SelectContent>
                     </Select>
                     <Button onClick={addToWatchlist} className="h-9">
-                      <Plus className="h-4 w-4 mr-1" />
-                      Add
-                    </Button>
+                      <Plus className="h-4 w-4 mr-1" />添加</Button>
                     <Button
                       variant="outline"
                       onClick={() => setBulkAddDialogOpen(true)}
                       className="h-9"
                     >
-                      <ListPlus className="h-4 w-4 mr-1" />
-                      Bulk
-                    </Button>
+                      <ListPlus className="h-4 w-4 mr-1" />批量操作</Button>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Two Column Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100vh-240px)]">
-                {/* Left Column - Download Settings */}
+                {/* Left Column - 下载设置 */}
                 <Card className="flex flex-col">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base flex items-center gap-2">
                       <Settings className="h-4 w-4" />
-                      Download Settings
+                      下载设置
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-1 overflow-auto">
@@ -2090,7 +2076,7 @@ export default function Historify() {
                       {/* Date Range Quick Buttons */}
                       <div>
                         <Label className="text-sm text-muted-foreground mb-2 block">
-                          Quick Date Range
+                          快捷日期范围
                         </Label>
                         <div className="flex flex-wrap gap-2">
                           {DATE_PRESETS.map((preset) => {
@@ -2120,7 +2106,7 @@ export default function Historify() {
                       {/* Custom Date Range */}
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <Label className="text-sm text-muted-foreground">From</Label>
+                          <Label className="text-sm text-muted-foreground">从</Label>
                           <Input
                             type="date"
                             value={startDate}
@@ -2141,7 +2127,7 @@ export default function Historify() {
 
                       {/* Interval Selection */}
                       <div>
-                        <Label className="text-sm text-muted-foreground">Interval</Label>
+                        <Label className="text-sm text-muted-foreground">时间周期</Label>
                         <Select value={selectedInterval} onValueChange={setSelectedInterval}>
                           <SelectTrigger className="h-9 mt-1">
                             <SelectValue />
@@ -2162,9 +2148,9 @@ export default function Historify() {
                       {/* Incremental Download Toggle */}
                       <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                         <div>
-                          <Label className="font-medium">Incremental Download</Label>
+                          <Label className="font-medium">增量下载</Label>
                           <p className="text-xs text-muted-foreground">
-                            Only download new data after last timestamp
+                            仅下载最后时间戳之后的新数据
                           </p>
                         </div>
                         <Switch
@@ -2202,7 +2188,7 @@ export default function Historify() {
                             className="w-full h-9"
                             onClick={() => setWatchlistSelectedSymbols(new Set())}
                           >
-                            Clear Selection
+                            清除选择
                           </Button>
                         )}
                       </div>
@@ -2246,7 +2232,7 @@ export default function Historify() {
                         >
                           {watchlistSelectedSymbols.size === watchlist.length
                             ? 'Deselect All'
-                            : 'Select All'}
+                            : '全选'}
                         </Button>
                       </div>
                     </div>
@@ -2273,10 +2259,10 @@ export default function Historify() {
                                 }}
                               />
                             </TableHead>
-                            <TableHead>Symbol</TableHead>
-                            <TableHead className="hidden sm:table-cell">Exchange</TableHead>
-                            <TableHead className="hidden md:table-cell">Added</TableHead>
-                            <TableHead className="w-20 text-right">Actions</TableHead>
+                            <TableHead>交易品种</TableHead>
+                            <TableHead className="hidden sm:table-cell">交易所</TableHead>
+                            <TableHead className="hidden md:table-cell">已添加</TableHead>
+                            <TableHead className="w-20 text-right">操作</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -2287,8 +2273,8 @@ export default function Historify() {
                                 className="text-center py-12 text-muted-foreground"
                               >
                                 <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                                <p>No symbols in watchlist</p>
-                                <p className="text-sm mt-1">Add symbols using the search above</p>
+                                <p>自选列表中没有交易品种</p>
+                                <p className="text-sm mt-1">通过上方搜索添加交易品种</p>
                               </TableCell>
                             </TableRow>
                           ) : (
@@ -2335,8 +2321,8 @@ export default function Historify() {
                                       size="icon"
                                       className="h-7 w-7"
                                       asChild
-                                      title="View chart"
-                                      aria-label="View chart"
+                                      title="查看图表"
+                                      aria-label="查看图表"
                                     >
                                       <Link
                                         to={`/historify/charts/${item.symbol}?exchange=${item.exchange}&interval=D`}
@@ -2351,7 +2337,7 @@ export default function Historify() {
                                       onClick={() =>
                                         removeFromWatchlist(item.symbol, item.exchange)
                                       }
-                                      title="Remove from watchlist"
+                                      title="从自选列表移除"
                                       aria-label={`Remove ${item.symbol} from watchlist`}
                                     >
                                       <X className="h-4 w-4" />
@@ -2376,11 +2362,9 @@ export default function Historify() {
                 <Card>
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-base">Download Jobs</CardTitle>
+                      <CardTitle className="text-base">下载任务</CardTitle>
                       <Button variant="outline" size="sm" onClick={loadJobs} disabled={jobsLoading}>
-                        <RefreshCw className={cn('h-4 w-4 mr-1', jobsLoading && 'animate-spin')} />
-                        Refresh
-                      </Button>
+                        <RefreshCw className={cn('h-4 w-4 mr-1', jobsLoading && 'animate-spin')} />刷新</Button>
                     </div>
                   </CardHeader>
                   <CardContent className="p-0">
@@ -2388,8 +2372,8 @@ export default function Historify() {
                       {jobs.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground">
                           <DownloadCloud className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                          <p>No download jobs yet</p>
-                          <p className="text-sm mt-1">Start a download from the Watchlist tab</p>
+                          <p>暂无下载任务</p>
+                          <p className="text-sm mt-1">在自选列表中启动下载</p>
                         </div>
                       ) : (
                         <div className="divide-y divide-border">
@@ -2507,9 +2491,7 @@ export default function Historify() {
                                           size="sm"
                                           onClick={() => retryJob(job.id)}
                                         >
-                                          <RefreshCw className="h-4 w-4 mr-1" />
-                                          Retry
-                                        </Button>
+                                          <RefreshCw className="h-4 w-4 mr-1" />重试</Button>
                                       )}
                                     {job.status !== 'running' && job.status !== 'paused' && (
                                       <Button
@@ -2540,14 +2522,14 @@ export default function Historify() {
                 {/* Header with Create button */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold">Scheduled Downloads</h2>
+                    <h2 className="text-lg font-semibold">定时下载</h2>
                     <p className="text-sm text-muted-foreground">
-                      Automate data downloads on a schedule
+                      按计划自动下载数据
                     </p>
                   </div>
                   <Button onClick={() => openScheduleDialog()}>
                     <Plus className="h-4 w-4 mr-1" />
-                    Create Schedule
+                    创建计划
                   </Button>
                 </div>
 
@@ -2561,8 +2543,8 @@ export default function Historify() {
                     ) : schedules.length === 0 ? (
                       <div className="text-center py-12 text-muted-foreground">
                         <RefreshCw className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                        <p>No schedules created yet</p>
-                        <p className="text-sm">Create a schedule to automate data downloads</p>
+                        <p>尚未创建计划</p>
+                        <p className="text-sm">创建计划以自动下载数据</p>
                       </div>
                     ) : (
                       <div className="divide-y divide-border">
@@ -2633,8 +2615,8 @@ export default function Historify() {
                                   className="h-8 w-8"
                                   onClick={() => handleTriggerSchedule(schedule.id)}
                                   disabled={!schedule.is_enabled || schedule.status === 'running'}
-                                  title="Run now"
-                                  aria-label="Run schedule now"
+                                  title="立即运行"
+                                  aria-label="立即运行计划"
                                 >
                                   <Zap className="h-4 w-4" />
                                 </Button>
@@ -2645,7 +2627,7 @@ export default function Historify() {
                                   className="h-8 w-8"
                                   onClick={() => openScheduleDialog(schedule)}
                                   title="Edit"
-                                  aria-label="Edit schedule"
+                                  aria-label="编辑计划"
                                 >
                                   <Settings className="h-4 w-4" />
                                 </Button>
@@ -2662,7 +2644,7 @@ export default function Historify() {
                                       loadScheduleExecutions(schedule.id)
                                     }
                                   }}
-                                  title="View history"
+                                  title="查看历史"
                                   aria-label={
                                     expandedSchedule === schedule.id
                                       ? 'Collapse schedule details'
@@ -2681,8 +2663,8 @@ export default function Historify() {
                                   size="icon"
                                   className="h-8 w-8 text-destructive hover:text-destructive"
                                   onClick={() => handleDeleteSchedule(schedule.id)}
-                                  title="Delete"
-                                  aria-label="Delete schedule"
+                                  title="删除"
+                                  aria-label="删除计划"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
@@ -2692,19 +2674,19 @@ export default function Historify() {
                             {/* Execution History (expandable) */}
                             {expandedSchedule === schedule.id && (
                               <div className="mt-4 pt-4 border-t border-border">
-                                <h4 className="text-sm font-medium mb-2">Recent Executions</h4>
+                                <h4 className="text-sm font-medium mb-2">最近执行记录</h4>
                                 {!scheduleExecutions[schedule.id] ||
                                 scheduleExecutions[schedule.id].length === 0 ? (
-                                  <p className="text-sm text-muted-foreground">No executions yet</p>
+                                  <p className="text-sm text-muted-foreground">暂无执行记录</p>
                                 ) : (
                                   <Table>
                                     <TableHeader>
                                       <TableRow>
-                                        <TableHead>Time</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Symbols</TableHead>
-                                        <TableHead className="text-right">Records</TableHead>
-                                        <TableHead>Error</TableHead>
+                                        <TableHead>时间</TableHead>
+                                        <TableHead>状态</TableHead>
+                                        <TableHead className="text-right">交易品种</TableHead>
+                                        <TableHead className="text-right">记录数</TableHead>
+                                        <TableHead>错误</TableHead>
                                       </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -2776,7 +2758,7 @@ export default function Historify() {
       >
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{editingSchedule ? 'Edit Schedule' : 'Create Schedule'}</DialogTitle>
+            <DialogTitle>{editingSchedule ? 'Edit Schedule' : '创建计划'}</DialogTitle>
             <DialogDescription>
               {editingSchedule
                 ? 'Update schedule configuration'
@@ -2785,26 +2767,26 @@ export default function Historify() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label>Name</Label>
+              <Label>名称</Label>
               <Input
                 value={scheduleName}
                 onChange={(e) => setScheduleName(e.target.value)}
-                placeholder="Daily Watchlist Update"
+                placeholder="每日更新自选列表"
                 className="mt-1"
               />
             </div>
             <div>
-              <Label>Description (optional)</Label>
+              <Label>说明（可选）</Label>
               <Input
                 value={scheduleDescription}
                 onChange={(e) => setScheduleDescription(e.target.value)}
-                placeholder="Downloads daily data for all watchlist symbols"
+                placeholder="下载自选列表中所有品种的日线数据"
                 className="mt-1"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Schedule Type</Label>
+                <Label>计划类型</Label>
                 <Select
                   value={scheduleType}
                   onValueChange={(v) => setScheduleType(v as 'interval' | 'daily')}
@@ -2813,13 +2795,13 @@ export default function Historify() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="interval">Interval</SelectItem>
-                    <SelectItem value="daily">Daily</SelectItem>
+                    <SelectItem value="interval">时间周期</SelectItem>
+                    <SelectItem value="daily">每日</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>Data Interval</Label>
+                <Label>数据周期</Label>
                 <Select
                   value={scheduleDataInterval}
                   onValueChange={(v) => setScheduleDataInterval(v as '1m' | 'D')}
@@ -2829,7 +2811,7 @@ export default function Historify() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="1m">1 Minute</SelectItem>
-                    <SelectItem value="D">Daily</SelectItem>
+                    <SelectItem value="D">每日</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -2838,7 +2820,7 @@ export default function Historify() {
             {scheduleType === 'interval' ? (
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Every</Label>
+                  <Label>每</Label>
                   <Select
                     value={String(scheduleIntervalValue)}
                     onValueChange={(v) => setScheduleIntervalValue(parseInt(v, 10))}
@@ -2855,7 +2837,7 @@ export default function Historify() {
                   </Select>
                 </div>
                 <div>
-                  <Label>Unit</Label>
+                  <Label>单位</Label>
                   <Select
                     value={scheduleIntervalUnit}
                     onValueChange={(v) => setScheduleIntervalUnit(v as 'minutes' | 'hours')}
@@ -2864,15 +2846,15 @@ export default function Historify() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="minutes">Minutes</SelectItem>
-                      <SelectItem value="hours">Hours</SelectItem>
+                      <SelectItem value="minutes">分钟</SelectItem>
+                      <SelectItem value="hours">小时</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
             ) : (
               <div>
-                <Label>Time of Day (IST)</Label>
+                <Label>执行时间（印度标准时间）</Label>
                 <div className="flex gap-2 mt-1">
                   <Select
                     value={(() => {
@@ -2953,7 +2935,7 @@ export default function Historify() {
             )}
 
             <div>
-              <Label>Lookback Days</Label>
+              <Label>回溯天数</Label>
               <Input
                 type="number"
                 min="1"
@@ -2963,7 +2945,7 @@ export default function Historify() {
                 className="mt-1"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Incremental download from watchlist. Lookback used only for new symbols.
+                从自选列表增量下载；回溯天数仅用于新添加的品种。
               </p>
             </div>
           </div>
@@ -2975,7 +2957,7 @@ export default function Historify() {
                 resetScheduleForm()
               }}
             >
-              Cancel
+              取消
             </Button>
             <Button onClick={handleCreateOrUpdateSchedule} disabled={isCreatingSchedule}>
               {isCreatingSchedule && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
@@ -2989,9 +2971,9 @@ export default function Historify() {
       <Dialog open={bulkAddDialogOpen} onOpenChange={setBulkAddDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Bulk Add Symbols</DialogTitle>
+            <DialogTitle>批量添加交易品种</DialogTitle>
             <DialogDescription>
-              Add multiple symbols at once. One per line: SYMBOL,EXCHANGE
+              批量添加交易品种，每行一个，格式：SYMBOL,EXCHANGE
             </DialogDescription>
           </DialogHeader>
           <Textarea
@@ -3004,7 +2986,7 @@ NIFTY24DEC25000CE,NFO"
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setBulkAddDialogOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={handleBulkAdd} disabled={isBulkAdding}>
               {isBulkAdding && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
@@ -3018,12 +3000,12 @@ NIFTY24DEC25000CE,NFO"
       <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Import Data</DialogTitle>
-            <DialogDescription>Upload a CSV or Parquet file with OHLCV data</DialogDescription>
+            <DialogTitle>导入数据</DialogTitle>
+            <DialogDescription>上传包含 OHLCV 数据的 CSV 或 Parquet 文件</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label>Symbol</Label>
+              <Label>交易品种</Label>
               <Input
                 value={uploadSymbol}
                 onChange={(e) => setUploadSymbol(e.target.value.toUpperCase())}
@@ -3033,7 +3015,7 @@ NIFTY24DEC25000CE,NFO"
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Exchange</Label>
+                <Label>交易所</Label>
                 <Select value={uploadExchange} onValueChange={setUploadExchange}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -3048,7 +3030,7 @@ NIFTY24DEC25000CE,NFO"
                 </Select>
               </div>
               <div>
-                <Label>Interval</Label>
+                <Label>时间周期</Label>
                 <Select value={uploadInterval} onValueChange={setUploadInterval}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -3062,12 +3044,12 @@ NIFTY24DEC25000CE,NFO"
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Only 1min and Daily data can be stored
+                  只能存储 1 分钟和日线数据
                 </p>
               </div>
             </div>
             <div>
-              <Label>Data File</Label>
+              <Label>数据文件</Label>
               <Input
                 ref={fileInputRef}
                 type="file"
@@ -3092,7 +3074,7 @@ NIFTY24DEC25000CE,NFO"
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setUploadDialogOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={uploadCSVData} disabled={isUploading}>
               {isUploading && <Loader2 className="h-4 w-4 animate-spin mr-1" />}
@@ -3106,26 +3088,26 @@ NIFTY24DEC25000CE,NFO"
       <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle>Export Data</DialogTitle>
-            <DialogDescription>Export historical data with multiple timeframes</DialogDescription>
+            <DialogTitle>导出数据</DialogTitle>
+            <DialogDescription>导出多个周期的历史数据</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Export Format</Label>
+                <Label>导出格式</Label>
                 <Select value={exportFormat} onValueChange={(v: any) => setExportFormat(v)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="zip">ZIP Archive (Recommended)</SelectItem>
-                    <SelectItem value="csv">CSV (Single file)</SelectItem>
-                    <SelectItem value="parquet">Parquet (ZSTD)</SelectItem>
+                    <SelectItem value="zip">ZIP 压缩包（推荐）</SelectItem>
+                    <SelectItem value="csv">CSV（单个文件）</SelectItem>
+                    <SelectItem value="parquet">Parquet（ZSTD 压缩）</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>Symbols to Export</Label>
+                <Label>要导出的交易品种</Label>
                 <Select value={exportSymbols} onValueChange={(v: any) => setExportSymbols(v)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -3142,9 +3124,9 @@ NIFTY24DEC25000CE,NFO"
 
             {/* Timeframe Selection */}
             <div>
-              <Label className="mb-2 block">Select Timeframes to Export</Label>
+              <Label className="mb-2 block">选择要导出的时间周期</Label>
               <p className="text-xs text-muted-foreground mb-3">
-                Intraday computed from 1m data. W/M/Q/Y computed from Daily data.
+                日内周期由 1 分钟数据计算；周 / 月 / 季 / 年周期由日线数据计算。
               </p>
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
                 {['1m', '5m', '15m', '30m', '1h', 'D', 'W', 'M', 'Q', 'Y'].map((int) => {
@@ -3200,7 +3182,7 @@ NIFTY24DEC25000CE,NFO"
               {/* Custom Interval Input */}
               <div className="mt-3 pt-3 border-t">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Custom:</span>
+                  <span className="text-sm text-muted-foreground">自定义：</span>
                   <Input
                     type="number"
                     min="1"
@@ -3222,10 +3204,10 @@ NIFTY24DEC25000CE,NFO"
                     <SelectContent>
                       <SelectItem value="m">min</SelectItem>
                       <SelectItem value="h">hr</SelectItem>
-                      <SelectItem value="W">Week</SelectItem>
-                      <SelectItem value="M">Month</SelectItem>
+                      <SelectItem value="W">周</SelectItem>
+                      <SelectItem value="M">月</SelectItem>
                       <SelectItem value="Q">Qtr</SelectItem>
-                      <SelectItem value="Y">Year</SelectItem>
+                      <SelectItem value="Y">年</SelectItem>
                     </SelectContent>
                   </Select>
                   <Button
@@ -3246,9 +3228,7 @@ NIFTY24DEC25000CE,NFO"
                       }
                     }}
                   >
-                    <Plus className="h-4 w-4 mr-1" />
-                    Add
-                  </Button>
+                    <Plus className="h-4 w-4 mr-1" />添加</Button>
                 </div>
                 {/* Show added custom intervals */}
                 {Array.from(exportIntervals).filter(
@@ -3304,16 +3284,14 @@ NIFTY24DEC25000CE,NFO"
                         setCatalogSelectedSymbols(new Set(allKeys))
                       }}
                     >
-                      Select All
+                      全选
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       className="h-6 text-xs"
                       onClick={() => setCatalogSelectedSymbols(new Set())}
-                    >
-                      Clear
-                    </Button>
+                    >清除</Button>
                   </div>
                 )}
               </div>
@@ -3381,7 +3359,7 @@ NIFTY24DEC25000CE,NFO"
             {/* Export Summary */}
             <div className="bg-muted/50 rounded-lg p-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Export Summary:</span>
+                <span className="text-muted-foreground">导出概况：</span>
                 <span className="font-medium">
                   {exportSymbols === 'selected'
                     ? catalogSelectedSymbols.size
@@ -3396,7 +3374,7 @@ NIFTY24DEC25000CE,NFO"
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setExportDialogOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button
               onClick={handleBulkExport}
@@ -3417,14 +3395,14 @@ NIFTY24DEC25000CE,NFO"
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Data</AlertDialogTitle>
+            <AlertDialogTitle>删除数据</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete all data for {deleteTarget?.symbol} (
               {deleteTarget?.exchange})? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteData}
               className="bg-destructive text-destructive-foreground"
@@ -3440,10 +3418,7 @@ NIFTY24DEC25000CE,NFO"
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete {catalogSelectedSymbols.size} Symbol(s)</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete all data for the selected symbols? This will remove
-              all historical data for:
-              <div className="mt-2 max-h-32 overflow-y-auto text-sm">
+            <AlertDialogDescription>确定删除所选交易品种的全部数据吗？这将删除以下品种的所有历史数据：<div className="mt-2 max-h-32 overflow-y-auto text-sm">
                 {Array.from(catalogSelectedSymbols)
                   .slice(0, 10)
                   .map((key) => (
@@ -3457,11 +3432,11 @@ NIFTY24DEC25000CE,NFO"
                   </div>
                 )}
               </div>
-              <div className="mt-2 font-medium text-destructive">This action cannot be undone.</div>
+              <div className="mt-2 font-medium text-destructive">此操作无法撤销。</div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isBulkDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isBulkDeleting}>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleBulkDeleteData}
               className="bg-destructive text-destructive-foreground"
@@ -3470,7 +3445,7 @@ NIFTY24DEC25000CE,NFO"
               {isBulkDeleting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
+                  删除中...
                 </>
               ) : (
                 `Delete ${catalogSelectedSymbols.size} Symbol(s)`
@@ -3491,7 +3466,7 @@ NIFTY24DEC25000CE,NFO"
               Remove {watchlistSelectedSymbols.size} Symbol(s) from Watchlist
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove the selected symbols from your watchlist?
+              确定从自选列表中移除所选品种吗？
               <div className="mt-2 max-h-32 overflow-y-auto text-sm">
                 {Array.from(watchlistSelectedSymbols)
                   .slice(0, 10)
@@ -3507,12 +3482,12 @@ NIFTY24DEC25000CE,NFO"
                 )}
               </div>
               <div className="mt-2 text-muted-foreground text-sm">
-                This will not delete any downloaded historical data.
+                此操作不会删除已下载的历史数据。
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isBulkWatchlistDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isBulkWatchlistDeleting}>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleBulkWatchlistDelete}
               className="bg-destructive text-destructive-foreground"
@@ -3521,7 +3496,7 @@ NIFTY24DEC25000CE,NFO"
               {isBulkWatchlistDeleting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Removing...
+                  移除中...
                 </>
               ) : (
                 `Remove ${watchlistSelectedSymbols.size} Symbol(s)`

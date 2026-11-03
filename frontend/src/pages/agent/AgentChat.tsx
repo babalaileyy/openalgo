@@ -430,10 +430,9 @@ export default function AgentChat() {
               <Bot className="h-10 w-10 text-muted-foreground/50" aria-hidden />
               {conversationId === null ? (
                 <>
-                  <p className="text-sm font-medium">Ask the agent</p>
+                  <p className="text-sm font-medium">向智能体提问</p>
                   <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-                    It reads your platform through the same service layer the rest of OpenAlgo uses,
-                    and it can write an OpenAlgo strategy or a Flow workflow for you to review.
+                    智能体通过 OpenAlgo 使用的服务层读取平台信息，也可以编写 OpenAlgo 策略或 Flow 工作流供您审核。
                   </p>
                 </>
               ) : (
@@ -444,10 +443,9 @@ export default function AgentChat() {
                    gets into this state when a run was interrupted before its
                    first message was stored. */
                 <>
-                  <p className="text-sm font-medium">This conversation is empty</p>
+                  <p className="text-sm font-medium">此对话为空</p>
                   <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-                    Nothing was stored against it, which happens when a run was interrupted before
-                    it answered. Ask something below to carry on in this thread.
+                    此对话没有保存内容，可能是运行在回答前中断。请在下方提问以继续对话。
                   </p>
                 </>
               )}

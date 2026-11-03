@@ -204,7 +204,7 @@ export function ExecuteBasketDialog({
       )
       if (bad) {
         updateRow(bad.row.legId, { price: null })
-        showToast.error(`${bad.row.symbol}: LIMIT needs a valid price`)
+        showToast.error(`${bad.row.symbol}：限价委托需要有效价格`)
         return
       }
     }
@@ -223,7 +223,7 @@ export function ExecuteBasketDialog({
     try {
       const resp = await tradingApi.placeBasketOrder(apiKey, strategyName.trim(), orders)
       if (resp.status !== 'success') {
-        showToast.error(resp.message || 'Basket order failed')
+        showToast.error(resp.message || '组合委托失败')
         setSubmitting(false)
         return
       }
@@ -232,14 +232,14 @@ export function ExecuteBasketDialog({
       const successCount = resultList.filter((r) => r.status === 'success').length
       const failCount = resultList.length - successCount
       if (failCount === 0) {
-        showToast.success(`Basket placed: ${successCount}/${resultList.length} orders`)
+        showToast.success(`组合委托已提交：${successCount}/${resultList.length} 笔成功`)
         setTimeout(() => onOpenChange(false), 800)
       } else {
-        showToast.error(`Basket partial: ${successCount} ok, ${failCount} failed`)
+        showToast.error(`组合委托部分成功：${successCount} 笔成功，${failCount} 笔失败`)
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Network error'
-      showToast.error(`Basket order error: ${msg}`)
+      const msg = err instanceof Error ? err.message : '网络错误'
+      showToast.error(`组合委托出错：${msg}`)
     } finally {
       setSubmitting(false)
     }
@@ -250,10 +250,10 @@ export function ExecuteBasketDialog({
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Send className="h-4 w-4" /> Execute Basket Order
+            <Send className="h-4 w-4" /> 执行组合委托
           </DialogTitle>
           <DialogDescription className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-muted-foreground">Strategy</span>
+            <span className="text-muted-foreground">策略</span>
             <span
               className="rounded-md border bg-muted/40 px-2 py-0.5 font-mono text-[11px] font-semibold text-foreground"
               title={strategyName}
@@ -261,7 +261,7 @@ export function ExecuteBasketDialog({
               {strategyName}
             </span>
             <span className="text-muted-foreground">·</span>
-            <span className="text-muted-foreground">Exchange</span>
+            <span className="text-muted-foreground">交易所</span>
             <span className="rounded-md border bg-muted/40 px-2 py-0.5 font-mono text-[11px] font-semibold text-foreground">
               {exchange}
             </span>
@@ -272,10 +272,10 @@ export function ExecuteBasketDialog({
         <div className="flex min-w-0 max-w-full items-end gap-4 rounded-lg border bg-muted/20 p-3">
           <div className="flex-1 space-y-1">
             <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Product Type
+              产品类型
             </Label>
             <fieldset
-              aria-label="Product type"
+              aria-label="产品类型"
               className="inline-flex h-9 w-full min-w-0 overflow-hidden rounded-md border bg-background"
             >
               {PRODUCT_TYPES.map((p, idx) => (
@@ -300,10 +300,10 @@ export function ExecuteBasketDialog({
           </div>
           <div className="flex-1 space-y-1">
             <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Price Type
+              价格类型
             </Label>
             <fieldset
-              aria-label="Price type"
+              aria-label="价格类型"
               className="inline-flex h-9 w-full min-w-0 overflow-hidden rounded-md border bg-background"
             >
               <button
@@ -318,7 +318,7 @@ export function ExecuteBasketDialog({
                     : 'text-muted-foreground hover:bg-muted'
                 )}
               >
-                LIMIT
+                限价（LIMIT）
               </button>
               <button
                 type="button"
@@ -332,7 +332,7 @@ export function ExecuteBasketDialog({
                     : 'text-muted-foreground hover:bg-muted'
                 )}
               >
-                MKT
+                市价（MKT）
               </button>
             </fieldset>
           </div>
@@ -344,16 +344,16 @@ export function ExecuteBasketDialog({
         <div className="overflow-hidden rounded-lg border">
           {/* Header */}
           <div className="grid grid-cols-[32px_1fr_72px_104px] items-center gap-2 border-b bg-muted/30 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-            <span className="text-center">Use</span>
-            <span>Symbol</span>
-            <span className="text-right">Lots</span>
-            <span className="text-right">Price</span>
+            <span className="text-center">启用</span>
+            <span>交易品种</span>
+            <span className="text-right">手数</span>
+            <span className="text-right">价格</span>
           </div>
           {/* Body */}
           <div className="max-h-[40vh] overflow-y-auto">
             {rows.length === 0 ? (
               <div className="p-6 text-center text-sm text-muted-foreground">
-                No active legs in the strategy.
+                策略中没有启用的交易腿。
               </div>
             ) : (
               rows.map((r, idx) => {
@@ -416,7 +416,7 @@ export function ExecuteBasketDialog({
                         </span>
                       </div>
                       <div className="mt-0.5 text-[10px] text-muted-foreground">
-                        Lot size: {r.lotSize} · Qty: {r.lots * r.lotSize}
+                        每手数量：{r.lotSize} · 数量： {r.lots * r.lotSize}
                       </div>
                       {result && (
                         <div className="mt-0.5 flex items-center gap-1 text-[10px]">
@@ -434,7 +434,7 @@ export function ExecuteBasketDialog({
                                 className="truncate text-rose-600 dark:text-rose-400"
                                 title={result.message}
                               >
-                                {result.message || 'Failed'}
+                                {result.message || '失败'}
                               </span>
                             </>
                           )}
@@ -485,7 +485,7 @@ export function ExecuteBasketDialog({
                         role="alert"
                         className="text-[10px] text-rose-700 dark:text-rose-400"
                       >
-                        {r.symbol}: price is outside the supported tick range
+                        {r.symbol}：价格超出支持的最小变动单位范围
                       </span>
                     )}
                   </div>
@@ -497,15 +497,15 @@ export function ExecuteBasketDialog({
 
         <DialogFooter className="flex-row items-center justify-between sm:justify-between">
           <div className="text-xs text-muted-foreground">
-            {includedRows.length} of {rows.length} legs selected
+            已选 {includedRows.length} / {rows.length} 条交易腿
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} disabled={submitting}>
-              {results ? 'Close' : 'Cancel'}
+              {results ? '关闭' : '取消'}
             </Button>
             <Button onClick={handleExecute} disabled={!canSubmit || !!results} className="gap-1.5">
               <Send className="h-3.5 w-3.5" />
-              {submitting ? 'Placing…' : `Execute (${includedRows.length})`}
+              {submitting ? '提交中…' : `执行（${includedRows.length}）`}
             </Button>
           </div>
         </DialogFooter>

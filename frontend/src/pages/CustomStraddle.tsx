@@ -294,7 +294,7 @@ export default function CustomStraddle() {
       theme: chartThemeFor(lookRef.current, shown, lastPnlRef.current),
       // A read-only analytic chart: the keyboard belongs to the page's controls.
       shortcuts: false,
-      ariaLabel: 'Straddle P&L chart',
+      ariaLabel: '跨式组合盈亏图表',
     })
 
     // P&L first: the primary series, a baseline at zero on the right axis. Its
@@ -305,7 +305,7 @@ export default function CustomStraddle() {
       style: {
         baseValue: 0,
         lineWidth: 2,
-        title: 'P&L',
+        title: 'P&L（盈亏）',
         lastValueVisible: true,
         priceLineVisible: true,
         visible: shown.showPnL,
@@ -319,7 +319,7 @@ export default function CustomStraddle() {
       style: {
         color: lookRef.current.spot,
         lineWidth: 2,
-        title: 'Spot',
+        title: '现货价',
         lastValueVisible: true,
         priceLineVisible: true,
         visible: shown.showSpot,
@@ -333,7 +333,7 @@ export default function CustomStraddle() {
         color: lookRef.current.synthetic,
         lineWidth: 1,
         lineStyle: 'dashed',
-        title: 'Synthetic Fut',
+        title: 'Synthetic Fut（合成期货）',
         lastValueVisible: true,
         priceLineVisible: false,
         visible: shown.showSynthetic,
@@ -366,31 +366,31 @@ export default function CustomStraddle() {
 
       tt.innerHTML = `
         <div class="flex justify-between gap-4 font-semibold" style="color:${pnlColor}">
-          <span>P&amp;L</span>
+          <span>P&amp;L（盈亏）</span>
           <span>${formatINR(point.pnl)}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">Spot</span>
+          <span class="text-muted-foreground">现货价</span>
           <span>${point.spot.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">ATM Strike</span>
+          <span class="text-muted-foreground">ATM Strike（平值行权价）</span>
           <span>${point.atm_strike}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">Entry Strike</span>
+          <span class="text-muted-foreground">建仓行权价</span>
           <span>${point.entry_strike}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">Straddle</span>
+          <span class="text-muted-foreground">Straddle（跨式组合）</span>
           <span>${point.straddle.toFixed(2)}</span>
         </div>
         <div class="flex justify-between gap-4" style="color:${c.synthetic}">
-          <span>Synthetic Fut</span>
+          <span>Synthetic Fut（合成期货）</span>
           <span>${point.synthetic_future.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">Adjustments</span>
+          <span class="text-muted-foreground">调仓次数</span>
           <span>${point.adjustments}</span>
         </div>
         <div class="mt-1 flex justify-between gap-4 border-t border-border pt-1 text-muted-foreground">
@@ -544,7 +544,7 @@ export default function CustomStraddle() {
         }
       } catch (error) {
         if (!cancelled)
-          showToast.error(serverSentence(error, 'Failed to fetch expiry dates'), 'positions')
+          showToast.error(serverSentence(error, '获取到期日失败'), 'positions')
       }
     }
     fetchExpiries()
@@ -574,11 +574,11 @@ export default function CustomStraddle() {
         setChartData(res.data)
         applyDataToChart(res.data)
       } else {
-        showToast.error(res.message || 'Failed to load simulation data', 'positions')
+        showToast.error(res.message || '加载模拟数据失败', 'positions')
       }
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { message?: string } } }
-      const msg = axiosErr?.response?.data?.message || 'Failed to fetch simulation data'
+      const msg = axiosErr?.response?.data?.message || '获取模拟数据失败'
       showToast.error(msg, 'positions')
     } finally {
       setIsLoading(false)
@@ -610,14 +610,14 @@ export default function CustomStraddle() {
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-xl font-semibold">Straddle PnL Simulator</CardTitle>
+          <CardTitle className="text-xl font-semibold">跨式组合盈亏模拟器</CardTitle>
         </CardHeader>
         <CardContent>
           {/* Row 1: Market controls */}
           <div className="flex flex-wrap items-center gap-3 mb-3">
             <Select value={selectedExchange} onValueChange={setSelectedExchange}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Exchange" />
+                <SelectValue placeholder="交易所" />
               </SelectTrigger>
               <SelectContent>
                 {fnoExchanges.map((ex) => (
@@ -636,15 +636,15 @@ export default function CustomStraddle() {
                   aria-expanded={underlyingOpen}
                   className="w-[140px] justify-between"
                 >
-                  {selectedUnderlying || 'Underlying'}
+                  {selectedUnderlying || '标的'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-0" align="start">
                 <Command>
-                  <CommandInput placeholder="Search underlying..." />
+                  <CommandInput placeholder="搜索标的..." />
                   <CommandList>
-                    <CommandEmpty>No underlying found</CommandEmpty>
+                    <CommandEmpty>未找到标的</CommandEmpty>
                     <CommandGroup>
                       {underlyings.map((u) => (
                         <CommandItem
@@ -669,7 +669,7 @@ export default function CustomStraddle() {
 
             <Select value={selectedExpiry} onValueChange={setSelectedExpiry}>
               <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Expiry" />
+                <SelectValue placeholder="到期日" />
               </SelectTrigger>
               <SelectContent>
                 {expiries.map((exp) => (
@@ -682,7 +682,7 @@ export default function CustomStraddle() {
 
             <Select value={selectedInterval} onValueChange={setSelectedInterval}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Interval" />
+                <SelectValue placeholder="时间周期" />
               </SelectTrigger>
               <SelectContent>
                 {intervals.map((intv) => (
@@ -695,12 +695,12 @@ export default function CustomStraddle() {
 
             <Select value={selectedDays} onValueChange={setSelectedDays}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Days" />
+                <SelectValue placeholder="天数" />
               </SelectTrigger>
               <SelectContent>
                 {['1', '3', '5', '7', '10'].map((d) => (
                   <SelectItem key={d} value={d}>
-                    {d} {d === '1' ? 'Day' : 'Days'}
+                    {d} 天
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -710,7 +710,7 @@ export default function CustomStraddle() {
           {/* Row 2: Strategy controls */}
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <div className="flex items-center gap-1.5">
-              <label className="text-xs text-muted-foreground whitespace-nowrap">Lot Size</label>
+              <label className="text-xs text-muted-foreground whitespace-nowrap">每手数量</label>
               <Input
                 type="number"
                 value={lotSize}
@@ -720,7 +720,7 @@ export default function CustomStraddle() {
               />
             </div>
             <div className="flex items-center gap-1.5">
-              <label className="text-xs text-muted-foreground whitespace-nowrap">Lots</label>
+              <label className="text-xs text-muted-foreground whitespace-nowrap">手数</label>
               <Input
                 type="number"
                 value={numLots}
@@ -730,7 +730,7 @@ export default function CustomStraddle() {
               />
             </div>
             <div className="flex items-center gap-1.5">
-              <label className="text-xs text-muted-foreground whitespace-nowrap">Adj Points</label>
+              <label className="text-xs text-muted-foreground whitespace-nowrap">调仓点数</label>
               <Input
                 type="number"
                 value={adjustmentPoints}
@@ -742,10 +742,10 @@ export default function CustomStraddle() {
               />
             </div>
             <div className="text-xs text-muted-foreground">
-              Qty: <span className="font-medium text-foreground">{lotSize * numLots}</span>
+              数量：<span className="font-medium text-foreground">{lotSize * numLots}</span>
             </div>
             <Button variant="outline" size="sm" onClick={loadData} disabled={isLoading}>
-              {isLoading ? 'Simulating...' : 'Simulate'}
+              {isLoading ? '模拟中...' : '开始模拟'}
             </Button>
           </div>
 
@@ -753,7 +753,7 @@ export default function CustomStraddle() {
           {summary && latestPoint && (
             <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mb-4 text-sm">
               <div>
-                <span className="text-muted-foreground">P&L </span>
+                <span className="text-muted-foreground">P&L（盈亏） </span>
                 <span
                   className={`font-semibold ${summary.total_pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}
                 >
@@ -761,23 +761,23 @@ export default function CustomStraddle() {
                 </span>
               </div>
               <div>
-                <span className="text-muted-foreground">Adjustments </span>
+                <span className="text-muted-foreground">调仓次数 </span>
                 <span className="font-medium">{summary.total_adjustments}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Max </span>
+                <span className="text-muted-foreground">最大盈亏 </span>
                 <span className="font-medium text-green-500">{formatINR(summary.max_pnl)}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Min </span>
+                <span className="text-muted-foreground">最小盈亏 </span>
                 <span className="font-medium text-red-500">{formatINR(summary.min_pnl)}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Spot </span>
+                <span className="text-muted-foreground">现货价 </span>
                 <span className="font-medium">{latestPoint.spot.toFixed(2)}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Entry Strike </span>
+                <span className="text-muted-foreground">建仓行权价 </span>
                 <span className="font-medium">{latestPoint.entry_strike}</span>
               </div>
             </div>
@@ -801,7 +801,7 @@ export default function CustomStraddle() {
               <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-lg">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Running simulation...
+                  正在运行模拟...
                 </div>
               </div>
             )}
@@ -818,7 +818,7 @@ export default function CustomStraddle() {
                 className="inline-block h-0.5 w-5 rounded"
                 style={{ backgroundColor: look.profit }}
               />
-              P&L
+              P&L（盈亏）
             </button>
             <button
               type="button"
@@ -829,7 +829,7 @@ export default function CustomStraddle() {
                 className="inline-block h-0.5 w-5 rounded"
                 style={{ backgroundColor: look.spot }}
               />
-              Spot
+              现货价
             </button>
             <button
               type="button"
@@ -840,7 +840,7 @@ export default function CustomStraddle() {
                 className="inline-block h-0.5 w-5 rounded border-dashed border-t-2"
                 style={{ borderColor: look.synthetic, backgroundColor: 'transparent' }}
               />
-              Synthetic Fut
+              Synthetic Fut（合成期货）
             </button>
           </div>
         </CardContent>
@@ -851,7 +851,7 @@ export default function CustomStraddle() {
         <Card className="mt-4">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg font-semibold">
-              Trade Log ({chartData.trades.length} trades)
+              交易记录（{chartData.trades.length} 笔）
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -859,15 +859,15 @@ export default function CustomStraddle() {
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-background border-b">
                   <tr className="text-left text-muted-foreground">
-                    <th className="py-2 pr-4 font-medium">Time</th>
-                    <th className="py-2 pr-4 font-medium">Type</th>
-                    <th className="py-2 pr-4 font-medium text-right">Strike</th>
-                    <th className="py-2 pr-4 font-medium text-right">CE</th>
-                    <th className="py-2 pr-4 font-medium text-right">PE</th>
-                    <th className="py-2 pr-4 font-medium text-right">Straddle</th>
-                    <th className="py-2 pr-4 font-medium text-right">Spot</th>
-                    <th className="py-2 pr-4 font-medium text-right">Leg P&L</th>
-                    <th className="py-2 font-medium text-right">Cumulative</th>
+                    <th className="py-2 pr-4 font-medium">时间</th>
+                    <th className="py-2 pr-4 font-medium">类型</th>
+                    <th className="py-2 pr-4 font-medium text-right">行权价</th>
+                    <th className="py-2 pr-4 font-medium text-right">CE（看涨）</th>
+                    <th className="py-2 pr-4 font-medium text-right">PE（看跌）</th>
+                    <th className="py-2 pr-4 font-medium text-right">Straddle（跨式组合）</th>
+                    <th className="py-2 pr-4 font-medium text-right">现货价</th>
+                    <th className="py-2 pr-4 font-medium text-right">单腿盈亏</th>
+                    <th className="py-2 font-medium text-right">累计盈亏</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -907,7 +907,7 @@ function TradeRow({ trade }: { trade: TradeEntry }) {
       <td className="py-2 pr-4 whitespace-nowrap text-muted-foreground">
         {date} {time}
       </td>
-      <td className={`py-2 pr-4 font-medium ${typeColor}`}>{trade.type}</td>
+      <td className={`py-2 pr-4 font-medium ${typeColor}`}>{trade.type === 'ENTRY' ? '建仓' : trade.type === 'ADJUSTMENT' ? '调仓' : trade.type === 'EXIT' ? '平仓' : trade.type}</td>
       <td className="py-2 pr-4 text-right font-mono">{strikeDisplay}</td>
       <td className="py-2 pr-4 text-right font-mono">{trade.ce_price.toFixed(2)}</td>
       <td className="py-2 pr-4 text-right font-mono">{trade.pe_price.toFixed(2)}</td>

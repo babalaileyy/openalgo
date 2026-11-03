@@ -19,23 +19,23 @@ export const SubscribeDepthNode = memo(({ data, selected }: SubscribeDepthNodePr
             <Layers className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Subscribe Depth</div>
-            <div className="text-[9px] text-muted-foreground">Order Book</div>
+            <div className="text-xs font-medium leading-tight">订阅盘口</div>
+            <div className="text-[9px] text-muted-foreground">委托列表</div>
           </div>
         </div>
         {data.symbol && (
           <div className="mt-1 space-y-0.5 text-[10px]">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Symbol:</span>
+              <span className="text-muted-foreground">品种：</span>
               <span className="mono-data font-medium">{data.symbol}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Exchange:</span>
+              <span className="text-muted-foreground">交易所：</span>
               <span className="mono-data">{data.exchange || 'NSE'}</span>
             </div>
             {data.outputVariable && (
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Output:</span>
+                <span className="text-muted-foreground">输出：</span>
                 <span className="mono-data text-green-500">{`{{${data.outputVariable}}}`}</span>
               </div>
             )}

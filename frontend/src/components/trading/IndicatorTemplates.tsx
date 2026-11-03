@@ -90,29 +90,29 @@ export function IndicatorTemplates({
 
   function chart() {
     const current = target()
-    if (!current) throw new Error('Select a loaded chart first')
+    if (!current) throw new Error('请先选择已加载的图表')
     return current
   }
 
   async function importFile(file: File) {
-    if (file.size > 5 * 1024 * 1024) throw new Error('Template file size must be at most 5 MB')
+    if (file.size > 5 * 1024 * 1024) throw new Error('模板文件大小不能超过 5 MB')
     const document = parseIndicatorTemplate(await file.text())
     const saved = await run((repository) => repository.importDocument(document))
-    return { message: 'Template imported', select: saved.id }
+    return { message: '模板已导入', select: saved.id }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Tip
         tip={{
-          title: 'Indicator templates',
-          sub: 'Save the studies on the selected chart, or apply a saved set',
+          title: '指标模板',
+          sub: '保存所选图表的指标，或应用已保存的指标组合',
         }}
       >
         <DialogTrigger asChild>
           <button type="button" data-workspace-control className={TB_BTN} aria-label="Templates">
             <ChromeIcon id="template" />
-            <span className={TB_LABEL_WIDE}>Templates</span>
+            <span className={TB_LABEL_WIDE}>模板</span>
           </button>
         </DialogTrigger>
       </Tip>
@@ -122,11 +122,8 @@ export function IndicatorTemplates({
         style={{ maxWidth: 'min(36rem, calc(100vw - 2rem))' }}
       >
         <DialogHeader>
-          <DialogTitle>Indicator templates</DialogTitle>
-          <DialogDescription>
-            Save studies and their styles, then apply them to the selected chart. Templates are
-            saved for your account in this browser.
-          </DialogDescription>
+          <DialogTitle>指标模板</DialogTitle>
+          <DialogDescription>保存指标及其样式，并将其应用到选中的图表。模板保存在此浏览器的当前账户下。</DialogDescription>
         </DialogHeader>
         {(failure || error) && (
           <p role="alert" className="text-sm text-destructive">
@@ -134,7 +131,7 @@ export function IndicatorTemplates({
           </p>
         )}
         {message && <output className="text-sm text-muted-foreground">{message}</output>}
-        {loading && <p className="text-sm">Loading templates…</p>}
+        {loading && <p className="text-sm">正在加载模板…</p>}
         <form
           className="grid gap-2"
           onSubmit={(event) => {
@@ -144,27 +141,21 @@ export function IndicatorTemplates({
               const saved = await run((repository) =>
                 repository.createTemplate(name.trim(), indicators)
               )
-              return { message: 'Template saved', select: saved.id, clearName: true }
+              return { message: '模板已保存', select: saved.id, clearName: true }
             })
           }}
         >
-          <label htmlFor={`${id}-new`} className="text-sm font-medium">
-            New template name
-          </label>
+          <label htmlFor={`${id}-new`} className="text-sm font-medium">新模板名称</label>
           <Input
             id={`${id}-new`}
             maxLength={120}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-          <Button type="submit" disabled={disabled || !name.trim()}>
-            Save current studies
-          </Button>
+          <Button type="submit" disabled={disabled || !name.trim()}>保存当前指标</Button>
         </form>
         <div className="grid gap-2 border-t pt-4">
-          <label htmlFor={`${id}-saved`} className="text-sm font-medium">
-            Saved template
-          </label>
+          <label htmlFor={`${id}-saved`} className="text-sm font-medium">已保存的模板</label>
           <select
             id={`${id}-saved`}
             value={selected?.id ?? ''}
@@ -172,7 +163,7 @@ export function IndicatorTemplates({
             className="h-9 min-w-0 rounded-md border bg-background px-3 text-sm"
             onChange={(event) => setSelectedId(event.target.value)}
           >
-            <option value="">Choose a template</option>
+            <option value="">选择模板</option>
             {catalog?.templates.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.name}
@@ -180,14 +171,14 @@ export function IndicatorTemplates({
             ))}
           </select>
           {catalog?.templates.length === 0 && (
-            <p className="text-sm text-muted-foreground">No saved templates</p>
+            <p className="text-sm text-muted-foreground">没有已保存的模板</p>
           )}
           {selected && (
             <>
               <p className="text-sm text-muted-foreground">
                 {selected.indicators.length
-                  ? `${selected.indicators.length} studies`
-                  : 'No studies'}
+                  ? `${selected.indicators.length} 个指标`
+                  : '没有指标'}
               </p>
               <div className="flex flex-wrap gap-2">
                 {(['replace', 'append'] as const).map((mode) => (
@@ -201,13 +192,13 @@ export function IndicatorTemplates({
                         return {
                           message:
                             mode === 'replace'
-                              ? 'Studies replaced on the selected chart'
-                              : 'Studies added to the selected chart',
+                              ? '已替换所选图表的指标'
+                              : '已向所选图表添加指标',
                         }
                       })
                     }
                   >
-                    {mode === 'replace' ? 'Replace studies' : 'Add studies'}
+                    {mode === 'replace' ? '替换指标' : '添加指标'}
                   </Button>
                 ))}
                 <Button
@@ -218,19 +209,13 @@ export function IndicatorTemplates({
                       const indicators = chart().captureIndicatorTemplate()
                       await run((repository) => repository.saveTemplate(selected.id, indicators))
                       return {
-                        message: `${selected.name} now holds the ${indicators.length} ${
-                          indicators.length === 1 ? 'study' : 'studies'
-                        } on the selected chart`,
+                        message: `${selected.name} 已更新为所选图表上的 ${indicators.length} 个指标`,
                       }
                     })
                   }
-                >
-                  Update with current chart
-                </Button>
+                >使用当前图表更新</Button>
               </div>
-              <label htmlFor={`${id}-rename`} className="mt-2 text-sm font-medium">
-                Saved template name
-              </label>
+              <label htmlFor={`${id}-rename`} className="mt-2 text-sm font-medium">已保存模板的名称</label>
               <Input
                 id={`${id}-rename`}
                 maxLength={120}
@@ -246,12 +231,10 @@ export function IndicatorTemplates({
                       await run((repository) =>
                         repository.rename('indicator-template', selected.id, savedName.trim())
                       )
-                      return { message: 'Template renamed' }
+                      return { message: '模板已重命名' }
                     })
                   }
-                >
-                  Rename
-                </Button>
+                >重命名</Button>
                 <Button
                   variant="outline"
                   disabled={disabled}
@@ -264,18 +247,18 @@ export function IndicatorTemplates({
                           `${selected.name.slice(0, 115)} copy`
                         )
                       )
-                      return { message: 'Template duplicated', select: saved.id }
+                      return { message: '模板已复制', select: saved.id }
                     })
                   }
                 >
-                  Duplicate
+                  复制
                 </Button>
                 <Button
                   variant="outline"
                   disabled={disabled || confirmDelete}
                   onClick={() => setConfirmDelete(true)}
                 >
-                  Delete
+                  删除
                 </Button>
                 <Button
                   variant="outline"
@@ -297,26 +280,25 @@ export function IndicatorTemplates({
                       } finally {
                         setTimeout(() => URL.revokeObjectURL(url), 0)
                       }
-                      return { message: 'Template exported' }
+                      return { message: '模板已导出' }
                     })
                   }
                 >
-                  Export JSON
+                  导出 JSON
                 </Button>
               </div>
               {confirmDelete && (
                 <div
                   role="alertdialog"
-                  aria-label="Delete template"
+                  aria-label="删除模板"
                   className="grid gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3"
                 >
                   <p className="text-sm">
-                    Delete the template {selected.name}? Charts that already use its studies keep
-                    them. This cannot be undone.
+                    确定删除模板 {selected.name} 吗？已应用该模板指标的图表会保留这些指标。此操作无法撤销。
                   </p>
                   <div className="flex flex-wrap justify-end gap-2">
                     <Button variant="outline" onClick={() => setConfirmDelete(false)}>
-                      Keep template
+                      保留模板
                     </Button>
                     <Button
                       variant="destructive"
@@ -327,11 +309,11 @@ export function IndicatorTemplates({
                             repository.remove('indicator-template', selected.id)
                           )
                           setConfirmDelete(false)
-                          return { message: 'Template deleted', select: '' }
+                          return { message: '模板已删除', select: '' }
                         })
                       }
                     >
-                      Delete template
+                      删除模板
                     </Button>
                   </div>
                 </div>
@@ -341,7 +323,7 @@ export function IndicatorTemplates({
         </div>
         <div className="grid gap-2 border-t pt-4">
           <label htmlFor={`${id}-import`} className="text-sm font-medium">
-            Import template JSON
+            导入模板 JSON
           </label>
           <Input
             id={`${id}-import`}
@@ -360,11 +342,11 @@ export function IndicatorTemplates({
             onClick={() =>
               void perform(async () => {
                 await reload()
-                return { message: 'Templates refreshed' }
+                return { message: '模板列表已刷新' }
               })
             }
           >
-            Refresh templates
+            刷新模板
           </Button>
         </div>
       </DialogContent>

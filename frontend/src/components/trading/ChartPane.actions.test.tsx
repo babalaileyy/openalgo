@@ -396,15 +396,15 @@ describe('study rows and Alerts in the chart menu', () => {
   it('opens the alerts list', async () => {
     const { view, owner } = await mount(null)
     act(() => owner.options.callbacks.onContextMenu?.(menu()))
-    fireEvent.click(view.getByRole('button', { name: 'Alerts...' }))
+    fireEvent.click(view.getByRole('button', { name: '提醒…' }))
     expect(owner.openAlerts).toHaveBeenCalledWith()
   })
 
   it('undoes chart changes from the toolbar, never naming an order', async () => {
     const { view, owner } = await mount(null)
-    const undo = view.getByRole('button', { name: 'Undo chart change' })
+    const undo = view.getByRole('button', { name: '撤销图表更改' })
     fireEvent.pointerEnter(undo.parentElement as Element)
-    expect(await view.findByRole('tooltip')).toHaveTextContent('Orders are never undone')
+    expect(await view.findByRole('tooltip')).toHaveTextContent('不会撤销订单')
     fireEvent.click(undo)
     expect(owner.historyPress).toHaveBeenCalledWith('undo')
   })

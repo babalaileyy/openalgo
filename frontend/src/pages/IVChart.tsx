@@ -54,33 +54,33 @@ const METRIC_CONFIG: Record<
   { label: string; ceTitle: string; peTitle: string; formatter: (v: number) => string }
 > = {
   iv: {
-    label: 'IV',
-    ceTitle: 'CE IV',
-    peTitle: 'PE IV',
+    label: 'IV（隐含波动率）',
+    ceTitle: 'CE IV（看涨隐含波动率）',
+    peTitle: 'PE IV（看跌隐含波动率）',
     formatter: (v) => `${v.toFixed(2)}%`,
   },
   delta: {
-    label: 'Delta',
-    ceTitle: 'CE Delta',
-    peTitle: 'PE Delta',
+    label: 'Delta（德尔塔）',
+    ceTitle: 'CE Delta（看涨德尔塔）',
+    peTitle: 'PE Delta（看跌德尔塔）',
     formatter: (v) => v.toFixed(4),
   },
   theta: {
-    label: 'Theta',
-    ceTitle: 'CE Theta',
-    peTitle: 'PE Theta',
+    label: 'Theta（时间价值衰减）',
+    ceTitle: 'CE Theta（看涨时间价值衰减）',
+    peTitle: 'PE Theta（看跌时间价值衰减）',
     formatter: (v) => v.toFixed(4),
   },
   vega: {
-    label: 'Vega',
-    ceTitle: 'CE Vega',
-    peTitle: 'PE Vega',
+    label: 'Vega（波动率敏感度）',
+    ceTitle: 'CE Vega（看涨波动率敏感度）',
+    peTitle: 'PE Vega（看跌波动率敏感度）',
     formatter: (v) => v.toFixed(4),
   },
   gamma: {
-    label: 'Gamma',
-    ceTitle: 'CE Gamma',
-    peTitle: 'PE Gamma',
+    label: 'Gamma（伽马）',
+    ceTitle: 'CE Gamma（看涨伽马）',
+    peTitle: 'PE Gamma（看跌伽马）',
     formatter: (v) => v.toFixed(6),
   },
 }
@@ -214,7 +214,7 @@ export default function IVChart() {
 
         const chart = createChart(container, {
           theme,
-          ariaLabel: `${title} chart`,
+          ariaLabel: `${title} 图表`,
           // A read-only study: the keyboard belongs to the page, and the hover
           // zoom rail is more chrome than a half-width panel has room for.
           shortcuts: false,
@@ -334,7 +334,7 @@ export default function IVChart() {
         }
       } catch (error) {
         if (cancelled) return
-        showToast.error(serverSentence(error, 'Failed to fetch expiry dates'), 'positions')
+        showToast.error(serverSentence(error, '获取到期日失败'), 'positions')
       }
     }
     fetchExpiries()
@@ -361,10 +361,10 @@ export default function IVChart() {
         setChartData(res.data)
         updateAllCharts(res.data)
       } else {
-        showToast.error(res.message || 'Failed to load data', 'positions')
+        showToast.error(res.message || '加载数据失败', 'positions')
       }
     } catch (error) {
-      showToast.error(serverSentence(error, 'Failed to fetch data'), 'positions')
+      showToast.error(serverSentence(error, '获取数据失败'), 'positions')
     } finally {
       setIsLoading(false)
     }
@@ -413,14 +413,14 @@ export default function IVChart() {
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-xl font-semibold">Option Greeks</CardTitle>
+          <CardTitle className="text-xl font-semibold">Option Greeks（期权希腊值）</CardTitle>
         </CardHeader>
         <CardContent>
           {/* Controls */}
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <Select value={selectedExchange} onValueChange={setSelectedExchange}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Exchange" />
+                <SelectValue placeholder="交易所" />
               </SelectTrigger>
               <SelectContent>
                 {toolsFnoExchanges.map((ex) => (
@@ -439,15 +439,15 @@ export default function IVChart() {
                   aria-expanded={underlyingOpen}
                   className="w-[140px] justify-between"
                 >
-                  {selectedUnderlying || 'Underlying'}
+                  {selectedUnderlying || '标的'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-0" align="start">
                 <Command>
-                  <CommandInput placeholder="Search underlying..." />
+                  <CommandInput placeholder="搜索标的..." />
                   <CommandList>
-                    <CommandEmpty>No underlying found</CommandEmpty>
+                    <CommandEmpty>未找到标的</CommandEmpty>
                     <CommandGroup>
                       {underlyings.map((u) => (
                         <CommandItem
@@ -472,7 +472,7 @@ export default function IVChart() {
 
             <Select value={selectedExpiry} onValueChange={setSelectedExpiry}>
               <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Expiry" />
+                <SelectValue placeholder="到期日" />
               </SelectTrigger>
               <SelectContent>
                 {expiries.map((exp) => (
@@ -485,7 +485,7 @@ export default function IVChart() {
 
             <Select value={selectedInterval} onValueChange={setSelectedInterval}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Interval" />
+                <SelectValue placeholder="时间周期" />
               </SelectTrigger>
               <SelectContent>
                 {intervals.map((intv) => (
@@ -498,19 +498,19 @@ export default function IVChart() {
 
             <Select value={selectedDays} onValueChange={setSelectedDays}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Days" />
+                <SelectValue placeholder="天数" />
               </SelectTrigger>
               <SelectContent>
                 {['1', '5', '10', '15'].map((d) => (
                   <SelectItem key={d} value={d}>
-                    {d} {d === '1' ? 'Day' : 'Days'}
+                    {d} 天
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
             <Button variant="outline" size="sm" onClick={loadData} disabled={isLoading}>
-              {isLoading ? 'Loading...' : 'Refresh'}
+              {isLoading ? '加载中...' : '刷新'}
             </Button>
           </div>
 
@@ -518,16 +518,16 @@ export default function IVChart() {
           {chartData && (
             <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mb-4 text-sm">
               <div>
-                <span className="text-muted-foreground">ATM Strike: </span>
+                <span className="text-muted-foreground">ATM Strike（平值行权价）：</span>
                 <span className="font-medium">{chartData.atm_strike}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">LTP: </span>
+                <span className="text-muted-foreground">最新价：</span>
                 <span className="font-medium">{chartData.underlying_ltp?.toFixed(2)}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-green-500" />
-                <span className="text-muted-foreground">CE: </span>
+                <span className="text-muted-foreground">CE（看涨）：</span>
                 <span className="font-medium">{chartData.ce_symbol}</span>
                 <span className="text-green-600 dark:text-green-400 font-medium ml-1">
                   {getLatestValue('CE', 'iv')}
@@ -535,7 +535,7 @@ export default function IVChart() {
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-red-500" />
-                <span className="text-muted-foreground">PE: </span>
+                <span className="text-muted-foreground">PE（看跌）：</span>
                 <span className="font-medium">{chartData.pe_symbol}</span>
                 <span className="text-red-600 dark:text-red-400 font-medium ml-1">
                   {getLatestValue('PE', 'iv')}
@@ -546,7 +546,7 @@ export default function IVChart() {
 
           {/* Metric tabs */}
           <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="grid w-full max-w-md grid-cols-5">
+            <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
               {METRICS.map((m) => (
                 <TabsTrigger key={m} value={m}>
                   {METRIC_CONFIG[m].label}

@@ -489,7 +489,7 @@ function DepthSide({ title, total, rows, tone, format }: DepthSideProps) {
         {total !== undefined && <span className="truncate normal-case">{compact(total)}</span>}
       </div>
       {rows.length === 0 ? (
-        <p className="mt-1 text-[11px] text-muted-foreground">No resting orders.</p>
+        <p className="mt-1 text-[11px] text-muted-foreground">暂无挂单。</p>
       ) : (
         <table className="mt-1 w-full font-mono text-[11px] tabular-nums">
           <tbody>
@@ -589,10 +589,7 @@ export function InstrumentCard({ spec, title, source, className }: InstrumentCar
         )}
         aria-label={asText(title) ?? 'Instrument'}
       >
-        <p className="px-3 py-6 text-center text-[12px] text-muted-foreground">
-          This instrument card could not be drawn: the quote did not arrive in a shape this page can
-          read.
-        </p>
+        <p className="px-3 py-6 text-center text-[12px] text-muted-foreground">无法显示此交易品种卡片：收到的行情格式无法识别。</p>
       </figure>
     )
   }
@@ -706,7 +703,7 @@ export function InstrumentCard({ spec, title, source, className }: InstrumentCar
             {details?.instrumentType && <Chip>{details.instrumentType}</Chip>}
             {parsed.analyze && (
               <Chip className="border-amber-500/40 text-amber-600 dark:text-amber-400">
-                Analyze
+                分析
               </Chip>
             )}
           </div>
@@ -802,9 +799,7 @@ export function InstrumentCard({ spec, title, source, className }: InstrumentCar
             )}
           >
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className="text-[10px] leading-4 tracking-wide text-muted-foreground uppercase">
-                Your position
-              </span>
+              <span className="text-[10px] leading-4 tracking-wide text-muted-foreground uppercase">您的持仓</span>
               {position.side && (
                 <Chip
                   className={cn('border-current', TONE[position.side === 'short' ? 'down' : 'up'])}
@@ -870,7 +865,7 @@ export function InstrumentCard({ spec, title, source, className }: InstrumentCar
             onClick={handleBuy}
             className="h-7 border-emerald-500/40 px-3 text-emerald-700 hover:bg-emerald-500/10 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-400"
           >
-            Buy
+            买入
           </Button>
           <Button
             type="button"
@@ -879,12 +874,9 @@ export function InstrumentCard({ spec, title, source, className }: InstrumentCar
             onClick={handleSell}
             className="h-7 border-red-500/40 px-3 text-red-700 hover:bg-red-500/10 hover:text-red-700 dark:text-red-400 dark:hover:text-red-400"
           >
-            Sell
+            卖出
           </Button>
-          <span className="min-w-0 flex-1 text-[11px] text-muted-foreground">
-            Writes the request into the message box. Nothing is ordered until you send it and
-            approve it.
-          </span>
+          <span className="min-w-0 flex-1 text-[11px] text-muted-foreground">将请求写入消息框。只有发送并批准后才会下单。</span>
         </div>
       )}
 

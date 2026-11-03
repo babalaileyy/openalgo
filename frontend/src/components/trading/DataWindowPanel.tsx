@@ -39,7 +39,23 @@ interface Props {
 export function mountChartDataWindow(chart: Chart, host: HTMLElement): DataWindowHandle {
   const doc = host.ownerDocument
   injectWidgetStyles(doc, WIDGET_COMPONENT_CSS)
-  const context = { chart, document: doc, locale: 'en-IN' } as unknown as WidgetContext
+  const labels: Record<string, string> = {
+    'schema.ui.data.title': '数据窗口',
+    'schema.ui.data.unavailable': '暂无数据',
+    'schema.ui.data.price': '价格',
+    'schema.ui.data.open': '开盘价',
+    'schema.ui.data.high': '最高价',
+    'schema.ui.data.low': '最低价',
+    'schema.ui.data.close': '收盘价',
+    'schema.ui.data.volume': '成交量',
+    'schema.ui.data.oi': '持仓量',
+  }
+  const context = {
+    chart,
+    document: doc,
+    locale: 'zh-CN',
+    translate: (key: string) => labels[key],
+  } as unknown as WidgetContext
   return mountDataWindow(context, host)
 }
 
@@ -66,17 +82,17 @@ export function DataWindowPanel({ chart, paneLabel }: Props) {
   return (
     <PanelShell
       id="oa-panel-data"
-      label="Data window"
+      label="数据窗口"
       storageKey="oa-trading-data-width"
       defaultWidth={280}
     >
       <div className={PANEL_HEADER}>
-        <h2 className="text-sm font-medium">Data window</h2>
+        <h2 className="text-sm font-medium">数据窗口</h2>
         <span className="min-w-0 truncate text-xs text-muted-foreground">{paneLabel}</span>
       </div>
       {chart ? null : (
         <p className="px-3 py-4 text-xs text-muted-foreground">
-          Load a chart in this pane to read its values here.
+          请先在此窗格加载图表，再查看数值。
         </p>
       )}
       {/* The library's own root class carries its tokens and styles; the

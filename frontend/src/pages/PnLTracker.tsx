@@ -314,10 +314,10 @@ export default function PnLTracker() {
           chartRef.current.fitContent()
         }
       } else {
-        showToast.error(result.message || 'Failed to load PnL data', 'positions')
+        showToast.error(result.message || '加载损益数据失败', 'positions')
       }
     } catch (_error) {
-      showToast.error('Failed to load PnL data. Please try again.', 'positions')
+      showToast.error('加载损益数据失败，请重试。', 'positions')
     } finally {
       setIsLoading(false)
     }
@@ -403,13 +403,13 @@ export default function PnLTracker() {
           document.body.removeChild(link)
           URL.revokeObjectURL(url)
 
-          showToast.success('Screenshot saved successfully!', 'positions')
+          showToast.success('截图已保存！', 'positions')
         },
         'image/png',
         1.0
       )
     } catch (_error) {
-      showToast.error('Failed to capture screenshot', 'positions')
+      showToast.error('截图失败', 'positions')
     } finally {
       // Always restore, including on the error path — a leaked prototype patch
       // would outlive this page and affect every canvas in the app.
@@ -428,20 +428,20 @@ export default function PnLTracker() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold">PnL Tracker</h1>
-          <p className="text-muted-foreground">Monitor your intraday profit and loss</p>
+          <h1 className="text-3xl font-bold">盈亏跟踪</h1>
+          <p className="text-muted-foreground">监控日内盈亏</p>
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={takeScreenshot} disabled={isCapturing}>
             {isCapturing ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                Capturing...
+                正在截图…
               </>
             ) : (
               <>
                 <Camera className="h-4 w-4 mr-2" />
-                Screenshot
+                截图
               </>
             )}
           </Button>
@@ -449,12 +449,12 @@ export default function PnLTracker() {
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                Loading...
+                加载中…
               </>
             ) : (
               <>
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh
+                刷新
               </>
             )}
           </Button>
@@ -469,7 +469,7 @@ export default function PnLTracker() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Current MTM
+                当前盯市盈亏
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -492,14 +492,14 @@ export default function PnLTracker() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                 <TrendingUp className="h-4 w-4 text-green-500" />
-                Max MTM
+                最高盯市盈亏
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-mono text-green-500">
                 {formatCurrency(metrics.maxMtm)}
               </div>
-              <div className="text-sm text-muted-foreground">at {metrics.maxMtmTime}</div>
+              <div className="text-sm text-muted-foreground">时间：{metrics.maxMtmTime}</div>
             </CardContent>
           </Card>
 
@@ -508,14 +508,14 @@ export default function PnLTracker() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                 <TrendingDown className="h-4 w-4 text-red-500" />
-                Min MTM
+                最低盯市盈亏
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-mono text-red-500">
                 {formatCurrency(metrics.minMtm)}
               </div>
-              <div className="text-sm text-muted-foreground">at {metrics.minMtmTime}</div>
+              <div className="text-sm text-muted-foreground">时间：{metrics.minMtmTime}</div>
             </CardContent>
           </Card>
 
@@ -524,14 +524,14 @@ export default function PnLTracker() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                 <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                Max Drawdown
+                最大回撤
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold font-mono text-yellow-500">
                 {formatCurrency(Math.abs(metrics.maxDrawdown))}
               </div>
-              <div className="text-sm text-muted-foreground">Peak to trough</div>
+              <div className="text-sm text-muted-foreground">峰值至谷值</div>
             </CardContent>
           </Card>
         </div>
@@ -540,7 +540,7 @@ export default function PnLTracker() {
         <Card>
           <CardHeader>
             <div className="flex flex-wrap justify-between items-center gap-2">
-              <CardTitle>Intraday PnL Curve</CardTitle>
+              <CardTitle>日内盈亏曲线</CardTitle>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   {/* Split swatch: the MTM curve is green above break-even, red below */}
@@ -548,11 +548,11 @@ export default function PnLTracker() {
                     <span className="h-full w-1/2 bg-green-500" />
                     <span className="h-full w-1/2 bg-red-500" />
                   </span>
-                  MTM PnL
+                  盯市盈亏
                 </span>
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block w-3 h-3 rounded-full bg-yellow-500"></span>
-                  Drawdown
+                  回撤
                 </span>
               </div>
             </div>
@@ -574,7 +574,7 @@ export default function PnLTracker() {
           <Card className="p-8">
             <div className="flex items-center gap-3">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <span className="text-lg">Loading PnL data...</span>
+              <span className="text-lg">正在加载盈亏数据…</span>
             </div>
           </Card>
         </div>

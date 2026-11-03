@@ -253,7 +253,7 @@ export function HistorifyChartPane({
     if (document.fullscreenElement) void document.exitFullscreen()
     else {
       void el.requestFullscreen().catch(() => {
-        showToast.error('Full screen is not available in this browser.', 'historify')
+        showToast.error('此浏览器不支持全屏。', 'historify')
       })
     }
   }
@@ -310,7 +310,7 @@ export function HistorifyChartPane({
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'))
       if (!blob) throw new Error('no image')
       await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-      showToast.success('Chart copied to the clipboard.', 'historify')
+      showToast.success('图表已复制到剪贴板。', 'historify')
     } catch {
       // Clipboard images need a secure context and permission, and neither is
       // something the reader can infer from a failure.
@@ -364,7 +364,7 @@ export function HistorifyChartPane({
                   </Badge>
                 </>
               ) : (
-                <span className="text-muted-foreground">Select symbol</span>
+                <span className="text-muted-foreground">选择交易品种</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -455,11 +455,11 @@ export function HistorifyChartPane({
           variant="outline"
           size="sm"
           className="h-7 shrink-0 gap-1 px-2 text-xs"
-          title="Indicators"
+          title="指标"
           onClick={() => setIndicatorsOpen(true)}
         >
           <BarChart3 className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Indicators</span>
+          <span className="hidden sm:inline">指标</span>
           {activeIndicators.length > 0 ? (
             <span className="rounded bg-primary/15 px-1 font-medium text-[10px] text-primary">
               {activeIndicators.length}
@@ -518,9 +518,9 @@ export function HistorifyChartPane({
             </DropdownMenuTrigger>
             <DropdownMenuContent container={menuHost} align="end" className="w-48">
               <DropdownMenuItem onSelect={() => void copyChartImage()}>
-                Copy to clipboard
+                复制到剪贴板
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={downloadChartImage}>Download image</DropdownMenuItem>
+              <DropdownMenuItem onSelect={downloadChartImage}>下载图片</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Button
@@ -536,7 +536,7 @@ export function HistorifyChartPane({
             variant="ghost"
             size="icon"
             className="h-7 w-7"
-            title="Chart settings"
+            title="图表设置"
             onClick={() => widgetRef.current?.openSettings()}
           >
             <Settings2 className="h-3.5 w-3.5" />
@@ -596,7 +596,7 @@ export function HistorifyChartPane({
         />
       ) : state.symbol && loading ? (
         <div className="flex min-h-0 flex-1 items-center justify-center p-4">
-          <p className="text-muted-foreground text-xs">Reading your local data</p>
+          <p className="text-muted-foreground text-xs">正在读取本地数据</p>
         </div>
       ) : state.symbol ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 p-4 text-center">
@@ -609,7 +609,7 @@ export function HistorifyChartPane({
       ) : (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 p-4 text-center">
           <Layers className="h-8 w-8 text-muted-foreground/60" />
-          <p className="font-medium text-sm">Pick a symbol to chart</p>
+          <p className="font-medium text-sm">选择交易品种以查看图表</p>
           <p className="max-w-xs text-muted-foreground text-xs">
             {symbols.length === 0
               ? 'Nothing has been downloaded yet. Download a symbol from Historify and it will appear here.'

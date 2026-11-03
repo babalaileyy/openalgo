@@ -61,7 +61,7 @@ describe('selected chart comparisons', () => {
       />
     )
     fireEvent.click(screen.getByRole('button', { name: 'Comparisons' }))
-    expect(screen.getByText('Loading history')).toBeVisible()
+    expect(screen.getByText('正在加载历史数据')).toBeVisible()
     expect(screen.getByText('No comparison history')).toBeVisible()
     fireEvent.click(screen.getByRole('button', { name: 'Remove NSE:BHEL' }))
     expect(remove).toHaveBeenCalledExactlyOnceWith('two')
@@ -81,8 +81,8 @@ describe('selected chart comparisons', () => {
       />
     )
     fireEvent.click(screen.getByRole('button', { name: 'Comparisons' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Add comparison' }))
-    const choose = screen.getByRole('button', { name: 'Add comparison symbol' })
+    fireEvent.click(screen.getByRole('button', { name: '添加对比' }))
+    const choose = screen.getByRole('button', { name: '添加对比品种' })
     expect(choose).toHaveAttribute('data-mode', 'comparison')
     fireEvent.click(choose)
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('History unavailable'))
@@ -169,7 +169,7 @@ describe('comparison rows', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Comparisons' }))
     expect(screen.getByText('1,523.40')).toBeVisible()
     expect(screen.getByText('-0.42%')).toBeVisible()
-    expect(screen.getByText('Hidden')).toBeVisible()
+    expect(screen.getByText('已隐藏')).toBeVisible()
     fireEvent.click(screen.getByRole('button', { name: 'Hide NSE:INFY' }))
     expect(toggle).toHaveBeenCalledWith('one', false)
     fireEvent.click(screen.getByRole('button', { name: 'Show NSE:TCS' }))

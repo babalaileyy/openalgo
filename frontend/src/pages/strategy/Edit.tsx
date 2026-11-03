@@ -34,10 +34,8 @@ export default function StrategyEdit() {
     return (
       <Card>
         <CardContent className="space-y-3 p-6 text-center">
-          <p className="text-sm text-destructive">Failed to load strategy.</p>
-          <Button variant="outline" onClick={() => navigate('/strategy')}>
-            Back to list
-          </Button>
+          <p className="text-sm text-destructive">加载策略失败。</p>
+          <Button variant="outline" onClick={() => navigate('/strategy')}>返回列表</Button>
         </CardContent>
       </Card>
     )
@@ -54,9 +52,7 @@ export default function StrategyEdit() {
             This strategy is currently <span className="font-mono">{strategy.status}</span>. Stop it
             before editing.
           </p>
-          <Button variant="outline" onClick={() => navigate(`/strategy/${strategy.id}`)}>
-            Back to detail
-          </Button>
+          <Button variant="outline" onClick={() => navigate(`/strategy/${strategy.id}`)}>返回详情</Button>
         </CardContent>
       </Card>
     )

@@ -36,7 +36,7 @@ export interface OrderActionContext {
  */
 export function apiErrorMessage(e: unknown): string {
   const err = e as { response?: { data?: { message?: string } }; message?: string }
-  return err.response?.data?.message || err.message || 'Request failed'
+  return err.response?.data?.message || err.message || '请求失败'
 }
 
 /** Whether the analyzer_update handler already toasts this failure. */
@@ -53,9 +53,9 @@ export async function cancelDockOrder(order: DockOrder, ctx: OrderActionContext)
     ok = res.status === 'success'
     if (ok) {
       // cancel_order_event only plays the sound in live mode.
-      if (ctx.appMode === 'live') showToast.success(`Order cancelled: ${order.orderid}`, 'orders')
+      if (ctx.appMode === 'live') showToast.success(`委托已撤销：${order.orderid}`, 'orders')
     } else if (ctx.appMode === 'live') {
-      showToast.error(res.message || 'Cancel failed', 'orders')
+      showToast.error(res.message || '撤单失败', 'orders')
     }
   } catch (e) {
     if (!handledGlobally(ctx, e)) showToast.error(apiErrorMessage(e), 'orders')
@@ -79,7 +79,7 @@ export async function closeDockPosition(
     const res = await tradingApi.closePosition(p.symbol, p.exchange, p.product)
     ok = res.status === 'success'
     if (!ok && ctx.appMode === 'live') {
-      showToast.error(res.message || 'Close failed', 'orders')
+      showToast.error(res.message || '平仓失败', 'orders')
     }
   } catch (e) {
     if (!handledGlobally(ctx, e)) showToast.error(apiErrorMessage(e), 'orders')
@@ -93,7 +93,7 @@ export async function cancelAllDockOrders(ctx: OrderActionContext): Promise<void
   try {
     const res = await tradingApi.cancelAllOrders()
     if (res.status !== 'success' && ctx.appMode === 'live') {
-      showToast.error(res.message || 'Cancel all failed', 'orders')
+      showToast.error(res.message || '全部撤单失败', 'orders')
     }
   } catch (e) {
     if (!handledGlobally(ctx, e)) showToast.error(apiErrorMessage(e), 'orders')
@@ -106,7 +106,7 @@ export async function closeAllDockPositions(ctx: OrderActionContext): Promise<vo
   try {
     const res = await tradingApi.closeAllPositions()
     if (res.status !== 'success' && ctx.appMode === 'live') {
-      showToast.error(res.message || 'Close all failed', 'orders')
+      showToast.error(res.message || '全部平仓失败', 'orders')
     }
   } catch (e) {
     if (!handledGlobally(ctx, e)) showToast.error(apiErrorMessage(e), 'orders')

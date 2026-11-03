@@ -24,13 +24,13 @@ export const HolidaysNode = memo(({ data, selected }: HolidaysNodeProps) => {
             <CalendarX className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Holidays</div>
-            <div className="text-[9px] text-muted-foreground">Market holidays</div>
+            <div className="text-xs font-medium leading-tight">节假日</div>
+            <div className="text-[9px] text-muted-foreground">市场休市日</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Year</span>
+            <span className="text-[10px] text-muted-foreground">年份</span>
             <span className="mono-data text-[10px] font-medium">
               {data.year || new Date().getFullYear()}
             </span>

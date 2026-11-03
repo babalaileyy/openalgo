@@ -83,10 +83,10 @@ export default function NewChartinkStrategy() {
         showToast.success('Chartink strategy created successfully', 'chartink')
         navigate(`/chartink/${response.data?.strategy_id}`)
       } else {
-        showToast.error(response.message || 'Failed to create strategy', 'chartink')
+        showToast.error(response.message || '创建策略失败', 'chartink')
       }
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create strategy'
+      const errorMessage = error instanceof Error ? error.message : '创建策略失败'
       showToast.error(errorMessage, 'chartink')
     } finally {
       setLoading(false)
@@ -102,26 +102,20 @@ export default function NewChartinkStrategy() {
       {/* Back Button */}
       <Button variant="ghost" asChild>
         <Link to="/chartink">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Chartink Strategies
-        </Link>
+          <ArrowLeft className="h-4 w-4 mr-2" />返回 Chartink 策略</Link>
       </Button>
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Create Chartink Strategy</h1>
-        <p className="text-muted-foreground">
-          Set up a new Chartink webhook strategy to receive screener alerts
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">创建 Chartink 策略</h1>
+        <p className="text-muted-foreground">创建 Chartink Webhook 策略以接收选股器提醒</p>
       </div>
 
       {/* Form */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5" />
-            Strategy Details
-          </CardTitle>
+            <Zap className="h-5 w-5" />策略详情</CardTitle>
           <CardDescription>
             Configure your Chartink strategy settings (NSE/BSE only)
           </CardDescription>
@@ -130,7 +124,7 @@ export default function NewChartinkStrategy() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Strategy Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Strategy Name</Label>
+              <Label htmlFor="name">策略名称</Label>
               <Input
                 id="name"
                 placeholder="My Chartink Strategy"
@@ -157,7 +151,7 @@ export default function NewChartinkStrategy() {
 
             {/* Strategy Type */}
             <div className="space-y-2">
-              <Label htmlFor="strategy_type">Strategy Type</Label>
+              <Label htmlFor="strategy_type">策略类型</Label>
               <Select
                 value={formData.strategy_type}
                 onValueChange={(value) => setFormData({ ...formData, strategy_type: value })}
@@ -166,23 +160,21 @@ export default function NewChartinkStrategy() {
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="intraday">Intraday</SelectItem>
-                  <SelectItem value="positional">Positional</SelectItem>
+                  <SelectItem value="intraday">日内</SelectItem>
+                  <SelectItem value="positional">持仓</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground">
-                Intraday strategies have trading hours and auto square-off.
-              </p>
+              <p className="text-xs text-muted-foreground">日内策略设有交易时段和自动平仓时间。</p>
             </div>
 
             {/* Intraday Time Settings */}
             {formData.strategy_type === 'intraday' && (
               <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                <h4 className="font-medium">Trading Hours</h4>
+                <h4 className="font-medium">交易时间</h4>
 
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="start_time">Start Time</Label>
+                    <Label htmlFor="start_time">开始时间</Label>
                     <Input
                       id="start_time"
                       type="time"
@@ -191,7 +183,7 @@ export default function NewChartinkStrategy() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="end_time">End Time</Label>
+                    <Label htmlFor="end_time">结束时间</Label>
                     <Input
                       id="end_time"
                       type="time"
@@ -200,7 +192,7 @@ export default function NewChartinkStrategy() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="squareoff_time">Square Off</Label>
+                    <Label htmlFor="squareoff_time">平仓</Label>
                     <Input
                       id="squareoff_time"
                       type="time"
@@ -211,10 +203,7 @@ export default function NewChartinkStrategy() {
                 </div>
 
                 {errors.time && <p className="text-sm text-red-500">{errors.time}</p>}
-                <p className="text-xs text-muted-foreground">
-                  Orders will only be placed during trading hours. Positions will be squared off at
-                  the specified time.
-                </p>
+                <p className="text-xs text-muted-foreground">仅在交易时段内下单，并在指定时间平仓。</p>
               </div>
             )}
 

@@ -182,7 +182,7 @@ describe('InstrumentCard', () => {
     expect(screen.queryByText('Day range')).toBeNull()
     expect(screen.queryByText('52 week range')).toBeNull()
     expect(screen.queryByText('Bids')).toBeNull()
-    expect(screen.queryByText('Your position')).toBeNull()
+    expect(screen.queryByText('您的持仓')).toBeNull()
     expect(screen.queryByText('Open interest')).toBeNull()
   })
 
@@ -309,7 +309,7 @@ describe('InstrumentCard', () => {
     }
     render(<InstrumentCard spec={held} />)
 
-    expect(screen.getByText('Your position')).toBeInTheDocument()
+    expect(screen.getByText('您的持仓')).toBeInTheDocument()
     expect(screen.getByText('long')).toBeInTheDocument()
     expect(screen.getByText('250')).toBeInTheDocument()
     expect(screen.getByText('1,322.30')).toBeInTheDocument()
@@ -350,7 +350,7 @@ describe('InstrumentCard', () => {
   ])('draws nothing for %s', (_name, position) => {
     render(<InstrumentCard spec={{ ...FULL, position }} />)
 
-    expect(screen.queryByText('Your position')).toBeNull()
+    expect(screen.queryByText('您的持仓')).toBeNull()
     expect(screen.queryByText(/Unrealised/)).toBeNull()
     expect(screen.queryByText('Quantity')).toBeNull()
   })
@@ -366,7 +366,7 @@ describe('InstrumentCard', () => {
     }
     render(<InstrumentCard spec={failed} />)
 
-    expect(screen.queryByText('Your position')).toBeNull()
+    expect(screen.queryByText('您的持仓')).toBeNull()
     expect(
       screen.getByText(
         /Could not read your position: RetryAgentRun: the broker rejected the position book/
@@ -403,7 +403,7 @@ describe('InstrumentCard', () => {
   it('says so when the quote could not be read', () => {
     render(<InstrumentCard spec={{ symbol: 'X', exchange: 'NSE', quote: {} }} title="X NSE" />)
 
-    expect(screen.getByText(/could not be drawn/)).toBeInTheDocument()
+    expect(screen.getByText(/无法显示此交易品种卡片/)).toBeInTheDocument()
   })
 })
 
@@ -424,8 +424,8 @@ describe('InstrumentCard order controls', () => {
   it('writes a request into the composer and places nothing', async () => {
     render(<InstrumentCard spec={FULL} />)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Buy' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Sell' }))
+    await userEvent.click(screen.getByRole('button', { name: '买入' }))
+    await userEvent.click(screen.getByRole('button', { name: '卖出' }))
 
     // A sentence, for a human to read and send. Not an order, not a tool call,
     // and nothing that could reach a broker without passing the approval gate.
@@ -438,7 +438,7 @@ describe('InstrumentCard order controls', () => {
   it('asks for a lot, not a share, on a derivative', async () => {
     render(<InstrumentCard spec={FUTURE} />)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Buy' }))
+    await userEvent.click(screen.getByRole('button', { name: '买入' }))
     expect(sent).toEqual(['Buy 1 lot (75 quantity) of NIFTY29SEP26FUT on NFO at market.'])
   })
 
@@ -452,7 +452,7 @@ describe('InstrumentCard order controls', () => {
     }
     render(<InstrumentCard spec={index} />)
 
-    expect(screen.queryByRole('button', { name: 'Buy' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '买入' })).toBeNull()
     expect(screen.queryByText('Bids')).toBeNull()
   })
 })
@@ -463,7 +463,7 @@ describe('InstrumentCard without a composer', () => {
     // read-only. A control that quietly did nothing would be worse than none.
     render(<InstrumentCard spec={FULL} />)
 
-    expect(screen.queryByRole('button', { name: 'Buy' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Sell' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '买入' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '卖出' })).toBeNull()
   })
 })

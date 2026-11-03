@@ -92,7 +92,7 @@ export default function TrafficDashboard() {
     setIsRefreshing(true)
     await fetchData()
     setIsRefreshing(false)
-    showToast.success('Data refreshed', 'monitoring')
+    showToast.success('数据已刷新', 'monitoring')
   }
 
   const handleExport = () => {
@@ -153,7 +153,7 @@ export default function TrafficDashboard() {
               Traffic Dashboard
             </h1>
           </div>
-          <p className="text-muted-foreground">Monitor HTTP traffic and API requests</p>
+          <p className="text-muted-foreground">监控 HTTP 流量和 API 请求</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing}>
@@ -172,7 +172,7 @@ export default function TrafficDashboard() {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold">{currentStats?.total_requests || 0}</p>
-            <p className="text-sm text-muted-foreground">Total Requests</p>
+            <p className="text-sm text-muted-foreground">请求总数</p>
           </CardContent>
         </Card>
         <Card>
@@ -180,13 +180,13 @@ export default function TrafficDashboard() {
             <p className="text-2xl font-bold text-destructive">
               {currentStats?.error_requests || 0}
             </p>
-            <p className="text-sm text-muted-foreground">Error Requests</p>
+            <p className="text-sm text-muted-foreground">错误请求</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold">{currentStats?.avg_duration?.toFixed(2) || 0}ms</p>
-            <p className="text-sm text-muted-foreground">Avg Duration</p>
+            <p className="text-sm text-muted-foreground">平均耗时</p>
           </CardContent>
         </Card>
       </div>
@@ -196,7 +196,7 @@ export default function TrafficDashboard() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Traffic Logs</CardTitle>
+              <CardTitle>流量日志</CardTitle>
               <CardDescription>{filteredLogs.length} requests</CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -207,8 +207,8 @@ export default function TrafficDashboard() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="error">Errors Only</SelectItem>
-                  <SelectItem value="success">Success Only</SelectItem>
+                  <SelectItem value="error">仅错误</SelectItem>
+                  <SelectItem value="success">仅成功</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -217,8 +217,8 @@ export default function TrafficDashboard() {
         <CardContent>
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
             <TabsList className="mb-4">
-              <TabsTrigger value="all">All Traffic</TabsTrigger>
-              <TabsTrigger value="api">API Traffic</TabsTrigger>
+              <TabsTrigger value="all">全部流量</TabsTrigger>
+              <TabsTrigger value="api">API 流量</TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeTab}>
@@ -226,20 +226,20 @@ export default function TrafficDashboard() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Timestamp</TableHead>
-                      <TableHead>Method</TableHead>
-                      <TableHead>Path</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Duration</TableHead>
-                      <TableHead>Client IP</TableHead>
-                      <TableHead>Host</TableHead>
+                      <TableHead>时间戳</TableHead>
+                      <TableHead>方法</TableHead>
+                      <TableHead>路径</TableHead>
+                      <TableHead>状态</TableHead>
+                      <TableHead>耗时</TableHead>
+                      <TableHead>客户端 IP</TableHead>
+                      <TableHead>主机</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredLogs.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                          No traffic logs found
+                          暂无流量日志
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -277,19 +277,19 @@ export default function TrafficDashboard() {
       {stats?.endpoints && Object.keys(stats.endpoints).length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>API Endpoint Statistics</CardTitle>
-            <CardDescription>Performance breakdown by endpoint</CardDescription>
+            <CardTitle>API 接口统计</CardTitle>
+            <CardDescription>按接口划分的性能明细</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="border rounded-md">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Endpoint</TableHead>
-                    <TableHead>Total Requests</TableHead>
-                    <TableHead>Errors</TableHead>
-                    <TableHead>Avg Duration</TableHead>
-                    <TableHead>Success Rate</TableHead>
+                    <TableHead>接口</TableHead>
+                    <TableHead>请求总数</TableHead>
+                    <TableHead>错误</TableHead>
+                    <TableHead>平均耗时</TableHead>
+                    <TableHead>成功率</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

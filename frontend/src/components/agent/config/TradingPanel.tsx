@@ -71,7 +71,7 @@ export function TradingPanel() {
       void queryClient.invalidateQueries({ queryKey: agentQueryKeys.settings() })
       void queryClient.invalidateQueries({ queryKey: agentQueryKeys.status() })
     },
-    onError: (cause) => setError(agentErrorMessage(cause, 'Could not change the trading setting')),
+    onError: (cause) => setError(agentErrorMessage(cause, '无法更改交易设置')),
   })
 
   const enabled = settings.data?.data.trading_enabled ?? false
@@ -82,11 +82,10 @@ export function TradingPanel() {
     <section aria-labelledby="agent-trading-heading" className="space-y-4">
       <div>
         <h2 id="agent-trading-heading" className="text-base font-semibold">
-          Trading
+          交易
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Whether the agent may propose orders at all. Every order it proposes still stops for your
-          approval before anything is sent.
+          控制智能体是否可以提出订单。每笔订单发送前仍需您批准。
         </p>
       </div>
 
@@ -101,12 +100,12 @@ export function TradingPanel() {
           />
           <div className="min-w-0 flex-1">
             <Label htmlFor="agent-trading-enabled" className="text-sm font-medium">
-              Allow the agent to place, modify and cancel orders
+              允许智能体下单、修改订单和撤销订单
             </Label>
             <p id="agent-trading-help" className="mt-1 text-sm text-muted-foreground">
               {enabled
-                ? 'Order tools are available. Each call pauses for your approval, and the risk limits still apply after it.'
-                : 'Order tools are withheld, so the agent will decline to trade rather than ask you to approve anything.'}
+                ? '订单工具已启用。每次调用都会等待您的批准，批准后仍受风险限额约束。'
+                : '订单工具已禁用，智能体将拒绝交易，不会发起订单审批。'}
             </p>
           </div>
         </div>
@@ -122,9 +121,7 @@ export function TradingPanel() {
           <div className="px-4 pb-4">
             <Alert variant="destructive">
               <AlertDescription>
-                This instance is in live mode, so an order you approve is sent to your broker with
-                real money. Switch the platform to analyzer mode first if you want approved orders
-                to reach the sandbox instead.
+                当前处于实盘模式，您批准的订单会发送给交易商并使用真实资金。如需将批准的订单发送到模拟环境，请先切换到分析模式。
               </AlertDescription>
             </Alert>
           </div>
@@ -132,8 +129,7 @@ export function TradingPanel() {
 
         {enabled && analyzer.data?.analyze_mode === true && (
           <p className="px-4 pb-4 text-sm text-muted-foreground">
-            The platform is in analyzer mode, so an approved order reaches the sandbox rather than
-            your broker.
+            当前处于分析模式，批准的订单会发送到模拟环境，不会发送给交易商。
           </p>
         )}
       </div>

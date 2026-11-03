@@ -48,14 +48,14 @@ describe('the alert editor', () => {
   it('opens on the alert it was sent to, not on a list', () => {
     const { handle } = handleOf([existing()], 'a1')
     render(<AlertsDialog handle={handle} onClose={noop} />)
-    expect(screen.getByText('Edit alert')).toBeInTheDocument()
-    expect(screen.getByLabelText('Value')).toHaveValue('1266.8')
+    expect(screen.getByText('编辑提醒')).toBeInTheDocument()
+    expect(screen.getByLabelText('数值')).toHaveValue('1266.8')
   })
 
   it('creates rather than edits when it was sent no alert', () => {
     const { handle } = handleOf([existing()])
     render(<AlertsDialog handle={handle} onClose={noop} />)
-    expect(screen.getByText('Create alert')).toBeInTheDocument()
+    expect(screen.getByText('创建提醒')).toBeInTheDocument()
   })
 
   it('saves an edit onto the alert it opened, and adds nothing', async () => {
@@ -63,7 +63,7 @@ describe('the alert editor', () => {
     const onClose = vi.fn()
     const { handle, controller } = handleOf([existing()], 'a1')
     render(<AlertsDialog handle={handle} onClose={onClose} />)
-    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: '保存' }))
     expect(controller.update).toHaveBeenCalledWith('a1', expect.anything())
     expect(controller.add).not.toHaveBeenCalled()
     expect(onClose).toHaveBeenCalled()
@@ -75,7 +75,7 @@ describe('the alert editor', () => {
     // pressed Save, and freeze it to a price the line may since have left.
     const { handle } = handleOf([existing()], 'a1')
     render(<AlertsDialog handle={handle} onClose={noop} />)
-    const name = screen.getByLabelText('Alert name')
+    const name = screen.getByLabelText('提醒名称')
     expect(name).toHaveValue('')
     expect(name).toHaveAttribute('placeholder', 'RELIANCE crossing 1266.8')
   })
@@ -83,14 +83,14 @@ describe('the alert editor', () => {
   it('keeps a name the trader typed exactly as they typed it', () => {
     const { handle } = handleOf([existing({ title: 'Cover the short', payload: undefined })], 'a1')
     render(<AlertsDialog handle={handle} onClose={noop} />)
-    expect(screen.getByLabelText('Alert name')).toHaveValue('Cover the short')
+    expect(screen.getByLabelText('提醒名称')).toHaveValue('Cover the short')
   })
 
   it('carries the mark through a save, so the name still follows the price', async () => {
     const user = userEvent.setup()
     const { handle, controller } = handleOf([existing()], 'a1')
     render(<AlertsDialog handle={handle} onClose={noop} />)
-    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: '保存' }))
     expect(controller.update.mock.calls[0][1]).toMatchObject({ payload: { autoTitle: true } })
   })
 })

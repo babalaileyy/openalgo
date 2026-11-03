@@ -20,6 +20,7 @@ import type {
   ChartSettingsRequest,
 } from '@/lib/trading/terminal'
 import { conditionHolds } from '@/lib/trading/inputConditions'
+import { chartSettingsChinese } from '@/lib/trading/chartSettingsChinese'
 import { cn } from '@/lib/utils'
 import { SettingsField } from './IndicatorSettingsDialog'
 import { TickBox } from './TickBox'
@@ -31,6 +32,8 @@ interface Props {
   onApply(patch: Record<string, Value>): void
   onClose(): void
 }
+
+const chartText = (label: string) => ({ Price: '价格', Appearance: '外观', Readout: '行情读数', Axes: '坐标轴', Trading: '交易', Candles: 'K 线', Body: '实体', Borders: '边框', Wicks: '影线', Up: '上涨', Down: '下跌' } as Record<string, string>)[label] ?? chartSettingsChinese(label)
 
 const isPair = (f: ChartSettingsField): f is ChartSettingsPairField => f.type === 'colorPair'
 
@@ -122,11 +125,11 @@ export function ChartSettingsDialog({ req, onApply, onClose }: Props) {
       <div className="flex max-h-[92%] w-[380px] flex-col rounded-lg border bg-popover shadow-2xl">
         {/* Title */}
         <div className="flex shrink-0 items-center justify-between px-4 pb-2 pt-3">
-          <h3 className="text-[15px] font-semibold tracking-tight">Chart settings</h3>
+          <h3 className="text-[15px] font-semibold tracking-tight">图表设置</h3>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="关闭"
             className="-mr-1 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <svg
@@ -176,7 +179,7 @@ export function ChartSettingsDialog({ req, onApply, onClose }: Props) {
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               )}
             >
-              {t.label}
+              {chartText(t.label)}
             </button>
           ))}
         </div>
@@ -199,7 +202,7 @@ export function ChartSettingsDialog({ req, onApply, onClose }: Props) {
             ))}
           </div>
           {shownInputs.length === 0 && (
-            <p className="py-3 text-[13px] text-muted-foreground">Nothing to configure here.</p>
+            <p className="py-3 text-[13px] text-muted-foreground">此处没有可配置的选项。</p>
           )}
         </div>
 
@@ -218,12 +221,12 @@ export function ChartSettingsDialog({ req, onApply, onClose }: Props) {
             onClick={() => setValues((prev) => ({ ...prev, ...defaults }))}
             title={
               deviates
-                ? 'Restore every control on every tab to its default'
-                : 'Every control is already at its default'
+                ? '将所有标签页的设置恢复默认'
+                : '所有设置均为默认值'
             }
             className="rounded px-2 py-1 text-[13px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
           >
-            Reset to defaults
+            恢复默认设置
           </button>
           <div className="flex items-center gap-2">
             <button
@@ -231,14 +234,14 @@ export function ChartSettingsDialog({ req, onApply, onClose }: Props) {
               onClick={onClose}
               className="rounded border border-foreground/25 px-3.5 py-1 text-[13px] transition-colors hover:border-foreground/50 hover:bg-accent"
             >
-              Cancel
+              取消
             </button>
             <button
               type="button"
               onClick={apply}
               className="rounded bg-foreground px-5 py-1 text-[13px] font-medium text-background transition-opacity hover:opacity-90"
             >
-              Ok
+              确定
             </button>
           </div>
         </div>
@@ -277,7 +280,7 @@ function FieldGroup({
     <>
       {heading && (
         <div className="col-span-2 pt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-          {heading}
+          {chartText(heading)}
         </div>
       )}
       {fields.map((f) =>
@@ -286,7 +289,13 @@ function FieldGroup({
         ) : (
           <SettingsField
             key={f.key}
-            field={f}
+            field={{
+              ...f,
+              label: chartText(f.label),
+              ...(f.options && { options: f.options.map((option) => ({ ...option, label: chartText(option.label) })) }),
+              ...(f.unavailable && { unavailable: chartText(f.unavailable) }),
+              ...(f.tooltip && { tooltip: chartText(f.tooltip) }),
+            }}
             id={`chart-${tabId}-${f.key}`}
             value={values[f.key]}
             onChange={(v) => onChange(f.key, v)}
@@ -324,10 +333,10 @@ export function ColorPairRow({
             id={`chart-${enabledKey}`}
             checked={on}
             onChange={(next) => onChange(enabledKey, next)}
-            label={field.label}
+            label={chartText(field.label)}
           />
         )}
-        <span className="text-[13px] text-muted-foreground">{field.label}</span>
+        <span className="text-[13px] text-muted-foreground">{chartText(field.label)}</span>
       </div>
       <div className={cn('flex items-center gap-2', !on && 'pointer-events-none opacity-40')}>
         {[field.up, field.down].map((side) => (
@@ -338,8 +347,8 @@ export function ColorPairRow({
               typeof values[side.key] === 'string' ? (values[side.key] as string) : side.default
             }
             onChange={(e) => onChange(side.key, e.target.value)}
-            aria-label={`${field.label} ${side.label}`}
-            title={side.label}
+            aria-label={`${chartText(field.label)} ${chartText(side.label)}`}
+            title={chartText(side.label)}
             className="h-[26px] w-[26px] cursor-pointer rounded-md border border-border bg-transparent p-0 [&::-moz-color-swatch]:rounded [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-[3px] [&::-webkit-color-swatch]:rounded [&::-webkit-color-swatch]:border-0"
           />
         ))}

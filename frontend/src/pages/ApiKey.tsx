@@ -73,11 +73,11 @@ export default function ApiKey() {
           setOrderMode(data.order_mode || 'auto')
         } else {
           // Backend returned HTML - this shouldn't happen now
-          showToast.error('Failed to load API key - please refresh', 'system')
+          showToast.error('无法加载 API 密钥，请刷新页面', 'system')
         }
       }
     } catch (_error) {
-      showToast.error('Failed to load API key', 'system')
+      showToast.error('无法加载 API 密钥', 'system')
     } finally {
       setIsLoading(false)
     }
@@ -87,9 +87,9 @@ export default function ApiKey() {
     if (apiKey) {
       try {
         await navigator.clipboard.writeText(apiKey)
-        showToast.success('API key copied to clipboard', 'clipboard')
+        showToast.success('API 密钥已复制到剪贴板', 'clipboard')
       } catch {
-        showToast.error('Failed to copy API key', 'clipboard')
+        showToast.error('复制 API 密钥失败', 'clipboard')
       }
     }
   }
@@ -119,12 +119,12 @@ export default function ApiKey() {
         setApiKey(data.api_key)
         setHasApiKey(true)
         setShowApiKey(true)
-        showToast.success('API key generated successfully', 'system')
+        showToast.success('API 密钥生成成功', 'system')
       } else {
-        showToast.error(data.error || 'Failed to generate API key', 'system')
+        showToast.error(data.error || '生成 API 密钥失败', 'system')
       }
     } catch (_error) {
-      showToast.error('Failed to generate API key', 'system')
+      showToast.error('生成 API 密钥失败', 'system')
     } finally {
       setIsRegenerating(false)
     }
@@ -155,14 +155,14 @@ export default function ApiKey() {
       if (data.mode) {
         setOrderMode(data.mode)
         showToast.success(
-          `Order mode updated to ${data.mode === 'semi_auto' ? 'Semi-Auto' : 'Auto'}`,
+          `订单执行模式已切换为${data.mode === 'semi_auto' ? '半自动' : '自动'}`,
           'system'
         )
       } else {
-        showToast.error(data.error || 'Failed to update order mode', 'system')
+        showToast.error(data.error || '更新订单执行模式失败', 'system')
       }
     } catch (_error) {
-      showToast.error('Failed to update order mode', 'system')
+      showToast.error('更新订单执行模式失败', 'system')
     } finally {
       setIsTogglingMode(false)
     }
@@ -184,12 +184,12 @@ export default function ApiKey() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Key className="h-5 w-5" />
-              API Key Management
+              API 密钥管理
             </CardTitle>
             <CardDescription>
               {hasApiKey
-                ? 'Your API key was automatically generated during account creation. You can view it below or generate a new one if needed.'
-                : 'Your API key could not be found. Please generate a new one.'}
+                ? 'API 密钥在创建账户时自动生成。您可以在下方查看，或根据需要重新生成。'
+                : '未找到 API 密钥，请生成新密钥。'}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -201,7 +201,7 @@ export default function ApiKey() {
                   ? showApiKey
                     ? apiKey
                     : `${apiKey?.slice(0, 8)}${'•'.repeat(32)}${apiKey?.slice(-8)}`
-                  : 'No API key generated'}
+                  : '尚未生成 API 密钥'}
               </code>
               <Button
                 variant="ghost"
@@ -209,8 +209,8 @@ export default function ApiKey() {
                 className="h-8 w-8 shrink-0"
                 onClick={() => setShowApiKey(!showApiKey)}
                 disabled={!hasApiKey}
-                title={showApiKey ? 'Hide API key' : 'Show API key'}
-                aria-label={showApiKey ? 'Hide API key' : 'Show API key'}
+                title={showApiKey ? '隐藏 API 密钥' : '显示 API 密钥'}
+                aria-label={showApiKey ? '隐藏 API 密钥' : '显示 API 密钥'}
               >
                 {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </Button>
@@ -220,7 +220,7 @@ export default function ApiKey() {
             <div className="flex flex-wrap gap-2">
               <Button onClick={handleCopyApiKey} disabled={!hasApiKey} size="sm">
                 <Copy className="h-4 w-4 mr-2" />
-                Copy
+                复制
               </Button>
 
               <Button
@@ -230,7 +230,7 @@ export default function ApiKey() {
                 disabled={isRegenerating}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isRegenerating ? 'animate-spin' : ''}`} />
-                {hasApiKey ? 'Regenerate' : 'Generate'}
+                {hasApiKey ? '重新生成' : '生成'}
               </Button>
             </div>
 
@@ -239,9 +239,9 @@ export default function ApiKey() {
               {/* Order Mode Toggle */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-lg">Order Execution Mode</h3>
+                  <h3 className="font-semibold text-lg">订单执行模式</h3>
                   <p className="text-sm text-muted-foreground">
-                    Choose between automatic execution or manual approval.
+                    选择自动执行或手动审批。
                   </p>
                 </div>
 
@@ -253,7 +253,7 @@ export default function ApiKey() {
                     disabled={isTogglingMode}
                   >
                     <Check className="h-4 w-4 mr-2" />
-                    Auto Mode
+                    自动模式
                   </Button>
 
                   <Button
@@ -263,12 +263,12 @@ export default function ApiKey() {
                     disabled={isTogglingMode}
                   >
                     <AlertCircle className="h-4 w-4 mr-2" />
-                    Semi-Auto
+                    半自动模式
                   </Button>
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground px-4">
-                  <span>Execute immediately</span>
-                  <span>Queue for approval</span>
+                  <span>立即执行</span>
+                  <span>进入队列等待审批</span>
                 </div>
 
                 {/* Current Mode Status */}
@@ -282,22 +282,22 @@ export default function ApiKey() {
                 >
                   <Info className="h-4 w-4" />
                   <AlertDescription>
-                    Current mode:{' '}
-                    <strong>{orderMode === 'semi_auto' ? 'Semi-Auto' : 'Auto'}</strong>
+                    当前模式：{' '}
+                    <strong>{orderMode === 'semi_auto' ? '半自动' : '自动'}</strong>
                     {orderMode === 'semi_auto' ? (
                       <span>
                         {' '}
-                        - All orders will be queued in{' '}
+                        所有订单将进入
                         <Link
                           to="/action-center"
                           className="font-bold underline hover:text-primary"
                         >
-                          Action Center
+                          操作中心
                         </Link>{' '}
-                        for approval
+                        等待审批
                       </span>
                     ) : (
-                      <span> - All orders will execute immediately</span>
+                      <span>所有订单将立即执行</span>
                     )}
                   </AlertDescription>
                 </Alert>
@@ -313,53 +313,51 @@ export default function ApiKey() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center">
                 <Zap className="h-4 w-4 text-white" />
               </div>
-              API Playground
+              API 测试工具
             </CardTitle>
             <CardDescription>
-              Test and explore OpenAlgo REST APIs directly in your browser. Send requests, view
-              responses, and experiment with all available endpoints without writing any code.
+              直接在浏览器中测试 OpenAlgo REST API，无需编写代码即可发送请求、查看响应并测试接口。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h3 className="font-semibold mb-3">Features</h3>
+              <h3 className="font-semibold mb-3">功能</h3>
               <ul className="text-sm text-muted-foreground space-y-2">
                 <li className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-                  Send GET/POST requests to any endpoint
+                  向接口发送 GET/POST 请求
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-                  Syntax highlighted JSON responses
+                  显示带语法高亮的 JSON 响应
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-                  Copy response or cURL command
+                  复制响应或 cURL 命令
                 </li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-3">How it Works</h3>
+              <h3 className="font-semibold mb-3">使用方法</h3>
               <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
-                <li>Select an endpoint from the sidebar</li>
-                <li>Modify the request body as needed</li>
-                <li>Click Send to execute the request</li>
-                <li>View the JSON response instantly</li>
+                <li>从侧栏选择接口</li>
+                <li>按需修改请求内容</li>
+                <li>点击发送以执行请求</li>
+                <li>查看 JSON 响应</li>
               </ol>
             </div>
 
             <div className="p-3 bg-muted rounded-lg">
               <p className="text-xs text-muted-foreground">
-                <strong>Tip:</strong> Your API key is automatically injected into requests when you
-                use the Playground. No need to copy it manually.
+                <strong>提示：</strong>使用测试工具时，API 密钥会自动加入请求，无需手动复制。
               </p>
             </div>
 
             <Button asChild className="w-full sm:w-auto">
               <Link to="/playground">
                 <ArrowRight className="h-4 w-4 mr-2" />
-                Open Playground
+                打开测试工具
               </Link>
             </Button>
           </CardContent>
@@ -371,18 +369,18 @@ export default function ApiKey() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {hasApiKey ? 'Regenerate API Key?' : 'Generate API Key?'}
+              {hasApiKey ? '重新生成 API 密钥？' : '生成 API 密钥？'}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {hasApiKey
-                ? 'Are you sure you want to regenerate your API key? The current key will be invalidated and any applications using it will need to be updated.'
-                : 'Generate a new API key for authenticating your API requests?'}
+                ? '确定重新生成 API 密钥吗？当前密钥将失效，使用该密钥的应用都需要更新。'
+                : '生成新 API 密钥用于验证 API 请求吗？'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleRegenerateApiKey}>
-              {hasApiKey ? 'Regenerate' : 'Generate'}
+              {hasApiKey ? '重新生成' : '生成'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

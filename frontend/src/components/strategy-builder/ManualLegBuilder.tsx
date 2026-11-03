@@ -299,9 +299,9 @@ export function ManualLegBuilder({
             <ListPlus className="h-3.5 w-3.5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold leading-none">Add a Position</h3>
+            <h3 className="text-sm font-semibold leading-none">添加持仓</h3>
             <p className="mt-1 text-[10px] text-muted-foreground">
-              Build legs manually with custom strike, expiry and side
+              手动设置行权价、到期日和买卖方向，构建策略腿
             </p>
           </div>
         </div>
@@ -322,7 +322,7 @@ export function ManualLegBuilder({
       <div className="flex flex-wrap items-end gap-3 px-4 py-4">
         {/* Segment */}
         <div className="flex min-w-[120px] flex-col gap-1.5">
-          <FieldLabel>Segment</FieldLabel>
+          <FieldLabel>市场类别</FieldLabel>
           <Select value={segment} onValueChange={(v) => setSegment(v as LegDraftSegment)}>
             <SelectTrigger
               aria-label="Segment"
@@ -333,18 +333,18 @@ export function ManualLegBuilder({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="OPTION">Options</SelectItem>
-              <SelectItem value="FUTURE">Futures</SelectItem>
+              <SelectItem value="OPTION">期权</SelectItem>
+              <SelectItem value="FUTURE">期货</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Expiry */}
         <div className="flex min-w-[140px] flex-col gap-1.5">
-          <FieldLabel>Expiry</FieldLabel>
+          <FieldLabel>到期日</FieldLabel>
           <Select value={expiry} onValueChange={setExpiry}>
             <SelectTrigger
-              aria-label="Expiry"
+              aria-label="到期日"
               aria-invalid={contractError !== null}
               aria-describedby={contractError ? contractErrorId : undefined}
               className="h-9 text-xs font-medium"
@@ -389,12 +389,12 @@ export function ManualLegBuilder({
                 onValueChange={(v) => setStrike(Number(v))}
               >
                 <SelectTrigger
-                  aria-label="Strike"
+                  aria-label="行权价"
                   aria-invalid={contractError !== null}
                   aria-describedby={contractError ? contractErrorId : undefined}
                   className="h-9 text-xs font-medium tabular-nums"
                 >
-                  <SelectValue placeholder="Select" />
+                  <SelectValue placeholder="选择" />
                 </SelectTrigger>
                 <SelectContent>
                   {strikeOptions.map((s) => {
@@ -423,9 +423,9 @@ export function ManualLegBuilder({
 
             {/* CE / PE */}
             <div className="flex flex-col gap-1.5">
-              <FieldLabel>Type</FieldLabel>
+              <FieldLabel>类型</FieldLabel>
               <fieldset
-                aria-label="Option type"
+                aria-label="期权类型"
                 aria-describedby={contractError ? contractErrorId : undefined}
                 className="inline-flex h-9 min-w-0 overflow-hidden rounded-md border bg-background p-0.5"
               >
@@ -462,7 +462,7 @@ export function ManualLegBuilder({
 
         {/* Buy / Sell — now inline, right where mouse already is. */}
         <div className="flex flex-col gap-1.5">
-          <FieldLabel>Side</FieldLabel>
+          <FieldLabel>方向</FieldLabel>
           <fieldset
             aria-label="Trade side"
             className="inline-flex h-9 min-w-0 overflow-hidden rounded-md border bg-background p-0.5"
@@ -478,7 +478,7 @@ export function ManualLegBuilder({
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
-              Buy
+              买入
             </button>
             <button
               type="button"
@@ -491,20 +491,20 @@ export function ManualLegBuilder({
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
-              Sell
+              卖出
             </button>
           </fieldset>
         </div>
 
         {/* Lot Qty */}
         <div className="flex flex-col gap-1.5">
-          <FieldLabel>Lot Qty</FieldLabel>
+          <FieldLabel>手数</FieldLabel>
           <div className="inline-flex h-9 w-[120px] items-center overflow-hidden rounded-md border bg-background">
             <button
               type="button"
               onClick={() => setLots(Math.max(1, lots - 1))}
               className="flex h-full w-9 items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground"
-              aria-label="Decrease lots"
+              aria-label="减少手数"
             >
               <Minus className="h-3.5 w-3.5" />
             </button>
@@ -520,7 +520,7 @@ export function ManualLegBuilder({
               type="button"
               onClick={() => setLots(lots + 1)}
               className="flex h-full w-9 items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground"
-              aria-label="Increase lots"
+              aria-label="增加手数"
             >
               <Plus className="h-3.5 w-3.5" />
             </button>

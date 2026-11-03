@@ -66,11 +66,11 @@ describe('BoxChartSettingsDialog', () => {
 
   it('offers Renko its body and border colours, and no reversal', () => {
     open('renko')
-    expect(screen.getByRole('heading', { name: 'Renko settings' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Body Up')).toBeInTheDocument()
-    expect(screen.getByLabelText('Borders Down')).toBeInTheDocument()
-    expect(screen.queryByLabelText('Reversal')).not.toBeInTheDocument()
-    expect(screen.getByLabelText('Size')).toHaveValue('12.5')
+    expect(screen.getByRole('heading', { name: 'Renko（砖形图）设置' })).toBeInTheDocument()
+    expect(screen.getByLabelText('实体 上涨')).toBeInTheDocument()
+    expect(screen.getByLabelText('边框 下跌')).toBeInTheDocument()
+    expect(screen.queryByLabelText('反转格数')).not.toBeInTheDocument()
+    expect(screen.getByLabelText('大小')).toHaveValue('12.5')
   })
 
   it('applies a percent preset as the method and the percent, and nothing else', async () => {
@@ -78,8 +78,8 @@ describe('BoxChartSettingsDialog', () => {
     const { onApply, onClose } = open('renko')
     await user.click(screen.getByRole('button', { name: '0.50%' }))
     expect(screen.getByRole('button', { name: '0.50%' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByLabelText('Size')).toHaveValue('0.5')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    expect(screen.getByLabelText('大小')).toHaveValue('0.5')
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'transform.mode': 'percent', 'transform.percent': 0.5 })
     expect(onClose).toHaveBeenCalled()
   })
@@ -87,13 +87,13 @@ describe('BoxChartSettingsDialog', () => {
   it('sizes from the ATR with its length, and builds from the high and low', async () => {
     const user = userEvent.setup()
     const { onApply } = open('renko')
-    expect(screen.queryByLabelText('ATR length')).not.toBeInTheDocument()
-    await user.selectOptions(screen.getByLabelText('Measured as'), 'atr')
+    expect(screen.queryByLabelText('ATR（平均真实波幅）周期')).not.toBeInTheDocument()
+    await user.selectOptions(screen.getByLabelText('计算方式'), 'atr')
     expect(screen.getByText('x ATR')).toBeInTheDocument()
-    fireEvent.change(screen.getByLabelText('Size'), { target: { value: '1.5' } })
-    fireEvent.change(screen.getByLabelText('ATR length'), { target: { value: '20' } })
-    await user.click(screen.getByLabelText('High and low'))
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    fireEvent.change(screen.getByLabelText('大小'), { target: { value: '1.5' } })
+    fireEvent.change(screen.getByLabelText('ATR（平均真实波幅）周期'), { target: { value: '20' } })
+    await user.click(screen.getByLabelText('最高价和最低价'))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({
       'transform.mode': 'atr',
       'transform.atrMultiplier': 1.5,
@@ -105,39 +105,39 @@ describe('BoxChartSettingsDialog', () => {
   it('keeps a size it cannot use on screen and refuses to apply it', async () => {
     const user = userEvent.setup()
     const { onApply, onClose } = open('renko')
-    await user.selectOptions(screen.getByLabelText('Measured as'), 'percent')
-    fireEvent.change(screen.getByLabelText('Size'), { target: { value: '-2' } })
-    expect(screen.getByLabelText('Size')).toHaveValue('-2')
-    expect(screen.getByText('Enter a number above 0')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.selectOptions(screen.getByLabelText('计算方式'), 'percent')
+    fireEvent.change(screen.getByLabelText('大小'), { target: { value: '-2' } })
+    expect(screen.getByLabelText('大小')).toHaveValue('-2')
+    expect(screen.getByText('请输入大于 0 的数值')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).not.toHaveBeenCalled()
     expect(onClose).not.toHaveBeenCalled()
-    fireEvent.change(screen.getByLabelText('Size'), {
+    fireEvent.change(screen.getByLabelText('大小'), {
       target: { value: '2' },
     })
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'transform.mode': 'percent', 'transform.percent': 2 })
   })
 
   it('treats a blank absolute size as sized from history', async () => {
     const user = userEvent.setup()
     const { onApply } = open('renko')
-    fireEvent.change(screen.getByLabelText('Size'), { target: { value: '' } })
-    expect(screen.getByLabelText('Size')).toHaveAttribute('placeholder', 'Auto')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    fireEvent.change(screen.getByLabelText('大小'), { target: { value: '' } })
+    expect(screen.getByLabelText('大小')).toHaveAttribute('placeholder', '自动')
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'transform.boxSize': 0 })
   })
 
   it('gives point and figure its X and O colours, a reversal and close-only prices', async () => {
     const user = userEvent.setup()
     const { onApply } = open('point-figure')
-    expect(screen.getByRole('heading', { name: 'Point & Figure settings' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Point & Figure（点数图）设置' })).toBeInTheDocument()
     expect(screen.getByLabelText('Boxes X')).toBeInTheDocument()
     expect(screen.queryByLabelText('Borders Up')).not.toBeInTheDocument()
-    expect(screen.getByLabelText('High and low')).toBeChecked()
-    await user.selectOptions(screen.getByLabelText('Reversal'), '2')
-    await user.click(screen.getByLabelText('Close only'))
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    expect(screen.getByLabelText('最高价和最低价')).toBeChecked()
+    await user.selectOptions(screen.getByLabelText('反转格数'), '2')
+    await user.click(screen.getByLabelText('仅收盘价'))
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'transform.reversal': 2, 'transform.method': 'close' })
   })
 
@@ -146,12 +146,12 @@ describe('BoxChartSettingsDialog', () => {
     const req = request('renko')
     req.values = { ...req.values, 'transform.mode': 'percent', 'transform.percent': 2 }
     const { onApply } = open('renko', req)
-    const reset = screen.getByRole('button', { name: 'Reset to defaults' })
+    const reset = screen.getByRole('button', { name: '恢复默认值' })
     expect(reset).toBeEnabled()
     await user.click(reset)
-    expect(screen.getByLabelText('Measured as')).toHaveValue('fixed')
-    expect(screen.getByLabelText('Size')).toHaveValue('12.5')
-    await user.click(screen.getByRole('button', { name: 'Ok' }))
+    expect(screen.getByLabelText('计算方式')).toHaveValue('fixed')
+    expect(screen.getByLabelText('大小')).toHaveValue('12.5')
+    await user.click(screen.getByRole('button', { name: '确定' }))
     expect(onApply).toHaveBeenCalledWith({ 'transform.mode': 'fixed', 'transform.percent': 1 })
   })
 
@@ -159,7 +159,7 @@ describe('BoxChartSettingsDialog', () => {
     const user = userEvent.setup()
     const { onApply, onClose } = open('renko')
     await user.click(screen.getByRole('button', { name: '1%' }))
-    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    await user.click(screen.getByRole('button', { name: '取消' }))
     expect(onApply).not.toHaveBeenCalled()
     expect(onClose).toHaveBeenCalled()
   })
@@ -177,15 +177,15 @@ describe('BoxChartSettingsDialog', () => {
         onClose={vi.fn()}
       />
     )
-    expect(screen.getByRole('dialog', { name: 'Renko settings' })).toContainElement(
+    expect(screen.getByRole('dialog', { name: 'Renko（砖形图）设置' })).toContainElement(
       document.activeElement as HTMLElement
     )
-    expect(screen.getByLabelText('Size')).toHaveFocus()
-    screen.getByRole('button', { name: 'Ok' }).focus()
+    expect(screen.getByLabelText('大小')).toHaveFocus()
+    screen.getByRole('button', { name: '确定' }).focus()
     await user.tab()
-    expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: '关闭' })).toHaveFocus()
     await user.tab({ shift: true })
-    expect(screen.getByRole('button', { name: 'Ok' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: '确定' })).toHaveFocus()
     unmount()
     expect(opener).toHaveFocus()
     opener.remove()

@@ -152,7 +152,7 @@ async function renderPopulatedBuilder() {
     </MemoryRouter>
   )
   await waitFor(() =>
-    expect(screen.getByRole('combobox', { name: 'Option expiry' })).toHaveTextContent('04AUG26')
+    expect(screen.getByRole('combobox', { name: '期权到期日' })).toHaveTextContent('04AUG26')
   )
   await screen.findByText('NIFTY04AUG26100CE')
   const add = await screen.findByRole('button', { name: /add buy/i })
@@ -192,9 +192,9 @@ describe('StrategyBuilder accessibility and mobile containment', () => {
 
       expect(screen.getByRole('textbox', { name: 'Search strategy templates' })).toBeVisible()
       expect(screen.getByRole('combobox', { name: 'Segment' })).toBeVisible()
-      expect(screen.getByRole('combobox', { name: 'Expiry' })).toBeVisible()
-      expect(screen.getByRole('combobox', { name: 'Strike' })).toBeVisible()
-      expect(screen.getByRole('group', { name: 'Option type' })).toBeVisible()
+      expect(screen.getByRole('combobox', { name: '到期日' })).toBeVisible()
+      expect(screen.getByRole('combobox', { name: '行权价' })).toBeVisible()
+      expect(screen.getByRole('group', { name: '期权类型' })).toBeVisible()
       expect(screen.getByRole('group', { name: 'Trade side' })).toBeVisible()
       expect(screen.getByRole('spinbutton', { name: 'Position lot quantity' })).toBeVisible()
       expect(screen.getByRole('slider', { name: 'Spot price shift' })).toBeVisible()
@@ -203,7 +203,7 @@ describe('StrategyBuilder accessibility and mobile containment', () => {
 
       const payoff = screen.getByRole('region', { name: /payoff analysis/i })
       expect(
-        within(payoff).getByRole('table', { name: /representative payoff values/i })
+        within(payoff).getByRole('table', { name: /代表性损益值/ })
       ).toBeVisible()
 
       const headingLevels = screen
@@ -225,18 +225,18 @@ describe('StrategyBuilder accessibility and mobile containment', () => {
     expect(
       within(dialog).getByRole('combobox', { name: /strike for buy call leg 1/i })
     ).toBeVisible()
-    expect(within(dialog).getByRole('combobox', { name: 'Strategy expiry' })).toBeVisible()
-    expect(within(dialog).getByRole('spinbutton', { name: 'Strategy lot quantity' })).toBeVisible()
+    expect(within(dialog).getByRole('combobox', { name: '策略到期日' })).toBeVisible()
+    expect(within(dialog).getByRole('spinbutton', { name: '策略手数' })).toBeVisible()
     expect(await axe(document.body)).toHaveNoViolations()
   })
 
   it('labels order controls and associates an invalid limit price with its error', async () => {
     const { user } = await renderPopulatedBuilder()
 
-    await user.click(screen.getByRole('button', { name: 'Execute' }))
-    const dialog = await screen.findByRole('dialog', { name: /execute basket order/i })
-    expect(within(dialog).getByRole('group', { name: 'Product type' })).toBeVisible()
-    expect(within(dialog).getByRole('group', { name: 'Price type' })).toBeVisible()
+    await user.click(screen.getByRole('button', { name: '执行' }))
+    const dialog = await screen.findByRole('dialog', { name: /执行组合委托/ })
+    expect(within(dialog).getByRole('group', { name: '产品类型' })).toBeVisible()
+    expect(within(dialog).getByRole('group', { name: '价格类型' })).toBeVisible()
     expect(
       within(dialog).getByRole('checkbox', { name: /include nifty04aug26100ce/i })
     ).toBeVisible()
@@ -253,7 +253,7 @@ describe('StrategyBuilder accessibility and mobile containment', () => {
     expect(price).toHaveAttribute('aria-invalid', 'true')
     const errorId = price.getAttribute('aria-describedby')
     expect(errorId).toBeTruthy()
-    expect(document.getElementById(errorId as string)).toHaveTextContent(/supported tick range/i)
+    expect(document.getElementById(errorId as string)).toHaveTextContent(/最小变动单位范围/)
     expect(await axe(document.body)).toHaveNoViolations()
   })
 })

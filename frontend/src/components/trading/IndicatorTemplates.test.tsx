@@ -47,8 +47,8 @@ async function open() {
   return user
 }
 async function save(user: ReturnType<typeof userEvent.setup>, name = 'Momentum') {
-  await user.type(screen.getByLabelText('New template name'), name)
-  await user.click(screen.getByRole('button', { name: 'Save current studies' }))
+  await user.type(screen.getByLabelText('新模板名称'), name)
+  await user.click(screen.getByRole('button', { name: '保存当前指标' }))
   await screen.findByRole('option', { name })
 }
 function fileOf(input: unknown) {
@@ -80,9 +80,9 @@ describe('named indicator templates', () => {
       applyIndicatorTemplate: vi.fn(async () => {}),
     }
     host.select(other)
-    await user.click(screen.getByRole('button', { name: 'Replace studies' }))
+    await user.click(screen.getByRole('button', { name: '替换指标' }))
     expect(other.applyIndicatorTemplate).toHaveBeenCalledWith(studies, 'replace')
-    await user.click(screen.getByRole('button', { name: 'Add studies' }))
+    await user.click(screen.getByRole('button', { name: '添加指标' }))
     expect(other.applyIndicatorTemplate).toHaveBeenLastCalledWith(studies, 'append')
     expect(host.target?.applyIndicatorTemplate).not.toHaveBeenCalled()
   })
@@ -91,23 +91,23 @@ describe('named indicator templates', () => {
     const host = harness()
     const user = await open()
     await save(user)
-    await user.clear(screen.getByLabelText('Saved template name'))
-    await user.type(screen.getByLabelText('Saved template name'), 'Trend')
-    await user.click(screen.getByRole('button', { name: 'Rename' }))
+    await user.clear(screen.getByLabelText('已保存模板的名称'))
+    await user.type(screen.getByLabelText('已保存模板的名称'), 'Trend')
+    await user.click(screen.getByRole('button', { name: '重命名' }))
     await screen.findByRole('option', { name: 'Trend' })
-    await user.click(screen.getByRole('button', { name: 'Duplicate' }))
+    await user.click(screen.getByRole('button', { name: '复制' }))
     await screen.findByRole('option', { name: 'Trend copy' })
     expect(host.saved()?.templates).toHaveLength(2)
-    await user.click(screen.getByRole('button', { name: 'Delete' }))
+    await user.click(screen.getByRole('button', { name: '删除' }))
     // Nothing goes until the trader confirms; keeping it puts the question away.
-    expect(screen.getByRole('alertdialog', { name: 'Delete template' })).toHaveTextContent(
-      'Delete the template Trend copy?'
+    expect(screen.getByRole('alertdialog', { name: '删除模板' })).toHaveTextContent(
+      '确定删除模板 Trend copy 吗？'
     )
-    await user.click(screen.getByRole('button', { name: 'Keep template' }))
+    await user.click(screen.getByRole('button', { name: '保留模板' }))
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
     expect(host.saved()?.templates).toHaveLength(2)
-    await user.click(screen.getByRole('button', { name: 'Delete' }))
-    await user.click(screen.getByRole('button', { name: 'Delete template' }))
+    await user.click(screen.getByRole('button', { name: '删除' }))
+    await user.click(screen.getByRole('button', { name: '删除模板' }))
     await waitFor(() => expect(host.saved()?.templates).toHaveLength(1))
     expect(host.saved()?.templates[0].name).toBe('Trend')
   })
@@ -124,8 +124,8 @@ describe('named indicator templates', () => {
       captureIndicatorTemplate: vi.fn(() => structuredClone(now)),
       applyIndicatorTemplate: vi.fn(async () => {}),
     })
-    await user.click(screen.getByRole('button', { name: 'Update with current chart' }))
-    await screen.findByText('Momentum now holds the 2 studies on the selected chart')
+    await user.click(screen.getByRole('button', { name: '使用当前图表更新' }))
+    await screen.findByText('Momentum 已更新为所选图表上的 2 个指标')
     expect(host.saved()?.templates).toHaveLength(1)
     expect(host.saved()?.templates[0].indicators).toEqual(now)
   })
@@ -133,10 +133,10 @@ describe('named indicator templates', () => {
   it('imports an empty template with a fresh identity and clears studies on replace', async () => {
     const host = harness()
     const user = await open()
-    await user.upload(screen.getByLabelText('Import template JSON'), fileOf(emptyTemplate))
-    await screen.findByText('No studies')
+    await user.upload(screen.getByLabelText('导入模板 JSON'), fileOf(emptyTemplate))
+    await screen.findByText('没有指标')
     expect(host.saved()?.templates[0].id).not.toBe('external')
-    await user.click(screen.getByRole('button', { name: 'Replace studies' }))
+    await user.click(screen.getByRole('button', { name: '替换指标' }))
     expect(host.target?.applyIndicatorTemplate).toHaveBeenCalledWith([], 'replace')
   })
 
@@ -147,7 +147,7 @@ describe('named indicator templates', () => {
     const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:template')
     const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
-    await user.click(screen.getByRole('button', { name: 'Export JSON' }))
+    await user.click(screen.getByRole('button', { name: '导出 JSON' }))
     expect(create).toHaveBeenCalledWith(expect.any(Blob))
     expect(click).toHaveBeenCalledOnce()
     await waitFor(() => expect(revoke).toHaveBeenCalledWith('blob:template'))
@@ -156,10 +156,10 @@ describe('named indicator templates', () => {
   it('keeps the entered name and dialog open after a rejected save', async () => {
     const host = harness({ failWrite: true })
     const user = await open()
-    await user.type(screen.getByLabelText('New template name'), 'Keep this name')
-    await user.click(screen.getByRole('button', { name: 'Save current studies' }))
+    await user.type(screen.getByLabelText('新模板名称'), 'Keep this name')
+    await user.click(screen.getByRole('button', { name: '保存当前指标' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('quota')
-    expect(screen.getByLabelText('New template name')).toHaveValue('Keep this name')
+    expect(screen.getByLabelText('新模板名称')).toHaveValue('Keep this name')
     expect(screen.getByRole('dialog')).toBeVisible()
     expect(host.saved()).toBeNull()
   })
@@ -168,15 +168,15 @@ describe('named indicator templates', () => {
     const host = harness()
     const user = await open()
     await user.upload(
-      screen.getByLabelText('Import template JSON'),
+      screen.getByLabelText('导入模板 JSON'),
       fileOf({ ...emptyTemplate, kind: 'workspace' })
     )
     expect(await screen.findByRole('alert')).toHaveTextContent(/kind|template/i)
     const oversized = fileOf(emptyTemplate)
     Object.defineProperty(oversized, 'size', { value: 6 * 1024 * 1024 })
-    await user.upload(screen.getByLabelText('Import template JSON'), oversized)
+    await user.upload(screen.getByLabelText('导入模板 JSON'), oversized)
     expect(await screen.findByRole('alert')).toHaveTextContent(/size|5 MB/i)
-    await user.upload(screen.getByLabelText('Import template JSON'), fileOf({}))
+    await user.upload(screen.getByLabelText('导入模板 JSON'), fileOf({}))
     expect(await screen.findByRole('alert')).toHaveTextContent(/kind|template/i)
     expect(host.saved()).toBeNull()
   })
@@ -184,17 +184,17 @@ describe('named indicator templates', () => {
   it('reports missing chart or custom studies without claiming success', async () => {
     const host = harness({ noTarget: true })
     const user = await open()
-    await user.type(screen.getByLabelText('New template name'), 'Unavailable')
-    await user.click(screen.getByRole('button', { name: 'Save current studies' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent(/chart/i)
-    await user.upload(screen.getByLabelText('Import template JSON'), fileOf(emptyTemplate))
+    await user.type(screen.getByLabelText('新模板名称'), 'Unavailable')
+    await user.click(screen.getByRole('button', { name: '保存当前指标' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent(/图表/)
+    await user.upload(screen.getByLabelText('导入模板 JSON'), fileOf(emptyTemplate))
     host.select({
       captureIndicatorTemplate: () => [],
       applyIndicatorTemplate: async () => {
         throw new Error('Missing custom study: local-oscillator')
       },
     })
-    await user.click(screen.getByRole('button', { name: 'Replace studies' }))
+    await user.click(screen.getByRole('button', { name: '替换指标' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('local-oscillator')
   })
 
@@ -210,9 +210,9 @@ describe('named indicator templates', () => {
     }
     const { rerender } = render(<IndicatorTemplates {...props} />)
     await userEvent.setup().click(screen.getByRole('button', { name: 'Templates', exact: true }))
-    expect(screen.getByRole('button', { name: 'Save current studies' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '保存当前指标' })).toBeDisabled()
     rerender(<IndicatorTemplates {...props} loading={false} pending />)
-    fireEvent.change(screen.getByLabelText('New template name'), { target: { value: 'Busy' } })
-    expect(screen.getByRole('button', { name: 'Save current studies' })).toBeDisabled()
+    fireEvent.change(screen.getByLabelText('新模板名称'), { target: { value: 'Busy' } })
+    expect(screen.getByRole('button', { name: '保存当前指标' })).toBeDisabled()
   })
 })

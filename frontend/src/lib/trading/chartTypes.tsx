@@ -32,36 +32,36 @@ export interface ChartTypeDef {
 /** Ordered groups (separators between them), matching the dropdown layout. */
 export const CHART_TYPE_GROUPS: ChartTypeDef[][] = [
   [
-    { value: 'bar', label: 'Bars (OHLC)', iconKey: 'chart-bar', series: 'bar' },
-    { value: 'candlestick', label: 'Candles', iconKey: 'chart-candlestick', series: 'candlestick' },
+    { value: 'bar', label: '美国线（OHLC）', iconKey: 'chart-bar', series: 'bar' },
+    { value: 'candlestick', label: 'K 线', iconKey: 'chart-candlestick', series: 'candlestick' },
     {
       value: 'hollow-candle',
-      label: 'Hollow Candles',
+      label: '空心 K 线',
       iconKey: 'chart-hollow-candle',
       series: 'hollow-candle',
     },
     {
       value: 'volume-candle',
-      label: 'Volume Candles',
+      label: '成交量 K 线',
       iconKey: 'chart-volume-candle',
       series: 'volume-candle',
     },
-    { value: 'high-low', label: 'High-Low', iconKey: 'chart-high-low', series: 'high-low' },
+    { value: 'high-low', label: '高低价线', iconKey: 'chart-high-low', series: 'high-low' },
   ],
   [
-    { value: 'line', label: 'Line', iconKey: 'chart-line', series: 'line' },
+    { value: 'line', label: '折线', iconKey: 'chart-line', series: 'line' },
     {
       value: 'line-markers',
-      label: 'Line + Markers',
+      label: '带标记折线',
       iconKey: 'chart-line-markers',
       series: 'line-markers',
     },
-    { value: 'step', label: 'Step', iconKey: 'chart-step', series: 'step' },
-    { value: 'area', label: 'Area', iconKey: 'chart-area', series: 'area' },
-    { value: 'hlc-area', label: 'HLC Area', iconKey: 'chart-hlc-area', series: 'hlc-area' },
+    { value: 'step', label: '阶梯线', iconKey: 'chart-step', series: 'step' },
+    { value: 'area', label: '面积图', iconKey: 'chart-area', series: 'area' },
+    { value: 'hlc-area', label: '高低收面积图', iconKey: 'chart-hlc-area', series: 'hlc-area' },
     {
       value: 'baseline',
-      label: 'Baseline',
+      label: '基准线',
       iconKey: 'chart-baseline',
       series: 'baseline',
       baseline: true,
@@ -70,35 +70,35 @@ export const CHART_TYPE_GROUPS: ChartTypeDef[][] = [
   [
     {
       value: 'heikin-ashi',
-      label: 'Heikin Ashi',
+      label: '平均 K 线',
       iconKey: 'chart-heikin-ashi',
       series: 'candlestick',
       transform: () => ({ type: 'heikin-ashi' }),
     },
     {
       value: 'renko',
-      label: 'Renko',
+      label: '砖形图',
       iconKey: 'chart-renko',
       series: 'candlestick',
       transform: (b) => ({ type: 'renko', options: { boxSize: b } }),
     },
     {
       value: 'range',
-      label: 'Range Bars',
+      label: '区间柱线',
       iconKey: 'chart-range-bars',
       series: 'candlestick',
       transform: (b) => ({ type: 'range-bars', options: { range: b } }),
     },
     {
       value: 'line-break',
-      label: 'Line Break',
+      label: '新价线',
       iconKey: 'chart-line-break',
       series: 'candlestick',
       transform: () => ({ type: 'line-break', options: { lines: 3 } }),
     },
     {
       value: 'point-figure',
-      label: 'Point & Figure',
+      label: '点数图',
       iconKey: 'chart-point-figure',
       series: 'point-figure',
       // Three boxes to reverse, from each bar's high and low: the standard
@@ -107,7 +107,7 @@ export const CHART_TYPE_GROUPS: ChartTypeDef[][] = [
     },
     {
       value: 'kagi',
-      label: 'Kagi',
+      label: '价位折线',
       iconKey: 'chart-kagi',
       series: 'kagi',
       // A reversal of two boxes, the proportion the transform itself takes
@@ -116,10 +116,10 @@ export const CHART_TYPE_GROUPS: ChartTypeDef[][] = [
     },
   ],
   [
-    { value: 'tpo', label: 'Time Price Opportunity', iconKey: 'tpo', series: 'candlestick' },
+    { value: 'tpo', label: '时间价格分布（TPO）', iconKey: 'tpo', series: 'candlestick' },
     {
       value: 'session-volume-profile',
-      label: 'Session Volume Profile',
+      label: '时段成交量分布',
       iconKey: 'profile',
       series: 'candlestick',
     },

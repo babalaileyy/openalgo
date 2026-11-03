@@ -79,7 +79,7 @@ describe('PriceScaleMenu', () => {
 
   it('greys a level with no data, and still lets one already on be switched off', () => {
     const { onCommand } = open()
-    expect(screen.getAllByText('no data')).toHaveLength(2)
+    expect(screen.getAllByText('无数据')).toHaveLength(2)
     expect(screen.getByRole('button', { name: 'Bid line' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Ask line' })).toBeDisabled()
     const askTag = screen.getByRole('button', { name: 'Ask axis tag' })

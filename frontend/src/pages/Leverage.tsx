@@ -14,7 +14,7 @@ import {
 import { showToast } from '@/utils/toast'
 
 const LEVERAGE_OPTIONS = [
-  { value: '0', label: 'Default (Broker Setting)' },
+  { value: '0', label: '默认（交易商设置）' },
   { value: '1', label: '1x' },
   { value: '2', label: '2x' },
   { value: '3', label: '3x' },
@@ -43,7 +43,7 @@ export default function Leverage() {
       }
     } catch {
       setFetchError(true)
-      showToast.error('Failed to fetch leverage setting')
+      showToast.error('获取杠杆设置失败')
     } finally {
       setIsLoading(false)
     }
@@ -63,10 +63,10 @@ export default function Leverage() {
         showToast.success(res.data.message)
         setCurrentLeverage(selectedLeverage)
       } else {
-        showToast.error(res.data.message || 'Failed to save')
+        showToast.error(res.data.message || '保存失败')
       }
     } catch {
-      showToast.error('Failed to save leverage')
+      showToast.error('保存杠杆设置失败')
     } finally {
       setIsSaving(false)
     }
@@ -89,10 +89,9 @@ export default function Leverage() {
           <div className="flex items-center gap-3">
             <Gauge className="h-6 w-6 text-primary" />
             <div>
-              <CardTitle>Leverage Configuration</CardTitle>
+              <CardTitle>杠杆配置</CardTitle>
               <CardDescription>
-                Set leverage for crypto futures. This leverage is applied before every order via the
-                Delta Exchange leverage API.
+                设置加密货币期货杠杆。每次下单前，系统会通过 Delta Exchange 杠杆接口应用此设置。
               </CardDescription>
             </div>
           </div>
@@ -100,7 +99,7 @@ export default function Leverage() {
         <CardContent>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="leverage">Default Leverage</Label>
+              <Label htmlFor="leverage">默认杠杆</Label>
               <div className="flex gap-2">
                 <Select
                   value={selectedLeverage}
@@ -121,7 +120,7 @@ export default function Leverage() {
                 {fetchError ? (
                   <Button size="sm" variant="destructive" onClick={fetchCurrent}>
                     <RefreshCw className="h-4 w-4 mr-1" />
-                    Retry
+                    重试
                   </Button>
                 ) : (
                   <Button
@@ -135,13 +134,12 @@ export default function Leverage() {
                     ) : (
                       <Save className="h-4 w-4 mr-1" />
                     )}
-                    Set
+                    设置
                   </Button>
                 )}
               </div>
               <p className="text-xs text-muted-foreground">
-                Default uses the leverage already set on your Delta Exchange account. Other values
-                will set leverage before every order.
+                选择默认时，使用 Delta Exchange 账户中已有的杠杆设置；选择其他倍数时，每次下单前都会设置该杠杆。
               </p>
             </div>
           </div>

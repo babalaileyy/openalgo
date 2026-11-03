@@ -107,21 +107,21 @@ export function WorkspaceMenu({
   const openSaved = (document: WorkspaceDocument) =>
     perform(async () => {
       await openWorkspace(document)
-      return { message: 'Workspace opened', select: document.id }
+      return { message: '工作区已打开', select: document.id }
     })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Tip
         tip={{
-          title: active ? `Workspace: ${active.name}` : 'Workspaces',
-          sub: 'Save or open a complete chart grid',
+          title: active ? `工作区：${active.name}` : '工作区',
+          sub: '保存或打开完整的图表布局',
         }}
       >
         <DialogTrigger asChild>
           <button type="button" data-workspace-control className={TB_BTN} aria-label="Workspaces">
             <ChromeIcon id="folder" />
-            <span className={TB_LABEL_WIDE}>Workspaces</span>
+            <span className={TB_LABEL_WIDE}>工作区</span>
           </button>
         </DialogTrigger>
       </Tip>
@@ -131,14 +131,11 @@ export function WorkspaceMenu({
         style={{ maxWidth: 'min(36rem, calc(100vw - 2rem))' }}
       >
         <DialogHeader>
-          <DialogTitle>Chart workspaces</DialogTitle>
-          <DialogDescription>
-            Save the complete chart grid for your account in this browser. Export a workspace to
-            share its chart configuration.
-          </DialogDescription>
+          <DialogTitle>图表工作区</DialogTitle>
+          <DialogDescription>在此浏览器的当前账户下保存完整的图表布局。可导出工作区以分享图表配置。</DialogDescription>
         </DialogHeader>
         <p className="text-sm">
-          {active ? `Current: ${active.name}` : 'Current: unnamed workspace'}
+          {active ? `当前：${active.name}` : '当前：未命名工作区'}
           {status ? ` (${status})` : ''}
         </p>
         {(failure || error) && (
@@ -147,55 +144,45 @@ export function WorkspaceMenu({
           </p>
         )}
         {message && <output className="text-sm text-muted-foreground">{message}</output>}
-        {loading && <p className="text-sm">Loading workspaces...</p>}
+        {loading && <p className="text-sm">正在加载工作区...</p>}
         {transitionPending && cancelOpening && (
-          <Button variant="outline" onClick={cancelOpening}>
-            Cancel workspace loading
-          </Button>
+          <Button variant="outline" onClick={cancelOpening}>取消加载工作区</Button>
         )}
         <label className="flex items-center gap-2 text-sm">
           <TickBox
-            label="Autosave chart changes"
+            label="自动保存图表更改"
             checked={catalog?.autosave === true}
             disabled={disabled}
             onChange={(enabled) =>
               void perform(async () => {
                 await run((repository) => repository.setAutosave(enabled))
-                return { message: enabled ? 'Autosave enabled' : 'Autosave disabled' }
+                return { message: enabled ? '已启用自动保存' : '已关闭自动保存' }
               })
             }
-          />
-          Autosave chart changes
-        </label>
+          />自动保存图表更改</label>
         <div className="flex flex-wrap gap-2">
           <Button
             disabled={disabled || !active}
             onClick={() =>
               void perform(async () => {
                 await save()
-                return { message: 'Workspace saved' }
+                return { message: '工作区已保存' }
               })
             }
-          >
-            Save
-          </Button>
+          >保存</Button>
           <Button
             variant="outline"
             disabled={disabled}
             onClick={() =>
               void perform(async () => {
                 await reload()
-                return { message: 'Workspace list refreshed' }
+                return { message: '工作区列表已刷新' }
               })
             }
-          >
-            Refresh
-          </Button>
+          >刷新</Button>
         </div>
         <div className="grid gap-2 border-t pt-3">
-          <label htmlFor={`${id}-name`} className="text-sm font-medium">
-            Workspace name
-          </label>
+          <label htmlFor={`${id}-name`} className="text-sm font-medium">工作区名称</label>
           <Input
             id={`${id}-name`}
             maxLength={120}
@@ -208,30 +195,24 @@ export function WorkspaceMenu({
               onClick={() =>
                 void perform(async () => {
                   const saved = await saveAs(name.trim())
-                  return { message: 'Workspace saved', select: saved.id, clearName: true }
+                  return { message: '工作区已保存', select: saved.id, clearName: true }
                 })
               }
-            >
-              Save as
-            </Button>
+            >另存为</Button>
             <Button
               variant="outline"
               disabled={disabled || !name.trim()}
               onClick={() =>
                 void perform(async () => {
                   const saved = await create(name.trim())
-                  return { message: 'New workspace opened', select: saved.id, clearName: true }
+                  return { message: '已打开新工作区', select: saved.id, clearName: true }
                 })
               }
-            >
-              New workspace
-            </Button>
+            >新建工作区</Button>
           </div>
         </div>
         <div className="grid gap-2 border-t pt-3">
-          <label htmlFor={`${id}-saved`} className="text-sm font-medium">
-            Saved workspace
-          </label>
+          <label htmlFor={`${id}-saved`} className="text-sm font-medium">已保存的工作区</label>
           <select
             id={`${id}-saved`}
             value={selected?.id ?? ''}
@@ -239,7 +220,7 @@ export function WorkspaceMenu({
             onChange={(event) => setSelectedId(event.target.value)}
             className="h-9 min-w-0 rounded-md border bg-background px-3 text-sm"
           >
-            <option value="">Choose a workspace</option>
+            <option value="">选择工作区</option>
             {catalog?.workspaces.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.name}
@@ -247,14 +228,12 @@ export function WorkspaceMenu({
             ))}
           </select>
           {catalog?.workspaces.length === 0 && (
-            <p className="text-sm text-muted-foreground">No saved workspaces</p>
+            <p className="text-sm text-muted-foreground">没有已保存的工作区</p>
           )}
           {selected && (
             <>
               <div className="flex flex-wrap gap-2">
-                <Button disabled={disabled} onClick={() => void openSaved(selected)}>
-                  Open
-                </Button>
+                <Button disabled={disabled} onClick={() => void openSaved(selected)}>打开</Button>
                 <Button
                   variant="outline"
                   disabled={disabled}
@@ -263,12 +242,10 @@ export function WorkspaceMenu({
                       const copy = await run((repository) =>
                         repository.duplicate('workspace', selected.id, `${selected.name} copy`)
                       )
-                      return { message: 'Workspace duplicated', select: copy.id }
+                      return { message: '工作区已复制', select: copy.id }
                     })
                   }
-                >
-                  Duplicate
-                </Button>
+                >复制</Button>
                 <Button
                   variant="outline"
                   disabled={disabled}
@@ -288,36 +265,34 @@ export function WorkspaceMenu({
                       } finally {
                         URL.revokeObjectURL(url)
                       }
-                      return { message: 'Workspace exported' }
+                      return { message: '工作区已导出' }
                     })
                   }
-                >
-                  Export JSON
-                </Button>
+                >导出 JSON</Button>
                 <Button
                   variant="outline"
                   disabled={disabled || confirmDelete}
                   onClick={() => setConfirmDelete(true)}
                 >
-                  Delete
+                  删除
                 </Button>
               </div>
               {confirmDelete && (
                 <div
                   role="alertdialog"
-                  aria-label="Delete workspace"
+                  aria-label="删除工作区"
                   className="grid gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3"
                 >
                   <p className="text-sm">
-                    Delete the saved workspace {selected.name}?
+                    确定删除已保存的工作区 {selected.name} 吗？
                     {selected.id === activeId
-                      ? ' It is open now: the charts on screen stay, as an unnamed workspace.'
+                      ? '该工作区当前已打开：屏幕上的图表会保留为未命名工作区。'
                       : ''}{' '}
-                    This cannot be undone.
+                    此操作无法撤销。
                   </p>
                   <div className="flex flex-wrap justify-end gap-2">
                     <Button variant="outline" onClick={() => setConfirmDelete(false)}>
-                      Keep workspace
+                      保留工作区
                     </Button>
                     <Button
                       variant="destructive"
@@ -329,19 +304,19 @@ export function WorkspaceMenu({
                           setConfirmDelete(false)
                           return {
                             message:
-                              'Saved workspace deleted; the displayed charts are still available',
+                              '已删除保存的工作区；当前显示的图表仍然保留',
                             select: '',
                           }
                         })
                       }
                     >
-                      Delete workspace
+                      删除工作区
                     </Button>
                   </div>
                 </div>
               )}
               <label htmlFor={`${id}-rename`} className="text-sm font-medium">
-                Saved workspace name
+                已保存工作区的名称
               </label>
               <div className="flex gap-2">
                 <Input
@@ -358,11 +333,11 @@ export function WorkspaceMenu({
                       await run((repository) =>
                         repository.rename('workspace', selected.id, savedName.trim())
                       )
-                      return { message: 'Workspace renamed' }
+                      return { message: '工作区已重命名' }
                     })
                   }
                 >
-                  Rename
+                  重命名
                 </Button>
               </div>
             </>
@@ -370,7 +345,7 @@ export function WorkspaceMenu({
         </div>
         {!!catalog?.recentWorkspaceIds.length && (
           <div className="grid gap-1 border-t pt-3">
-            <p className="text-sm font-medium">Recent workspaces</p>
+            <p className="text-sm font-medium">最近的工作区</p>
             {catalog.recentWorkspaceIds.map((key) => {
               const document = catalog.workspaces.find((item) => item.id === key)
               return document ? (
@@ -388,7 +363,7 @@ export function WorkspaceMenu({
           </div>
         )}
         <label htmlFor={`${id}-import`} className="text-sm font-medium">
-          Import workspace JSON
+          导入工作区 JSON
         </label>
         <Input
           id={`${id}-import`}
@@ -401,10 +376,10 @@ export function WorkspaceMenu({
             if (!file) return
             void perform(async () => {
               if (file.size > 5 * 1024 * 1024)
-                throw new Error('Workspace file size must be at most 5 MB')
+                throw new Error('工作区文件大小不能超过 5 MB')
               const document = parseWorkspaceDocument(await file.text())
               const saved = await importWorkspace(document)
-              return { message: 'Workspace imported and opened', select: saved.id }
+              return { message: '工作区已导入并打开', select: saved.id }
             })
           }}
         />

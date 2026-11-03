@@ -46,17 +46,17 @@ export const PriceConditionNode = memo(({ data, selected }: PriceConditionNodePr
             <TrendingUp className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Price</div>
-            <div className="text-[9px] text-muted-foreground">Condition</div>
+            <div className="text-xs font-medium leading-tight">价格</div>
+            <div className="text-[9px] text-muted-foreground">条件</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Check</span>
+            <span className="text-[10px] text-muted-foreground">检查</span>
             <span className="text-[10px] font-medium">
               {fieldLabels[data.field] || 'LTP'} {operatorLabels[data.operator] || '>'}{' '}
               {data.value || 0}
@@ -65,8 +65,8 @@ export const PriceConditionNode = memo(({ data, selected }: PriceConditionNodePr
         </div>
         {/* Handle labels */}
         <div className="mt-2 flex justify-between px-1 text-[8px]">
-          <span className="text-buy">True</span>
-          <span className="text-sell">False</span>
+          <span className="text-buy">真</span>
+          <span className="text-sell">假</span>
         </div>
       </div>
       {/* True output (left) - Condition met */}

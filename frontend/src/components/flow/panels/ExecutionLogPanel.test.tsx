@@ -28,14 +28,14 @@ describe('ExecutionLogPanel', () => {
       />
     )
 
-    expect(screen.getByText('Running in background')).toBeTruthy()
-    expect(screen.queryByText('Failed')).toBeNull()
+    expect(screen.getByText('后台运行中')).toBeTruthy()
+    expect(screen.queryByText('失败')).toBeNull()
     expect(screen.queryByText('Completed')).toBeNull()
   })
 
   it('still shows a failed run as failed', () => {
     render(<ExecutionLogPanel logs={[]} status="error" onClose={() => {}} />)
 
-    expect(screen.getByText('Failed')).toBeTruthy()
+    expect(screen.getByText('失败')).toBeTruthy()
   })
 })

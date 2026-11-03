@@ -371,9 +371,9 @@ describe('PayoffChart exact geometry', () => {
     )
 
     const region = screen.getByRole('region', { name: 'Long Call payoff analysis' })
-    expect(within(region).getByText(/scenario spot/i)).toHaveTextContent('₹100.00')
+    expect(within(region).getByText(/情景标的价格/)).toHaveTextContent('₹100.00')
     expect(within(region).getByRole('status')).toHaveTextContent(/at expiry/i)
-    const table = within(region).getByRole('table', { name: /representative payoff values/i })
+    const table = within(region).getByRole('table', { name: /代表性损益值/ })
     expect(within(table).getAllByRole('row').length).toBeGreaterThanOrEqual(4)
     expect(within(table).getAllByRole('row').length).toBeLessThan(10)
   })
@@ -410,7 +410,7 @@ describe('PayoffChart exact geometry', () => {
     expect(breakevenSummary).toHaveTextContent('4 of 10 shown')
     expect((breakevenSummary.textContent ?? '').split(' (')[0].split(', ')).toHaveLength(4)
 
-    const table = within(region).getByRole('table', { name: /representative payoff values/i })
+    const table = within(region).getByRole('table', { name: /代表性损益值/ })
     expect(within(table).getAllByRole('row')).toHaveLength(8)
     expect(within(region).getByTestId('representative-payoff-disclosure')).toHaveTextContent(
       '7 of 13 representative points shown'

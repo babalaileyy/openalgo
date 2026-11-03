@@ -148,7 +148,7 @@ function computeRow(pair: ArbitragePair, quotes: Map<string, Quote>, now: number
 }
 
 function directionLabel(dir: Direction): string {
-  return dir === 'SHORT_SPREAD' ? 'Sell far / Buy near' : 'Buy far / Sell near'
+  return dir === 'SHORT_SPREAD' ? '卖远月 / 买近月' : '买远月 / 卖近月'
 }
 
 export default function Arbitrage() {
@@ -194,10 +194,10 @@ export default function Arbitrage() {
         setSymbols(res.data.symbols)
         setGeneratedAt(res.data.generated_at)
       } else {
-        setUniverseError(res.message || 'Failed to load arbitrage universe')
+        setUniverseError(res.message || '加载套利合约列表失败')
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to load arbitrage universe'
+      const message = err instanceof Error ? err.message : '加载套利合约列表失败'
       setUniverseError(message)
     } finally {
       setLoading(false)
@@ -337,19 +337,19 @@ export default function Arbitrage() {
   const submitTrade = useCallback(async () => {
     if (!tradeRow) return
     if (!apiKey) {
-      showToast.error('API key not found. Generate one at /apikey')
+      showToast.error('未找到 API 密钥，请在 /apikey 生成')
       return
     }
     const lotsN = Number.parseInt(lots, 10)
     if (!Number.isInteger(lotsN) || lotsN < 1) {
-      showToast.error('Lots must be a positive whole number')
+      showToast.error('手数必须为正整数')
       return
     }
     const { near, far } = tradeRow.pair
     const nearLot = near.lotsize ?? 0
     const farLot = far.lotsize ?? 0
     if (nearLot <= 0 || farLot <= 0) {
-      showToast.error('Missing lot size for one of the legs')
+      showToast.error('某条交易腿缺少每手数量')
       return
     }
 
@@ -362,7 +362,7 @@ export default function Arbitrage() {
       nearPx = Number.parseFloat(nearPrice)
       farPx = Number.parseFloat(farPrice)
       if (!(nearPx > 0) || !(farPx > 0)) {
-        showToast.error('Enter valid limit prices for both legs')
+        showToast.error('请输入两条交易腿的有效限价')
         return
       }
     }
@@ -398,14 +398,14 @@ export default function Arbitrage() {
       const res = await tradingApi.placeBasketOrder(apiKey, 'calendar_arbitrage', orders)
       if (res.status === 'success') {
         const ok = (res.results || []).filter((r) => r.status === 'success').length
-        const modeNote = res.mode === 'analyze' ? ' (analyzer)' : ''
-        showToast.success(`Spread order placed: ${ok}/${orders.length} legs${modeNote}`, 'orders')
+        const modeNote = res.mode === 'analyze' ? '（模拟分析模式）' : ''
+        showToast.success(`价差组合下单结果：${ok}/${orders.length} 条腿成功${modeNote}`, 'orders')
         setTradeRow(null)
       } else {
-        showToast.error(res.message || 'Basket order failed')
+        showToast.error(res.message || '组合下单失败')
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to place spread order'
+      const message = err instanceof Error ? err.message : '价差组合下单失败'
       showToast.error(serverSentence(err, message))
     } finally {
       setSubmitting(false)
@@ -413,44 +413,43 @@ export default function Arbitrage() {
   }, [tradeRow, tradeDir, apiKey, lots, pricetype, product, nearPrice, farPrice])
 
   const connBadge = () => {
-    if (conn.isFallbackMode) return <Badge variant="secondary">REST fallback (after-hours)</Badge>
-    if (conn.isAuthenticated) return <Badge className="bg-emerald-600 text-white">Live</Badge>
-    if (conn.isConnected) return <Badge variant="secondary">Authenticating…</Badge>
-    return <Badge variant="outline">Connecting…</Badge>
+    if (conn.isFallbackMode) return <Badge variant="secondary">盘后使用 REST 备用行情</Badge>
+    if (conn.isAuthenticated) return <Badge className="bg-emerald-600 text-white">实时</Badge>
+    if (conn.isConnected) return <Badge variant="secondary">验证中…</Badge>
+    return <Badge variant="outline">连接中…</Badge>
   }
 
   return (
     <div className="py-6 space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Arbitrage</h1>
+          <h1 className="text-2xl font-bold">跨期套利</h1>
           <p className="text-muted-foreground mt-1">
-            Realtime futures calendar-spread scanner (NFO &amp; MCX). Ranks near-vs-next and
-            near-vs-third month pairs by executable bid/ask spread.
+            实时扫描期货跨期价差（NFO 和 MCX），按可成交买卖报价的价差排列近月与次月、近月与第三个月合约组合。
           </p>
         </div>
         <div className="flex items-center gap-2">
           {connBadge()}
           <Button variant="outline" size="sm" onClick={loadUniverse} disabled={loading}>
-            {loading ? 'Loading…' : 'Refresh universe'}
+            {loading ? '加载中…' : '刷新合约列表'}
           </Button>
         </div>
       </div>
 
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Filters</CardTitle>
+          <CardTitle className="text-base">筛选条件</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="space-y-1.5">
-              <Label>Exchange</Label>
+              <Label>交易所</Label>
               <Select value={exchangeFilter} onValueChange={setExchangeFilter}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ALL">All</SelectItem>
+                  <SelectItem value="ALL">全部</SelectItem>
                   {exchanges.map((ex) => (
                     <SelectItem key={ex} value={ex}>
                       {ex}
@@ -461,35 +460,35 @@ export default function Arbitrage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label>Pair type</Label>
+              <Label>合约组合类型</Label>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ALL">All</SelectItem>
-                  <SelectItem value="near-next">Near vs Next</SelectItem>
-                  <SelectItem value="near-third">Near vs Third</SelectItem>
+                  <SelectItem value="ALL">全部</SelectItem>
+                  <SelectItem value="near-next">近月与次月</SelectItem>
+                  <SelectItem value="near-third">近月与第三个月</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-1.5">
-              <Label>Min spread %</Label>
+              <Label>最低价差比例 %</Label>
               <Input
                 type="number"
                 inputMode="decimal"
                 step="0.05"
-                placeholder="e.g. 0.5"
+                placeholder="例如 0.5"
                 value={minSpread}
                 onChange={(e) => setMinSpread(e.target.value)}
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label>Underlying</Label>
+              <Label>标的</Label>
               <Input
-                placeholder="Search e.g. NIFTY"
+                placeholder="搜索，例如 NIFTY"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -498,7 +497,7 @@ export default function Arbitrage() {
             <div className="flex items-end gap-2 pb-1">
               <Switch id="only-liquid" checked={onlyLiquid} onCheckedChange={setOnlyLiquid} />
               <Label htmlFor="only-liquid" className="cursor-pointer">
-                Two-sided quotes only
+                仅显示双边报价
               </Label>
             </div>
           </div>
@@ -508,10 +507,10 @@ export default function Arbitrage() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
-            Opportunities
+            套利机会
             <span className="text-sm font-normal text-muted-foreground">
-              {visibleRows.length} of {pairs.length} pairs
-              {generatedAt ? ` · universe ${new Date(generatedAt).toLocaleTimeString()}` : ''}
+              显示 {visibleRows.length} / {pairs.length} 组合
+              {generatedAt ? ` · 合约列表更新于 ${new Date(generatedAt).toLocaleTimeString()}` : ''}
             </span>
           </CardTitle>
         </CardHeader>
@@ -520,29 +519,29 @@ export default function Arbitrage() {
             <div className="text-sm text-destructive py-8 text-center">{universeError}</div>
           ) : loading ? (
             <div className="text-sm text-muted-foreground py-8 text-center">
-              Loading futures universe…
+              正在加载期货合约列表…
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-10">#</TableHead>
-                  <TableHead>Underlying</TableHead>
-                  <TableHead>Exch</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Near (bid/ask)</TableHead>
-                  <TableHead>Far (bid/ask)</TableHead>
-                  <TableHead className="text-right">Net</TableHead>
-                  <TableHead className="text-right">Spread %</TableHead>
-                  <TableHead>Direction</TableHead>
-                  <TableHead className="text-right">Trade</TableHead>
+                  <TableHead>标的</TableHead>
+                  <TableHead>交易所</TableHead>
+                  <TableHead>类型</TableHead>
+                  <TableHead>近月（买价/卖价）</TableHead>
+                  <TableHead>远月（买价/卖价）</TableHead>
+                  <TableHead className="text-right">净价差</TableHead>
+                  <TableHead className="text-right">价差比例 %</TableHead>
+                  <TableHead>方向</TableHead>
+                  <TableHead className="text-right">交易</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {visibleRows.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
-                      No pairs match the current filters (or no live quotes yet).
+                      没有符合筛选条件的组合，或尚无实时行情。
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -562,7 +561,7 @@ export default function Arbitrage() {
                               className={`inline-block h-2 w-2 rounded-full ${
                                 row.fresh ? 'bg-emerald-500' : 'bg-muted-foreground/40'
                               }`}
-                              title={row.fresh ? 'Live' : 'Stale / no recent tick'}
+                              title={row.fresh ? '实时行情' : '行情已过期或近期无更新'}
                             />
                             {row.pair.underlying}
                           </div>
@@ -570,7 +569,7 @@ export default function Arbitrage() {
                         <TableCell>{row.pair.exchange}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className="font-normal">
-                            {row.pair.type === 'near-next' ? 'Next' : 'Third'}
+                            {row.pair.type === 'near-next' ? '次月' : '第三个月'}
                           </Badge>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
@@ -599,7 +598,7 @@ export default function Arbitrage() {
                             disabled={!row.hasData}
                             onClick={() => openTrade(row)}
                           >
-                            Trade
+                            交易
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -616,33 +615,33 @@ export default function Arbitrage() {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {tradeRow ? `${tradeRow.pair.underlying} calendar spread` : 'Spread order'}
+              {tradeRow ? `${tradeRow.pair.underlying} 跨期价差` : '价差组合委托'}
             </DialogTitle>
             <DialogDescription>
-              Two-leg basket order. BUY leg is executed before the SELL leg for margin efficiency.
+              双腿组合委托。为提高保证金使用效率，买入腿先于卖出腿执行。
             </DialogDescription>
           </DialogHeader>
 
           {tradeRow && (
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <Label>Direction</Label>
+                <Label>方向</Label>
                 <Select value={tradeDir} onValueChange={(v) => onChangeDir(v as Direction)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="SHORT_SPREAD">
-                      Sell far / Buy near (capture far premium)
+                      卖远月 / 买近月（获取远月溢价）
                     </SelectItem>
-                    <SelectItem value="LONG_SPREAD">Buy far / Sell near</SelectItem>
+                    <SelectItem value="LONG_SPREAD">买远月 / 卖近月</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Lots</Label>
+                  <Label>手数</Label>
                   <Input
                     type="number"
                     min="1"
@@ -652,7 +651,7 @@ export default function Arbitrage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Price type</Label>
+                  <Label>价格类型</Label>
                   <Select
                     value={pricetype}
                     onValueChange={(v) => {
@@ -664,13 +663,13 @@ export default function Arbitrage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="LIMIT">LIMIT</SelectItem>
-                      <SelectItem value="MARKET">MARKET</SelectItem>
+                      <SelectItem value="LIMIT">限价（LIMIT）</SelectItem>
+                      <SelectItem value="MARKET">市价（MARKET）</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Product</Label>
+                  <Label>产品类型</Label>
                   <Select value={product} onValueChange={(v) => setProduct(v as 'NRML' | 'MIS')}>
                     <SelectTrigger>
                       <SelectValue />
@@ -699,7 +698,7 @@ export default function Arbitrage() {
                           variant={nearAction === 'BUY' ? 'default' : 'destructive'}
                           className="mr-2"
                         >
-                          {nearAction}
+                          {nearAction === 'BUY' ? '买入' : '卖出'}
                         </Badge>
                         {tradeRow.pair.near.symbol}
                       </span>
@@ -713,7 +712,7 @@ export default function Arbitrage() {
                         step={tradeRow.pair.near.tick_size || 0.05}
                         value={nearPrice}
                         onChange={(e) => setNearPrice(e.target.value)}
-                        placeholder="Near leg limit price"
+                        placeholder="近月腿限价"
                       />
                     )}
                     <div className="flex items-center justify-between gap-2 pt-1">
@@ -722,7 +721,7 @@ export default function Arbitrage() {
                           variant={farAction === 'BUY' ? 'default' : 'destructive'}
                           className="mr-2"
                         >
-                          {farAction}
+                          {farAction === 'BUY' ? '买入' : '卖出'}
                         </Badge>
                         {tradeRow.pair.far.symbol}
                       </span>
@@ -736,13 +735,12 @@ export default function Arbitrage() {
                         step={tradeRow.pair.far.tick_size || 0.05}
                         value={farPrice}
                         onChange={(e) => setFarPrice(e.target.value)}
-                        placeholder="Far leg limit price"
+                        placeholder="远月腿限价"
                       />
                     )}
                     <div className="text-xs text-muted-foreground pt-1">
-                      Executable net {fmt(tradeRow.bestCredit)} ·{' '}
-                      {tradeRow.spreadPct == null ? '—' : `${tradeRow.spreadPct.toFixed(2)}%`} of
-                      near mid
+                      可成交净价差 {fmt(tradeRow.bestCredit)} ·{' '}
+                      {tradeRow.spreadPct == null ? '—' : `${tradeRow.spreadPct.toFixed(2)}%`}，占近月中间价的比例
                     </div>
                   </div>
                 )
@@ -752,10 +750,10 @@ export default function Arbitrage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setTradeRow(null)} disabled={submitting}>
-              Cancel
+              取消
             </Button>
             <Button onClick={submitTrade} disabled={submitting}>
-              {submitting ? 'Placing…' : 'Place spread order'}
+              {submitting ? '下单中…' : '提交价差组合委托'}
             </Button>
           </DialogFooter>
         </DialogContent>

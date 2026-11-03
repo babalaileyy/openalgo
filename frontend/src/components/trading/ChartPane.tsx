@@ -113,6 +113,7 @@ import {
 import type { WorkspaceReplaySnapshot } from '@/lib/trading/workspaceReplay'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/authStore'
+import { useBrokerStore } from '@/stores/brokerStore'
 import { useThemeStore } from '@/stores/themeStore'
 import { showToast } from '@/utils/toast'
 import { ChartStateOverlay } from './ChartStateOverlay'
@@ -304,6 +305,8 @@ export function ChartPane({
   railVisible,
   layoutPicker,
 }: Props) {
+  const marketDataOnly = useBrokerStore((state) => state.capabilities?.market_data_only === true)
+  const defaultChart = useBrokerStore((state) => state.capabilities?.default_chart)
   const chartRef = useRef<HTMLDivElement>(null)
   const legendRef = useRef<HTMLDivElement>(null)
   /**
@@ -605,13 +608,15 @@ export function ChartPane({
       release()
       setReady(false)
       if (initializationErrorCbRef.current) initializationErrorCbRef.current(paneId, error)
-      else showToast.error(error instanceof Error ? error.message : 'Chart initialization failed')
+      else showToast.error(error instanceof Error ? error.message : '图表初始化失败')
     }
 
     if (chartRef.current && legendRef.current) {
       try {
         const owner = new TradingTerminal({
           apiKey,
+          marketDataOnly,
+          defaultChart,
           // Only the messaging channels of an alert need it, and an empty name
           // is a terminal that works with those two refused by the server.
           username: useAuthStore.getState().user?.username ?? '',
@@ -657,7 +662,7 @@ export function ChartPane({
     // `username` is read at build time rather than subscribed: a terminal is
     // rebuilt on a sign-in change anyway, and re-creating the chart because a
     // display name moved would throw away every drawing on it.
-  }, [paneId, apiKey, wsUrl, noteHistory, linkGroup, initialWorkspacePane])
+  }, [paneId, apiKey, wsUrl, noteHistory, linkGroup, initialWorkspacePane, marketDataOnly, defaultChart])
 
   /* ── follow the page-level drawing rail ───────────────────────────────── */
   useEffect(() => {
@@ -883,7 +888,7 @@ export function ChartPane({
         return
       }
     } catch {
-      showToast.error('The position could not be read, so nothing was sent. Try again.')
+      showToast.error('无法读取持仓，未发送任何订单。请重试。')
       return
     }
     try {
@@ -896,7 +901,7 @@ export function ChartPane({
         product: p.product as 'MIS' | 'NRML' | 'CNC',
       })
     } catch (e) {
-      showToast.error(e instanceof Error ? e.message : 'The order could not be placed')
+      showToast.error(e instanceof Error ? e.message : '无法下单')
     }
     actions.refresh()
   }
@@ -1152,12 +1157,12 @@ export function ChartPane({
           <ToolbarDivider />
           {/* Chart type */}
           <DropdownMenu>
-            <Tip tip={{ title: 'Chart type', sub: chartTypeDef.label }}>
+            <Tip tip={{ title: '图表类型', sub: chartTypeDef.label }}>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
                   className={cn(TB_BTN, 'gap-1 px-1.5')}
-                  aria-label={`Chart type: ${chartTypeDef.label}`}
+                  aria-label={`图表类型：${chartTypeDef.label}`}
                 >
                   <span className="h-4 w-4">{chartTypeIcon(chartTypeDef.iconKey)}</span>
                   <MenuChevron />
@@ -1238,7 +1243,7 @@ export function ChartPane({
               className="whitespace-nowrap text-[11px] font-medium text-muted-foreground"
               htmlFor={`qty-${paneId}`}
             >
-              {sym?.lots ? 'Lots' : 'Qty'}
+              {sym?.lots ? '手数' : '数量'}
             </label>
             <Input
               id={`qty-${paneId}`}
@@ -1255,31 +1260,31 @@ export function ChartPane({
           {/* Indicators. A dialog rather than a dropdown: 105 built-ins in a
             264px column was a scroll race, with no way to jump to a category
             and no memory of what you reach for daily. */}
-          <Tip tip={{ title: 'Indicators', sub: 'Add studies and saved scripts to this chart' }}>
+          <Tip tip={{ title: '指标', sub: '向图表添加指标和已保存的脚本' }}>
             <button
               type="button"
               className={TB_BTN}
-              aria-label="Indicators"
+              aria-label="指标"
               onClick={() => {
                 setPickerOpen(true)
                 void openIndicators()
               }}
             >
               <IndicatorIcon className="h-4 w-4" />
-              <span className={TB_LABEL_2XL}>Indicators</span>
+              <span className={TB_LABEL_2XL}>指标</span>
               {indicators.length > 0 && <span className={TB_COUNT}>{indicators.length}</span>}
             </button>
           </Tip>
 
-          <Tip tip={{ title: 'Alerts', sub: 'Create and manage price alerts for this chart' }}>
+          <Tip tip={{ title: '预警', sub: '创建和管理此图表的价格预警' }}>
             <button
               type="button"
               className={TB_BTN}
-              aria-label="Alerts"
+              aria-label="预警"
               onClick={() => void terminalRef.current?.openAlerts()}
             >
               <ChromeIcon id="bell" />
-              <span className={TB_LABEL_WIDE}>Alerts</span>
+              <span className={TB_LABEL_WIDE}>预警</span>
             </button>
           </Tip>
 
@@ -1315,12 +1320,12 @@ export function ChartPane({
           <Tip
             tip={{
               title: replayTitle,
-              sub: 'Play the session back bar by bar from a bar you pick',
+              sub: '从选定的柱线开始逐根回放行情',
             }}
           >
             <button
               type="button"
-              aria-label="Replay"
+              aria-label="行情回放"
               className={cn(
                 TB_BTN,
                 (workspaceReplay
@@ -1339,7 +1344,7 @@ export function ChartPane({
               }}
             >
               <ChromeIcon id="replay" />
-              <span className={TB_LABEL_2XL}>Replay</span>
+              <span className={TB_LABEL_2XL}>回放</span>
             </button>
           </Tip>
 
@@ -1362,9 +1367,9 @@ export function ChartPane({
               disabled button takes no pointer events of its own. */}
           <Tip
             tip={{
-              title: 'Undo chart change',
+              title: '撤销图表更改',
               chord: `${MOD_KEY}+Z`,
-              sub: 'Orders are never undone',
+              sub: '不会撤销订单',
             }}
           >
             <span className="inline-flex shrink-0">
@@ -1373,20 +1378,20 @@ export function ChartPane({
                 className={cn(TB_BTN, TB_ICON)}
                 onClick={() => terminalRef.current?.historyPress('undo')}
                 disabled={!history.canUndo}
-                aria-label="Undo chart change"
+                aria-label="撤销图表更改"
               >
                 <ChromeIcon id="undo" />
               </button>
             </span>
           </Tip>
-          <Tip tip={{ title: 'Redo chart change', chord: `${MOD_KEY}+Y` }}>
+          <Tip tip={{ title: '重做图表更改', chord: `${MOD_KEY}+Y` }}>
             <span className="inline-flex shrink-0">
               <button
                 type="button"
                 className={cn(TB_BTN, TB_ICON)}
                 onClick={() => terminalRef.current?.historyPress('redo')}
                 disabled={!history.canRedo}
-                aria-label="Redo chart change"
+                aria-label="重做图表更改"
               >
                 <ChromeIcon id="redo" />
               </button>
@@ -1415,15 +1420,15 @@ export function ChartPane({
             <Tip
               tip={
                 fullscreen
-                  ? { title: 'Exit full screen', chord: 'Esc' }
-                  : { title: 'Full screen chart', sub: 'This chart alone, with its toolbar' }
+                  ? { title: '退出全屏', chord: 'Esc' }
+                  : { title: '图表全屏', sub: '仅显示此图表及其工具栏' }
               }
             >
               <button
                 type="button"
                 className={cn(TB_BTN, TB_ICON, fullscreen && TB_ON)}
                 onClick={toggleFullscreen}
-                aria-label="Toggle full screen chart"
+                aria-label="切换图表全屏"
               >
                 <ChromeIcon id={fullscreen ? 'fullscreen-exit' : 'fullscreen'} />
               </button>
@@ -1434,7 +1439,7 @@ export function ChartPane({
               <Tip
                 disabled={snapOpen}
                 tip={{
-                  title: 'Chart snapshot',
+                  title: '图表快照',
                   chord: 'Alt+Shift+S',
                   sub: 'Save or copy an image, or download the data. Shift-click saves the image.',
                 }}
@@ -1452,7 +1457,7 @@ export function ChartPane({
                     if (snapOpen) setSnapOpen(false)
                     else openSnapMenu()
                   }}
-                  aria-label="Chart snapshot"
+                  aria-label="图表快照"
                 >
                   <CameraIcon className="h-4 w-4" />
                 </button>
@@ -1467,9 +1472,7 @@ export function ChartPane({
                     className="fixed z-50 w-56 rounded-md border bg-popover p-1 shadow-lg"
                     style={{ top: snapAt?.top ?? 0, right: snapAt?.right ?? 0 }}
                   >
-                    <div className="px-2 pb-1 pt-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-                      Chart snapshot
-                    </div>
+                    <div className="px-2 pb-1 pt-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">图表快照</div>
                     <button
                       type="button"
                       className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs hover:bg-accent"
@@ -1478,9 +1481,7 @@ export function ChartPane({
                         void terminalRef.current?.screenshot()
                       }}
                     >
-                      <ChromeIcon id="download" size={14} className="opacity-70" />
-                      Download image
-                    </button>
+                      <ChromeIcon id="download" size={14} className="opacity-70" />下载图片</button>
                     <button
                       type="button"
                       className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs hover:bg-accent disabled:opacity-40"
@@ -1504,9 +1505,7 @@ export function ChartPane({
                         if (terminal) setDataExport(terminal.dataExportChoices())
                       }}
                     >
-                      <ChromeIcon id="download" size={14} className="opacity-70" />
-                      Download CSV
-                    </button>
+                      <ChromeIcon id="download" size={14} className="opacity-70" />下载 CSV</button>
                     <button
                       type="button"
                       className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs hover:bg-accent"
@@ -1515,9 +1514,7 @@ export function ChartPane({
                         void terminalRef.current?.copyScreenshot()
                       }}
                     >
-                      <ChromeIcon id="copy" size={14} className="opacity-70" />
-                      Copy image
-                    </button>
+                      <ChromeIcon id="copy" size={14} className="opacity-70" />复制图片</button>
                   </div>
                 </>
               )}
@@ -1674,14 +1671,14 @@ export function ChartPane({
               <span className="font-medium">
                 {replayLoading ? 'Loading replay history' : 'Select a bar'}
               </span>{' '}
-              {!replayLoading && <span className="text-muted-foreground">to replay from</span>}
+              {!replayLoading && <span className="text-muted-foreground">开始回放</span>}
             </span>
             <button
               type="button"
               className="rounded border border-border px-2 py-1 hover:bg-accent"
               onClick={() => terminalRef.current?.cancelReplayPick()}
             >
-              Cancel
+              取消
             </button>
           </div>
         )}
@@ -1747,9 +1744,7 @@ export function ChartPane({
                   type="button"
                   className="rounded border border-border px-3 py-1.5 text-xs hover:bg-accent"
                   onClick={() => setRemoveAll(null)}
-                >
-                  Keep them
-                </button>
+                >保留</button>
                 <button
                   type="button"
                   className="rounded bg-destructive px-3 py-1.5 text-xs font-medium text-destructive-foreground hover:opacity-90"
@@ -1757,9 +1752,7 @@ export function ChartPane({
                     setRemoveAll(null)
                     terminalRef.current?.removeDrawings(true)
                   }}
-                >
-                  Remove all
-                </button>
+                >全部移除</button>
               </div>
             </div>
           </div>
@@ -1768,17 +1761,15 @@ export function ChartPane({
         {!onReplayStart && confirmLeave && (
           <div className="pointer-events-auto absolute inset-0 z-30 flex items-center justify-center bg-black/45">
             <div className="w-[340px] rounded-lg border border-border bg-popover p-4 shadow-xl">
-              <h4 className="mb-2 text-sm font-medium">Leave replay?</h4>
-              <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-                The chart goes back to the live session and the playhead is lost.
-              </p>
+              <h4 className="mb-2 text-sm font-medium">退出回放？</h4>
+              <p className="mb-4 text-xs leading-relaxed text-muted-foreground">图表将返回实时行情，回放进度会丢失。</p>
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   className="rounded border border-border px-3 py-1.5 text-xs hover:bg-accent"
                   onClick={() => setConfirmLeave(false)}
                 >
-                  Stay
+                  继续回放
                 </button>
                 <button
                   type="button"
@@ -1788,7 +1779,7 @@ export function ChartPane({
                     terminalRef.current?.stopReplay()
                   }}
                 >
-                  Leave
+                  退出
                 </button>
               </div>
             </div>
@@ -1803,7 +1794,7 @@ export function ChartPane({
               title={`Step back ${replay.subSteps > 1 ? 'one step of the forming bar' : 'one bar'}`}
               onClick={() => terminalRef.current?.replayStepBack()}
             >
-              Prev
+              上一根
             </button>
             <button
               type="button"
@@ -1823,7 +1814,7 @@ export function ChartPane({
               title={`Step forward ${replay.subSteps > 1 ? 'one step of the forming bar' : 'one bar'}`}
               onClick={() => terminalRef.current?.replayStep()}
             >
-              Next
+              下一根
             </button>
 
             <input
@@ -1866,7 +1857,7 @@ export function ChartPane({
               title="Leave replay and return to the live chart"
               onClick={() => setConfirmLeave(true)}
             >
-              Exit
+              退出
             </button>
           </div>
         )}
@@ -2141,9 +2132,7 @@ export function ChartPane({
               className={ctxRow}
               onClick={() => run(() => terminalRef.current?.resetScale())}
             >
-              <ChromeIcon id="refresh" size={14} className="opacity-70" />
-              Reset chart view
-            </button>
+              <ChromeIcon id="refresh" size={14} className="opacity-70" />重置图表视图</button>
             {/* Settings sits on the chart it configures rather than in the
                 toolbar: right-click is where a terminal user reaches for it, and
                 the toolbar row is already the most contended space on the page. */}
@@ -2156,9 +2145,7 @@ export function ChartPane({
                 })
               }
             >
-              <ChromeIcon id="settings" size={14} className="opacity-70" />
-              Chart settings...
-            </button>
+              <ChromeIcon id="settings" size={14} className="opacity-70" />图表设置…</button>
             {/* The alerts list, the same one the toolbar's Alerts opens. */}
             <button
               type="button"
@@ -2166,7 +2153,7 @@ export function ChartPane({
               onClick={() => run(() => void terminalRef.current?.openAlerts())}
             >
               <ChromeIcon id="bell" size={14} className="opacity-70" />
-              Alerts...
+              提醒…
             </button>
             {onToggleRail && (
               <button type="button" className={ctxRow} onClick={() => run(onToggleRail)}>

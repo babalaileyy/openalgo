@@ -75,9 +75,9 @@ export function SetSLDialog({
   let directionError = ''
   if (Number.isFinite(slNum) && slNum > 0 && refPrice > 0) {
     if (side === 'BUY' && slNum >= refPrice) {
-      directionError = `Long (BUY): stop-loss must be below ${refPrice.toFixed(decimals)}`
+      directionError = `多头（买入）：止损价必须低于 ${refPrice.toFixed(decimals)}`
     } else if (side === 'SELL' && slNum <= refPrice) {
-      directionError = `Short (SELL): stop-loss must be above ${refPrice.toFixed(decimals)}`
+      directionError = `空头（卖出）：止损价必须高于 ${refPrice.toFixed(decimals)}`
     }
   }
 
@@ -86,9 +86,9 @@ export function SetSLDialog({
   let targetError = ''
   if (Number.isFinite(tgtNum) && tgtNum > 0 && refPrice > 0) {
     if (side === 'BUY' && tgtNum <= refPrice) {
-      targetError = `Long (BUY): target must be above ${refPrice.toFixed(decimals)}`
+      targetError = `多头（买入）：止盈价必须高于 ${refPrice.toFixed(decimals)}`
     } else if (side === 'SELL' && tgtNum >= refPrice) {
-      targetError = `Short (SELL): target must be below ${refPrice.toFixed(decimals)}`
+      targetError = `空头（卖出）：止盈价必须低于 ${refPrice.toFixed(decimals)}`
     }
   }
 
@@ -96,7 +96,7 @@ export function SetSLDialog({
   const stepNum = Number(trailingStep)
   const trailingError =
     trailingEnabled && !(Number.isFinite(stepNum) && stepNum > 0)
-      ? 'Trailing step must be greater than 0'
+      ? '跟踪止损步长必须大于 0'
       : ''
 
   const handleSave = () => {
@@ -132,45 +132,44 @@ export function SetSLDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>SL · Target · Trailing — {leg?.symbol ?? ''}</DialogTitle>
+          <DialogTitle>止损 · 止盈 · 跟踪止损 — {leg?.symbol ?? ''}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <span className="text-muted-foreground">Entry</span>
+              <span className="text-muted-foreground">建仓价</span>
               <div className="font-mono">{entryPrice > 0 ? entryPrice.toFixed(decimals) : '—'}</div>
             </div>
             <div>
-              <span className="text-muted-foreground">LTP</span>
+              <span className="text-muted-foreground">最新价</span>
               <div className="font-mono">{ltp != null ? ltp.toFixed(decimals) : '—'}</div>
             </div>
             <div>
-              <span className="text-muted-foreground">Side</span>
+              <span className="text-muted-foreground">方向</span>
               <div className="font-mono">{side}</div>
             </div>
             <div>
-              <span className="text-muted-foreground">Qty</span>
+              <span className="text-muted-foreground">数量</span>
               <div className="font-mono">{quantity}</div>
             </div>
           </div>
 
           {quantity <= 0 && (
             <p className="text-xs text-red-600">
-              No quantity for this leg yet — open a position (or wait for chain data) before setting
-              a stop-loss.
+              此交易腿暂无数量，请先建仓或等待期权链数据加载后再设置止损。
             </p>
           )}
 
           <div className="space-y-1">
-            <Label htmlFor="sl-price">Stop-loss price</Label>
+            <Label htmlFor="sl-price">止损价</Label>
             <Input
               id="sl-price"
               type="number"
               inputMode="decimal"
               value={stoploss}
               onChange={(e) => setStoploss(e.target.value)}
-              placeholder="e.g. 270"
+              placeholder="例如 270"
             />
             {directionError && <p className="text-xs text-red-600">{directionError}</p>}
           </div>
@@ -180,36 +179,36 @@ export function SetSLDialog({
               checked={trailingEnabled}
               onCheckedChange={(v) => setTrailingEnabled(v === true)}
             />
-            <span className="text-sm">Enable trailing stop-loss</span>
+            <span className="text-sm">启用跟踪止损</span>
           </label>
 
           {trailingEnabled && (
             <div className="space-y-1">
-              <Label htmlFor="sl-step">Trailing step</Label>
+              <Label htmlFor="sl-step">跟踪步长</Label>
               <Input
                 id="sl-step"
                 type="number"
                 inputMode="decimal"
                 value={trailingStep}
                 onChange={(e) => setTrailingStep(e.target.value)}
-                placeholder="e.g. 2"
+                placeholder="例如 2"
               />
               <p className="text-xs text-muted-foreground">
-                Trailing starts only once price is ≥1 in profit; the stop only moves in your favor.
+                仅当价格盈利至少 1 个单位时开始跟踪；止损价只会向有利方向移动。
               </p>
               {trailingError && <p className="text-xs text-red-600">{trailingError}</p>}
             </div>
           )}
 
           <div className="space-y-1">
-            <Label htmlFor="sl-target">Target price (optional)</Label>
+            <Label htmlFor="sl-target">止盈价（可选）</Label>
             <Input
               id="sl-target"
               type="number"
               inputMode="decimal"
               value={targetPrice}
               onChange={(e) => setTargetPrice(e.target.value)}
-              placeholder={side === 'BUY' ? 'above entry' : 'below entry'}
+              placeholder={side === 'BUY' ? '高于建仓价' : '低于建仓价'}
             />
             {targetError && <p className="text-xs text-red-600">{targetError}</p>}
           </div>
@@ -224,11 +223,11 @@ export function SetSLDialog({
                 onOpenChange(false)
               }}
             >
-              Clear SL
+              清除止损
             </Button>
           )}
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            取消
           </Button>
           <Button
             onClick={handleSave}
@@ -236,7 +235,7 @@ export function SetSLDialog({
               quantity <= 0 || !stoploss || !!directionError || !!targetError || !!trailingError
             }
           >
-            Save
+            保存
           </Button>
         </DialogFooter>
       </DialogContent>

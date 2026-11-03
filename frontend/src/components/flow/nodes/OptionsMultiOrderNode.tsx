@@ -59,23 +59,23 @@ export const OptionsMultiOrderNode = memo(({ data, selected }: OptionsMultiOrder
             <Layers className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Multi-Leg</div>
+            <div className="text-xs font-medium leading-tight">多腿期权</div>
             <div className="text-[9px] text-muted-foreground">{data.underlying || 'NIFTY'}</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Strategy</span>
+            <span className="text-[10px] text-muted-foreground">策略</span>
             <span className="text-[10px] font-medium">
               {strategyLabels[data.strategy] || data.strategy}
             </span>
           </div>
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Legs</span>
+            <span className="text-[10px] text-muted-foreground">策略腿</span>
             <span className="mono-data text-[10px] font-medium">{legCount}</span>
           </div>
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Expiry</span>
+            <span className="text-[10px] text-muted-foreground">到期日</span>
             <span className="text-[10px] font-medium">
               {expiryLabels[(nodeData.expiryType as string) || ''] || 'This Week'}
             </span>

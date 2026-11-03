@@ -229,17 +229,17 @@ export default function MasterContract() {
       const data = await response.json()
 
       if (data.status === 'success' || data.started) {
-        showToast.success('Master contract download started')
+        showToast.success('已开始下载主合约')
         pollingRequestedRef.current = true
         forceProbePendingRef.current = true
         void fetchStatus()
       } else if (data.status === 'skipped') {
         showToast.info(data.message)
       } else {
-        showToast.error(data.message || 'Failed to start download')
+        showToast.error(data.message || '启动下载失败')
       }
     } catch (_error) {
-      showToast.error('Failed to start download')
+      showToast.error('启动下载失败')
     } finally {
       setIsDownloading(false)
     }
@@ -260,13 +260,13 @@ export default function MasterContract() {
       const data = await response.json()
 
       if (data.status === 'success') {
-        showToast.success('Cache reloaded successfully')
+        showToast.success('缓存已重新加载')
         fetchCacheHealth()
       } else {
-        showToast.error(data.message || 'Failed to reload cache')
+        showToast.error(data.message || '重新加载缓存失败')
       }
     } catch (_error) {
-      showToast.error('Failed to reload cache')
+      showToast.error('重新加载缓存失败')
     } finally {
       setIsReloadingCache(false)
     }
@@ -294,9 +294,9 @@ export default function MasterContract() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Database className="h-8 w-8" />
-            Master Contract
+            合约信息
           </h1>
-          <p className="text-muted-foreground mt-1">Manage master contract data and symbol cache</p>
+          <p className="text-muted-foreground mt-1">管理合约基础数据和交易品种缓存</p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -309,7 +309,7 @@ export default function MasterContract() {
             ) : (
               <RefreshCw className="h-4 w-4 mr-2" />
             )}
-            Reload Cache
+            重新加载缓存
           </Button>
           <Button
             onClick={handleForceDownload}
@@ -320,7 +320,7 @@ export default function MasterContract() {
             ) : (
               <Download className="h-4 w-4 mr-2" />
             )}
-            Force Download
+            强制下载
           </Button>
         </div>
       </div>
@@ -330,7 +330,7 @@ export default function MasterContract() {
         <Alert className="mb-6">
           <CheckCircle2 className="h-4 w-4" />
           <AlertDescription>
-            <strong>Smart Download:</strong> {status.smart_download.reason}
+            <strong>智能下载：</strong> {status.smart_download.reason}
           </AlertDescription>
         </Alert>
       )}
@@ -341,13 +341,13 @@ export default function MasterContract() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Server className="h-5 w-5" />
-              Download Status
+              下载状态
             </CardTitle>
-            <CardDescription>Current master contract download status</CardDescription>
+            <CardDescription>当前合约基础数据下载状态</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Status</span>
+              <span className="text-muted-foreground">状态</span>
               <div className="flex items-center gap-2">
                 {getStatusIcon(status?.status || 'unknown')}
                 <span
@@ -362,32 +362,32 @@ export default function MasterContract() {
               <div className="space-y-2">
                 <Progress value={undefined} className="h-2" />
                 <p className="text-sm text-muted-foreground text-center">
-                  Downloading master contract data...
+                  正在下载合约基础数据…
                 </p>
               </div>
             )}
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Broker</span>
+              <span className="text-muted-foreground">券商</span>
               <Badge variant="outline">{status?.broker || 'N/A'}</Badge>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Ready</span>
+              <span className="text-muted-foreground">是否就绪</span>
               <Badge variant={status?.is_ready ? 'default' : 'secondary'}>
-                {status?.is_ready ? 'Yes' : 'No'}
+                {status?.is_ready ? '是' : '否'}
               </Badge>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Total Symbols</span>
+              <span className="text-muted-foreground">交易品种总数</span>
               <span className="font-mono">
                 {status?.total_symbols ? Number(status.total_symbols).toLocaleString() : 'N/A'}
               </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Last Updated</span>
+              <span className="text-muted-foreground">上次更新</span>
               <span className="text-sm">{formatDateTime(status?.last_updated || null)}</span>
             </div>
 
@@ -404,23 +404,23 @@ export default function MasterContract() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="h-5 w-5" />
-              Download History
+              下载记录
             </CardTitle>
-            <CardDescription>Last successful download information</CardDescription>
+            <CardDescription>最近一次成功下载的信息</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Last Download</span>
+              <span className="text-muted-foreground">上次下载</span>
               <span className="text-sm">{formatDateTime(status?.last_download_time || null)}</span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Download Date</span>
+              <span className="text-muted-foreground">下载日期</span>
               <span className="text-sm">{status?.download_date || 'N/A'}</span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Download Duration</span>
+              <span className="text-muted-foreground">下载耗时</span>
               <span className="font-mono text-sm">
                 {formatDuration(status?.download_duration_seconds || null)}
               </span>
@@ -429,15 +429,15 @@ export default function MasterContract() {
             <div className="pt-2 border-t">
               <div className="flex items-center gap-2 mb-3">
                 <FileStack className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Smart Download Cutoff</span>
+                <span className="text-sm font-medium">智能下载截止时间</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Downloads after{' '}
+                在 
                 <span className="font-medium">
                   {status?.smart_download?.cutoff_time || '08:00'}{' '}
                   {status?.smart_download?.cutoff_timezone || 'IST'}
                 </span>{' '}
-                are cached for the day. Login after cutoff reuses cached data.
+                之后下载的数据会在当日缓存，截止时间后登录将使用缓存数据。
               </p>
             </div>
           </CardContent>
@@ -448,9 +448,9 @@ export default function MasterContract() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileStack className="h-5 w-5" />
-              Exchange Statistics
+              交易所统计
             </CardTitle>
-            <CardDescription>Symbol count per exchange</CardDescription>
+            <CardDescription>各交易所的品种数量</CardDescription>
           </CardHeader>
           <CardContent>
             {status?.exchange_stats && Object.keys(status.exchange_stats).length > 0 ? (
@@ -469,7 +469,7 @@ export default function MasterContract() {
               </div>
             ) : (
               <p className="text-muted-foreground text-center py-4">
-                No exchange statistics available
+                暂无交易所统计数据
               </p>
             )}
           </CardContent>
@@ -480,13 +480,13 @@ export default function MasterContract() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Server className="h-5 w-5" />
-              Cache Health
+              缓存状态
             </CardTitle>
-            <CardDescription>In-memory symbol cache status</CardDescription>
+            <CardDescription>内存中交易品种缓存的状态</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Health Score</span>
+              <span className="text-muted-foreground">健康评分</span>
               <div className="flex items-center gap-2">
                 <Progress value={cacheHealth?.health_score || 0} className="w-24 h-2" />
                 <span className="font-mono text-sm">{cacheHealth?.health_score || 0}%</span>
@@ -494,7 +494,7 @@ export default function MasterContract() {
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Status</span>
+              <span className="text-muted-foreground">状态</span>
               <Badge
                 variant={
                   cacheHealth?.status === 'healthy'
@@ -509,7 +509,7 @@ export default function MasterContract() {
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Cached Symbols</span>
+              <span className="text-muted-foreground">已缓存品种</span>
               <span className="font-mono">
                 {cacheHealth?.total_symbols?.toLocaleString() || 'N/A'}
               </span>
@@ -517,14 +517,14 @@ export default function MasterContract() {
 
             {cacheHealth?.hit_rate && (
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Hit Rate</span>
+                <span className="text-muted-foreground">命中率</span>
                 <span className="font-mono text-sm">{cacheHealth.hit_rate}</span>
               </div>
             )}
 
             {cacheHealth?.memory_usage_mb && (
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Memory Usage</span>
+                <span className="text-muted-foreground">内存占用</span>
                 <span className="font-mono text-sm">{cacheHealth.memory_usage_mb} MB</span>
               </div>
             )}

@@ -55,7 +55,7 @@ export function OrderPriceFields({
     <>
       {(priceType === 'LIMIT' || priceType === 'SL') && (
         <TemplatableField
-          label="Price"
+          label="委托价格"
           htmlFor={priceId}
           value={price}
           onChange={onPriceChange}
@@ -74,7 +74,7 @@ export function OrderPriceFields({
       )}
       {(priceType === 'SL' || priceType === 'SL-M') && (
         <TemplatableField
-          label="Trigger Price"
+          label="触发价格"
           htmlFor={triggerPriceId}
           value={triggerPrice}
           onChange={onTriggerPriceChange}

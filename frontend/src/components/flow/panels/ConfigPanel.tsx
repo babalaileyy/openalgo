@@ -21,6 +21,7 @@ import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import type { PriceType } from '@/lib/flow/constants'
+import { flowIndicatorCategory, flowIndicatorName } from '@/lib/flow/indicatorChinese'
 import {
   DAYS_OF_WEEK,
   defaultProductForExchange,
@@ -66,19 +67,19 @@ import { TemplatableField } from './TemplatableField'
 // ===== LOCAL CONSTANTS =====
 
 const ALERT_CONDITIONS = [
-  { value: 'above', label: 'Greater Than' },
-  { value: 'below', label: 'Less Than' },
-  { value: 'crosses_above', label: 'Crosses Above' },
-  { value: 'crosses_below', label: 'Crosses Below' },
+  { value: 'above', label: '大于' },
+  { value: 'below', label: '小于' },
+  { value: 'crosses_above', label: '向上穿越' },
+  { value: 'crosses_below', label: '向下穿越' },
 ]
 
 const ALERT_TRIGGERS = [
-  { value: 'once', label: 'Only Once' },
-  { value: 'every_time', label: 'Every Time' },
+  { value: 'once', label: '仅触发一次' },
+  { value: 'every_time', label: '每次触发' },
 ]
 
 const ALERT_EXPIRATION = [
-  { value: 'none', label: 'No Expiration' },
+  { value: 'none', label: '永不过期' },
   { value: '1h', label: '1 Hour' },
   { value: '4h', label: '4 Hours' },
   { value: '1d', label: '1 Day' },
@@ -86,37 +87,37 @@ const ALERT_EXPIRATION = [
 ]
 
 const VARIABLE_OPERATIONS = [
-  { value: 'set', label: 'Set Value', description: 'Set variable to a value' },
-  { value: 'get', label: 'Get Value', description: 'Copy from another variable' },
-  { value: 'add', label: 'Add', description: 'Add to variable' },
-  { value: 'subtract', label: 'Subtract', description: 'Subtract from variable' },
-  { value: 'multiply', label: 'Multiply', description: 'Multiply variable' },
-  { value: 'divide', label: 'Divide', description: 'Divide variable' },
-  { value: 'increment', label: 'Increment', description: 'Add 1 to variable' },
-  { value: 'decrement', label: 'Decrement', description: 'Subtract 1 from variable' },
-  { value: 'parse_json', label: 'Parse JSON', description: 'Parse JSON string to object' },
-  { value: 'stringify', label: 'Stringify', description: 'Convert to JSON string' },
-  { value: 'append', label: 'Append', description: 'Append to string' },
+  { value: 'set', label: '设置值', description: '将变量设置为指定值' },
+  { value: 'get', label: '获取值', description: '从另一个变量复制' },
+  { value: 'add', label: '加', description: '给变量加上指定值' },
+  { value: 'subtract', label: '减', description: '从变量减去指定值' },
+  { value: 'multiply', label: '乘', description: '将变量乘以指定值' },
+  { value: 'divide', label: '除', description: '将变量除以指定值' },
+  { value: 'increment', label: '加一', description: '变量加 1' },
+  { value: 'decrement', label: '减一', description: '变量减 1' },
+  { value: 'parse_json', label: '解析 JSON', description: '将 JSON 字符串解析为对象' },
+  { value: 'stringify', label: '转为 JSON 字符串', description: '转换为 JSON 字符串' },
+  { value: 'append', label: '追加', description: '追加到字符串' },
 ]
 
 const LOG_LEVELS = [
-  { value: 'info', label: 'Info', color: 'text-blue-400' },
-  { value: 'warn', label: 'Warning', color: 'text-yellow-400' },
-  { value: 'error', label: 'Error', color: 'text-red-400' },
+  { value: 'info', label: '信息', color: 'text-blue-400' },
+  { value: 'warn', label: '警告', color: 'text-yellow-400' },
+  { value: 'error', label: '错误', color: 'text-red-400' },
 ]
 
 const TIME_OPERATORS = [
-  { value: '==', label: 'Equals (=)', description: 'Exactly at this time' },
-  { value: '>=', label: 'At or After (>=)', description: 'Time has passed' },
-  { value: '<=', label: 'At or Before (<=)', description: 'Before this time' },
-  { value: '>', label: 'After (>)', description: 'Strictly after' },
-  { value: '<', label: 'Before (<)', description: 'Strictly before' },
+  { value: '==', label: '等于（=）', description: '恰好在此时间' },
+  { value: '>=', label: '等于或晚于（>=）', description: '到达或超过此时间' },
+  { value: '<=', label: '等于或早于（<=）', description: '在此时间或之前' },
+  { value: '>', label: '晚于（>）', description: '严格晚于此时间' },
+  { value: '<', label: '早于（<）', description: '严格早于此时间' },
 ]
 
 const CONDITION_TYPES = [
-  { value: 'entry', label: 'Entry' },
-  { value: 'exit', label: 'Exit' },
-  { value: 'custom', label: 'Custom' },
+  { value: 'entry', label: '开仓' },
+  { value: 'exit', label: '平仓' },
+  { value: 'custom', label: '自定义' },
 ]
 
 const HTTP_METHODS = [
@@ -129,67 +130,67 @@ const HTTP_METHODS = [
 
 // Node type to display name
 const NODE_TITLES: Record<string, string> = {
-  start: 'Schedule Trigger',
-  priceAlert: 'Price Alert',
-  webhookTrigger: 'Webhook Trigger',
-  orderUpdateTrigger: 'Order Update Trigger',
-  placeOrder: 'Place Order',
-  smartOrder: 'Smart Order',
-  optionsOrder: 'Options Order',
-  optionsMultiOrder: 'Multi-Leg Options',
-  basketOrder: 'Basket Order',
-  splitOrder: 'Split Order',
-  cancelOrder: 'Cancel Order',
-  cancelAllOrders: 'Cancel All Orders',
-  closePositions: 'Close Positions',
-  modifyOrder: 'Modify Order',
-  getQuote: 'Get Quote',
-  getDepth: 'Get Depth',
-  getOrderStatus: 'Order Status',
-  openPosition: 'Open Position',
-  history: 'History Data',
-  indicator: 'Indicator',
-  priorPeriodOhlc: 'Prior Period OHLC',
-  strategyPnl: 'Strategy P&L',
-  barOffset: 'Bar Offset',
-  expiry: 'Get Expiry',
-  calendar: 'Calendar',
-  intervals: 'Intervals',
-  multiQuotes: 'Multi Quotes',
-  symbol: 'Symbol Info',
-  optionSymbol: 'Option Symbol',
-  orderBook: 'Order Book',
-  tradeBook: 'Trade Book',
-  positionBook: 'Position Book',
-  syntheticFuture: 'Synthetic Future',
-  optionChain: 'Option Chain',
-  holidays: 'Holidays',
-  timings: 'Market Timings',
-  holdings: 'Holdings',
-  funds: 'Funds',
-  margin: 'Margin Calculator',
-  delay: 'Delay',
-  waitUntil: 'Wait Until',
-  log: 'Log',
-  telegramAlert: 'Telegram Alert',
-  whatsappAlert: 'WhatsApp Alert',
-  variable: 'Variable',
-  mathExpression: 'Math Expression',
-  httpRequest: 'HTTP Request',
-  timeWindow: 'Time Window',
-  timeCondition: 'Time Condition',
-  priceCondition: 'Price Condition',
-  varCondition: 'Var Condition',
-  positionCheck: 'Position Check',
-  fundCheck: 'Fund Check',
-  andGate: 'AND Gate',
-  orGate: 'OR Gate',
-  notGate: 'NOT Gate',
-  group: 'Group',
-  subscribeLtp: 'Subscribe LTP',
-  subscribeQuote: 'Subscribe Quote',
-  subscribeDepth: 'Subscribe Depth',
-  unsubscribe: 'Unsubscribe',
+  start: '定时触发',
+  priceAlert: '价格提醒',
+  webhookTrigger: 'Webhook 触发',
+  orderUpdateTrigger: '订单更新触发',
+  placeOrder: '下单',
+  smartOrder: '智能下单',
+  optionsOrder: '期权下单',
+  optionsMultiOrder: '多腿期权',
+  basketOrder: '篮子订单',
+  splitOrder: '拆单',
+  cancelOrder: '撤单',
+  cancelAllOrders: '全部撤单',
+  closePositions: '平仓',
+  modifyOrder: '修改订单',
+  getQuote: '获取行情',
+  getDepth: '获取盘口',
+  getOrderStatus: '订单状态',
+  openPosition: '查询持仓',
+  history: '历史数据',
+  indicator: '技术指标',
+  priorPeriodOhlc: '上一周期 OHLC',
+  strategyPnl: '策略盈亏',
+  barOffset: 'K 线偏移',
+  expiry: '获取到期日',
+  calendar: '交易日历',
+  intervals: '时间周期',
+  multiQuotes: '批量行情',
+  symbol: '品种信息',
+  optionSymbol: '期权合约',
+  orderBook: '委托列表',
+  tradeBook: '成交列表',
+  positionBook: '持仓列表',
+  syntheticFuture: '合成期货',
+  optionChain: '期权链',
+  holidays: '节假日',
+  timings: '交易时间',
+  holdings: '持有资产',
+  funds: '资金',
+  margin: '保证金计算',
+  delay: '延时',
+  waitUntil: '等待至指定时间',
+  log: '日志',
+  telegramAlert: 'Telegram 提醒',
+  whatsappAlert: 'WhatsApp 提醒',
+  variable: '变量',
+  mathExpression: '数学表达式',
+  httpRequest: 'HTTP 请求',
+  timeWindow: '时间区间',
+  timeCondition: '时间条件',
+  priceCondition: '价格条件',
+  varCondition: '变量条件',
+  positionCheck: '持仓检查',
+  fundCheck: '资金检查',
+  andGate: '与门',
+  orGate: '或门',
+  notGate: '非门',
+  group: '分组',
+  subscribeLtp: '订阅最新价',
+  subscribeQuote: '订阅行情',
+  subscribeDepth: '订阅盘口',
+  unsubscribe: '取消订阅',
 }
 
 /** Drop `params` keys the newly selected indicator does not accept.
@@ -307,13 +308,13 @@ export function ConfigPanel() {
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <div className="flex items-center gap-2">
             <Settings2 className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">Properties</span>
+            <span className="font-medium">属性</span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center text-muted-foreground">
             <Settings2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">Select a node to configure</p>
+            <p className="text-sm">选择要配置的节点</p>
           </div>
         </div>
       </div>
@@ -341,7 +342,7 @@ export function ConfigPanel() {
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div>
           <h2 className="font-semibold text-sm">{nodeTitle}</h2>
-          <p className="text-xs text-muted-foreground">Configure node</p>
+          <p className="text-xs text-muted-foreground">配置节点</p>
         </div>
         <div className="flex items-center gap-1">
           <Button
@@ -349,7 +350,7 @@ export function ConfigPanel() {
             size="icon"
             className="h-7 w-7 text-destructive hover:text-destructive"
             onClick={handleDelete}
-            aria-label="Delete node"
+            aria-label="删除节点"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -358,7 +359,7 @@ export function ConfigPanel() {
             size="icon"
             className="h-7 w-7"
             onClick={handleClose}
-            aria-label="Close configuration panel"
+            aria-label="关闭配置面板"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -372,7 +373,7 @@ export function ConfigPanel() {
             {nodeType === 'start' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Schedule Type</Label>
+                  <Label className="text-xs">定时类型</Label>
                   <Select
                     value={(nodeData.scheduleType as string) || 'daily'}
                     onValueChange={(v) => handleDataChange('scheduleType', v)}
@@ -391,7 +392,7 @@ export function ConfigPanel() {
                 </div>
                 {nodeData.scheduleType !== 'interval' && (
                   <div className="space-y-2">
-                    <Label className="text-xs">Time</Label>
+                    <Label className="text-xs">时间</Label>
                     <Input
                       type="time"
                       className="h-8"
@@ -402,7 +403,7 @@ export function ConfigPanel() {
                 )}
                 {nodeData.scheduleType === 'interval' && (
                   <div className="space-y-2">
-                    <Label className="text-xs">Repeat Every</Label>
+                    <Label className="text-xs">重复间隔</Label>
                     <div className="flex gap-2">
                       <Input
                         type="number"
@@ -421,9 +422,9 @@ export function ConfigPanel() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="seconds">Seconds</SelectItem>
-                          <SelectItem value="minutes">Minutes</SelectItem>
-                          <SelectItem value="hours">Hours</SelectItem>
+                          <SelectItem value="seconds">秒</SelectItem>
+                          <SelectItem value="minutes">分钟</SelectItem>
+                          <SelectItem value="hours">小时</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -431,29 +432,23 @@ export function ConfigPanel() {
                 )}
                 {(nodeData.scheduleType === 'daily' || nodeData.scheduleType === 'weekly') && (
                   <div className="space-y-2">
-                    <Label className="text-xs">Run On Days</Label>
+                    <Label className="text-xs">运行日期</Label>
                     <div className="flex flex-wrap gap-1 mb-2">
                       <button
                         type="button"
                         onClick={() => handleDataChange('days', [0, 1, 2, 3, 4])}
                         className="rounded-md bg-muted px-2 py-1 text-[10px] hover:bg-accent"
-                      >
-                        Weekdays
-                      </button>
+                      >工作日</button>
                       <button
                         type="button"
                         onClick={() => handleDataChange('days', [5, 6])}
                         className="rounded-md bg-muted px-2 py-1 text-[10px] hover:bg-accent"
-                      >
-                        Weekends
-                      </button>
+                      >周末</button>
                       <button
                         type="button"
                         onClick={() => handleDataChange('days', [0, 1, 2, 3, 4, 5, 6])}
                         className="rounded-md bg-muted px-2 py-1 text-[10px] hover:bg-accent"
-                      >
-                        All
-                      </button>
+                      >全部</button>
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {DAYS_OF_WEEK.map((day) => {
@@ -487,7 +482,7 @@ export function ConfigPanel() {
                 )}
                 {nodeData.scheduleType === 'once' && (
                   <div className="space-y-2">
-                    <Label className="text-xs">Date</Label>
+                    <Label className="text-xs">日期</Label>
                     <Input
                       type="date"
                       className="h-8"
@@ -503,7 +498,7 @@ export function ConfigPanel() {
                     gating was added, but nothing rendered them, so the window
                     could only be set by hand-editing the workflow JSON. */}
                 <div className="flex items-center justify-between gap-2">
-                  <Label className="text-xs">Only during market hours</Label>
+                  <Label className="text-xs">仅在交易时段</Label>
                   <Switch
                     checked={nodeData.marketHoursOnly !== false}
                     onCheckedChange={(v) => handleDataChange('marketHoursOnly', v)}
@@ -514,7 +509,7 @@ export function ConfigPanel() {
                   <>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="space-y-2">
-                        <Label className="text-xs">Start</Label>
+                        <Label className="text-xs">开始</Label>
                         <Input
                           type="time"
                           className="h-8"
@@ -523,7 +518,7 @@ export function ConfigPanel() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs">End</Label>
+                        <Label className="text-xs">结束</Label>
                         <Input
                           type="time"
                           className="h-8"
@@ -533,7 +528,7 @@ export function ConfigPanel() {
                       </div>
                     </div>
                     <ExchangeField
-                      label="Calendar"
+                      label="交易日历"
                       value={(nodeData.marketHoursExchange as string) || 'NSE'}
                       onChange={(v) => handleDataChange('marketHoursExchange', v)}
                     />
@@ -551,7 +546,7 @@ export function ConfigPanel() {
             {nodeType === 'priceAlert' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -564,7 +559,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Condition</Label>
+                  <Label className="text-xs">条件</Label>
                   <Select
                     value={(nodeData.condition as string) || 'above'}
                     onValueChange={(v) => handleDataChange('condition', v)}
@@ -582,7 +577,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Target Price</Label>
+                  <Label className="text-xs">目标价格</Label>
                   <Input
                     type="number"
                     step="0.05"
@@ -592,7 +587,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Trigger</Label>
+                  <Label className="text-xs">触发</Label>
                   <Select
                     value={(nodeData.trigger as string) || 'once'}
                     onValueChange={(v) => handleDataChange('trigger', v)}
@@ -610,7 +605,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Expiration</Label>
+                  <Label className="text-xs">有效期</Label>
                   <Select
                     value={(nodeData.expiration as string) || 'none'}
                     onValueChange={(v) => handleDataChange('expiration', v)}
@@ -629,7 +624,7 @@ export function ConfigPanel() {
                 </div>
                 <div className="flex items-center justify-between rounded-lg border p-3">
                   <div>
-                    <Label className="text-xs">Play Sound</Label>
+                    <Label className="text-xs">播放声音</Label>
                   </div>
                   <Switch
                     checked={(nodeData.playSound as boolean) ?? true}
@@ -637,7 +632,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Alert Message</Label>
+                  <Label className="text-xs">提醒消息</Label>
                   <Input
                     className="h-8"
                     placeholder="Custom message"
@@ -652,7 +647,7 @@ export function ConfigPanel() {
             {nodeType === 'webhookTrigger' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Label</Label>
+                  <Label className="text-xs">标签</Label>
                   <Input
                     className="h-8"
                     placeholder="TradingView Alert"
@@ -668,7 +663,7 @@ export function ConfigPanel() {
                 ) : webhookQuery.data ? (
                   <>
                     <div className="space-y-2">
-                      <Label className="text-xs">Webhook URL</Label>
+                      <Label className="text-xs">Webhook 地址</Label>
                       <div className="flex gap-1">
                         <Input
                           readOnly
@@ -687,14 +682,14 @@ export function ConfigPanel() {
                               'URL'
                             )
                           }
-                          aria-label="Copy webhook URL"
+                          aria-label="复制 Webhook 地址"
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs">Webhook Secret</Label>
+                      <Label className="text-xs">Webhook 密钥</Label>
                       <div className="flex gap-1">
                         <div className="relative flex-1">
                           <Input
@@ -724,7 +719,7 @@ export function ConfigPanel() {
                           onClick={() =>
                             copyToClipboard(webhookQuery.data.webhook_secret, 'Secret')
                           }
-                          aria-label="Copy webhook secret"
+                          aria-label="复制 Webhook 密钥"
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
@@ -742,9 +737,7 @@ export function ConfigPanel() {
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-lg border-yellow-500/30 bg-yellow-500/10 p-3 text-center text-xs text-yellow-600">
-                    Save workflow first
-                  </div>
+                  <div className="rounded-lg border-yellow-500/30 bg-yellow-500/10 p-3 text-center text-xs text-yellow-600">请先保存工作流</div>
                 )}
               </>
             )}
@@ -752,7 +745,7 @@ export function ConfigPanel() {
             {nodeType === 'orderUpdateTrigger' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Order ID (optional)</Label>
+                  <Label className="text-xs">订单号（可选）</Label>
                   <Input
                     className="h-8"
                     placeholder="240221025997024"
@@ -766,7 +759,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol (optional)</Label>
+                  <Label className="text-xs">交易品种（可选）</Label>
                   <Input
                     className="h-8"
                     placeholder="NIFTY28OCT2525950CE"
@@ -774,12 +767,9 @@ export function ConfigPanel() {
                     onChange={(e) => handleDataChange('symbol', e.target.value)}
                   />
                 </div>
-                <p className="text-[10px] text-muted-foreground">
-                  Set at least one of Order ID / Symbol - an unfiltered watch would fire on every
-                  order in the account.
-                </p>
+                <p className="text-[10px] text-muted-foreground">请至少设置订单编号或交易品种之一，否则监听会在账户中每笔订单发生时触发。</p>
                 <div className="space-y-2">
-                  <Label className="text-xs">Exchange (optional)</Label>
+                  <Label className="text-xs">交易所（可选）</Label>
                   <Select
                     value={(nodeData.exchange as string) || 'ANY'}
                     onValueChange={(v) => handleDataChange('exchange', v === 'ANY' ? '' : v)}
@@ -788,7 +778,7 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ANY">Any exchange</SelectItem>
+                      <SelectItem value="ANY">任意交易所</SelectItem>
                       {EXCHANGES.map((e) => (
                         <SelectItem key={e.value} value={e.value}>
                           {e.label}
@@ -798,7 +788,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Status</Label>
+                  <Label className="text-xs">状态</Label>
                   <Select
                     value={(nodeData.status as string) || 'complete'}
                     onValueChange={(v) => handleDataChange('status', v)}
@@ -807,17 +797,17 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="any">Any status change</SelectItem>
-                      <SelectItem value="open">Open</SelectItem>
-                      <SelectItem value="trigger pending">Trigger Pending</SelectItem>
-                      <SelectItem value="complete">Complete (filled)</SelectItem>
-                      <SelectItem value="rejected">Rejected</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                      <SelectItem value="any">任何状态变化</SelectItem>
+                      <SelectItem value="open">待成交</SelectItem>
+                      <SelectItem value="trigger pending">等待触发</SelectItem>
+                      <SelectItem value="complete">已全部成交</SelectItem>
+                      <SelectItem value="rejected">已拒绝</SelectItem>
+                      <SelectItem value="cancelled">已撤销</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Trigger</Label>
+                  <Label className="text-xs">触发</Label>
                   <Select
                     value={(nodeData.trigger as string) || 'once'}
                     onValueChange={(v) => handleDataChange('trigger', v)}
@@ -826,8 +816,8 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="once">Once, then stop watching</SelectItem>
-                      <SelectItem value="every_time">Every matching update</SelectItem>
+                      <SelectItem value="once">仅触发一次，然后停止监控</SelectItem>
+                      <SelectItem value="every_time">每次匹配的更新</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -838,7 +828,7 @@ export function ConfigPanel() {
             {nodeType === 'placeOrder' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -874,7 +864,7 @@ export function ConfigPanel() {
                   onTriggerPriceChange={(value) => handleDataChange('triggerPrice', value)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="orderResult"
@@ -892,7 +882,7 @@ export function ConfigPanel() {
             {nodeType === 'smartOrder' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -914,7 +904,7 @@ export function ConfigPanel() {
                   min={0}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Position Size</Label>
+                  <Label className="text-xs">持仓数量</Label>
                   <Input
                     type="number"
                     className="h-8"
@@ -944,7 +934,7 @@ export function ConfigPanel() {
                   onTriggerPriceChange={(value) => handleDataChange('triggerPrice', value)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="smartResult"
@@ -959,7 +949,7 @@ export function ConfigPanel() {
             {nodeType === 'optionsOrder' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Underlying</Label>
+                  <Label className="text-xs">标的</Label>
                   <Select
                     value={(nodeData.underlying as string) || 'NIFTY'}
                     onValueChange={(v) => {
@@ -990,7 +980,7 @@ export function ConfigPanel() {
                   options={expiryTypesFor((nodeData.underlying as string) || 'NIFTY')}
                 />
                 <TemplatableField
-                  label="Strike Offset"
+                  label="行权价偏移"
                   value={(nodeData.offset as string) || 'ATM'}
                   onChange={(v) => handleDataChange('offset', v)}
                   fallback="ATM"
@@ -1014,7 +1004,7 @@ export function ConfigPanel() {
                   </Select>
                 </TemplatableField>
                 <TemplatableField
-                  label="Option Type"
+                  label="期权类型"
                   value={nodeData.optionType}
                   onChange={(v) => handleDataChange('optionType', v)}
                   fallback="CE"
@@ -1046,7 +1036,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('action', v)}
                 />
                 <QuantityField
-                  label="Quantity (Lots)"
+                  label="数量（手）"
                   value={nodeData.quantity ?? 1}
                   onChange={(v) => handleDataChange('quantity', v)}
                 />
@@ -1080,7 +1070,7 @@ export function ConfigPanel() {
                   onTriggerPriceChange={(value) => handleDataChange('triggerPrice', value)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="optionOrder"
@@ -1095,7 +1085,7 @@ export function ConfigPanel() {
             {nodeType === 'optionsMultiOrder' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Strategy</Label>
+                  <Label className="text-xs">策略</Label>
                   <Select
                     value={(nodeData.strategy as string) || 'straddle'}
                     onValueChange={(strategy) => {
@@ -1125,7 +1115,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Underlying</Label>
+                  <Label className="text-xs">标的</Label>
                   <Select
                     value={(nodeData.underlying as string) || 'NIFTY'}
                     onValueChange={(v) => applyUnderlying(v)}
@@ -1148,7 +1138,7 @@ export function ConfigPanel() {
                   options={expiryTypesFor((nodeData.underlying as string) || 'NIFTY')}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Action</Label>
+                  <Label className="text-xs">买卖方向</Label>
                   <div className="grid grid-cols-2 gap-2">
                     {ORDER_ACTIONS.map((a) => (
                       <button
@@ -1173,7 +1163,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <QuantityField
-                  label="Quantity (Lots)"
+                  label="数量（手）"
                   value={nodeData.quantity ?? 1}
                   onChange={(v) => handleDataChange('quantity', v)}
                 />
@@ -1201,15 +1191,12 @@ export function ConfigPanel() {
                 )}
                 {orderPriceType === 'LIMIT' && nodeData.strategy !== 'custom' && (
                   <div>
-                    <p className="text-[10px] text-muted-foreground">
-                      Applied to every generated leg. A LIMIT order without a positive price is
-                      rejected rather than sent at market.
-                    </p>
+                    <p className="text-[10px] text-muted-foreground">应用于生成的每条策略腿。限价单未填写大于零的价格时会被拒绝，不会转为市价单。</p>
                   </div>
                 )}
                 {/* Strategy Legs Preview */}
                 <div className="rounded-lg border bg-muted/30 p-2">
-                  <p className="text-[10px] font-medium mb-1.5">Strategy Legs:</p>
+                  <p className="text-[10px] font-medium mb-1.5">策略腿：</p>
                   <div className="space-y-0.5 text-[10px] font-mono">
                     {nodeData.strategy === 'straddle' && (
                       <>
@@ -1263,19 +1250,19 @@ export function ConfigPanel() {
                       <>
                         <div className="flex justify-between">
                           <span>OTM2 CE</span>
-                          <span className="text-red-600">SELL</span>
+                          <span className="text-red-600">卖出</span>
                         </div>
                         <div className="flex justify-between">
                           <span>OTM4 CE</span>
-                          <span className="text-green-600">BUY</span>
+                          <span className="text-green-600">买入</span>
                         </div>
                         <div className="flex justify-between">
                           <span>OTM2 PE</span>
-                          <span className="text-red-600">SELL</span>
+                          <span className="text-red-600">卖出</span>
                         </div>
                         <div className="flex justify-between">
                           <span>OTM4 PE</span>
-                          <span className="text-green-600">BUY</span>
+                          <span className="text-green-600">买入</span>
                         </div>
                       </>
                     )}
@@ -1283,11 +1270,11 @@ export function ConfigPanel() {
                       <>
                         <div className="flex justify-between">
                           <span>ATM CE</span>
-                          <span className="text-green-600">BUY</span>
+                          <span className="text-green-600">买入</span>
                         </div>
                         <div className="flex justify-between">
                           <span>OTM2 CE</span>
-                          <span className="text-red-600">SELL</span>
+                          <span className="text-red-600">卖出</span>
                         </div>
                       </>
                     )}
@@ -1295,16 +1282,16 @@ export function ConfigPanel() {
                       <>
                         <div className="flex justify-between">
                           <span>ATM PE</span>
-                          <span className="text-green-600">BUY</span>
+                          <span className="text-green-600">买入</span>
                         </div>
                         <div className="flex justify-between">
                           <span>OTM2 PE</span>
-                          <span className="text-red-600">SELL</span>
+                          <span className="text-red-600">卖出</span>
                         </div>
                       </>
                     )}
                     {nodeData.strategy === 'custom' && (
-                      <p className="text-muted-foreground">Built below, leg by leg.</p>
+                      <p className="text-muted-foreground">在下方逐腿配置。</p>
                     )}
                   </div>
                 </div>
@@ -1322,7 +1309,7 @@ export function ConfigPanel() {
                   />
                 )}
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="multiLegOrder"
@@ -1337,7 +1324,7 @@ export function ConfigPanel() {
             {nodeType === 'basketOrder' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Basket Name</Label>
+                  <Label className="text-xs">篮子名称</Label>
                   <Input
                     className="h-8"
                     placeholder="Morning Portfolio"
@@ -1346,7 +1333,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Orders (SYMBOL,EXCHANGE,ACTION,QTY)</Label>
+                  <Label className="text-xs">订单（品种代码、交易所、买卖方向、数量）</Label>
                   <Textarea
                     className="min-h-[100px] text-xs font-mono"
                     placeholder="RELIANCE,NSE,BUY,10&#10;INFY,NSE,BUY,5&#10;SBIN,NSE,SELL,20"
@@ -1356,28 +1343,20 @@ export function ConfigPanel() {
                   />
                   {Array.isArray(basketOrders) && (
                     <div className="space-y-2 rounded-md border p-2">
-                      <p className="text-[10px] text-muted-foreground">
-                        This imported per-order list is preserved read-only, including product and
-                        price overrides. Converting to CSV keeps only symbol, exchange, action, and
-                        quantity so the rows can be edited here.
-                      </p>
+                      <p className="text-[10px] text-muted-foreground">导入的逐笔订单列表以只读方式保留，包括产品类型和价格覆盖值。转换为 CSV 后仅保留交易品种、交易所、买卖方向和数量，以便在此编辑。</p>
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
                         className="h-7 text-xs"
                         onClick={() => handleDataChange('orders', basketOrdersToCsv(basketOrders))}
-                      >
-                        Convert imported orders to CSV
-                      </Button>
+                      >将导入的订单转换为 CSV</Button>
                     </div>
                   )}
-                  <p className="text-[10px] text-muted-foreground">
-                    Supported exchanges: NSE, BSE, NFO, BFO, CDS, BCD, MCX, NCO
-                  </p>
+                  <p className="text-[10px] text-muted-foreground">支持的交易所：NSE、BSE、NFO、BFO、CDS、BCD、MCX、NCO</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Product</Label>
+                  <Label className="text-xs">交易产品</Label>
                   {/* One basket can mix segments, so the default is decided per
                       row rather than blanket: an NFO row goes NRML while an NSE
                       row goes MIS. Choosing a product here overrides all of
@@ -1392,7 +1371,7 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={BASKET_PRODUCT_AUTO}>By row exchange</SelectItem>
+                      <SelectItem value={BASKET_PRODUCT_AUTO}>按各行交易所</SelectItem>
                       {PRODUCT_TYPES.map((t) => (
                         <SelectItem key={t.value} value={t.value}>
                           {t.label}
@@ -1413,7 +1392,7 @@ export function ConfigPanel() {
                   onTriggerPriceChange={(value) => handleDataChange('triggerPrice', value)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="basketResult"
@@ -1431,7 +1410,7 @@ export function ConfigPanel() {
             {nodeType === 'splitOrder' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -1448,7 +1427,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('action', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Total Quantity</Label>
+                  <Label className="text-xs">总数量</Label>
                   <Input
                     type="number"
                     min={1}
@@ -1460,7 +1439,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Split Size</Label>
+                  <Label className="text-xs">每笔拆单数量</Label>
                   <Input
                     type="number"
                     min={1}
@@ -1487,7 +1466,7 @@ export function ConfigPanel() {
                   onTriggerPriceChange={(value) => handleDataChange('triggerPrice', value)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="splitResult"
@@ -1511,23 +1490,21 @@ export function ConfigPanel() {
             {/* ===== CANCEL ORDER ===== */}
             {nodeType === 'cancelOrder' && (
               <div className="space-y-2">
-                <Label className="text-xs">Order ID</Label>
+                <Label className="text-xs">订单号</Label>
                 <Input
                   className="h-8"
                   placeholder="{{orderResult.orderid}}"
                   value={(nodeData.orderId as string) || ''}
                   onChange={(e) => handleDataChange('orderId', e.target.value)}
                 />
-                <p className="text-[10px] text-muted-foreground">Use variable from Place Order</p>
+                <p className="text-[10px] text-muted-foreground">使用下单节点的变量</p>
               </div>
             )}
 
             {/* ===== CANCEL ALL / CLOSE POSITIONS ===== */}
             {nodeType === 'cancelAllOrders' && (
               <div className="rounded-lg border bg-muted/30 p-3">
-                <p className="text-xs text-muted-foreground">
-                  Cancels all open orders. No configuration needed.
-                </p>
+                <p className="text-xs text-muted-foreground">撤销所有未完成订单，无需配置。</p>
               </div>
             )}
             {nodeType === 'closePositions' && (
@@ -1539,10 +1516,10 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
-                    placeholder="Blank = close all positions"
+                    placeholder="留空表示平掉全部持仓"
                     value={(nodeData.symbol as string) || ''}
                     onChange={(e) => handleDataChange('symbol', e.target.value)}
                   />
@@ -1566,7 +1543,7 @@ export function ConfigPanel() {
             {nodeType === 'modifyOrder' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Order ID</Label>
+                  <Label className="text-xs">订单号</Label>
                   <Input
                     className="h-8"
                     placeholder="{{orderResult.orderid}}"
@@ -1575,29 +1552,26 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="rounded-lg border bg-muted/30 p-3">
-                  <p className="text-xs text-muted-foreground">
-                    Symbol, exchange, side and product are read from the live order, so anything
-                    left blank here stays as it is.
-                  </p>
+                  <p className="text-xs text-muted-foreground">交易品种、交易所、买卖方向和产品类型从实时订单中读取，此处留空的字段保持不变。</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">New Price</Label>
+                  <Label className="text-xs">新价格</Label>
                   <Input
                     type="number"
                     step="0.05"
                     className="h-8"
-                    placeholder="Leave empty to keep"
+                    placeholder="留空表示保持不变"
                     value={(nodeData.newPrice as number) ?? ''}
                     onChange={(e) => handleDataChange('newPrice', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">New Quantity</Label>
+                  <Label className="text-xs">新数量</Label>
                   <Input
                     type="number"
                     min={1}
                     className="h-8"
-                    placeholder="Leave empty to keep"
+                    placeholder="留空表示保持不变"
                     value={(nodeData.newQuantity as number) ?? ''}
                     onChange={(e) => handleDataChange('newQuantity', e.target.value)}
                   />
@@ -1609,7 +1583,7 @@ export function ConfigPanel() {
             {nodeType === 'getQuote' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -1622,7 +1596,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="quote"
@@ -1637,7 +1611,7 @@ export function ConfigPanel() {
             {nodeType === 'getDepth' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="SBIN"
@@ -1650,7 +1624,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="depth"
@@ -1668,19 +1642,17 @@ export function ConfigPanel() {
             {nodeType === 'getOrderStatus' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Order ID</Label>
+                  <Label className="text-xs">订单号</Label>
                   <Input
                     className="h-8"
                     placeholder="{{orderResult.orderid}}"
                     value={(nodeData.orderId as string) || ''}
                     onChange={(e) => handleDataChange('orderId', e.target.value)}
                   />
-                  <p className="text-[10px] text-muted-foreground">
-                    Use variable from Place Order node
-                  </p>
+                  <p className="text-[10px] text-muted-foreground">使用下单节点的变量</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="orderStatus"
@@ -1697,7 +1669,7 @@ export function ConfigPanel() {
             {nodeType === 'openPosition' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -1714,7 +1686,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('product', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="position"
@@ -1729,7 +1701,7 @@ export function ConfigPanel() {
             {nodeType === 'history' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="SBIN"
@@ -1742,7 +1714,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Interval</Label>
+                  <Label className="text-xs">时间周期</Label>
                   <Select
                     value={(nodeData.interval as string) || '1d'}
                     onValueChange={(v) => handleDataChange('interval', v)}
@@ -1751,16 +1723,16 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1m">1 Min</SelectItem>
-                      <SelectItem value="5m">5 Min</SelectItem>
-                      <SelectItem value="15m">15 Min</SelectItem>
-                      <SelectItem value="1h">1 Hour</SelectItem>
-                      <SelectItem value="1d">Daily</SelectItem>
+                      <SelectItem value="1m">1 分钟</SelectItem>
+                      <SelectItem value="5m">5 分钟</SelectItem>
+                      <SelectItem value="15m">15 分钟</SelectItem>
+                      <SelectItem value="1h">1 小时</SelectItem>
+                      <SelectItem value="1d">每日</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Days</Label>
+                  <Label className="text-xs">天</Label>
                   <Input
                     type="number"
                     min={1}
@@ -1771,7 +1743,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="ohlcv"
@@ -1785,7 +1757,7 @@ export function ConfigPanel() {
             {nodeType === 'indicator' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Indicator</Label>
+                  <Label className="text-xs">指标</Label>
                   <Select
                     value={(nodeData.indicatorName as string) || 'rsi'}
                     onValueChange={(v) => {
@@ -1806,14 +1778,14 @@ export function ConfigPanel() {
                     <SelectContent className="max-h-72">
                       {INDICATOR_CATALOG.map((ind) => (
                         <SelectItem key={ind.value} value={ind.value}>
-                          {ind.label} ({ind.category})
+                          {flowIndicatorName(ind.value)} · {flowIndicatorCategory(ind.category)}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Nest on another indicator (optional)</Label>
+                  <Label className="text-xs">基于另一指标计算（可选）</Label>
                   <Input
                     className="h-8"
                     placeholder="{{rsi1.series}}"
@@ -1829,22 +1801,20 @@ export function ConfigPanel() {
                 </div>
                 {nodeData.sourceSeries ? (
                   <div className="space-y-2">
-                    <Label className="text-xs">Source Field (optional)</Label>
+                    <Label className="text-xs">来源字段（可选）</Label>
                     <Input
                       className="h-8"
-                      placeholder="blank = auto (value, out0, close)"
+                      placeholder="留空自动选择（value、out0、close）"
                       value={(nodeData.sourceField as string) || ''}
                       onChange={(e) => handleDataChange('sourceField', e.target.value)}
                     />
-                    <p className="text-[10px] text-muted-foreground">
-                      Which field to read from each row, e.g. high, low, out1.
-                    </p>
+                    <p className="text-[10px] text-muted-foreground">从每行读取哪个字段，例如 high、low、out1。</p>
                   </div>
                 ) : null}
                 {!nodeData.sourceSeries && (
                   <>
                     <div className="space-y-2">
-                      <Label className="text-xs">Symbol</Label>
+                      <Label className="text-xs">交易品种</Label>
                       <Input
                         className="h-8"
                         placeholder="RELIANCE"
@@ -1857,10 +1827,10 @@ export function ConfigPanel() {
                       onChange={(v) => handleDataChange('exchange', v)}
                     />
                     <div className="space-y-2">
-                      <Label className="text-xs">Interval</Label>
+                      <Label className="text-xs">时间周期</Label>
                       <Input
                         className="h-8"
-                        placeholder="D, 5m, 1h, or a custom Historify interval"
+                        placeholder="D、5m、1h 或自定义历史数据周期"
                         value={(nodeData.interval as string) || 'D'}
                         onChange={(e) => handleDataChange('interval', e.target.value)}
                       />
@@ -1870,7 +1840,7 @@ export function ConfigPanel() {
                       </p>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs">Source</Label>
+                      <Label className="text-xs">数据来源</Label>
                       <Select
                         value={(nodeData.source as string) || 'api'}
                         onValueChange={(v) => handleDataChange('source', v)}
@@ -1879,7 +1849,7 @@ export function ConfigPanel() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="api">Broker API</SelectItem>
+                          <SelectItem value="api">券商 API</SelectItem>
                           <SelectItem value="db">
                             Historify DB (custom intervals: 2m, 4m, W, M, Q)
                           </SelectItem>
@@ -1887,7 +1857,7 @@ export function ConfigPanel() {
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs">Lookback Bars</Label>
+                      <Label className="text-xs">回看 K 线数</Label>
                       <Input
                         type="number"
                         min={5}
@@ -1909,7 +1879,7 @@ export function ConfigPanel() {
                   onChange={(raw) => handleDataChange('params', raw)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Value N Bars Back</Label>
+                  <Label className="text-xs">前 N 根 K 线的值</Label>
                   <Input
                     type="number"
                     min={0}
@@ -1927,7 +1897,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Tail Bars</Label>
+                  <Label className="text-xs">末尾 K 线数量</Label>
                   <Input
                     type="number"
                     min={1}
@@ -1944,7 +1914,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="rsi1"
@@ -1963,10 +1933,10 @@ export function ConfigPanel() {
             {nodeType === 'strategyPnl' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Strategy</Label>
+                  <Label className="text-xs">策略</Label>
                   <Input
                     className="h-8"
-                    placeholder="blank = this workflow's name"
+                    placeholder="留空使用当前工作流名称"
                     value={(nodeData.strategy as string) || ''}
                     onChange={(e) => handleDataChange('strategy', e.target.value)}
                   />
@@ -1976,7 +1946,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="spnl"
@@ -1994,7 +1964,7 @@ export function ConfigPanel() {
             {nodeType === 'priorPeriodOhlc' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="NIFTY"
@@ -2007,7 +1977,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Period</Label>
+                  <Label className="text-xs">周期</Label>
                   <Select
                     value={(nodeData.period as string) || 'previous_day'}
                     onValueChange={(v) => handleDataChange('period', v)}
@@ -2016,15 +1986,15 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="previous_hour">Previous Hour</SelectItem>
-                      <SelectItem value="previous_day">Previous Day</SelectItem>
-                      <SelectItem value="previous_week">Previous Week</SelectItem>
-                      <SelectItem value="previous_month">Previous Month</SelectItem>
+                      <SelectItem value="previous_hour">前一小时</SelectItem>
+                      <SelectItem value="previous_day">前一日</SelectItem>
+                      <SelectItem value="previous_week">前一周</SelectItem>
+                      <SelectItem value="previous_month">前一月</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Source</Label>
+                  <Label className="text-xs">数据来源</Label>
                   <Select
                     value={(nodeData.source as string) || 'api'}
                     onValueChange={(v) => handleDataChange('source', v)}
@@ -2033,13 +2003,13 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="api">Broker API</SelectItem>
-                      <SelectItem value="db">Historify DB</SelectItem>
+                      <SelectItem value="api">券商 API</SelectItem>
+                      <SelectItem value="db">Historify 数据库</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="pdhpdl"
@@ -2057,7 +2027,7 @@ export function ConfigPanel() {
             {nodeType === 'barOffset' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -2070,16 +2040,16 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Interval</Label>
+                  <Label className="text-xs">时间周期</Label>
                   <Input
                     className="h-8"
-                    placeholder="D, 5m, 1h, or a custom Historify interval"
+                    placeholder="D、5m、1h 或自定义历史数据周期"
                     value={(nodeData.interval as string) || 'D'}
                     onChange={(e) => handleDataChange('interval', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Source</Label>
+                  <Label className="text-xs">数据来源</Label>
                   <Select
                     value={(nodeData.source as string) || 'api'}
                     onValueChange={(v) => handleDataChange('source', v)}
@@ -2088,13 +2058,13 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="api">Broker API</SelectItem>
-                      <SelectItem value="db">Historify DB</SelectItem>
+                      <SelectItem value="api">券商 API</SelectItem>
+                      <SelectItem value="db">Historify 数据库</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Bars Back</Label>
+                  <Label className="text-xs">向前 K 线数</Label>
                   <Input
                     type="number"
                     min={0}
@@ -2109,7 +2079,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="bar1"
@@ -2123,7 +2093,7 @@ export function ConfigPanel() {
             {nodeType === 'expiry' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="NIFTY"
@@ -2137,7 +2107,7 @@ export function ConfigPanel() {
                   fallback="NFO"
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Instrument Type</Label>
+                  <Label className="text-xs">交易品种类型</Label>
                   <Select
                     value={(nodeData.instrumenttype as string) || 'options'}
                     onValueChange={(v) => handleDataChange('instrumenttype', v)}
@@ -2146,16 +2116,14 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="options">Options</SelectItem>
-                      <SelectItem value="futures">Futures</SelectItem>
+                      <SelectItem value="options">期权</SelectItem>
+                      <SelectItem value="futures">期货</SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-[10px] text-muted-foreground">
-                    Futures and options have different expiry calendars
-                  </p>
+                  <p className="text-[10px] text-muted-foreground">期货和期权的到期日历不同</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="expiries"
@@ -2170,7 +2138,7 @@ export function ConfigPanel() {
             {nodeType === 'multiQuotes' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbols (comma separated)</Label>
+                  <Label className="text-xs">交易品种（逗号分隔）</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE,INFY,TCS"
@@ -2183,7 +2151,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="quotes"
@@ -2200,7 +2168,7 @@ export function ConfigPanel() {
             {nodeType === 'symbol' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="NIFTY30DEC25FUT"
@@ -2214,7 +2182,7 @@ export function ConfigPanel() {
                   fallback="NFO"
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="symbolInfo"
@@ -2231,7 +2199,7 @@ export function ConfigPanel() {
             {nodeType === 'optionSymbol' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Underlying</Label>
+                  <Label className="text-xs">标的</Label>
                   <Input
                     className="h-8"
                     placeholder="NIFTY"
@@ -2245,7 +2213,7 @@ export function ConfigPanel() {
                   fallback="NSE_INDEX"
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Expiry Date</Label>
+                  <Label className="text-xs">到期日</Label>
                   <Input
                     className="h-8"
                     placeholder="30DEC25"
@@ -2254,7 +2222,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <TemplatableField
-                  label="Strike Offset"
+                  label="行权价偏移"
                   value={(nodeData.offset as string) || 'ATM'}
                   onChange={(v) => handleDataChange('offset', v)}
                   fallback="ATM"
@@ -2278,7 +2246,7 @@ export function ConfigPanel() {
                   </Select>
                 </TemplatableField>
                 <div className="space-y-2">
-                  <Label className="text-xs">Option Type</Label>
+                  <Label className="text-xs">期权类型</Label>
                   <div className="grid grid-cols-2 gap-2">
                     {['CE', 'PE'].map((t) => (
                       <button
@@ -2300,7 +2268,7 @@ export function ConfigPanel() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="optionSym"
@@ -2314,19 +2282,17 @@ export function ConfigPanel() {
             {nodeType === 'calendar' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Date</Label>
+                  <Label className="text-xs">日期</Label>
                   <Input
                     type="date"
                     className="h-8"
                     value={(nodeData.date as string) || ''}
                     onChange={(e) => handleDataChange('date', e.target.value)}
                   />
-                  <p className="text-[10px] text-muted-foreground">
-                    Leave blank for the current trading session date.
-                  </p>
+                  <p className="text-[10px] text-muted-foreground">留空时使用当前交易日日期。</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="cal"
@@ -2342,7 +2308,7 @@ export function ConfigPanel() {
             )}
             {nodeType === 'intervals' && (
               <div className="space-y-2">
-                <Label className="text-xs">Output Variable</Label>
+                <Label className="text-xs">输出变量</Label>
                 <Input
                   className="h-8"
                   placeholder="intervals"
@@ -2356,7 +2322,7 @@ export function ConfigPanel() {
             )}
             {nodeType === 'orderBook' && (
               <div className="space-y-2">
-                <Label className="text-xs">Output Variable</Label>
+                <Label className="text-xs">输出变量</Label>
                 <Input
                   className="h-8"
                   placeholder="orders"
@@ -2368,7 +2334,7 @@ export function ConfigPanel() {
             )}
             {nodeType === 'tradeBook' && (
               <div className="space-y-2">
-                <Label className="text-xs">Output Variable</Label>
+                <Label className="text-xs">输出变量</Label>
                 <Input
                   className="h-8"
                   placeholder="trades"
@@ -2380,7 +2346,7 @@ export function ConfigPanel() {
             )}
             {nodeType === 'positionBook' && (
               <div className="space-y-2">
-                <Label className="text-xs">Output Variable</Label>
+                <Label className="text-xs">输出变量</Label>
                 <Input
                   className="h-8"
                   placeholder="positions"
@@ -2394,7 +2360,7 @@ export function ConfigPanel() {
             {nodeType === 'syntheticFuture' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Underlying</Label>
+                  <Label className="text-xs">标的</Label>
                   <Input
                     className="h-8"
                     placeholder="NIFTY"
@@ -2408,7 +2374,7 @@ export function ConfigPanel() {
                   fallback="NSE_INDEX"
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Expiry Date</Label>
+                  <Label className="text-xs">到期日</Label>
                   <Input
                     className="h-8"
                     placeholder="25NOV25"
@@ -2417,7 +2383,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="synthFuture"
@@ -2434,7 +2400,7 @@ export function ConfigPanel() {
             {nodeType === 'optionChain' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Underlying</Label>
+                  <Label className="text-xs">标的</Label>
                   <Input
                     className="h-8"
                     placeholder="NIFTY"
@@ -2448,7 +2414,7 @@ export function ConfigPanel() {
                   fallback="NSE_INDEX"
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Expiry Date</Label>
+                  <Label className="text-xs">到期日</Label>
                   <Input
                     className="h-8"
                     placeholder="30DEC25"
@@ -2457,7 +2423,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Strike Count</Label>
+                  <Label className="text-xs">行权价数量</Label>
                   <Input
                     type="number"
                     className="h-8"
@@ -2469,7 +2435,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="chain"
@@ -2484,7 +2450,7 @@ export function ConfigPanel() {
             {nodeType === 'holidays' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Year</Label>
+                  <Label className="text-xs">年份</Label>
                   <Input
                     type="number"
                     className="h-8"
@@ -2497,7 +2463,7 @@ export function ConfigPanel() {
                   <p className="text-[10px] text-muted-foreground">Empty = current year</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="holidays"
@@ -2511,7 +2477,7 @@ export function ConfigPanel() {
             {nodeType === 'timings' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Date</Label>
+                  <Label className="text-xs">日期</Label>
                   <Input
                     type="date"
                     className="h-8"
@@ -2521,7 +2487,7 @@ export function ConfigPanel() {
                   <p className="text-[10px] text-muted-foreground">Empty = today</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="timings"
@@ -2534,7 +2500,7 @@ export function ConfigPanel() {
 
             {nodeType === 'holdings' && (
               <div className="space-y-2">
-                <Label className="text-xs">Output Variable</Label>
+                <Label className="text-xs">输出变量</Label>
                 <Input
                   className="h-8"
                   placeholder="holdings"
@@ -2548,7 +2514,7 @@ export function ConfigPanel() {
             )}
             {nodeType === 'funds' && (
               <div className="space-y-2">
-                <Label className="text-xs">Output Variable</Label>
+                <Label className="text-xs">输出变量</Label>
                 <Input
                   className="h-8"
                   placeholder="funds"
@@ -2568,7 +2534,7 @@ export function ConfigPanel() {
                   onChange={(raw) => handleDataChange('positionsJson', raw)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="marginResult"
@@ -2583,7 +2549,7 @@ export function ConfigPanel() {
             {nodeType === 'subscribeLtp' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -2596,7 +2562,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="ltp"
@@ -2611,7 +2577,7 @@ export function ConfigPanel() {
             {nodeType === 'subscribeQuote' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -2624,7 +2590,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="quote"
@@ -2641,7 +2607,7 @@ export function ConfigPanel() {
             {nodeType === 'subscribeDepth' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -2654,7 +2620,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="depth"
@@ -2671,7 +2637,7 @@ export function ConfigPanel() {
             {nodeType === 'unsubscribe' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Stream Type</Label>
+                  <Label className="text-xs">行情流类型</Label>
                   <Select
                     value={(nodeData.streamType as string) || 'all'}
                     onValueChange={(v) => handleDataChange('streamType', v)}
@@ -2680,18 +2646,18 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ltp">LTP Only</SelectItem>
-                      <SelectItem value="quote">Quote Only</SelectItem>
-                      <SelectItem value="depth">Depth Only</SelectItem>
-                      <SelectItem value="all">All Streams</SelectItem>
+                      <SelectItem value="ltp">仅最新价</SelectItem>
+                      <SelectItem value="quote">仅行情</SelectItem>
+                      <SelectItem value="depth">仅盘口</SelectItem>
+                      <SelectItem value="all">全部行情流</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
-                    placeholder="Empty = all symbols"
+                    placeholder="留空表示所有交易品种"
                     value={(nodeData.symbol as string) || ''}
                     onChange={(e) => handleDataChange('symbol', e.target.value)}
                   />
@@ -2706,7 +2672,7 @@ export function ConfigPanel() {
             {/* ===== UTILITY NODES ===== */}
             {nodeType === 'delay' && (
               <div className="space-y-2">
-                <Label className="text-xs">Wait Duration</Label>
+                <Label className="text-xs">等待时长</Label>
                 <div className="flex gap-2">
                   <Input
                     type="number"
@@ -2725,9 +2691,9 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="seconds">Seconds</SelectItem>
-                      <SelectItem value="minutes">Minutes</SelectItem>
-                      <SelectItem value="hours">Hours</SelectItem>
+                      <SelectItem value="seconds">秒</SelectItem>
+                      <SelectItem value="minutes">分钟</SelectItem>
+                      <SelectItem value="hours">小时</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -2737,19 +2703,17 @@ export function ConfigPanel() {
             {nodeType === 'waitUntil' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Target Time</Label>
+                  <Label className="text-xs">目标时间</Label>
                   <Input
                     type="time"
                     className="h-8"
                     value={(nodeData.targetTime as string) || '09:30'}
                     onChange={(e) => handleDataChange('targetTime', e.target.value)}
                   />
-                  <p className="text-[10px] text-muted-foreground">
-                    Workflow pauses until this time
-                  </p>
+                  <p className="text-[10px] text-muted-foreground">工作流暂停至此时间</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Label</Label>
+                  <Label className="text-xs">标签</Label>
                   <Input
                     className="h-8"
                     placeholder="Wait for Entry"
@@ -2763,7 +2727,7 @@ export function ConfigPanel() {
             {nodeType === 'log' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Log Level</Label>
+                  <Label className="text-xs">日志级别</Label>
                   <Select
                     value={(nodeData.level as string) || 'info'}
                     onValueChange={(v) => handleDataChange('level', v)}
@@ -2781,7 +2745,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Message</Label>
+                  <Label className="text-xs">消息</Label>
                   <Textarea
                     className="min-h-[80px]"
                     placeholder="Log message with {{variables}}"
@@ -2795,7 +2759,7 @@ export function ConfigPanel() {
             {nodeType === 'telegramAlert' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Message</Label>
+                  <Label className="text-xs">消息</Label>
                   <Textarea
                     className="min-h-[80px]"
                     placeholder="Order placed for {{orderResult.symbol}}"
@@ -2814,7 +2778,7 @@ export function ConfigPanel() {
             {nodeType === 'whatsappAlert' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">To (optional)</Label>
+                  <Label className="text-xs">结束日期（可选）</Label>
                   <Input
                     className="h-8"
                     placeholder="919876543210 - blank sends to yourself"
@@ -2823,7 +2787,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Message</Label>
+                  <Label className="text-xs">消息</Label>
                   <Textarea
                     className="min-h-[80px]"
                     placeholder="Order placed for {{orderResult.symbol}}"
@@ -2832,21 +2796,19 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="rounded-lg border bg-muted/30 p-2">
-                  <p className="text-[10px] font-medium mb-1">Variables:</p>
+                  <p className="text-[10px] font-medium mb-1">变量：</p>
                   <p className="text-[9px] font-mono text-muted-foreground">
                     {`{{orderResult.orderid}}`}, {`{{quote.ltp}}`}, {`{{timestamp}}`}
                   </p>
                 </div>
-                <p className="text-[10px] text-muted-foreground">
-                  Requires the WhatsApp bot to be paired from the /whatsapp page first.
-                </p>
+                <p className="text-[10px] text-muted-foreground">需要先在 /whatsapp 页面配对 WhatsApp 机器人。</p>
               </>
             )}
 
             {nodeType === 'variable' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Variable Name</Label>
+                  <Label className="text-xs">变量名称</Label>
                   <Input
                     className="h-8"
                     placeholder="myLTP"
@@ -2858,7 +2820,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Operation</Label>
+                  <Label className="text-xs">操作</Label>
                   <Select
                     value={(nodeData.operation as string) || 'set'}
                     onValueChange={(v) => handleDataChange('operation', v)}
@@ -2901,7 +2863,7 @@ export function ConfigPanel() {
                 )}
                 {['get', 'stringify'].includes(nodeData.operation as string) && (
                   <div className="space-y-2">
-                    <Label className="text-xs">Source Variable</Label>
+                    <Label className="text-xs">来源变量</Label>
                     <Input
                       className="h-8"
                       placeholder="quoteData"
@@ -2912,7 +2874,7 @@ export function ConfigPanel() {
                 )}
                 {nodeData.operation === 'get' && (
                   <div className="space-y-2">
-                    <Label className="text-xs">JSON Path</Label>
+                    <Label className="text-xs">JSON 路径</Label>
                     <Input
                       className="h-8"
                       placeholder="data.ltp"
@@ -2927,7 +2889,7 @@ export function ConfigPanel() {
             {nodeType === 'mathExpression' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Expression</Label>
+                  <Label className="text-xs">表达式</Label>
                   <Textarea
                     className="min-h-[80px] font-mono"
                     placeholder="({{ltp}} * {{lotSize}}) + {{brokerage}}"
@@ -2939,7 +2901,7 @@ export function ConfigPanel() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="result"
@@ -2953,7 +2915,7 @@ export function ConfigPanel() {
             {nodeType === 'httpRequest' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Method</Label>
+                  <Label className="text-xs">方法</Label>
                   <div className="grid grid-cols-5 gap-1">
                     {HTTP_METHODS.map((m) => (
                       <button
@@ -2982,7 +2944,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Headers (JSON)</Label>
+                  <Label className="text-xs">请求头（JSON）</Label>
                   <Textarea
                     className="min-h-[60px] font-mono text-xs"
                     placeholder='{"Authorization": "Bearer {{token}}"}'
@@ -2992,7 +2954,7 @@ export function ConfigPanel() {
                 </div>
                 {['POST', 'PUT', 'PATCH'].includes((nodeData.method as string) || 'GET') && (
                   <div className="space-y-2">
-                    <Label className="text-xs">Body (JSON)</Label>
+                    <Label className="text-xs">请求内容（JSON）</Label>
                     <Textarea
                       className="min-h-[80px] font-mono text-xs"
                       placeholder='{"symbol": "{{webhook.symbol}}"}'
@@ -3002,7 +2964,7 @@ export function ConfigPanel() {
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label className="text-xs">Timeout (ms)</Label>
+                  <Label className="text-xs">超时（毫秒）</Label>
                   <Input
                     type="number"
                     min={1000}
@@ -3015,7 +2977,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Output Variable</Label>
+                  <Label className="text-xs">输出变量</Label>
                   <Input
                     className="h-8"
                     placeholder="apiResponse"
@@ -3031,7 +2993,7 @@ export function ConfigPanel() {
             {nodeType === 'timeWindow' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Start Time</Label>
+                  <Label className="text-xs">开始时间</Label>
                   <Input
                     type="time"
                     className="h-8"
@@ -3040,7 +3002,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">End Time</Label>
+                  <Label className="text-xs">结束时间</Label>
                   <Input
                     type="time"
                     className="h-8"
@@ -3050,8 +3012,8 @@ export function ConfigPanel() {
                 </div>
                 <div className="flex items-center justify-between rounded-lg border p-3">
                   <div>
-                    <Label className="text-xs">Invert Condition</Label>
-                    <p className="text-[10px] text-muted-foreground">Trigger outside window</p>
+                    <Label className="text-xs">条件取反</Label>
+                    <p className="text-[10px] text-muted-foreground">在时间区间外触发</p>
                   </div>
                   <Switch
                     checked={(nodeData.invertCondition as boolean) || false}
@@ -3064,7 +3026,7 @@ export function ConfigPanel() {
             {nodeType === 'timeCondition' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Condition Type</Label>
+                  <Label className="text-xs">条件类型</Label>
                   <div className="grid grid-cols-3 gap-2">
                     {CONDITION_TYPES.map((t) => (
                       <button
@@ -3088,7 +3050,7 @@ export function ConfigPanel() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Operator</Label>
+                  <Label className="text-xs">运算符</Label>
                   <Select
                     value={(nodeData.operator as string) || '>='}
                     onValueChange={(v) => handleDataChange('operator', v)}
@@ -3106,7 +3068,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Target Time</Label>
+                  <Label className="text-xs">目标时间</Label>
                   <Input
                     type="time"
                     className="h-8"
@@ -3115,7 +3077,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Label</Label>
+                  <Label className="text-xs">标签</Label>
                   <Input
                     className="h-8"
                     placeholder="Market Open Entry"
@@ -3129,7 +3091,7 @@ export function ConfigPanel() {
             {nodeType === 'priceCondition' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -3142,7 +3104,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('exchange', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Field</Label>
+                  <Label className="text-xs">字段</Label>
                   <Select
                     value={(nodeData.field as string) || 'ltp'}
                     onValueChange={(v) => handleDataChange('field', v)}
@@ -3151,17 +3113,17 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ltp">LTP</SelectItem>
-                      <SelectItem value="open">Open</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                      <SelectItem value="low">Low</SelectItem>
-                      <SelectItem value="prev_close">Prev Close</SelectItem>
-                      <SelectItem value="change_percent">Change %</SelectItem>
+                      <SelectItem value="ltp">最新成交价</SelectItem>
+                      <SelectItem value="open">开盘价</SelectItem>
+                      <SelectItem value="high">最高价</SelectItem>
+                      <SelectItem value="low">最低价</SelectItem>
+                      <SelectItem value="prev_close">昨收价</SelectItem>
+                      <SelectItem value="change_percent">涨跌幅 %</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Operator</Label>
+                  <Label className="text-xs">运算符</Label>
                   <Select
                     value={(nodeData.operator as string) || '>'}
                     onValueChange={(v) => handleDataChange('operator', v)}
@@ -3180,7 +3142,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Value</Label>
+                  <Label className="text-xs">值</Label>
                   <Input
                     type="number"
                     step="0.05"
@@ -3195,7 +3157,7 @@ export function ConfigPanel() {
             {nodeType === 'varCondition' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Left Value</Label>
+                  <Label className="text-xs">左值</Label>
                   <Input
                     className="h-8"
                     placeholder="{{rsi1.latest.value}}"
@@ -3204,7 +3166,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Operator</Label>
+                  <Label className="text-xs">运算符</Label>
                   <Select
                     value={(nodeData.operator as string) || '>'}
                     onValueChange={(v) => handleDataChange('operator', v)}
@@ -3223,7 +3185,7 @@ export function ConfigPanel() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Right Value</Label>
+                  <Label className="text-xs">右值</Label>
                   <Input
                     className="h-8"
                     placeholder="30 or {{pdhpdl.pdh}}"
@@ -3241,7 +3203,7 @@ export function ConfigPanel() {
             {nodeType === 'positionCheck' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Symbol</Label>
+                  <Label className="text-xs">交易品种</Label>
                   <Input
                     className="h-8"
                     placeholder="RELIANCE"
@@ -3258,7 +3220,7 @@ export function ConfigPanel() {
                   onChange={(v) => handleDataChange('product', v)}
                 />
                 <div className="space-y-2">
-                  <Label className="text-xs">Condition</Label>
+                  <Label className="text-xs">条件</Label>
                   <Select
                     value={(nodeData.condition as string) || 'exists'}
                     onValueChange={(v) => handleDataChange('condition', v)}
@@ -3267,12 +3229,12 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="exists">Has Position</SelectItem>
-                      <SelectItem value="not_exists">No Position</SelectItem>
-                      <SelectItem value="quantity_above">Qty Above</SelectItem>
-                      <SelectItem value="quantity_below">Qty Below</SelectItem>
-                      <SelectItem value="pnl_above">P&L Above</SelectItem>
-                      <SelectItem value="pnl_below">P&L Below</SelectItem>
+                      <SelectItem value="exists">有持仓</SelectItem>
+                      <SelectItem value="not_exists">无持仓</SelectItem>
+                      <SelectItem value="quantity_above">数量高于</SelectItem>
+                      <SelectItem value="quantity_below">数量低于</SelectItem>
+                      <SelectItem value="pnl_above">盈亏高于</SelectItem>
+                      <SelectItem value="pnl_below">盈亏低于</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -3280,7 +3242,7 @@ export function ConfigPanel() {
                   nodeData.condition as string
                 ) && (
                   <div className="space-y-2">
-                    <Label className="text-xs">Threshold</Label>
+                    <Label className="text-xs">阈值</Label>
                     <Input
                       type="number"
                       className="h-8"
@@ -3296,7 +3258,7 @@ export function ConfigPanel() {
 
             {nodeType === 'fundCheck' && (
               <div className="space-y-2">
-                <Label className="text-xs">Minimum Available Funds</Label>
+                <Label className="text-xs">最低可用资金</Label>
                 <Input
                   type="number"
                   min={0}
@@ -3307,14 +3269,14 @@ export function ConfigPanel() {
                     handleDataChange('minAvailable', parseFloat(e.target.value) || 0)
                   }
                 />
-                <p className="text-[10px] text-muted-foreground">Checks if margin is above this</p>
+                <p className="text-[10px] text-muted-foreground">检查可用保证金是否高于此值</p>
               </div>
             )}
 
             {nodeType === 'andGate' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Number of Inputs</Label>
+                  <Label className="text-xs">输入数量</Label>
                   <Select
                     value={String((nodeData.inputCount as number) || 2)}
                     onValueChange={(v) => handleDataChange('inputCount', parseInt(v, 10))}
@@ -3323,16 +3285,16 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="2">2 inputs</SelectItem>
-                      <SelectItem value="3">3 inputs</SelectItem>
-                      <SelectItem value="4">4 inputs</SelectItem>
-                      <SelectItem value="5">5 inputs</SelectItem>
+                      <SelectItem value="2">2 个输入</SelectItem>
+                      <SelectItem value="3">3 个输入</SelectItem>
+                      <SelectItem value="4">4 个输入</SelectItem>
+                      <SelectItem value="5">5 个输入</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="rounded-lg bg-muted/50 p-3 text-xs">
-                  <p className="font-medium mb-1">AND Gate</p>
-                  <p className="text-muted-foreground">Yes only if ALL conditions true</p>
+                  <p className="font-medium mb-1">与门</p>
+                  <p className="text-muted-foreground">所有条件均满足时为真</p>
                 </div>
               </>
             )}
@@ -3340,7 +3302,7 @@ export function ConfigPanel() {
             {nodeType === 'orGate' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Number of Inputs</Label>
+                  <Label className="text-xs">输入数量</Label>
                   <Select
                     value={String((nodeData.inputCount as number) || 2)}
                     onValueChange={(v) => handleDataChange('inputCount', parseInt(v, 10))}
@@ -3349,33 +3311,31 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="2">2 inputs</SelectItem>
-                      <SelectItem value="3">3 inputs</SelectItem>
-                      <SelectItem value="4">4 inputs</SelectItem>
-                      <SelectItem value="5">5 inputs</SelectItem>
+                      <SelectItem value="2">2 个输入</SelectItem>
+                      <SelectItem value="3">3 个输入</SelectItem>
+                      <SelectItem value="4">4 个输入</SelectItem>
+                      <SelectItem value="5">5 个输入</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="rounded-lg bg-muted/50 p-3 text-xs">
-                  <p className="font-medium mb-1">OR Gate</p>
-                  <p className="text-muted-foreground">Yes if ANY condition true</p>
+                  <p className="font-medium mb-1">或门</p>
+                  <p className="text-muted-foreground">任一条件满足时为真</p>
                 </div>
               </>
             )}
 
             {nodeType === 'notGate' && (
               <div className="rounded-lg bg-muted/50 p-3 text-xs">
-                <p className="font-medium mb-1">NOT Gate</p>
-                <p className="text-muted-foreground">
-                  Inverts the condition. True becomes False, False becomes True.
-                </p>
+                <p className="font-medium mb-1">非门</p>
+                <p className="text-muted-foreground">反转条件：真变为假，假变为真。</p>
               </div>
             )}
 
             {nodeType === 'group' && (
               <>
                 <div className="space-y-2">
-                  <Label className="text-xs">Group Name</Label>
+                  <Label className="text-xs">组名称</Label>
                   <Input
                     className="h-8"
                     placeholder="Entry Logic"
@@ -3384,7 +3344,7 @@ export function ConfigPanel() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Color</Label>
+                  <Label className="text-xs">颜色</Label>
                   <Select
                     value={(nodeData.color as string) || 'default'}
                     onValueChange={(v) => handleDataChange('color', v)}
@@ -3393,12 +3353,12 @@ export function ConfigPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="default">Default</SelectItem>
-                      <SelectItem value="blue">Blue</SelectItem>
-                      <SelectItem value="green">Green</SelectItem>
-                      <SelectItem value="red">Red</SelectItem>
-                      <SelectItem value="purple">Purple</SelectItem>
-                      <SelectItem value="orange">Orange</SelectItem>
+                      <SelectItem value="default">默认</SelectItem>
+                      <SelectItem value="blue">蓝色</SelectItem>
+                      <SelectItem value="green">绿色</SelectItem>
+                      <SelectItem value="red">红色</SelectItem>
+                      <SelectItem value="purple">紫色</SelectItem>
+                      <SelectItem value="orange">橙色</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -3423,10 +3383,10 @@ export function ConfigPanel() {
                 )}
                 <Separator />
                 <div className="space-y-2">
-                  <Label className="text-xs">Node Label</Label>
+                  <Label className="text-xs">节点标签</Label>
                   <Input
                     className="h-8"
-                    placeholder="Enter label..."
+                    placeholder="输入标签…"
                     value={(nodeData.label as string) || ''}
                     onChange={(e) => handleDataChange('label', e.target.value)}
                   />
@@ -3436,7 +3396,7 @@ export function ConfigPanel() {
 
             <Separator />
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Node ID</Label>
+              <Label className="text-xs text-muted-foreground">节点编号</Label>
               <code className="block text-[10px] bg-muted px-2 py-1 rounded font-mono">
                 {selectedNode.id}
               </code>

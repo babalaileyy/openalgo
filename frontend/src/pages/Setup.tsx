@@ -162,21 +162,18 @@ export default function Setup() {
           <div className="space-y-6 lg:pr-8">
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
-                Initial <span className="text-primary">Setup</span>
+                首次<span className="text-primary">设置</span>
               </h1>
               <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
-                Welcome to OpenAlgo! Create your administrator account to get started with
-                algorithmic trading. This account will have full access to manage the platform.
+                欢迎使用 OpenAlgo！创建管理员账户以开始使用算法交易。该账户拥有平台管理权限。
               </p>
             </div>
 
             <Alert>
               <Info className="h-5 w-5" />
               <AlertDescription>
-                <strong className="block mb-1">First Time Setup</strong>
-                This form will create the initial administrator account. After signing in, open your
-                Profile and scan the TOTP QR code there to enable two-factor authentication and
-                TOTP-based password resets.
+                <strong className="block mb-1">首次设置</strong>
+                此表单将创建初始管理员账户。登录后，请在个人资料中扫描 TOTP 二维码，启用双因素验证及使用动态验证码重置密码。
               </AlertDescription>
             </Alert>
           </div>
@@ -188,12 +185,12 @@ export default function Setup() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {/* Username */}
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username">用户名</Label>
                     <Input
                       id="username"
                       name="username"
                       type="text"
-                      placeholder="Choose a username"
+                      placeholder="设置用户名"
                       value={formData.username}
                       onChange={handleInputChange}
                       required
@@ -204,12 +201,12 @@ export default function Setup() {
 
                   {/* Email */}
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">邮箱</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="输入邮箱"
                       value={formData.email}
                       onChange={handleInputChange}
                       required
@@ -219,12 +216,12 @@ export default function Setup() {
 
                   {/* Password */}
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">密码</Label>
                     <Input
                       id="password"
                       name="password"
                       type="password"
-                      placeholder="Choose a password"
+                      placeholder="设置密码"
                       value={formData.password}
                       onChange={handleInputChange}
                       required
@@ -242,12 +239,12 @@ export default function Setup() {
 
                   {/* Confirm Password */}
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <Label htmlFor="confirmPassword">确认密码</Label>
                     <Input
                       id="confirmPassword"
                       name="confirmPassword"
                       type="password"
-                      placeholder="Confirm your password"
+                      placeholder="再次输入密码"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                       required
@@ -261,7 +258,7 @@ export default function Setup() {
                           passwordsMatch ? 'text-green-500' : 'text-red-500'
                         )}
                       >
-                        {passwordsMatch ? 'Passwords match' : 'Passwords do not match'}
+                        {passwordsMatch ? '两次密码一致' : '两次密码不一致'}
                       </p>
                     )}
                   </div>
@@ -269,19 +266,19 @@ export default function Setup() {
                   {/* Password Requirements */}
                   <div className="bg-muted rounded-lg p-4 space-y-1">
                     <RequirementItem met={requirements.length}>
-                      Minimum 8 characters
+                      至少 8 个字符
                     </RequirementItem>
                     <RequirementItem met={requirements.uppercase}>
-                      At least 1 uppercase letter (A-Z)
+                      至少 1 个大写字母（A-Z）
                     </RequirementItem>
                     <RequirementItem met={requirements.lowercase}>
-                      At least 1 lowercase letter (a-z)
+                      至少 1 个小写字母（a-z）
                     </RequirementItem>
                     <RequirementItem met={requirements.number}>
-                      At least 1 number (0-9)
+                      至少 1 个数字（0-9）
                     </RequirementItem>
                     <RequirementItem met={requirements.special}>
-                      At least 1 special character (!@#$%^&*)
+                      至少 1 个特殊字符（!@#$%^&*）
                     </RequirementItem>
                   </div>
 

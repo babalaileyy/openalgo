@@ -63,7 +63,7 @@ export function ComparisonMenu({
       setError(null)
       void onAdd(row.symbol, String(row.exchange)).catch((cause: unknown) => {
         if (alive.current)
-          setError(cause instanceof Error ? cause.message : 'Unable to add comparison')
+          setError(cause instanceof Error ? cause.message : '无法添加对比品种')
       })
     },
     [disabled, onAdd]
@@ -72,7 +72,7 @@ export function ComparisonMenu({
     setError(null)
     void onRetry?.(id).catch((cause: unknown) => {
       if (alive.current)
-        setError(cause instanceof Error ? cause.message : 'The comparison could not be loaded')
+        setError(cause instanceof Error ? cause.message : '无法加载对比数据')
     })
   }
   const scale = COMPARISON_SCALES.find((item) => item.value === state.mode) ?? COMPARISON_SCALES[0]
@@ -92,7 +92,7 @@ export function ComparisonMenu({
           <PopoverTrigger asChild>
             <button type="button" className={TB_BTN} disabled={disabled} aria-label="Comparisons">
               <ChromeIcon id="compare" />
-              <span className={TB_LABEL_WIDE}>Compare</span>
+              <span className={TB_LABEL_WIDE}>对比</span>
               {/* The same count chip Indicators wears, because it says the same
                 thing. `Compare (2)` beside `Indicators 2` was two spellings of
                 one idea in one row, and the parenthesised one reads as part of
@@ -104,7 +104,7 @@ export function ComparisonMenu({
         </Tip>
         <PopoverContent align="start" container={container} className="w-80 space-y-3 p-3">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-sm font-medium">Comparisons</span>
+            <span className="text-sm font-medium">对比品种</span>
             <button
               type="button"
               className="rounded border px-2 py-1 text-xs hover:bg-accent"
@@ -113,12 +113,12 @@ export function ComparisonMenu({
                 setSearchOpen(true)
               }}
             >
-              Add comparison
+              添加对比
             </button>
           </div>
           <div className="space-y-1">
             <label className="flex items-center justify-between gap-3 text-xs">
-              Scale
+              刻度
               <select
                 aria-label="Comparison scale"
                 aria-describedby={hintId}
@@ -138,7 +138,7 @@ export function ComparisonMenu({
             </p>
           </div>
           {state.items.length === 0 && (
-            <p className="text-xs text-muted-foreground">Add symbols to compare with this chart.</p>
+            <p className="text-xs text-muted-foreground">添加品种以与此图表对比。</p>
           )}
           <ul className="max-h-64 space-y-2 overflow-y-auto">
             {state.items.map((item) => (
@@ -173,9 +173,9 @@ export function ComparisonMenu({
                       )}
                     </p>
                   )}
-                  {!item.visible && <p className="text-muted-foreground">Hidden</p>}
+                  {!item.visible && <p className="text-muted-foreground">已隐藏</p>}
                   {item.status === 'loading' && (
-                    <output className="block text-muted-foreground">Loading history</output>
+                    <output className="block text-muted-foreground">正在加载历史数据</output>
                   )}
                   {item.status === 'error' && (
                     <p role="alert" className="text-destructive">
@@ -190,7 +190,7 @@ export function ComparisonMenu({
                     onClick={() => retry(item.id)}
                     className={action}
                   >
-                    Retry
+                    重试
                   </button>
                 )}
                 {onToggle && (
@@ -210,7 +210,7 @@ export function ComparisonMenu({
                   onClick={() => onRemove(item.id)}
                   className={action}
                 >
-                  Remove
+                  移除
                 </button>
               </li>
             ))}
@@ -226,7 +226,7 @@ export function ComparisonMenu({
         open={searchOpen}
         onOpenChange={setSearchOpen}
         mode="comparison"
-        title="Add comparison symbol"
+        title="添加对比品种"
         search={search}
         onPick={add}
         container={container}

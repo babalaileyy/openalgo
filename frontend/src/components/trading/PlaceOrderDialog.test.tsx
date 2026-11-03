@@ -88,14 +88,14 @@ describe('PlaceOrderDialog', () => {
   it('shows the lots a units quantity stands for, over the same total', () => {
     render(<PlaceOrderDialog {...nifty} />)
     expect(screen.getByRole('spinbutton')).toHaveValue(2)
-    expect(screen.getByText('Total qty: 150')).toBeInTheDocument()
+    expect(screen.getByText('总数量：150')).toBeInTheDocument()
   })
 
   it('sends the confirmed order through the caller route and never the API', async () => {
     const place = vi.fn(async () => ({ orderId: 'ORD-1' }))
     const onSuccess = vi.fn()
     render(<PlaceOrderDialog {...nifty} place={place} onSuccess={onSuccess} />)
-    await userEvent.click(screen.getByRole('button', { name: 'Place BUY Order' }))
+    await userEvent.click(screen.getByRole('button', { name: '提交买入委托' }))
     await waitFor(() => expect(onSuccess).toHaveBeenCalledWith('ORD-1'))
     expect(place).toHaveBeenCalledWith({
       symbol: 'NIFTY28MAR2420800CE',
@@ -118,7 +118,7 @@ describe('PlaceOrderDialog', () => {
     render(
       <PlaceOrderDialog {...nifty} place={place} onError={onError} onOpenChange={onOpenChange} />
     )
-    await userEvent.click(screen.getByRole('button', { name: 'Place BUY Order' }))
+    await userEvent.click(screen.getByRole('button', { name: '提交买入委托' }))
     await waitFor(() => expect(onError).toHaveBeenCalledWith(reason))
     expect(showToast.error).toHaveBeenCalledWith(reason, 'orders')
     expect(onOpenChange).not.toHaveBeenCalled()
@@ -129,7 +129,7 @@ describe('PlaceOrderDialog', () => {
     placeOrder.mockResolvedValue({ status: 'success', orderid: 'ORD-2' } as never)
     const onSuccess = vi.fn()
     render(<PlaceOrderDialog {...nifty} onSuccess={onSuccess} />)
-    await userEvent.click(screen.getByRole('button', { name: 'Place BUY Order' }))
+    await userEvent.click(screen.getByRole('button', { name: '提交买入委托' }))
     await waitFor(() => expect(onSuccess).toHaveBeenCalledWith('ORD-2'))
     expect(placeOrder).toHaveBeenCalledWith(
       expect.objectContaining({

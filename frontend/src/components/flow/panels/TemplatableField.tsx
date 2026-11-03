@@ -90,8 +90,8 @@ export function TemplatableField({
       <button
         type="button"
         onClick={() => onChange(dynamic ? fallback : placeholder)}
-        aria-label={dynamic ? `Use a fixed ${label}` : `Take ${label} from the payload`}
-        title={dynamic ? 'Pick a fixed value instead' : 'Take this value from the payload'}
+        aria-label={dynamic ? `使用固定${label}` : `从请求数据获取${label}`}
+        title={dynamic ? '改用固定值' : '从请求数据获取此值'}
         className={cn(
           'absolute right-0 top-0 rounded p-0.5 transition-colors',
           dynamic ? 'text-primary' : 'text-muted-foreground/50 hover:bg-muted hover:text-foreground'

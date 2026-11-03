@@ -24,17 +24,17 @@ export const GetDepthNode = memo(({ data, selected }: GetDepthNodeProps) => {
             <Layers3 className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Depth</div>
+            <div className="text-xs font-medium leading-tight">盘口</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NSE'}</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
         </div>
-        <div className="mt-1 text-center text-[9px] text-muted-foreground">5-level bid/ask</div>
+        <div className="mt-1 text-center text-[9px] text-muted-foreground">五档买卖盘</div>
       </div>
       <Handle type="source" position={Position.Bottom} className="!bottom-0 !translate-y-1/2" />
     </div>

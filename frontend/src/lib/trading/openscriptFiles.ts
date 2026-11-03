@@ -113,9 +113,9 @@ export function fileNameFor(typed: string): string {
 /** Why a name will not be accepted, or null when it will. */
 export function nameProblem(typed: string): string | null {
   const stem = typed.trim().replace(/\.oscript$/i, '')
-  if (!stem) return 'Give the script a name.'
+  if (!stem) return '请为脚本填写名称。'
   if (!NAME_PATTERN.test(stem)) {
-    return 'A name can hold letters, digits, dots, dashes and underscores, and starts with a letter or a digit.'
+    return '名称只能包含英文字母、数字、点、连字符和下划线，且须以字母或数字开头。'
   }
   return null
 }
@@ -136,7 +136,7 @@ export async function listScripts(signal?: AbortSignal): Promise<StoredScript[]>
     headers: { Accept: 'application/json' },
     signal,
   })
-  if (!response.ok) throw new Error('Your scripts could not be listed. Try again in a moment.')
+  if (!response.ok) throw new Error('无法读取脚本列表，请稍后重试。')
   const body = await response.json()
   if (!Array.isArray(body)) return []
   // Read field by field rather than cast, for the sake of `program`: an
@@ -170,7 +170,7 @@ export async function normalise(source: string): Promise<string> {
 /** One script's source, in the normal form the editor and the compiler share. */
 export async function readScript(file: string, signal?: AbortSignal): Promise<string> {
   const response = await fetch(`${BASE}/${encodeURIComponent(file)}?v=${Date.now()}`, { signal })
-  if (!response.ok) throw new Error(`${file} could not be opened.`)
+  if (!response.ok) throw new Error(`无法打开 ${file}。`)
   return normalise(await response.text())
 }
 
@@ -223,7 +223,7 @@ export async function saveScript(
     body: JSON.stringify({ source, program: result.program ?? null }),
   })
   if (!response.ok) {
-    throw new Error(await readMessage(response, `${file} could not be saved.`))
+    throw new Error(await readMessage(response, `无法保存 ${file}。`))
   }
   const body = await response.json()
   return {
@@ -242,7 +242,7 @@ export async function deleteScript(file: string): Promise<void> {
     headers: await writeHeaders(),
   })
   if (!response.ok) {
-    throw new Error(await readMessage(response, `${file} could not be deleted.`))
+    throw new Error(await readMessage(response, `无法删除 ${file}。`))
   }
 }
 
@@ -306,7 +306,7 @@ export async function compileSource(file: string, source: string): Promise<Compi
     // at all would leave them staring at a panel with no opinion.
     problem:
       emitted.program === undefined && diagnostics.length === 0
-        ? 'This script did not compile, and the compiler gave no reason. Please report it.'
+        ? '脚本编译失败，但编译器未提供原因，请报告此问题。'
         : undefined,
   }
 }

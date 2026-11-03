@@ -32,14 +32,14 @@ export default function NotFound() {
           <Button asChild>
             <Link to="/">
               <Home className="h-4 w-4 mr-2" />
-              Back to Home
+              返回首页
             </Link>
           </Button>
 
           <Button variant="outline" asChild>
             <Link to="/login">
               <LogIn className="h-4 w-4 mr-2" />
-              Login
+              登录
             </Link>
           </Button>
         </div>
@@ -50,7 +50,7 @@ export default function NotFound() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Quick Links</span>
+            <span className="bg-background px-2 text-muted-foreground">快捷链接</span>
           </div>
         </div>
 
@@ -59,19 +59,19 @@ export default function NotFound() {
           <Button variant="ghost" size="sm" asChild>
             <a href="https://docs.openalgo.in" target="_blank" rel="noopener noreferrer">
               <BookOpen className="h-4 w-4 mr-2" />
-              Documentation
+              文档
             </a>
           </Button>
           <Button variant="ghost" size="sm" asChild>
             <Link to="/faq">
               <HelpCircle className="h-4 w-4 mr-2" />
-              FAQ
+              常见问题
             </Link>
           </Button>
           <Button variant="ghost" size="sm" asChild>
             <Link to="/download">
               <Download className="h-4 w-4 mr-2" />
-              Download
+              下载
             </Link>
           </Button>
         </div>

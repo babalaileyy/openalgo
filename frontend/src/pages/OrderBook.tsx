@@ -123,10 +123,10 @@ function formatTime(timestamp: string): string {
 }
 
 const statusConfig: Record<string, { icon: typeof CheckCircle2; color: string; label: string }> = {
-  complete: { icon: CheckCircle2, color: 'text-green-500', label: 'complete' },
-  rejected: { icon: XCircle, color: 'text-red-500', label: 'rejected' },
-  cancelled: { icon: XCircle, color: 'text-gray-500', label: 'cancelled' },
-  open: { icon: Clock, color: 'text-blue-500', label: 'open' },
+  complete: { icon: CheckCircle2, color: 'text-green-500', label: '已成交' },
+  rejected: { icon: XCircle, color: 'text-red-500', label: '已拒绝' },
+  cancelled: { icon: XCircle, color: 'text-gray-500', label: '已撤销' },
+  open: { icon: Clock, color: 'text-blue-500', label: '未完成' },
 }
 
 export default function OrderBook() {
@@ -239,10 +239,10 @@ export default function OrderBook() {
           setStats(response.data.statistics)
           setError(null)
         } else {
-          setError(response.message || 'Failed to fetch orders')
+          setError(response.message || '获取委托失败')
         }
       } catch {
-        setError('Failed to fetch orders')
+        setError('获取委托失败')
       } finally {
         setIsLoading(false)
         setIsRefreshing(false)
@@ -272,14 +272,14 @@ export default function OrderBook() {
     try {
       const response = await tradingApi.cancelOrder(orderid)
       if (response.status === 'success') {
-        showToast.success(`Order cancelled: ${orderid}`, 'orders')
+        showToast.success(`委托已撤销：${orderid}`, 'orders')
         setTimeout(() => fetchOrders(true), 1000)
       } else {
-        showToast.error(response.message || 'Failed to cancel order', 'orders')
+        showToast.error(response.message || '撤销委托失败', 'orders')
       }
     } catch (error) {
       const axiosError = error as { response?: { data?: { message?: string } } }
-      const message = axiosError.response?.data?.message || 'Failed to cancel order'
+      const message = axiosError.response?.data?.message || '撤销委托失败'
       showToast.error(message, 'orders')
     }
   }
@@ -288,17 +288,17 @@ export default function OrderBook() {
     try {
       const response = await tradingApi.cancelAllOrders()
       if (response.status === 'success') {
-        showToast.success(response.message || 'All orders cancelled', 'orders')
+        showToast.success(response.message || '所有委托已撤销', 'orders')
         // Delay refresh to allow broker to process cancellations
         setTimeout(() => fetchOrders(true), 2000)
       } else if (response.status === 'info') {
-        showToast.info(response.message || 'No open orders to cancel', 'orders')
+        showToast.info(response.message || '没有可撤销的未完成委托', 'orders')
       } else {
-        showToast.error(response.message || 'Failed to cancel all orders', 'orders')
+        showToast.error(response.message || '全部撤单失败', 'orders')
       }
     } catch (error) {
       const axiosError = error as { response?: { data?: { message?: string } } }
-      const message = axiosError.response?.data?.message || 'Failed to cancel all orders'
+      const message = axiosError.response?.data?.message || '全部撤单失败'
       showToast.error(message, 'orders')
     }
   }
@@ -350,22 +350,22 @@ export default function OrderBook() {
         ...(sendsTrigger && { trigger_price: modifyForm.trigger_price }),
       })
       if (response.status === 'success') {
-        showToast.success(`Order modified: ${modifyingOrder.orderid}`, 'orders')
+        showToast.success(`委托已修改：${modifyingOrder.orderid}`, 'orders')
         setModifyDialogOpen(false)
         setTimeout(() => fetchOrders(true), 1000)
       } else {
-        showToast.error(response.message || 'Failed to modify order', 'orders')
+        showToast.error(response.message || '修改委托失败', 'orders')
       }
     } catch (error) {
       const axiosError = error as { response?: { data?: { message?: string } } }
-      const message = axiosError.response?.data?.message || 'Failed to modify order'
+      const message = axiosError.response?.data?.message || '修改委托失败'
       showToast.error(message, 'orders')
     }
   }
 
   const exportToCSV = () => {
     if (sortedAndFilteredOrders.length === 0) {
-      showToast.error('No data to export', 'system')
+      showToast.error('没有可导出的数据', 'system')
       return
     }
 
@@ -408,7 +408,7 @@ export default function OrderBook() {
       URL.revokeObjectURL(url)
       showToast.success(`Downloaded ${filename}`, 'clipboard')
     } catch {
-      showToast.error('Failed to export CSV', 'system')
+      showToast.error('导出 CSV 失败', 'system')
     }
   }
 
@@ -432,14 +432,14 @@ export default function OrderBook() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Order Book</h1>
-        <p className="text-muted-foreground">View and manage your orders</p>
+        <h1 className="text-3xl font-bold tracking-tight">委托记录</h1>
+        <p className="text-muted-foreground">查看和管理委托</p>
       </div>
 
       <Tabs defaultValue="orders" className="space-y-6">
         <TabsList className="h-10">
           <TabsTrigger value="orders" className="min-w-[110px] text-sm">
-            Orders
+            委托
           </TabsTrigger>
           <TabsTrigger value="gtt" className="min-w-[110px] text-sm">
             GTT
@@ -458,7 +458,7 @@ export default function OrderBook() {
                   className="relative"
                 >
                   <Settings2 className="h-4 w-4 mr-2" />
-                  Filters
+                  筛选
                   {hasActiveFilters && (
                     <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full" />
                   )}
@@ -466,30 +466,30 @@ export default function OrderBook() {
               </DialogTrigger>
               <DialogContent className="max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Order Filters</DialogTitle>
-                  <DialogDescription>Filter orders by status</DialogDescription>
+                  <DialogTitle>委托筛选</DialogTitle>
+                  <DialogDescription>按状态筛选委托</DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-6 py-4">
                   {/* Order Status */}
                   <div className="space-y-3">
                     <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Order Status
+                      委托状态
                     </Label>
                     <div className="flex flex-wrap gap-2">
-                      <FilterChip status="complete" label="Complete" />
-                      <FilterChip status="open" label="Open" />
-                      <FilterChip status="rejected" label="Rejected" />
-                      <FilterChip status="cancelled" label="Cancelled" />
+                      <FilterChip status="complete" label="已成交" />
+                      <FilterChip status="open" label="未完成" />
+                      <FilterChip status="rejected" label="已拒绝" />
+                      <FilterChip status="cancelled" label="已撤销" />
                     </div>
                   </div>
                 </div>
 
                 <DialogFooter>
                   <Button variant="ghost" onClick={clearFilters}>
-                    Clear All
+                    清除全部
                   </Button>
-                  <Button onClick={() => setSettingsOpen(false)}>Done</Button>
+                  <Button onClick={() => setSettingsOpen(false)}>完成</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -501,30 +501,29 @@ export default function OrderBook() {
               disabled={isRefreshing}
             >
               <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
-              Refresh
+              刷新
             </Button>
             <Button variant="outline" size="sm" onClick={exportToCSV}>
               <Download className="h-4 w-4 mr-2" />
-              Export
+              导出
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm" disabled={openOrders.length === 0}>
                   <X className="h-4 w-4 mr-2" />
-                  Cancel All
+                  全部撤单
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Cancel All Orders?</AlertDialogTitle>
+                  <AlertDialogTitle>撤销所有委托？</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will cancel all {openOrders.length} open orders. This action cannot be
-                    undone.
+                    将撤销全部 {openOrders.length} 笔未完成委托，此操作无法撤回。
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Keep Orders</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleCancelAllOrders}>Cancel All</AlertDialogAction>
+                  <AlertDialogCancel>保留委托</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleCancelAllOrders}>全部撤销</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -533,14 +532,14 @@ export default function OrderBook() {
           {/* Active Filters Bar */}
           {hasActiveFilters && (
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-sm text-muted-foreground">Active Filters:</span>
+              <span className="text-sm text-muted-foreground">已启用的筛选：</span>
               {statusFilter.map((status) => (
                 <Badge
                   key={status}
                   variant="secondary"
                   className="bg-pink-500/10 text-pink-600 border-pink-500/30"
                 >
-                  {status}
+                  {statusConfig[status]?.label ?? status}
                 </Badge>
               ))}
               <Button
@@ -549,7 +548,7 @@ export default function OrderBook() {
                 className="text-red-500 border-red-500/50 hover:bg-red-500/10"
                 onClick={clearFilters}
               >
-                Clear All
+                清除全部
               </Button>
             </div>
           )}
@@ -558,7 +557,7 @@ export default function OrderBook() {
           <div className="grid gap-4 md:grid-cols-5">
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Buy Orders</CardDescription>
+                <CardDescription>买入委托</CardDescription>
                 <CardTitle className="text-2xl text-green-600">
                   {stats?.total_buy_orders ?? 0}
                 </CardTitle>
@@ -566,7 +565,7 @@ export default function OrderBook() {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Sell Orders</CardDescription>
+                <CardDescription>卖出委托</CardDescription>
                 <CardTitle className="text-2xl text-red-600">
                   {stats?.total_sell_orders ?? 0}
                 </CardTitle>
@@ -574,13 +573,13 @@ export default function OrderBook() {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Completed</CardDescription>
+                <CardDescription>已完成</CardDescription>
                 <CardTitle className="text-2xl">{stats?.total_completed_orders ?? 0}</CardTitle>
               </CardHeader>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Open</CardDescription>
+                <CardDescription>未完成</CardDescription>
                 <CardTitle className="text-2xl text-blue-600">
                   {stats?.total_open_orders ?? 0}
                 </CardTitle>
@@ -588,7 +587,7 @@ export default function OrderBook() {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Rejected</CardDescription>
+                <CardDescription>已拒绝</CardDescription>
                 <CardTitle className="text-2xl text-red-600">
                   {stats?.total_rejected_orders ?? 0}
                 </CardTitle>
@@ -609,19 +608,19 @@ export default function OrderBook() {
                 hasActiveFilters ? (
                   <EmptyState
                     icon={FilterX}
-                    title="No orders match your filters"
-                    description="Try adjusting or clearing your filters to see results."
+                    title="没有符合筛选条件的委托"
+                    description="请调整或清除筛选条件后重试。"
                     action={
                       <Button variant="ghost" size="sm" onClick={clearFilters}>
-                        Clear Filters
+                        清除筛选
                       </Button>
                     }
                   />
                 ) : (
                   <EmptyState
                     icon={ClipboardList}
-                    title="No orders today"
-                    description="Orders you place will display here."
+                    title="今天没有委托"
+                    description="提交的委托将显示在这里。"
                   />
                 )
               ) : (
@@ -634,7 +633,7 @@ export default function OrderBook() {
                           onClick={() => requestSort('symbol')}
                         >
                           <div className="flex items-center gap-1">
-                            Symbol
+                            交易品种
                             {sortConfig.key === 'symbol' &&
                               (sortConfig.direction === 'asc' ? (
                                 <ArrowUp className="h-3 w-3" />
@@ -643,13 +642,13 @@ export default function OrderBook() {
                               ))}
                           </div>
                         </TableHead>
-                        <TableHead className="w-[80px]">Exchange</TableHead>
+                        <TableHead className="w-[80px]">交易所</TableHead>
                         <TableHead
                           className="w-[70px] cursor-pointer hover:bg-muted/50 transition-colors"
                           onClick={() => requestSort('action')}
                         >
                           <div className="flex items-center gap-1">
-                            Action
+                            买卖方向
                             {sortConfig.key === 'action' &&
                               (sortConfig.direction === 'asc' ? (
                                 <ArrowUp className="h-3 w-3" />
@@ -658,13 +657,13 @@ export default function OrderBook() {
                               ))}
                           </div>
                         </TableHead>
-                        <TableHead className="w-[70px] text-right">Qty</TableHead>
+                        <TableHead className="w-[70px] text-right">数量</TableHead>
                         <TableHead
                           className="w-[100px] text-right cursor-pointer hover:bg-muted/50 transition-colors"
                           onClick={() => requestSort('price')}
                         >
                           <div className="flex items-center justify-end gap-1">
-                            Price
+                            价格
                             {sortConfig.key === 'price' &&
                               (sortConfig.direction === 'asc' ? (
                                 <ArrowUp className="h-3 w-3" />
@@ -673,16 +672,16 @@ export default function OrderBook() {
                               ))}
                           </div>
                         </TableHead>
-                        <TableHead className="w-[100px] text-right">Trigger</TableHead>
-                        <TableHead className="w-[80px]">Type</TableHead>
-                        {!isCrypto && <TableHead className="w-[70px]">Product</TableHead>}
-                        <TableHead className="w-[140px]">Order ID</TableHead>
+                        <TableHead className="w-[100px] text-right">触发价</TableHead>
+                        <TableHead className="w-[80px]">类型</TableHead>
+                        {!isCrypto && <TableHead className="w-[70px]">产品类型</TableHead>}
+                        <TableHead className="w-[140px]">订单编号</TableHead>
                         <TableHead
                           className="w-[100px] cursor-pointer hover:bg-muted/50 transition-colors"
                           onClick={() => requestSort('order_status')}
                         >
                           <div className="flex items-center gap-1">
-                            Status
+                            状态
                             {sortConfig.key === 'order_status' &&
                               (sortConfig.direction === 'asc' ? (
                                 <ArrowUp className="h-3 w-3" />
@@ -696,7 +695,7 @@ export default function OrderBook() {
                           onClick={() => requestSort('timestamp')}
                         >
                           <div className="flex items-center gap-1">
-                            Time
+                            时间
                             {sortConfig.key === 'timestamp' &&
                               (sortConfig.direction === 'asc' ? (
                                 <ArrowUp className="h-3 w-3" />
@@ -705,8 +704,8 @@ export default function OrderBook() {
                               ))}
                           </div>
                         </TableHead>
-                        <TableHead className="w-[60px]">Cancel</TableHead>
-                        <TableHead className="w-[60px]">Modify</TableHead>
+                        <TableHead className="w-[60px]">撤销</TableHead>
+                        <TableHead className="w-[60px]">修改</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -728,7 +727,7 @@ export default function OrderBook() {
                                 variant={order.action === 'BUY' ? 'default' : 'destructive'}
                                 className={order.action === 'BUY' ? 'bg-green-500' : ''}
                               >
-                                {order.action}
+                                {order.action === 'BUY' ? '买入' : order.action === 'SELL' ? '卖出' : order.action}
                               </Badge>
                             </TableCell>
                             <TableCell className="text-right font-mono">{order.quantity}</TableCell>
@@ -803,7 +802,7 @@ export default function OrderBook() {
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <span>Modify Order</span>
+              <span>修改委托</span>
               <Badge
                 variant={modifyingOrder?.action === 'BUY' ? 'default' : 'destructive'}
                 className={modifyingOrder?.action === 'BUY' ? 'bg-green-500' : ''}
@@ -811,7 +810,7 @@ export default function OrderBook() {
                 {modifyingOrder?.action}
               </Badge>
             </DialogTitle>
-            <DialogDescription className="sr-only">Modify order details</DialogDescription>
+            <DialogDescription className="sr-only">修改委托详情</DialogDescription>
           </DialogHeader>
 
           {/* Symbol and Order Info */}
@@ -822,27 +821,27 @@ export default function OrderBook() {
                 <div className="text-sm text-muted-foreground">{modifyingOrder?.exchange}</div>
               </div>
               <div className="text-right">
-                <div className="text-xs text-muted-foreground">Order ID</div>
+                <div className="text-xs text-muted-foreground">订单编号</div>
                 <div className="font-mono text-sm">{modifyingOrder?.orderid}</div>
               </div>
             </div>
             <div className="flex items-center gap-3 pt-2 border-t">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Type:</span>
+                <span className="text-xs text-muted-foreground">类型：</span>
                 <Badge variant="secondary" className="text-xs">
                   {modifyForm.pricetype}
                 </Badge>
               </div>
               {!isCrypto && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Product:</span>
+                  <span className="text-xs text-muted-foreground">产品类型：</span>
                   <Badge variant="outline" className="text-xs">
                     {modifyForm.product}
                   </Badge>
                 </div>
               )}
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Qty:</span>
+                <span className="text-xs text-muted-foreground">数量：</span>
                 <span className="font-mono text-sm font-medium">{modifyForm.quantity}</span>
               </div>
             </div>
@@ -851,47 +850,47 @@ export default function OrderBook() {
           {/* Market Quotes Section */}
           <div className="rounded-lg border bg-muted/50 p-4">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-medium">Market Data</span>
+              <span className="text-sm font-medium">市场行情</span>
               {isLoadingQuotes && <Loader2 className="h-4 w-4 animate-spin" />}
             </div>
             {quotes ? (
               <div className="grid grid-cols-4 gap-4 text-sm">
                 <div>
-                  <div className="text-muted-foreground text-xs">LTP</div>
+                  <div className="text-muted-foreground text-xs">最新价</div>
                   <div className="font-mono font-semibold">{formatCurrency(quotes.ltp)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Bid</div>
+                  <div className="text-muted-foreground text-xs">买价</div>
                   <div className="font-mono text-green-600">{formatCurrency(quotes.bid)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Ask</div>
+                  <div className="text-muted-foreground text-xs">卖价</div>
                   <div className="font-mono text-red-600">{formatCurrency(quotes.ask)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Prev Close</div>
+                  <div className="text-muted-foreground text-xs">昨收</div>
                   <div className="font-mono">{formatCurrency(quotes.prev_close)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Open</div>
+                  <div className="text-muted-foreground text-xs">开盘价</div>
                   <div className="font-mono">{formatCurrency(quotes.open)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">High</div>
+                  <div className="text-muted-foreground text-xs">最高价</div>
                   <div className="font-mono text-green-600">{formatCurrency(quotes.high)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Low</div>
+                  <div className="text-muted-foreground text-xs">最低价</div>
                   <div className="font-mono text-red-600">{formatCurrency(quotes.low)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Volume</div>
+                  <div className="text-muted-foreground text-xs">成交量</div>
                   <div className="font-mono">{quotes.volume.toLocaleString('en-IN')}</div>
                 </div>
               </div>
             ) : (
               <div className="text-sm text-muted-foreground">
-                {isLoadingQuotes ? 'Loading quotes...' : 'Quotes not available'}
+                {isLoadingQuotes ? '正在加载行情…' : '暂无行情'}
               </div>
             )}
           </div>
@@ -902,7 +901,7 @@ export default function OrderBook() {
             {modifyForm.pricetype !== 'MARKET' && (
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="quantity" className="text-right">
-                  Quantity
+                  数量
                 </Label>
                 <Input
                   id="quantity"
@@ -923,7 +922,7 @@ export default function OrderBook() {
             {(modifyForm.pricetype === 'LIMIT' || modifyForm.pricetype === 'SL') && (
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="price" className="text-right">
-                  Price
+                  价格
                 </Label>
                 <Input
                   id="price"
@@ -941,7 +940,7 @@ export default function OrderBook() {
             {(modifyForm.pricetype === 'SL' || modifyForm.pricetype === 'SL-M') && (
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="trigger_price" className="text-right">
-                  Trigger Price
+                  触发价格
                 </Label>
                 <Input
                   id="trigger_price"
@@ -958,15 +957,15 @@ export default function OrderBook() {
             {/* Info for MARKET orders */}
             {modifyForm.pricetype === 'MARKET' && (
               <div className="text-sm text-muted-foreground text-center py-2">
-                Market orders cannot be modified. Cancel and place a new order.
+                市价单无法修改，请撤单后重新下单。
               </div>
             )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setModifyDialogOpen(false)}>
-              Cancel
+              取消
             </Button>
-            <Button onClick={handleModifyOrder}>Modify Order</Button>
+            <Button onClick={handleModifyOrder}>修改委托</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

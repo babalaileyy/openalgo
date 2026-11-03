@@ -24,13 +24,13 @@ export const CancelOrderNode = memo(({ data, selected }: CancelOrderNodeProps) =
             <XCircle className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Cancel Order</div>
-            <div className="text-[9px] text-muted-foreground">By Order ID</div>
+            <div className="text-xs font-medium leading-tight">撤销订单</div>
+            <div className="text-[9px] text-muted-foreground">按订单号</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Order ID</span>
+            <span className="text-[10px] text-muted-foreground">订单号</span>
             <span className="mono-data text-[10px] font-medium">
               {data.orderId ? `...${data.orderId.slice(-6)}` : 'Variable'}
             </span>

@@ -121,11 +121,11 @@ export default function FreezeQtyPage() {
         setNewEntry({ exchange: 'NFO', symbol: '', freeze_qty: '' })
         fetchFreezeData()
       } else {
-        showToast.error(response.message || 'Failed to add entry', 'admin')
+        showToast.error(response.message || '添加记录失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to add entry', 'admin')
+      showToast.error(err.response?.data?.message || '添加记录失败', 'admin')
     } finally {
       setIsAdding(false)
     }
@@ -153,11 +153,11 @@ export default function FreezeQtyPage() {
         setEditingId(null)
         fetchFreezeData()
       } else {
-        showToast.error(response.message || 'Failed to update entry', 'admin')
+        showToast.error(response.message || '更新记录失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to update entry', 'admin')
+      showToast.error(err.response?.data?.message || '更新记录失败', 'admin')
     } finally {
       setIsSaving(false)
     }
@@ -175,11 +175,11 @@ export default function FreezeQtyPage() {
         setDeleteEntry(null)
         fetchFreezeData()
       } else {
-        showToast.error(response.message || 'Failed to delete entry', 'admin')
+        showToast.error(response.message || '删除记录失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to delete entry', 'admin')
+      showToast.error(err.response?.data?.message || '删除记录失败', 'admin')
     } finally {
       setIsDeleting(false)
     }
@@ -201,11 +201,11 @@ export default function FreezeQtyPage() {
         setUploadFile(null)
         fetchFreezeData()
       } else {
-        showToast.error(response.message || 'Failed to upload CSV', 'admin')
+        showToast.error(response.message || '上传 CSV 失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to upload CSV', 'admin')
+      showToast.error(err.response?.data?.message || '上传 CSV 失败', 'admin')
     } finally {
       setIsUploading(false)
     }
@@ -229,22 +229,18 @@ export default function FreezeQtyPage() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Snowflake className="h-6 w-6" />
-              Freeze Quantities
-            </h1>
+              <Snowflake className="h-6 w-6" />单笔数量上限</h1>
           </div>
-          <p className="text-muted-foreground">
-            Manage F&O freeze quantity limits for automatic order splitting
-          </p>
+          <p className="text-muted-foreground">管理期货和期权的单笔数量上限，以便自动拆单</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowUploadDialog(true)}>
             <Upload className="h-4 w-4 mr-2" />
-            Upload CSV
+            上传 CSV
           </Button>
           <Button onClick={() => setShowAddDialog(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Add Entry
+            添加条目
           </Button>
         </div>
       </div>
@@ -254,7 +250,7 @@ export default function FreezeQtyPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold">{freezeData.length}</p>
-            <p className="text-sm text-muted-foreground">Total Symbols</p>
+            <p className="text-sm text-muted-foreground">交易品种总数</p>
           </CardContent>
         </Card>
         <Card>
@@ -262,7 +258,7 @@ export default function FreezeQtyPage() {
             <p className="text-2xl font-bold">
               {freezeData.filter((f) => f.exchange === 'NFO').length}
             </p>
-            <p className="text-sm text-muted-foreground">NFO Symbols</p>
+            <p className="text-sm text-muted-foreground">NFO 品种</p>
           </CardContent>
         </Card>
         <Card>
@@ -270,7 +266,7 @@ export default function FreezeQtyPage() {
             <p className="text-2xl font-bold">
               {freezeData.filter((f) => f.exchange !== 'NFO').length}
             </p>
-            <p className="text-sm text-muted-foreground">Other Exchanges</p>
+            <p className="text-sm text-muted-foreground">其他交易所</p>
           </CardContent>
         </Card>
       </div>
@@ -278,7 +274,7 @@ export default function FreezeQtyPage() {
       {/* Search and Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Freeze Quantity List</CardTitle>
+          <CardTitle>单笔数量限制列表</CardTitle>
           <CardDescription>{filteredData.length} entries total</CardDescription>
         </CardHeader>
         <CardContent>
@@ -287,7 +283,7 @@ export default function FreezeQtyPage() {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by symbol or exchange..."
+                placeholder="按交易代码或交易所搜索…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -300,10 +296,10 @@ export default function FreezeQtyPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Exchange</TableHead>
-                  <TableHead>Symbol</TableHead>
-                  <TableHead>Freeze Qty</TableHead>
-                  <TableHead className="w-[100px]">Actions</TableHead>
+                  <TableHead>交易所</TableHead>
+                  <TableHead>交易品种</TableHead>
+                  <TableHead>单笔数量限制</TableHead>
+                  <TableHead className="w-[100px]">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -337,7 +333,7 @@ export default function FreezeQtyPage() {
                               className="h-8 w-8"
                               onClick={() => handleSaveEdit(entry.id)}
                               disabled={isSaving}
-                              title="Save changes"
+                              title="保存更改"
                               aria-label={`Save freeze quantity for ${entry.symbol}`}
                             >
                               <Save className="h-4 w-4" />
@@ -347,7 +343,7 @@ export default function FreezeQtyPage() {
                               variant="ghost"
                               className="h-8 w-8"
                               onClick={() => setEditingId(null)}
-                              title="Cancel editing"
+                              title="取消编辑"
                               aria-label={`Cancel editing ${entry.symbol}`}
                             >
                               <X className="h-4 w-4" />
@@ -365,7 +361,7 @@ export default function FreezeQtyPage() {
                               variant="ghost"
                               className="h-8 w-8"
                               onClick={() => handleEdit(entry)}
-                              title="Edit freeze quantity"
+                              title="编辑单笔数量上限"
                               aria-label={`Edit freeze quantity for ${entry.symbol}`}
                             >
                               <Pencil className="h-4 w-4" />
@@ -396,14 +392,12 @@ export default function FreezeQtyPage() {
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Freeze Quantity</DialogTitle>
-            <DialogDescription>
-              Add a new freeze quantity entry for an F&O symbol.
-            </DialogDescription>
+            <DialogTitle>添加单笔数量限制</DialogTitle>
+            <DialogDescription>为期货或期权品种添加单笔数量上限。</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Exchange</Label>
+              <Label>交易所</Label>
               <Select
                 value={newEntry.exchange}
                 onValueChange={(value) => setNewEntry({ ...newEntry, exchange: value })}
@@ -421,7 +415,7 @@ export default function FreezeQtyPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Symbol</Label>
+              <Label>交易品种</Label>
               <Input
                 placeholder="e.g., NIFTY, RELIANCE"
                 value={newEntry.symbol}
@@ -429,7 +423,7 @@ export default function FreezeQtyPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label>Freeze Quantity</Label>
+              <Label>单笔数量限制</Label>
               <Input
                 type="number"
                 placeholder="e.g., 1800"
@@ -441,7 +435,7 @@ export default function FreezeQtyPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowAddDialog(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={handleAdd} disabled={isAdding}>
               {isAdding ? 'Adding...' : 'Add Entry'}
@@ -454,15 +448,12 @@ export default function FreezeQtyPage() {
       <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upload Freeze Quantities CSV</DialogTitle>
-            <DialogDescription>
-              Upload a CSV file to bulk update freeze quantities. This will replace existing entries
-              for the selected exchange.
-            </DialogDescription>
+            <DialogTitle>上传数量限制 CSV</DialogTitle>
+            <DialogDescription>上传 CSV 文件批量更新单笔数量上限。此操作将替换所选交易所的现有记录。</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Exchange</Label>
+              <Label>交易所</Label>
               <Select value={uploadExchange} onValueChange={setUploadExchange}>
                 <SelectTrigger>
                   <SelectValue />
@@ -477,7 +468,7 @@ export default function FreezeQtyPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>CSV File</Label>
+              <Label>CSV 文件</Label>
               <Input
                 type="file"
                 accept=".csv"
@@ -490,7 +481,7 @@ export default function FreezeQtyPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowUploadDialog(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={handleUpload} disabled={isUploading || !uploadFile}>
               {isUploading ? 'Uploading...' : 'Upload'}
@@ -503,14 +494,14 @@ export default function FreezeQtyPage() {
       <AlertDialog open={!!deleteEntry} onOpenChange={() => setDeleteEntry(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Entry?</AlertDialogTitle>
+            <AlertDialogTitle>删除条目？</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete the freeze quantity for {deleteEntry?.symbol} (
               {deleteEntry?.exchange})? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>

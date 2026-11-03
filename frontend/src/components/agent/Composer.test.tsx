@@ -254,7 +254,7 @@ describe('attaching follows what the model can actually read', () => {
     renderComposer(<Composer onSend={vi.fn()} onStop={vi.fn()} running={false} />)
 
     await user.click(screen.getByRole('button', { name: 'Add to this message' }))
-    const item = await screen.findByRole('menuitem', { name: 'Attach files' })
+    const item = await screen.findByRole('menuitem', { name: '添加附件' })
     expect(item).not.toHaveAttribute('aria-disabled', 'true')
     expect(screen.queryByText(/cannot read images/)).not.toBeInTheDocument()
   })
@@ -272,7 +272,7 @@ describe('attaching follows what the model can actually read', () => {
         'GPT-3.5 Turbo cannot read images. Pick a model that supports vision to attach a file.'
       )
     ).toBeInTheDocument()
-    expect(screen.getByRole('menuitem', { name: 'Attach files' })).toHaveAttribute(
+    expect(screen.getByRole('menuitem', { name: '添加附件' })).toHaveAttribute(
       'aria-disabled',
       'true'
     )
@@ -285,7 +285,7 @@ describe('attaching follows what the model can actually read', () => {
     renderComposer(<Composer onSend={vi.fn()} onStop={vi.fn()} running={false} />)
 
     await user.click(screen.getByRole('button', { name: 'Add to this message' }))
-    const item = await screen.findByRole('menuitem', { name: 'Attach files' })
+    const item = await screen.findByRole('menuitem', { name: '添加附件' })
     expect(item).not.toHaveAttribute('aria-disabled', 'true')
   })
 })
@@ -296,8 +296,8 @@ describe('the "+" menu', () => {
     renderComposer(<Composer onSend={vi.fn()} onStop={vi.fn()} running={false} />)
 
     await user.click(screen.getByRole('button', { name: 'Add to this message' }))
-    expect(await screen.findByRole('menuitem', { name: 'Attach files' })).toBeInTheDocument()
-    expect(screen.queryByRole('menuitem', { name: 'Attach chart screenshot' })).toBeNull()
+    expect(await screen.findByRole('menuitem', { name: '添加附件' })).toBeInTheDocument()
+    expect(screen.queryByRole('menuitem', { name: '添加图表截图' })).toBeNull()
   })
 
   it('attaches the capture the surface hands back', async () => {
@@ -312,7 +312,7 @@ describe('the "+" menu', () => {
     )
 
     await user.click(screen.getByRole('button', { name: 'Add to this message' }))
-    await user.click(await screen.findByRole('menuitem', { name: 'Attach chart screenshot' }))
+    await user.click(await screen.findByRole('menuitem', { name: '添加图表截图' }))
 
     expect(capture).toHaveBeenCalledTimes(1)
     expect(await screen.findByText('RELIANCE-D-2026-09-04-11-00.png')).toBeInTheDocument()
@@ -324,7 +324,7 @@ describe('the "+" menu', () => {
     renderComposer(<Composer onSend={onSend} onStop={vi.fn()} running={false} />)
 
     await user.click(screen.getByRole('button', { name: 'Add to this message' }))
-    await user.click(await screen.findByRole('menuitemcheckbox', { name: 'Web search' }))
+    await user.click(await screen.findByRole('menuitemcheckbox', { name: '网络搜索' }))
 
     await user.type(box(), 'what happened to the nifty today')
     await user.click(screen.getByRole('button', { name: 'Send the message' }))

@@ -22,12 +22,12 @@ export const CancelAllOrdersNode = memo(({ selected }: CancelAllOrdersNodeProps)
             <XCircle className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Cancel All</div>
-            <div className="text-[9px] text-muted-foreground">Orders</div>
+            <div className="text-xs font-medium leading-tight">全部撤单</div>
+            <div className="text-[9px] text-muted-foreground">订单</div>
           </div>
         </div>
         <div className="rounded bg-sell/10 px-1.5 py-1 text-center">
-          <span className="text-[9px] text-sell">Cancels all open orders</span>
+          <span className="text-[9px] text-sell">撤销全部未完成订单</span>
         </div>
       </div>
       <Handle type="source" position={Position.Bottom} className="!bottom-0 !translate-y-1/2" />

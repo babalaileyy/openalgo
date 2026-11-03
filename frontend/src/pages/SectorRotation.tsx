@@ -218,7 +218,7 @@ function RotationMap({
         viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
         className="absolute inset-0 h-full w-full"
         role="img"
-        aria-label="Sector rotation map"
+        aria-label="板块轮动图"
         onMouseLeave={() => setHover(null)}
       >
         {/* Quadrant backgrounds, clockwise from top right. */}
@@ -236,16 +236,16 @@ function RotationMap({
 
         <g fontWeight={600} letterSpacing={4} fontSize={30}>
           <text x={40} y={60} fill="#3b82f6">
-            IMPROVING
+            改善
           </text>
           <text x={VIEW_W - 40} y={60} textAnchor="end" fill="#10b981">
-            LEADING
+            领先
           </text>
           <text x={40} y={VIEW_H - 36} fill="#f43f5e">
-            LAGGING
+            落后
           </text>
           <text x={VIEW_W - 40} y={VIEW_H - 36} textAnchor="end" fill="#f59e0b">
-            WEAKENING
+            转弱
           </text>
         </g>
 
@@ -277,7 +277,7 @@ function RotationMap({
           fontSize={22}
           className="fill-muted-foreground"
         >
-          RS-Ratio
+          RS-Ratio（相对强度比率）
         </text>
         <text
           x={22}
@@ -287,7 +287,7 @@ function RotationMap({
           transform={`rotate(-90 22 ${VIEW_H / 2})`}
           className="fill-muted-foreground"
         >
-          RS-Momentum
+          RS-Momentum（相对强度动量）
         </text>
 
         {trails.map(({ entry, points }) => {
@@ -394,17 +394,17 @@ function RankingTable({
     <Card className="flex h-full min-h-0 flex-col gap-0 py-0">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div>
-          <p className="text-xs text-muted-foreground">Ranking</p>
+          <p className="text-xs text-muted-foreground">排名</p>
           <p className="text-sm font-medium">
             {visible} of {entries.length} visible
           </p>
         </div>
         <div className="flex gap-1" data-screenshot-ignore>
           <Button size="sm" variant="secondary" className="h-7 px-2 text-xs" onClick={onShowAll}>
-            All
+            全选
           </Button>
           <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={onHideAll}>
-            None
+            全不选
           </Button>
         </div>
       </div>
@@ -412,9 +412,9 @@ function RankingTable({
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-card text-xs text-muted-foreground">
             <tr className="border-b">
-              <th className="w-8 py-2 pl-4" aria-label="Visible" />
-              <th className="py-2 text-left font-medium">Symbol</th>
-              <th className="py-2 text-left font-medium">Quadrant</th>
+              <th className="w-8 py-2 pl-4" aria-label="可见" />
+              <th className="py-2 text-left font-medium">交易品种</th>
+              <th className="py-2 text-left font-medium">象限</th>
               <th className="py-2 pr-1 text-right font-medium">
                 <span className="inline-flex items-center gap-0.5">
                   RS <InfoTip text={RS_INFO} />
@@ -426,7 +426,7 @@ function RankingTable({
                 </span>
               </th>
               <th className="py-2 pr-2 text-right font-medium">{barsLabel}</th>
-              <th className="w-8 pr-2" aria-label="Remove" />
+              <th className="w-8 pr-2" aria-label="移除" />
             </tr>
           </thead>
           <tbody>
@@ -497,46 +497,28 @@ function MethodologyDialog() {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-1.5">
           <Info className="size-3.5" />
-          Methodology
+          计算方法
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>How the map is built</DialogTitle>
-          <DialogDescription>
-            Each dot is a sector index, stock or index measured against the benchmark you pick.
-          </DialogDescription>
+          <DialogTitle>图表构建方式</DialogTitle>
+          <DialogDescription>每个点代表一个相对于所选基准衡量的板块指数、股票或其他指数。</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 text-sm">
           <p>
-            <span className="font-medium">RS-Ratio</span> (horizontal) shows whether the symbol's
-            recent relative strength against the benchmark is running above its longer trend.{' '}
-            <span className="font-medium">RS-Momentum</span> (vertical) shows whether that relative
-            strength is still accelerating. Both are centred on 100, and recent bars count most.
+            <span className="font-medium">RS-Ratio（相对强度比率）</span>（横轴）显示交易品种近期相对基准的强弱是否高于长期趋势。{' '}
+            <span className="font-medium">RS-Momentum（相对强度动量）</span>（纵轴）显示相对强度是否仍在加速。两项指标均以 100 为中心，近期数据的权重更高。
           </p>
-          <p>
-            Bars are daily sessions, or weeks ending Friday built from daily closes. Only sessions
-            both the symbol and the benchmark traded are used, so a newly listed index shows a
-            shorter trail until enough history builds up. The Days or Weeks column counts
-            consecutive bars in the current quadrant.
-          </p>
+          <p>数据按日线或以周五结束、由日收盘价构成的周线统计。只使用交易品种和基准均有交易的数据，因此新上市指数在积累足够历史数据之前轨迹较短。天数或周数列显示连续处于当前象限的数据周期数。</p>
           <ul className="grid grid-cols-2 gap-2 text-xs">
-            <li className={`rounded-md p-2 ${QUADRANT_BADGE.leading}`}>
-              Leading: strong and rising
-            </li>
-            <li className={`rounded-md p-2 ${QUADRANT_BADGE.weakening}`}>
-              Weakening: strong but slowing
-            </li>
-            <li className={`rounded-md p-2 ${QUADRANT_BADGE.improving}`}>
-              Improving: weak but turning up
-            </li>
-            <li className={`rounded-md p-2 ${QUADRANT_BADGE.lagging}`}>
-              Lagging: weak and falling
-            </li>
+            <li className={`rounded-md p-2 ${QUADRANT_BADGE.leading}`}>领先：强势且持续上升</li>
+            <li className={`rounded-md p-2 ${QUADRANT_BADGE.weakening}`}>转弱：仍然强势但动能放缓</li>
+            <li className={`rounded-md p-2 ${QUADRANT_BADGE.improving}`}>改善：仍然偏弱但开始回升</li>
+            <li className={`rounded-md p-2 ${QUADRANT_BADGE.lagging}`}>落后：弱势且持续下行</li>
           </ul>
           <p className="text-xs text-muted-foreground">
-            Symbols usually rotate clockwise: Improving, Leading, Weakening, Lagging. The map
-            describes where they stand today; it does not predict what happens next.
+            交易品种通常按改善、领先、转弱、落后的顺序顺时针轮动。图表反映当前状态，并不预测未来走势。
           </p>
         </div>
       </DialogContent>
@@ -714,11 +696,8 @@ export default function SectorRotation() {
     <div className="container mx-auto space-y-4 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Sector Rotation</h1>
-          <p className="text-sm text-muted-foreground">
-            Which sectors and stocks are leading the benchmark, which are fading, and which are
-            turning up.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">板块轮动</h1>
+          <p className="text-sm text-muted-foreground">查看哪些板块和股票领先基准、正在走弱或开始回升。</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -737,7 +716,7 @@ export default function SectorRotation() {
 
       <div className="flex flex-wrap items-end gap-3">
         <div className="space-y-1">
-          <Label className="text-xs">Benchmark</Label>
+          <Label className="text-xs">基准</Label>
           <Select value={store.benchmark} onValueChange={store.setBenchmark}>
             <SelectTrigger className="w-40">
               <SelectValue />
@@ -754,7 +733,7 @@ export default function SectorRotation() {
           </Select>
         </div>
         <div className="space-y-1">
-          <Label className="text-xs">Timeframe</Label>
+          <Label className="text-xs">时间周期</Label>
           <Select
             value={store.timeframe}
             onValueChange={(v) => store.setTimeframe(v as 'daily' | 'weekly')}
@@ -763,8 +742,8 @@ export default function SectorRotation() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="daily">Daily</SelectItem>
-              <SelectItem value="weekly">Weekly</SelectItem>
+              <SelectItem value="daily">每日</SelectItem>
+              <SelectItem value="weekly">每周</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -784,14 +763,14 @@ export default function SectorRotation() {
           />
         </div>
         <div className="space-y-1">
-          <Label className="text-xs">Data source</Label>
+          <Label className="text-xs">数据来源</Label>
           <Select value={store.source} onValueChange={(v) => store.setSource(v as 'db' | 'api')}>
             <SelectTrigger className="w-40">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="api">Broker API</SelectItem>
-              <SelectItem value="db">Historify (local)</SelectItem>
+              <SelectItem value="api">交易商 API</SelectItem>
+              <SelectItem value="db">Historify（本地）</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -817,9 +796,7 @@ export default function SectorRotation() {
           {onMap.length} of {maxInstruments} symbols
         </span>
         {store.instruments !== null && (
-          <Button variant="ghost" size="sm" onClick={resetInstruments}>
-            Reset to sectors
-          </Button>
+          <Button variant="ghost" size="sm" onClick={resetInstruments}>重置为板块</Button>
         )}
       </div>
 
@@ -830,9 +807,7 @@ export default function SectorRotation() {
       )}
 
       {!apiKey && (
-        <div className="rounded-md border p-3 text-sm text-muted-foreground">
-          Generate an API key on the API Key page to load the sector map.
-        </div>
+        <div className="rounded-md border p-3 text-sm text-muted-foreground">请在 API 密钥页面生成密钥，以加载板块轮动图。</div>
       )}
 
       <div ref={captureRef} data-rotation-capture className="space-y-3 bg-background">
@@ -857,7 +832,7 @@ export default function SectorRotation() {
                   size="icon"
                   variant="outline"
                   className="size-8"
-                  aria-label="Zoom in"
+                  aria-label="放大"
                   disabled={zoomStep === ZOOM_STEPS.length - 1}
                   onClick={() => store.setZoomStep(Math.min(zoomStep + 1, ZOOM_STEPS.length - 1))}
                 >
@@ -867,7 +842,7 @@ export default function SectorRotation() {
                   size="icon"
                   variant="outline"
                   className="size-8"
-                  aria-label="Zoom out"
+                  aria-label="缩小"
                   disabled={zoomStep === 0}
                   onClick={() => store.setZoomStep(Math.max(zoomStep - 1, 0))}
                 >
@@ -877,20 +852,16 @@ export default function SectorRotation() {
                   size="icon"
                   variant="outline"
                   className="size-8"
-                  aria-label="Reset zoom"
+                  aria-label="重置缩放"
                   onClick={() => store.setZoomStep(0)}
                 >
                   <RotateCcw className="size-4" />
                 </Button>
               </div>
               {isEmptyMap ? (
-                <div className="grid aspect-[16/10] w-full place-items-center rounded-lg border p-6 text-center text-sm text-muted-foreground">
-                  No symbols on the map. Search above to add one, or use Reset to sectors.
-                </div>
+                <div className="grid aspect-[16/10] w-full place-items-center rounded-lg border p-6 text-center text-sm text-muted-foreground">图中暂无交易品种。请在上方搜索添加，或重置为板块。</div>
               ) : isPending && apiKey ? (
-                <div className="grid aspect-[16/10] w-full place-items-center rounded-lg border text-sm text-muted-foreground">
-                  Loading history...
-                </div>
+                <div className="grid aspect-[16/10] w-full place-items-center rounded-lg border text-sm text-muted-foreground">正在加载历史数据…</div>
               ) : (
                 <RotationMap
                   entries={visibleEntries}
@@ -928,7 +899,7 @@ export default function SectorRotation() {
       {unavailable.length > 0 && (
         <Card className="py-3">
           <CardContent className="space-y-1 px-4 text-sm">
-            <p className="font-medium">Not on the map</p>
+            <p className="font-medium">未显示在图中</p>
             {unavailable.map((u) => (
               <div key={instrumentKey(u)} className="flex items-start justify-between gap-2">
                 <p className="text-muted-foreground">
@@ -939,18 +910,14 @@ export default function SectorRotation() {
                   size="sm"
                   className="h-7 shrink-0 px-2 text-xs"
                   onClick={() => removeInstrument(instrumentKey(u))}
-                >
-                  Remove
-                </Button>
+                >移除</Button>
               </div>
             ))}
           </CardContent>
         </Card>
       )}
 
-      <p className="text-center text-xs text-muted-foreground">
-        A descriptive view of relative strength for analysis only. It is not investment advice.
-      </p>
+      <p className="text-center text-xs text-muted-foreground">此图仅用于描述和分析相对强弱，不构成投资建议。</p>
     </div>
   )
 }

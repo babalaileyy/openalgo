@@ -65,28 +65,28 @@ import { showToast, toast } from '@/utils/toast'
 const THEME_MODES: { value: ThemeMode; label: string; icon: typeof Sun; description: string }[] = [
   {
     value: 'light',
-    label: 'Light',
+    label: '浅色',
     icon: Sun,
-    description: 'Clean, bright interface for daytime trading',
+    description: '明亮清晰的界面，适合白天交易',
   },
   {
     value: 'dark',
-    label: 'Dark',
+    label: '深色',
     icon: Moon,
-    description: 'Reduced eye strain for extended sessions',
+    description: '适合长时间使用，减轻视觉疲劳',
   },
 ]
 
 // Accent colors for customization
 const ACCENT_COLORS: { value: ThemeColor; label: string; color: string }[] = [
-  { value: 'zinc', label: 'Zinc', color: 'bg-zinc-500' },
-  { value: 'slate', label: 'Slate', color: 'bg-slate-500' },
-  { value: 'gray', label: 'Gray', color: 'bg-gray-500' },
-  { value: 'neutral', label: 'Neutral', color: 'bg-neutral-500' },
-  { value: 'green', label: 'Green', color: 'bg-green-500' },
-  { value: 'blue', label: 'Blue', color: 'bg-blue-500' },
-  { value: 'violet', label: 'Violet', color: 'bg-violet-500' },
-  { value: 'orange', label: 'Orange', color: 'bg-orange-500' },
+  { value: 'zinc', label: '锌灰', color: 'bg-zinc-500' },
+  { value: 'slate', label: '石板灰', color: 'bg-slate-500' },
+  { value: 'gray', label: '灰色', color: 'bg-gray-500' },
+  { value: 'neutral', label: '中性灰', color: 'bg-neutral-500' },
+  { value: 'green', label: '绿色', color: 'bg-green-500' },
+  { value: 'blue', label: '蓝色', color: 'bg-blue-500' },
+  { value: 'violet', label: '紫色', color: 'bg-violet-500' },
+  { value: 'orange', label: '橙色', color: 'bg-orange-500' },
 ]
 
 interface ProfileData {
@@ -160,12 +160,12 @@ interface PermissionsData {
 
 // Toast position options
 const TOAST_POSITIONS: { value: ToastPosition; label: string }[] = [
-  { value: 'top-left', label: 'Top Left' },
-  { value: 'top-center', label: 'Top Center' },
-  { value: 'top-right', label: 'Top Right' },
-  { value: 'bottom-left', label: 'Bottom Left' },
-  { value: 'bottom-center', label: 'Bottom Center' },
-  { value: 'bottom-right', label: 'Bottom Right' },
+  { value: 'top-left', label: '左上' },
+  { value: 'top-center', label: '顶部居中' },
+  { value: 'top-right', label: '右上' },
+  { value: 'bottom-left', label: '左下' },
+  { value: 'bottom-center', label: '底部居中' },
+  { value: 'bottom-right', label: '右下' },
 ]
 
 // Alert category descriptions - organized by groups
@@ -176,23 +176,23 @@ const ALERT_CATEGORIES_REALTIME: {
 }[] = [
   {
     key: 'orders',
-    label: 'Order Notifications',
-    description: 'Real-time BUY/SELL order placement, cancellation, and modification alerts',
+    label: '订单通知',
+    description: '实时买卖订单的下单、撤单和修改通知',
   },
   {
     key: 'analyzer',
-    label: 'Analyzer Mode',
-    description: 'Real-time sandbox/analyzer mode operation notifications',
+    label: '模拟盘模式',
+    description: '模拟盘模式操作的实时通知',
   },
   {
     key: 'system',
-    label: 'System Alerts',
-    description: 'Password changes, master contract downloads, and system events',
+    label: '系统通知',
+    description: '密码更改、合约数据下载和系统事件',
   },
   {
     key: 'actionCenter',
-    label: 'Action Center',
-    description: 'Pending order notifications in semi-auto mode',
+    label: '操作中心',
+    description: '半自动模式下待审批订单的通知',
   },
 ]
 
@@ -203,13 +203,13 @@ const ALERT_CATEGORIES_TRADING: {
 }[] = [
   {
     key: 'positions',
-    label: 'Positions',
-    description: 'Position close/update operations and P&L notifications',
+    label: '持仓',
+    description: '持仓平仓、更新及盈亏通知',
   },
   {
     key: 'chartink',
     label: 'Chartink',
-    description: 'Chartink strategy operations and scanner integrations',
+    description: 'Chartink 策略操作和扫描器集成',
   },
 ]
 
@@ -221,17 +221,17 @@ const ALERT_CATEGORIES_DATA: {
   {
     key: 'historify',
     label: 'Historify',
-    description: 'Historical data jobs, file uploads, downloads, and schedules',
+    description: '历史数据任务、文件上传下载和计划',
   },
   {
     key: 'pythonStrategy',
-    label: 'Python Strategy',
-    description: 'Python strategy uploads, execution, logs, and scheduling',
+    label: 'Python 策略',
+    description: 'Python 策略上传、执行、日志和计划',
   },
   {
     key: 'flow',
-    label: 'Flow Workflows',
-    description: 'Visual workflow creation, execution, and management',
+    label: '流程工作流',
+    description: '可视化工作流的创建、执行和管理',
   },
 ]
 
@@ -242,23 +242,23 @@ const ALERT_CATEGORIES_ADMIN: {
 }[] = [
   {
     key: 'telegram',
-    label: 'Telegram Bot',
-    description: 'Telegram bot operations, broadcasts, and user management',
+    label: 'Telegram 机器人',
+    description: 'Telegram 机器人操作、广播和用户管理',
   },
   {
     key: 'admin',
-    label: 'Admin Panel',
-    description: 'Market timings, holidays, freeze quantities, and admin settings',
+    label: '管理面板',
+    description: '交易时间、节假日、冻结数量和管理设置',
   },
   {
     key: 'monitoring',
-    label: 'Monitoring',
-    description: 'Health monitor, latency dashboard, and security alerts',
+    label: '监控',
+    description: '健康监控、延迟面板和安全通知',
   },
   {
     key: 'clipboard',
-    label: 'Clipboard',
-    description: 'Copy to clipboard confirmation messages',
+    label: '剪贴板',
+    description: '复制到剪贴板的确认通知',
   },
 ]
 
@@ -351,7 +351,7 @@ export default function ProfilePage() {
         }
       }
     } catch (_error) {
-      showToast.error('Failed to load profile data', 'admin')
+      showToast.error('加载个人资料失败', 'admin')
     } finally {
       setIsLoading(false)
     }
@@ -382,7 +382,7 @@ export default function ProfilePage() {
         setPermissionsData(response.data.data)
       }
     } catch (_error) {
-      showToast.error('Failed to load permission status', 'admin')
+      showToast.error('加载权限状态失败', 'admin')
     } finally {
       setIsLoadingPermissions(false)
     }
@@ -414,10 +414,10 @@ export default function ProfilePage() {
         // Refresh permissions after fix
         await fetchPermissions()
       } else {
-        showToast.error('Failed to fix permissions', 'admin')
+        showToast.error('修复权限失败', 'admin')
       }
     } catch (_error) {
-      showToast.error('Failed to fix permissions', 'admin')
+      showToast.error('修复权限失败', 'admin')
     } finally {
       setIsFixingPermissions(false)
     }
@@ -486,11 +486,11 @@ export default function ProfilePage() {
         // Show restart dialog
         setShowRestartDialog(true)
       } else {
-        showToast.error(response.data.message || 'Failed to save credentials', 'admin')
+        showToast.error(response.data.message || '保存凭据失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to save broker credentials', 'admin')
+      showToast.error(err.response?.data?.message || '保存交易商凭据失败', 'admin')
     } finally {
       setIsSavingBroker(false)
     }
@@ -549,11 +549,11 @@ export default function ProfilePage() {
         // Show restart dialog
         setShowRestartDialog(true)
       } else {
-        showToast.error(response.data.message || 'Failed to save settings', 'admin')
+        showToast.error(response.data.message || '保存设置失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to save settings', 'admin')
+      showToast.error(err.response?.data?.message || '保存设置失败', 'admin')
     } finally {
       setIsSavingNgrok(false)
     }
@@ -578,11 +578,11 @@ export default function ProfilePage() {
 
   const getPasswordStrength = () => {
     const metCount = Object.values(passwordRequirements).filter(Boolean).length
-    if (metCount === 0) return { percentage: 0, label: 'None', color: 'bg-gray-400' }
-    if (metCount <= 2) return { percentage: 40, label: 'Weak', color: 'bg-red-500' }
-    if (metCount <= 3) return { percentage: 60, label: 'Fair', color: 'bg-yellow-500' }
-    if (metCount <= 4) return { percentage: 80, label: 'Good', color: 'bg-blue-500' }
-    return { percentage: 100, label: 'Strong', color: 'bg-green-500' }
+    if (metCount === 0) return { percentage: 0, label: '无', color: 'bg-gray-400' }
+    if (metCount <= 2) return { percentage: 40, label: '弱', color: 'bg-red-500' }
+    if (metCount <= 3) return { percentage: 60, label: '一般', color: 'bg-yellow-500' }
+    if (metCount <= 4) return { percentage: 80, label: '良好', color: 'bg-blue-500' }
+    return { percentage: 100, label: '强', color: 'bg-green-500' }
   }
 
   const passwordsMatch = newPassword === confirmPassword && confirmPassword !== ''
@@ -606,16 +606,16 @@ export default function ProfilePage() {
       )
 
       if (response.data.status === 'success') {
-        showToast.success(response.data.message || 'Password changed successfully', 'system')
+        showToast.success(response.data.message || '密码修改成功', 'system')
         setOldPassword('')
         setNewPassword('')
         setConfirmPassword('')
       } else {
-        showToast.error(response.data.message || 'Failed to change password', 'system')
+        showToast.error(response.data.message || '修改密码失败', 'system')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to change password', 'system')
+      showToast.error(err.response?.data?.message || '修改密码失败', 'system')
     } finally {
       setIsChangingPassword(false)
     }
@@ -644,14 +644,14 @@ export default function ProfilePage() {
       )
 
       if (response.data.status === 'success') {
-        showToast.success(response.data.message || 'SMTP settings saved successfully', 'admin')
+        showToast.success(response.data.message || 'SMTP 设置已保存', 'admin')
         setSmtpPassword('') // Clear password field after save
       } else {
-        showToast.error(response.data.message || 'Failed to save SMTP settings', 'admin')
+        showToast.error(response.data.message || '保存 SMTP 设置失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to save SMTP settings', 'admin')
+      showToast.error(err.response?.data?.message || '保存 SMTP 设置失败', 'admin')
     } finally {
       setIsSavingSmtp(false)
     }
@@ -659,7 +659,7 @@ export default function ProfilePage() {
 
   const handleTestEmail = async () => {
     if (!testEmail) {
-      showToast.error('Please enter an email address to test', 'admin')
+      showToast.error('请输入用于测试的邮箱地址', 'admin')
       return
     }
 
@@ -675,13 +675,13 @@ export default function ProfilePage() {
       )
 
       if (response.data.success) {
-        showToast.success(response.data.message || 'Test email sent successfully', 'admin')
+        showToast.success(response.data.message || '测试邮件已发送', 'admin')
       } else {
-        showToast.error(response.data.message || 'Failed to send test email', 'admin')
+        showToast.error(response.data.message || '发送测试邮件失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to send test email', 'admin')
+      showToast.error(err.response?.data?.message || '发送测试邮件失败', 'admin')
     } finally {
       setIsSendingTest(false)
     }
@@ -711,7 +711,7 @@ export default function ProfilePage() {
 
   const handleThemeModeChange = (newMode: ThemeMode) => {
     if (isAnalyzerMode) {
-      showToast.error('Cannot change theme while in Analyzer Mode', 'system')
+      showToast.error('分析模式下无法更改主题', 'system')
       return
     }
     setMode(newMode)
@@ -720,7 +720,7 @@ export default function ProfilePage() {
 
   const handleAccentColorChange = (newColor: ThemeColor) => {
     if (isAnalyzerMode) {
-      showToast.error('Cannot change theme while in Analyzer Mode', 'system')
+      showToast.error('分析模式下无法更改主题', 'system')
       return
     }
     setColor(newColor)
@@ -729,22 +729,22 @@ export default function ProfilePage() {
 
   const handleResetTheme = () => {
     if (isAnalyzerMode) {
-      showToast.error('Cannot change theme while in Analyzer Mode', 'system')
+      showToast.error('分析模式下无法更改主题', 'system')
       return
     }
     setMode('light')
     setColor('zinc')
-    showToast.success('Theme reset to default', 'system')
+    showToast.success('主题已恢复默认', 'system')
   }
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        showToast.success('Copied to clipboard', 'clipboard')
+        showToast.success('已复制到剪贴板', 'clipboard')
       })
       .catch(() => {
-        showToast.error('Failed to copy', 'clipboard')
+        showToast.error('复制失败', 'clipboard')
       })
   }
 
@@ -768,11 +768,11 @@ export default function ProfilePage() {
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <User className="h-6 w-6" />
-            Profile Settings
+            个人设置
           </h1>
         </div>
         <p className="text-muted-foreground">
-          Manage your account settings and security preferences
+          管理账户设置和安全选项
         </p>
       </div>
 
@@ -790,23 +790,23 @@ export default function ProfilePage() {
         <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="account" className="gap-1">
             <Lock className="h-4 w-4" />
-            <span className="hidden sm:inline">Account</span>
+            <span className="hidden sm:inline">账户</span>
           </TabsTrigger>
           <TabsTrigger value="broker" className="gap-1">
             <Key className="h-4 w-4" />
-            <span className="hidden sm:inline">Broker</span>
+            <span className="hidden sm:inline">券商</span>
           </TabsTrigger>
           <TabsTrigger value="alerts" className="gap-1">
             <Bell className="h-4 w-4" />
-            <span className="hidden sm:inline">Alerts</span>
+            <span className="hidden sm:inline">通知</span>
           </TabsTrigger>
           <TabsTrigger value="permissions" className="gap-1">
             <FolderCheck className="h-4 w-4" />
-            <span className="hidden sm:inline">System</span>
+            <span className="hidden sm:inline">系统</span>
           </TabsTrigger>
           <TabsTrigger value="theme" className="gap-1">
             <Palette className="h-4 w-4" />
-            <span className="hidden sm:inline">Theme</span>
+            <span className="hidden sm:inline">主题</span>
           </TabsTrigger>
           <TabsTrigger value="smtp" className="gap-1">
             <Mail className="h-4 w-4" />
@@ -823,17 +823,17 @@ export default function ProfilePage() {
           {/* Account Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Account Information</CardTitle>
+              <CardTitle>账户信息</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Username</Label>
+                <Label>用户名</Label>
                 <Input value={user?.username || profileData?.username || ''} disabled />
               </div>
               <div className="space-y-2">
-                <Label>Account Type</Label>
+                <Label>账户类型</Label>
                 <div className="pt-2">
-                  <Badge>Administrator</Badge>
+                  <Badge>管理员</Badge>
                 </div>
               </div>
             </CardContent>
@@ -842,41 +842,41 @@ export default function ProfilePage() {
           {/* Password Change */}
           <Card>
             <CardHeader>
-              <CardTitle>Change Password</CardTitle>
+              <CardTitle>修改密码</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleChangePassword} className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Current Password</Label>
+                  <Label>当前密码</Label>
                   <Input
                     type="password"
-                    placeholder="Enter your current password"
+                    placeholder="请输入当前密码"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>New Password</Label>
+                  <Label>新密码</Label>
                   <Input
                     type="password"
-                    placeholder="Enter your new password"
+                    placeholder="请输入新密码"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Confirm New Password</Label>
+                  <Label>确认新密码</Label>
                   <Input
                     type="password"
-                    placeholder="Confirm your new password"
+                    placeholder="请再次输入新密码"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                   {confirmPassword && (
                     <p className={`text-sm ${passwordsMatch ? 'text-green-500' : 'text-red-500'}`}>
-                      {passwordsMatch ? 'Passwords match' : 'Passwords do not match'}
+                      {passwordsMatch ? '两次密码一致' : '两次密码不一致'}
                     </p>
                   )}
                 </div>
@@ -884,7 +884,7 @@ export default function ProfilePage() {
                 {/* Password Strength */}
                 <div className="bg-muted rounded-lg p-4 space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span>Strength</span>
+                    <span>密码强度</span>
                     <span className="font-medium">{strength.label}</span>
                   </div>
                   <Progress value={strength.percentage} className={strength.color} />
@@ -901,11 +901,11 @@ export default function ProfilePage() {
                       >
                         {met ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
                         <span>
-                          {key === 'length' && '8+ chars'}
+                          {key === 'length' && '至少 8 个字符'}
                           {key === 'uppercase' && 'A-Z'}
                           {key === 'lowercase' && 'a-z'}
                           {key === 'number' && '0-9'}
-                          {key === 'special' && 'Special (@#$%^&*)'}
+                          {key === 'special' && '特殊字符（@#$%^&*）'}
                         </span>
                       </div>
                     ))}
@@ -916,12 +916,12 @@ export default function ProfilePage() {
                   {isChangingPassword ? (
                     <>
                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                      Changing...
+                      修改中…
                     </>
                   ) : (
                     <>
                       <Lock className="h-4 w-4 mr-2" />
-                      Change Password
+                      修改密码
                     </>
                   )}
                 </Button>
@@ -934,80 +934,79 @@ export default function ProfilePage() {
         <TabsContent value="broker" className="space-y-6">
           <Alert>
             <Key className="h-4 w-4" />
-            <AlertTitle>Broker API Credentials</AlertTitle>
+            <AlertTitle>券商 API 凭据</AlertTitle>
             <AlertDescription>
-              Update your broker API credentials. Changes require an application restart to take
-              effect. You will be logged out after saving.
+              更新券商 API 凭据后，需重启应用才能生效。保存后您将退出登录。
             </AlertDescription>
           </Alert>
 
           {/* Current Broker */}
           <Card>
             <CardHeader>
-              <CardTitle>Current Configuration</CardTitle>
-              <CardDescription>Your currently configured broker and credentials</CardDescription>
+              <CardTitle>当前配置</CardTitle>
+              <CardDescription>当前配置的券商和凭据</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Current Broker</Label>
+                  <Label>当前券商</Label>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-base">
-                      {brokerCredentials?.current_broker?.toUpperCase() || 'Not configured'}
+                      {brokerCredentials?.current_broker?.toUpperCase() || '未配置'}
                     </Badge>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Redirect URL</Label>
+                  <Label>重定向地址</Label>
                   <code className="text-xs text-muted-foreground break-all">
-                    {brokerCredentials?.redirect_url || 'Not configured'}
+                    {brokerCredentials?.redirect_url || '未配置'}
                   </code>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div className="space-y-2 min-w-0">
-                  <Label>API Key</Label>
+                  <Label>API 密钥</Label>
                   {/* block truncate clamps long masked values to their column;
                       backend mask is fixed-length but defence-in-depth in case
                       a future change emits a longer string. */}
                   <code className="block truncate text-xs text-muted-foreground">
-                    {brokerCredentials?.broker_api_key || '(not set)'}
+                    {brokerCredentials?.broker_api_key || '（未设置）'}
                   </code>
                 </div>
                 <div className="space-y-2 min-w-0">
-                  <Label>API Secret</Label>
+                  <Label>API 密钥（Secret）</Label>
                   <code className="block truncate text-xs text-muted-foreground">
-                    {brokerCredentials?.broker_api_secret || '(not set)'}
+                    {brokerCredentials?.broker_api_secret || '（未设置）'}
                   </code>
                 </div>
               </div>
               {(brokerCredentials?.broker_api_key_market_raw_length ?? 0) > 0 && (
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div className="space-y-2 min-w-0">
-                    <Label>Market API Key</Label>
+                    <Label>行情 API 密钥</Label>
                     <code className="block truncate text-xs text-muted-foreground">
-                      {brokerCredentials?.broker_api_key_market || '(not set)'}
+                      {brokerCredentials?.broker_api_key_market || '（未设置）'}
                     </code>
                   </div>
                   <div className="space-y-2 min-w-0">
-                    <Label>Market API Secret</Label>
+                    <Label>行情 API 密钥（Secret）</Label>
                     <code className="block truncate text-xs text-muted-foreground">
-                      {brokerCredentials?.broker_api_secret_market || '(not set)'}
+                      {brokerCredentials?.broker_api_secret_market || '（未设置）'}
                     </code>
                   </div>
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4 pt-2 border-t">
                 <div className="space-y-2">
-                  <Label>Ngrok Status</Label>
+                  <Label>Ngrok 状态</Label>
                   <Badge variant={brokerCredentials?.ngrok_allow ? 'default' : 'secondary'}>
-                    {brokerCredentials?.ngrok_allow ? 'Enabled' : 'Disabled'}
+                    {brokerCredentials?.ngrok_allow ? '已启用' : '已禁用'}
                   </Badge>
                 </div>
                 <div className="space-y-2">
-                  <Label>Host Server</Label>
+                  <Label>服务器地址</Label>
                   <code className="text-xs text-muted-foreground break-all">
-                    {brokerCredentials?.host_server || '(not set)'}
+                    {brokerCredentials?.host_server || '（未设置）'}
                   </code>
                 </div>
               </div>
@@ -1017,18 +1016,18 @@ export default function ProfilePage() {
           {/* Update Credentials */}
           <Card>
             <CardHeader>
-              <CardTitle>Update Credentials</CardTitle>
+              <CardTitle>更新凭据</CardTitle>
               <CardDescription>
-                Enter new values to update. Leave fields empty to keep existing values.
+                填写新值以更新，留空则保留现有值。
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Broker Selection */}
               <div className="space-y-2">
-                <Label>Select Broker</Label>
+                <Label>选择券商</Label>
                 <Select value={selectedBroker} onValueChange={setSelectedBroker}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a broker" />
+                    <SelectValue placeholder="选择券商" />
                   </SelectTrigger>
                   <SelectContent>
                     {brokerCredentials?.valid_brokers.map((broker) => (
@@ -1040,7 +1039,7 @@ export default function ProfilePage() {
                 </Select>
                 {selectedBroker && selectedBroker !== brokerCredentials?.current_broker && (
                   <p className="text-sm text-yellow-600 dark:text-yellow-500">
-                    Changing broker to: {selectedBroker.toUpperCase()}
+                    将券商更改为：{selectedBroker.toUpperCase()}
                   </p>
                 )}
               </div>
@@ -1048,58 +1047,58 @@ export default function ProfilePage() {
               {/* API Credentials */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Broker API Key</Label>
+                  <Label>券商 API 密钥</Label>
                   <Input
                     type="password"
                     value={brokerApiKey}
                     onChange={(e) => setBrokerApiKey(e.target.value)}
-                    placeholder="Enter new API key"
+                    placeholder="输入新的 API 密钥"
                   />
                   <p className="text-xs text-muted-foreground">
                     {(brokerCredentials?.broker_api_key_raw_length ?? 0) > 0
-                      ? `Current: ${brokerCredentials?.broker_api_key_raw_length} chars`
-                      : 'Not currently set'}
+                      ? `当前：${brokerCredentials?.broker_api_key_raw_length} 个字符`
+                      : '当前未设置'}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label>Broker API Secret</Label>
+                  <Label>券商 API 密钥（Secret）</Label>
                   <Input
                     type="password"
                     value={brokerApiSecret}
                     onChange={(e) => setBrokerApiSecret(e.target.value)}
-                    placeholder="Enter new API secret"
+                    placeholder="输入新的 API 密钥（Secret）"
                   />
                   <p className="text-xs text-muted-foreground">
                     {(brokerCredentials?.broker_api_secret_raw_length ?? 0) > 0
-                      ? `Current: ${brokerCredentials?.broker_api_secret_raw_length} chars`
-                      : 'Not currently set'}
+                      ? `当前：${brokerCredentials?.broker_api_secret_raw_length} 个字符`
+                      : '当前未设置'}
                   </p>
                 </div>
               </div>
 
               {/* Market API Credentials (optional) */}
               <div className="pt-4 border-t">
-                <h4 className="font-medium mb-3">Market Data API (Optional)</h4>
+                <h4 className="font-medium mb-3">行情 API（可选）</h4>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Required only for XTS API supported brokers (e.g., 5paisa XTS, Jainam XTS)
+                  仅使用支持 XTS API 的券商时需要（如 5paisa XTS、Jainam XTS）。
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Market API Key</Label>
+                    <Label>行情 API 密钥</Label>
                     <Input
                       type="password"
                       value={brokerApiKeyMarket}
                       onChange={(e) => setBrokerApiKeyMarket(e.target.value)}
-                      placeholder="Enter market API key"
+                      placeholder="输入行情 API 密钥"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Market API Secret</Label>
+                    <Label>行情 API 密钥（Secret）</Label>
                     <Input
                       type="password"
                       value={brokerApiSecretMarket}
                       onChange={(e) => setBrokerApiSecretMarket(e.target.value)}
-                      placeholder="Enter market API secret"
+                      placeholder="输入行情 API 密钥（Secret）"
                     />
                   </div>
                 </div>
@@ -1109,41 +1108,41 @@ export default function ProfilePage() {
               {selectedBroker === 'fivepaisa' && (
                 <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>5paisa API Key Format</AlertTitle>
+                  <AlertTitle>5paisa API 密钥格式</AlertTitle>
                   <AlertDescription>
-                    Format: <code>User_Key:::User_ID:::client_id</code>
+                    格式：<code>User_Key:::User_ID:::client_id</code>
                   </AlertDescription>
                 </Alert>
               )}
               {selectedBroker === 'flattrade' && (
                 <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Flattrade API Key Format</AlertTitle>
+                  <AlertTitle>Flattrade API 密钥格式</AlertTitle>
                   <AlertDescription>
-                    Format: <code>client_id:::api_key</code>
+                    格式：<code>client_id:::api_key</code>
                   </AlertDescription>
                 </Alert>
               )}
               {selectedBroker === 'dhan' && (
                 <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Dhan API Key Format</AlertTitle>
+                  <AlertTitle>Dhan API 密钥格式</AlertTitle>
                   <AlertDescription>
-                    Format: <code>client_id:::api_key</code>
+                    格式：<code>client_id:::api_key</code>
                   </AlertDescription>
                 </Alert>
               )}
               {selectedBroker === 'indmoney' && (
                 <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>IndMoney Credentials</AlertTitle>
+                  <AlertTitle>IndMoney 凭据</AlertTitle>
                   <AlertDescription>
                     <p>
-                      <strong>API Key</strong>: the <code>Client ID</code> shown at indstocks.com
+                      <strong>API 密钥</strong>: the <code>客户端 ID</code> shown at indstocks.com
                       &gt; API Trading &gt; Access Tokens after you set up TOTP.
                     </p>
                     <p className="mt-1">
-                      <strong>API Secret</strong>: leave blank to log in with MPIN + TOTP
+                      <strong>API 密钥（Secret）</strong>: leave blank to log in with MPIN + TOTP
                       (recommended). If you paste an access token here instead, it is used as-is and
                       the TOTP flow is skipped - you must regenerate it every 24 hours.
                     </p>
@@ -1160,12 +1159,12 @@ export default function ProfilePage() {
                 {isSavingBroker ? (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Saving...
+                    保存中…
                   </>
                 ) : (
                   <>
                     <Key className="h-4 w-4 mr-2" />
-                    Save Broker Credentials
+                    保存券商凭据
                   </>
                 )}
               </Button>
@@ -1176,16 +1175,16 @@ export default function ProfilePage() {
           {brokerCredentials?.server_status && (
             <Card>
               <CardHeader>
-                <CardTitle>Server Status</CardTitle>
-                <CardDescription>Running services and their configured ports</CardDescription>
+                <CardTitle>服务器状态</CardTitle>
+                <CardDescription>正在运行的服务及配置端口</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="flex flex-col items-center p-3 bg-muted rounded-lg">
                     <Badge variant="default" className="mb-2 bg-green-600">
-                      Running
+                      运行中
                     </Badge>
-                    <span className="text-sm font-medium">Flask App</span>
+                    <span className="text-sm font-medium">Flask 应用</span>
                     <span className="text-xs text-muted-foreground">
                       {brokerCredentials.server_status.flask.host}:
                       {brokerCredentials.server_status.flask.port}
@@ -1193,7 +1192,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex flex-col items-center p-3 bg-muted rounded-lg">
                     <Badge variant="default" className="mb-2 bg-green-600">
-                      Running
+                      运行中
                     </Badge>
                     <span className="text-sm font-medium">WebSocket</span>
                     <span className="text-xs text-muted-foreground">
@@ -1203,7 +1202,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex flex-col items-center p-3 bg-muted rounded-lg">
                     <Badge variant="default" className="mb-2 bg-green-600">
-                      Running
+                      运行中
                     </Badge>
                     <span className="text-sm font-medium">ZeroMQ</span>
                     <span className="text-xs text-muted-foreground">
@@ -1219,10 +1218,9 @@ export default function ProfilePage() {
           {/* Ngrok Configuration - Separate Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Server Configuration</CardTitle>
+              <CardTitle>服务器配置</CardTitle>
               <CardDescription>
-                Configure ngrok for receiving webhook alerts from external services like
-                TradingView, Chartink, GoCharting, etc.
+                配置 ngrok，以接收来自 TradingView、Chartink、GoCharting 等外部服务的 Webhook 警报。
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1232,44 +1230,44 @@ export default function ProfilePage() {
                   checked={ngrokEnabled}
                   onCheckedChange={(checked) => setNgrokEnabled(checked === true)}
                 />
-                <Label htmlFor="ngrok_enabled">Enable Ngrok Tunnel</Label>
+                <Label htmlFor="ngrok_enabled">启用 Ngrok 隧道</Label>
                 {ngrokEnabled !== brokerCredentials?.ngrok_allow && (
                   <Badge variant="outline" className="text-yellow-600">
-                    Changed
+                    已修改
                   </Badge>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label>Host Server URL</Label>
+                <Label>服务器地址</Label>
                 <Input
                   value={hostServer}
                   onChange={(e) => setHostServer(e.target.value)}
                   placeholder="https://your-domain.ngrok-free.app"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Your ngrok domain or custom domain for receiving webhooks.
+                  用于接收 Webhook 的 ngrok 域名或自定义域名。
                 </p>
                 {hostServer !== brokerCredentials?.host_server && hostServer && (
                   <Badge variant="outline" className="text-yellow-600">
-                    Changed from: {brokerCredentials?.host_server}
+                    原地址：{brokerCredentials?.host_server}
                   </Badge>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label>WebSocket URL</Label>
+                <Label>WebSocket 地址</Label>
                 <Input
                   value={websocketUrl}
                   onChange={(e) => setWebsocketUrl(e.target.value)}
                   placeholder="ws://127.0.0.1:8765"
                 />
                 <p className="text-xs text-muted-foreground">
-                  WebSocket server URL for real-time market data streaming.
+                  用于实时行情推送的 WebSocket 服务器地址。
                 </p>
                 {websocketUrl !== brokerCredentials?.websocket_url && websocketUrl && (
                   <Badge variant="outline" className="text-yellow-600">
-                    Changed from: {brokerCredentials?.websocket_url}
+                    原地址：{brokerCredentials?.websocket_url}
                   </Badge>
                 )}
               </div>
@@ -1282,12 +1280,12 @@ export default function ProfilePage() {
                 {isSavingNgrok ? (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Saving...
+                    保存中…
                   </>
                 ) : (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Save Ngrok Settings
+                    保存 Ngrok 设置
                   </>
                 )}
               </Button>
@@ -1299,28 +1297,27 @@ export default function ProfilePage() {
         <TabsContent value="alerts" className="space-y-6">
           <Alert>
             <Bell className="h-4 w-4" />
-            <AlertTitle>Toast Notification Settings</AlertTitle>
+            <AlertTitle>弹窗通知设置</AlertTitle>
             <AlertDescription>
-              Configure how toast notifications appear. Useful for power users running multiple
-              strategies who want to reduce notification spam.
+              设置弹窗通知的显示方式，减少运行多个策略时的通知干扰。
             </AlertDescription>
           </Alert>
 
           {/* Master Controls */}
           <Card>
             <CardHeader>
-              <CardTitle>Master Controls</CardTitle>
+              <CardTitle>总开关</CardTitle>
               <CardDescription>
-                Enable or disable all toast notifications and sounds
+                启用或关闭所有弹窗通知和提示音
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Toasts Enabled */}
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="toasts-enabled">Toast Notifications</Label>
+                  <Label htmlFor="toasts-enabled">弹窗通知</Label>
                   <p className="text-sm text-muted-foreground">
-                    Show popup notifications for events
+                    发生事件时显示弹窗通知
                   </p>
                 </div>
                 <Switch
@@ -1339,10 +1336,10 @@ export default function ProfilePage() {
                     ) : (
                       <VolumeX className="h-4 w-4" />
                     )}
-                    Sound Alerts
+                    声音提醒
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Play audio alert for important events
+                    重要事件发生时播放提示音
                   </p>
                 </div>
                 <Switch
@@ -1357,20 +1354,20 @@ export default function ProfilePage() {
           {/* Display Settings */}
           <Card className={!alertStore.toastsEnabled ? 'opacity-60' : ''}>
             <CardHeader>
-              <CardTitle>Display Settings</CardTitle>
-              <CardDescription>Customize toast appearance and behavior</CardDescription>
+              <CardTitle>显示设置</CardTitle>
+              <CardDescription>自定义通知外观和行为</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Position */}
               <div className="space-y-2">
-                <Label>Toast Position</Label>
+                <Label>通知位置</Label>
                 <Select
                   value={alertStore.position}
                   onValueChange={(value) => alertStore.setPosition(value as ToastPosition)}
                   disabled={!alertStore.toastsEnabled}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select position" />
+                    <SelectValue placeholder="选择位置" />
                   </SelectTrigger>
                   <SelectContent>
                     {TOAST_POSITIONS.map((pos) => (
@@ -1384,7 +1381,7 @@ export default function ProfilePage() {
 
               {/* Max Visible Toasts */}
               <div className="space-y-2">
-                <Label>Maximum Visible Toasts</Label>
+                <Label>最多同时显示通知数</Label>
                 <div className="flex items-center gap-4">
                   <Input
                     type="number"
@@ -1396,14 +1393,14 @@ export default function ProfilePage() {
                     className="w-24"
                   />
                   <span className="text-sm text-muted-foreground">
-                    (1-10) Additional toasts will be queued
+                    （1–10）超出的通知将排队显示
                   </span>
                 </div>
               </div>
 
               {/* Duration */}
               <div className="space-y-2">
-                <Label>Auto-dismiss Duration</Label>
+                <Label>自动关闭时间</Label>
                 <div className="flex items-center gap-4">
                   <Input
                     type="number"
@@ -1414,7 +1411,7 @@ export default function ProfilePage() {
                     disabled={!alertStore.toastsEnabled}
                     className="w-24"
                   />
-                  <span className="text-sm text-muted-foreground">seconds (1-15)</span>
+                  <span className="text-sm text-muted-foreground">秒（1–15）</span>
                 </div>
               </div>
             </CardContent>
@@ -1423,10 +1420,9 @@ export default function ProfilePage() {
           {/* Category Controls - Real-time (Socket.IO) */}
           <Card className={!alertStore.toastsEnabled ? 'opacity-60' : ''}>
             <CardHeader>
-              <CardTitle>Real-time Notifications</CardTitle>
+              <CardTitle>实时通知</CardTitle>
               <CardDescription>
-                High-frequency alerts from Socket.IO events. Disable these to reduce notification
-                spam during active trading.
+                来自 Socket.IO 事件的高频通知。交易频繁时可关闭，以减少通知干扰。
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1455,9 +1451,9 @@ export default function ProfilePage() {
           {/* Category Controls - Trading */}
           <Card className={!alertStore.toastsEnabled ? 'opacity-60' : ''}>
             <CardHeader>
-              <CardTitle>Trading Operations</CardTitle>
+              <CardTitle>交易操作</CardTitle>
               <CardDescription>
-                Notifications from position management, strategies, and Chartink integrations
+                来自持仓管理、策略和 Chartink 集成的通知
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1486,9 +1482,9 @@ export default function ProfilePage() {
           {/* Category Controls - Data & Automation */}
           <Card className={!alertStore.toastsEnabled ? 'opacity-60' : ''}>
             <CardHeader>
-              <CardTitle>Data & Automation</CardTitle>
+              <CardTitle>数据与自动化</CardTitle>
               <CardDescription>
-                Notifications from historical data, Python strategies, and workflow automation
+                来自历史数据、Python 策略和自动化工作流的通知
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1517,9 +1513,9 @@ export default function ProfilePage() {
           {/* Category Controls - Admin & System */}
           <Card className={!alertStore.toastsEnabled ? 'opacity-60' : ''}>
             <CardHeader>
-              <CardTitle>Admin & Utilities</CardTitle>
+              <CardTitle>管理与工具</CardTitle>
               <CardDescription>
-                Notifications from admin panel, Telegram bot, monitoring, and clipboard operations
+                来自管理面板、Telegram 机器人、监控和剪贴板操作的通知
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1548,54 +1544,54 @@ export default function ProfilePage() {
           {/* Actions */}
           <Card>
             <CardHeader>
-              <CardTitle>Actions</CardTitle>
-              <CardDescription>Test and manage notifications</CardDescription>
+              <CardTitle>操作</CardTitle>
+              <CardDescription>测试和管理通知</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-3">
                 <Button
                   variant="outline"
                   onClick={() => {
-                    toast.success('This is a test success notification')
+                    toast.success('这是一条测试成功通知')
                   }}
                   disabled={!alertStore.toastsEnabled}
                 >
-                  Test Toast
+                  测试通知
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => {
                     toast.dismiss()
-                    toast.success('All notifications cleared')
+                    toast.success('已清除所有通知')
                   }}
                 >
-                  Clear All Toasts
+                  清除所有通知
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => {
                     alertStore.resetToDefaults()
-                    toast.success('Settings reset to defaults')
+                    toast.success('设置已恢复默认值')
                   }}
                 >
                   <RotateCcw className="h-4 w-4 mr-2" />
-                  Reset to Defaults
+                  恢复默认设置
                 </Button>
               </div>
 
               {/* Current Settings Summary */}
               <div className="mt-4 p-4 bg-muted rounded-lg">
-                <h4 className="font-medium mb-2">Current Configuration</h4>
+                <h4 className="font-medium mb-2">当前配置</h4>
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <span className="text-muted-foreground">Toasts:</span>
-                  <span>{alertStore.toastsEnabled ? 'Enabled' : 'Disabled'}</span>
-                  <span className="text-muted-foreground">Sound:</span>
-                  <span>{alertStore.soundEnabled ? 'Enabled' : 'Disabled'}</span>
-                  <span className="text-muted-foreground">Position:</span>
-                  <span className="capitalize">{alertStore.position.replace('-', ' ')}</span>
-                  <span className="text-muted-foreground">Max Visible:</span>
-                  <span>{alertStore.maxVisibleToasts} toasts</span>
-                  <span className="text-muted-foreground">Duration:</span>
+                  <span className="text-muted-foreground">通知：</span>
+                  <span>{alertStore.toastsEnabled ? '已启用' : '已禁用'}</span>
+                  <span className="text-muted-foreground">声音：</span>
+                  <span>{alertStore.soundEnabled ? '已启用' : '已禁用'}</span>
+                  <span className="text-muted-foreground">位置：</span>
+                  <span className="capitalize">{TOAST_POSITIONS.find((pos) => pos.value === alertStore.position)?.label ?? alertStore.position}</span>
+                  <span className="text-muted-foreground">最多显示：</span>
+                  <span>{alertStore.maxVisibleToasts} 条</span>
+                  <span className="text-muted-foreground">持续时间：</span>
                   <span>{alertStore.duration / 1000} seconds</span>
                 </div>
               </div>
@@ -1605,94 +1601,87 @@ export default function ProfilePage() {
           {/* Help Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Understanding Notification Categories</CardTitle>
+              <CardTitle>通知类别说明</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-4">
               <div>
                 <p className="font-medium text-foreground mb-2">
-                  Real-time Notifications (High Priority)
+                  实时通知（高优先级）
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
                   <li>
-                    <strong>Orders:</strong> BUY/SELL alerts from Socket.IO - highest frequency
-                    during trading
+                    <strong>订单：</strong>来自 Socket.IO 的买卖通知，交易期间频率较高。
                   </li>
                   <li>
-                    <strong>Analyzer:</strong> Sandbox mode operations - can spam during sandbox
-                    trading
+                    <strong>模拟盘：</strong>模拟盘操作通知，模拟交易期间可能较频繁。
                   </li>
                   <li>
-                    <strong>System:</strong> Password changes, master contracts - infrequent but
-                    important
+                    <strong>系统：</strong>密码更改、合约数据等重要通知，频率较低。
                   </li>
                   <li>
-                    <strong>Action Center:</strong> Semi-auto pending orders - high frequency in
-                    managed accounts
+                    <strong>操作中心：</strong>半自动模式下待审批订单的通知。
                   </li>
                 </ul>
               </div>
               <div>
-                <p className="font-medium text-foreground mb-2">Trading Operations</p>
+                <p className="font-medium text-foreground mb-2">交易操作</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
                   <li>
-                    <strong>Positions:</strong> Position close/update notifications
+                    <strong>持仓：</strong>平仓和持仓更新通知。
                   </li>
                   <li>
-                    <strong>Chartink:</strong> Chartink scanner and strategy integrations
+                    <strong>Chartink：</strong>扫描器和策略集成通知。
                   </li>
                 </ul>
               </div>
               <div>
-                <p className="font-medium text-foreground mb-2">Data & Automation</p>
+                <p className="font-medium text-foreground mb-2">数据与自动化</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
                   <li>
-                    <strong>Historify:</strong> Historical data jobs, uploads, downloads (67 toasts
-                    - highest volume)
+                    <strong>Historify：</strong>历史数据任务及文件上传、下载通知。
                   </li>
                   <li>
-                    <strong>Python Strategy:</strong> Strategy uploads, execution logs, scheduling
+                    <strong>Python 策略：</strong>策略上传、执行日志和计划通知。
                   </li>
                   <li>
-                    <strong>Flow:</strong> Visual workflow execution and management
+                    <strong>Flow：</strong>可视化工作流执行和管理通知。
                   </li>
                 </ul>
               </div>
               <div>
-                <p className="font-medium text-foreground mb-2">Admin & Utilities</p>
+                <p className="font-medium text-foreground mb-2">管理与工具</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
                   <li>
-                    <strong>Telegram:</strong> Bot operations, broadcasts, user management
+                    <strong>Telegram：</strong>机器人操作、广播和用户管理通知。
                   </li>
                   <li>
-                    <strong>Admin:</strong> Market timings, holidays, freeze quantities
+                    <strong>管理：</strong>交易时间、节假日和冻结数量通知。
                   </li>
                   <li>
-                    <strong>Monitoring:</strong> Health, latency, and security dashboards
+                    <strong>监控：</strong>健康、延迟和安全面板通知。
                   </li>
                   <li>
-                    <strong>Clipboard:</strong> Copy-to-clipboard confirmations
+                    <strong>剪贴板：</strong>复制操作确认。
                   </li>
                 </ul>
               </div>
               <div className="pt-3 border-t">
-                <p className="font-medium text-foreground mb-2">Tips for Power Users</p>
+                <p className="font-medium text-foreground mb-2">使用提示</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
                   <li>
-                    Running 5+ strategies? Set max visible to <strong>2-3</strong> and duration to{' '}
-                    <strong>2 seconds</strong>
+                    运行 5 个以上策略时，可将最多显示数设为 <strong>2–3</strong>，持续时间设为 <strong>2 秒</strong>。
                   </li>
                   <li>
-                    Disable <strong>Analyzer</strong> when not sandbox trading to reduce spam
+                    不使用模拟盘时，可关闭<strong>模拟盘</strong>通知以减少干扰。
                   </li>
                   <li>
-                    Disable <strong>Orders</strong> if you prefer checking the order book manually
+                    如果习惯手动查看订单簿，可关闭<strong>订单</strong>通知。
                   </li>
                   <li>
-                    Disable <strong>Historify</strong> during large data imports to avoid
-                    notification flood
+                    大批量导入数据时，可关闭 <strong>Historify</strong> 通知以避免通知过多。
                   </li>
                   <li>
-                    Keep <strong>System</strong> enabled for critical security alerts
+                    建议保留<strong>系统</strong>通知，以接收重要安全提示。
                   </li>
                 </ul>
               </div>
@@ -1704,10 +1693,9 @@ export default function ProfilePage() {
         <TabsContent value="permissions" className="space-y-6">
           <Alert>
             <FolderCheck className="h-4 w-4" />
-            <AlertTitle>File Permissions Monitor</AlertTitle>
+            <AlertTitle>文件权限监控</AlertTitle>
             <AlertDescription>
-              Check file and directory permissions for OpenAlgo components. Incorrect permissions
-              may cause the application to malfunction.
+              检查 OpenAlgo 组件的文件和目录权限。权限不正确可能导致应用无法正常运行。
             </AlertDescription>
           </Alert>
 
@@ -1718,16 +1706,16 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      System Status
+                      系统状态
                       {permissionsData.all_correct ? (
-                        <Badge className="bg-green-500">All OK</Badge>
+                        <Badge className="bg-green-500">全部正常</Badge>
                       ) : (
-                        <Badge variant="destructive">Issues Found</Badge>
+                        <Badge variant="destructive">发现问题</Badge>
                       )}
                     </CardTitle>
                     <CardDescription>
-                      Platform: {permissionsData.platform}
-                      {permissionsData.is_windows && ' (Windows uses access-based checks)'}
+                      平台：{permissionsData.platform}
+                      {permissionsData.is_windows && '（Windows 使用基于访问能力的检查）'}
                     </CardDescription>
                   </div>
                   <div className="flex gap-2">
@@ -1742,7 +1730,7 @@ export default function ProfilePage() {
                       ) : (
                         <>
                           <RefreshCw className="h-4 w-4 mr-2" />
-                          Refresh
+                          刷新
                         </>
                       )}
                     </Button>
@@ -1757,7 +1745,7 @@ export default function ProfilePage() {
                         ) : (
                           <>
                             <Wrench className="h-4 w-4 mr-2" />
-                            Fix Issues
+                            修复问题
                           </>
                         )}
                       </Button>
@@ -1774,7 +1762,7 @@ export default function ProfilePage() {
               <CardContent className="py-12 flex items-center justify-center">
                 <div className="flex items-center gap-2">
                   <RefreshCw className="h-5 w-5 animate-spin" />
-                  <span>Checking permissions...</span>
+                  <span>正在检查权限…</span>
                 </div>
               </CardContent>
             </Card>
@@ -1784,9 +1772,9 @@ export default function ProfilePage() {
           {permissionsData && (
             <Card>
               <CardHeader>
-                <CardTitle>Permission Details</CardTitle>
+                <CardTitle>权限详情</CardTitle>
                 <CardDescription>
-                  Click on items with issues to see recommended fixes
+                  查看有问题的项目以获取修复建议
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1818,12 +1806,12 @@ export default function ProfilePage() {
                           {check.is_sensitive && (
                             <Badge variant="outline" className="text-xs">
                               <Lock className="h-3 w-3 mr-1" />
-                              Sensitive
+                              敏感
                             </Badge>
                           )}
                           {check.is_directory && (
                             <Badge variant="outline" className="text-xs">
-                              Directory
+                              目录
                             </Badge>
                           )}
                         </div>
@@ -1832,7 +1820,7 @@ export default function ProfilePage() {
                         {/* Permission Details */}
                         <div className="flex items-center gap-4 mt-2 text-xs">
                           <span className="text-muted-foreground">
-                            Expected:{' '}
+                            预期权限：{' '}
                             <code className="bg-muted px-1 rounded">{check.expected_mode}</code>
                             <span className="ml-1 text-muted-foreground/70">
                               ({check.expected_rwx})
@@ -1846,7 +1834,7 @@ export default function ProfilePage() {
                                   : 'text-red-600 dark:text-red-400'
                               }
                             >
-                              Actual:{' '}
+                              实际权限：{' '}
                               <code
                                 className={`px-1 rounded ${check.is_correct ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}
                               >
@@ -1865,14 +1853,14 @@ export default function ProfilePage() {
                             </p>
                             {!permissionsData.is_windows && !check.exists && (
                               <p className="text-red-600 dark:text-red-400 text-xs mt-1">
-                                Fix: Create the directory or file
+                                修复：创建目录或文件
                               </p>
                             )}
                             {!permissionsData.is_windows &&
                               check.exists &&
                               check.actual_mode !== check.expected_mode && (
                                 <p className="text-red-600 dark:text-red-400 text-xs mt-1">
-                                  Fix:{' '}
+                                  修复：{' '}
                                   <code className="bg-red-200 dark:bg-red-800 px-1 rounded">
                                     chmod {check.expected_mode} {check.path}
                                   </code>
@@ -1900,44 +1888,42 @@ export default function ProfilePage() {
           {/* Help Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Understanding Permissions</CardTitle>
+              <CardTitle>权限说明</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <div>
-                <p className="font-medium text-foreground">Permission Format (Unix/Linux/macOS)</p>
-                <p>Permissions are shown as a 3-digit number (e.g., 755) where:</p>
+                <p className="font-medium text-foreground">权限格式（Unix/Linux/macOS）</p>
+                <p>权限以三位数字表示（例如 755）：</p>
                 <ul className="list-disc list-inside mt-1 space-y-1 ml-2">
                   <li>
-                    <code className="bg-muted px-1 rounded">7</code> = Read + Write + Execute (rwx)
+                    <code className="bg-muted px-1 rounded">7</code> = 读取 + 写入 + 执行（rwx）
                   </li>
                   <li>
-                    <code className="bg-muted px-1 rounded">5</code> = Read + Execute (r-x)
+                    <code className="bg-muted px-1 rounded">5</code> = 读取 + 执行（r-x）
                   </li>
                   <li>
-                    <code className="bg-muted px-1 rounded">6</code> = Read + Write (rw-)
+                    <code className="bg-muted px-1 rounded">6</code> = 读取 + 写入（rw-）
                   </li>
                   <li>
-                    <code className="bg-muted px-1 rounded">4</code> = Read only (r--)
+                    <code className="bg-muted px-1 rounded">4</code> = 仅读取（r--）
                   </li>
                   <li>
-                    <code className="bg-muted px-1 rounded">0</code> = No permission (---)
+                    <code className="bg-muted px-1 rounded">0</code> = 无权限（---）
                   </li>
                 </ul>
               </div>
               <div>
-                <p className="font-medium text-foreground">Sensitive Files</p>
+                <p className="font-medium text-foreground">敏感文件</p>
                 <p>
-                  Files marked as sensitive (like{' '}
-                  <code className="bg-muted px-1 rounded">.env</code> and{' '}
-                  <code className="bg-muted px-1 rounded">keys/</code>) should have restricted
-                  permissions (600 or 700) to prevent unauthorized access.
+                  标记为敏感的文件（例如 
+                  <code className="bg-muted px-1 rounded">.env</code> 和 
+                  <code className="bg-muted px-1 rounded">keys/</code>）应限制权限（600 或 700），以防止未经授权的访问。
                 </p>
               </div>
               <div>
                 <p className="font-medium text-foreground">Windows</p>
                 <p>
-                  On Windows, the system checks if files/directories are readable and writable
-                  instead of Unix-style permissions.
+                  在 Windows 上，系统检查文件和目录是否可读写，而不是检查 Unix 格式的权限。
                 </p>
               </div>
             </CardContent>
@@ -1950,11 +1936,9 @@ export default function ProfilePage() {
           {isAnalyzerMode && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Theme Changes Disabled</AlertTitle>
+              <AlertTitle>主题更改已禁用</AlertTitle>
               <AlertDescription>
-                Theme customization is disabled while in Analyzer Mode. The purple theme is
-                automatically applied for visual distinction. Switch back to Live Mode to change
-                themes.
+                模拟盘模式下无法自定义主题，系统会自动使用紫色主题以示区分。切换回实盘模式后可更改主题。
               </AlertDescription>
             </Alert>
           )}
@@ -1964,19 +1948,19 @@ export default function ProfilePage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Current Theme</CardTitle>
+                  <CardTitle>当前主题</CardTitle>
                   <CardDescription>
                     {isAnalyzerMode
-                      ? 'Analyzer Mode (Purple Theme)'
-                      : `${mode.charAt(0).toUpperCase() + mode.slice(1)} Mode with ${color.charAt(0).toUpperCase() + color.slice(1)} accent`}
+                      ? '模拟盘模式（紫色主题）'
+                      : `${THEME_MODES.find((item) => item.value === mode)?.label ?? mode}模式，强调色：${ACCENT_COLORS.find((item) => item.value === color)?.label ?? color}`}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex gap-2">
-                    <div className="w-6 h-6 rounded bg-primary" title="Primary" />
-                    <div className="w-6 h-6 rounded bg-secondary" title="Secondary" />
-                    <div className="w-6 h-6 rounded bg-accent" title="Accent" />
-                    <div className="w-6 h-6 rounded bg-muted" title="Muted" />
+                    <div className="w-6 h-6 rounded bg-primary" title="主色" />
+                    <div className="w-6 h-6 rounded bg-secondary" title="次要颜色" />
+                    <div className="w-6 h-6 rounded bg-accent" title="强调色" />
+                    <div className="w-6 h-6 rounded bg-muted" title="柔和色" />
                   </div>
                   <Button
                     variant="outline"
@@ -1985,7 +1969,7 @@ export default function ProfilePage() {
                     disabled={isAnalyzerMode || (mode === 'light' && color === 'zinc')}
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Reset
+                    重置
                   </Button>
                 </div>
               </div>
@@ -1995,8 +1979,8 @@ export default function ProfilePage() {
           {/* Theme Mode Selection */}
           <Card className={isAnalyzerMode ? 'opacity-60' : ''}>
             <CardHeader>
-              <CardTitle>Theme Mode</CardTitle>
-              <CardDescription>Choose between light and dark interface</CardDescription>
+              <CardTitle>主题模式</CardTitle>
+              <CardDescription>选择浅色或深色界面</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -2039,8 +2023,8 @@ export default function ProfilePage() {
           {/* Accent Color Selection */}
           <Card className={isAnalyzerMode ? 'opacity-60' : ''}>
             <CardHeader>
-              <CardTitle>Accent Color</CardTitle>
-              <CardDescription>Customize the primary accent color</CardDescription>
+              <CardTitle>强调色</CardTitle>
+              <CardDescription>自定义主要强调色</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
@@ -2073,21 +2057,17 @@ export default function ProfilePage() {
           {/* Theme Info */}
           <Card>
             <CardHeader>
-              <CardTitle>About Themes</CardTitle>
+              <CardTitle>关于主题</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-2">
               <p>
-                <strong>Light Mode:</strong> Optimized for daytime use with high contrast and
-                readability.
+                <strong>浅色模式：</strong>对比清晰，适合白天使用。
               </p>
               <p>
-                <strong>Dark Mode:</strong> Reduces eye strain during extended trading sessions,
-                especially in low-light environments.
+                <strong>深色模式：</strong>适合长时间交易，尤其是在低光环境下。
               </p>
               <p>
-                <strong>Analyzer Mode:</strong> When in sandbox/analyzer mode, a distinct purple
-                theme is applied automatically to clearly indicate you are not trading with real
-                funds.
+                <strong>模拟盘模式：</strong>自动使用紫色主题，提示当前交易使用模拟资金。
               </p>
             </CardContent>
           </Card>
@@ -2097,26 +2077,25 @@ export default function ProfilePage() {
         <TabsContent value="smtp" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>SMTP Configuration</CardTitle>
+              <CardTitle>SMTP 配置</CardTitle>
               <CardDescription>
-                Configure email settings for password reset notifications
+                配置用于密码重置通知的邮箱设置
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Alert className="mb-6">
                 <Mail className="h-4 w-4" />
-                <AlertTitle>Gmail Configuration Tips</AlertTitle>
+                <AlertTitle>Gmail 配置提示</AlertTitle>
                 <AlertDescription>
                   <ul className="text-sm list-disc list-inside mt-1 space-y-1">
                     <li>
-                      <strong>Personal Gmail:</strong> Server: smtp.gmail.com:587
+                      <strong>个人 Gmail：</strong>服务器：smtp.gmail.com:587
                     </li>
                     <li>
-                      <strong>Password:</strong> Use App Password (not your regular password)
+                      <strong>密码：</strong>使用应用专用密码，不要使用账户登录密码
                     </li>
                     <li>
-                      <strong>Setup:</strong> Google Account - Security - 2-Step Verification - App
-                      passwords
+                      <strong>设置路径：</strong>Google 账户 → 安全 → 两步验证 → 应用专用密码
                     </li>
                   </ul>
                 </AlertDescription>
@@ -2125,7 +2104,7 @@ export default function ProfilePage() {
               <form onSubmit={handleSaveSmtp} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>SMTP Server</Label>
+                    <Label>SMTP 服务器</Label>
                     <Input
                       value={smtpServer}
                       onChange={(e) => setSmtpServer(e.target.value)}
@@ -2133,19 +2112,19 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>SMTP Port</Label>
+                    <Label>SMTP 端口</Label>
                     <Input
                       type="number"
                       value={smtpPort}
                       onChange={(e) => setSmtpPort(e.target.value)}
                       placeholder="587"
                     />
-                    <p className="text-xs text-muted-foreground">587 (STARTTLS) or 465 (SSL/TLS)</p>
+                    <p className="text-xs text-muted-foreground">587（STARTTLS）或 465（SSL/TLS）</p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Username/Email</Label>
+                  <Label>用户名／邮箱</Label>
                   <Input
                     type="email"
                     value={smtpUsername}
@@ -2155,21 +2134,21 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Password/App Password</Label>
+                  <Label>密码／应用专用密码</Label>
                   <Input
                     type="password"
                     value={smtpPassword}
                     onChange={(e) => setSmtpPassword(e.target.value)}
                     placeholder={
                       profileData?.smtp_settings?.smtp_password
-                        ? 'Password is set (enter new to change)'
-                        : 'Enter your App Password'
+                        ? '已设置密码（输入新密码可更改）'
+                        : '请输入应用专用密码'
                     }
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>From Email</Label>
+                  <Label>发件邮箱</Label>
                   <Input
                     type="email"
                     value={smtpFromEmail}
@@ -2179,7 +2158,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>HELO Hostname</Label>
+                  <Label>HELO 主机名</Label>
                   <Input
                     value={smtpHeloHostname}
                     onChange={(e) => setSmtpHeloHostname(e.target.value)}
@@ -2193,35 +2172,35 @@ export default function ProfilePage() {
                     checked={smtpUseTls}
                     onCheckedChange={(checked) => setSmtpUseTls(checked === true)}
                   />
-                  <Label htmlFor="smtp_tls">Use TLS/SSL</Label>
+                  <Label htmlFor="smtp_tls">使用 TLS/SSL</Label>
                 </div>
 
                 <Button type="submit" disabled={isSavingSmtp}>
                   {isSavingSmtp ? (
                     <>
                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                      Saving...
+                      保存中…
                     </>
                   ) : (
                     <>
                       <Mail className="h-4 w-4 mr-2" />
-                      Save SMTP Settings
+                      保存 SMTP 设置
                     </>
                   )}
                 </Button>
 
                 {/* Test Configuration */}
                 <div className="border-t pt-4 mt-4">
-                  <h4 className="font-medium mb-3">Test Configuration</h4>
+                  <h4 className="font-medium mb-3">测试配置</h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Send a test email to verify your SMTP settings.
+                    发送测试邮件以验证 SMTP 设置。
                   </p>
                   <div className="flex gap-2">
                     <Input
                       type="email"
                       value={testEmail}
                       onChange={(e) => setTestEmail(e.target.value)}
-                      placeholder="Enter email address to test"
+                      placeholder="输入用于测试的邮箱地址"
                       className="flex-1"
                     />
                     <Button
@@ -2235,7 +2214,7 @@ export default function ProfilePage() {
                       ) : (
                         <>
                           <Send className="h-4 w-4 mr-1" />
-                          Send Test
+                          发送测试邮件
                         </>
                       )}
                     </Button>
@@ -2250,7 +2229,7 @@ export default function ProfilePage() {
                       ) : (
                         <>
                           <Bug className="h-4 w-4 mr-1" />
-                          Debug
+                          诊断
                         </>
                       )}
                     </Button>
@@ -2261,7 +2240,7 @@ export default function ProfilePage() {
                       className={`mt-4 ${debugResult.success ? 'border-green-500' : 'border-yellow-500'}`}
                     >
                       <AlertTitle>
-                        {debugResult.success ? 'SMTP Debug Complete' : 'SMTP Connection Issues'}
+                        {debugResult.success ? 'SMTP 诊断完成' : 'SMTP 连接存在问题'}
                       </AlertTitle>
                       <AlertDescription>
                         <p>{debugResult.message}</p>
@@ -2285,17 +2264,15 @@ export default function ProfilePage() {
         <TabsContent value="totp" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>TOTP Authentication</CardTitle>
-              <CardDescription>Manage your Two-Factor Authentication settings</CardDescription>
+              <CardTitle>TOTP 身份验证</CardTitle>
+              <CardDescription>管理双重身份验证设置</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <Alert>
                 <Shield className="h-4 w-4" />
-                <AlertTitle>About TOTP Authentication</AlertTitle>
+                <AlertTitle>关于 TOTP 身份验证</AlertTitle>
                 <AlertDescription>
-                  TOTP (Time-based One-Time Password) provides an additional layer of security.
-                  You&apos;ll need an authenticator app like Google Authenticator or Authy to
-                  generate codes for password recovery.
+                  TOTP（基于时间的一次性密码）提供额外的安全保护。您需要使用 Google Authenticator 或 Authy 等身份验证器生成密码恢复所需的验证码。
                 </AlertDescription>
               </Alert>
 
@@ -2303,14 +2280,14 @@ export default function ProfilePage() {
 
               {profileData?.qr_code && profileData?.totp_secret ? (
                 <div className="bg-muted rounded-lg p-6 space-y-6">
-                  <h3 className="font-semibold text-center">Your TOTP QR Code</h3>
+                  <h3 className="font-semibold text-center">您的 TOTP 二维码</h3>
 
                   {/* QR Code */}
                   <div className="flex justify-center">
                     <div className="p-4 bg-white rounded-lg shadow">
                       <img
                         src={`data:image/png;base64,${profileData.qr_code}`}
-                        alt="TOTP QR Code"
+                        alt="TOTP 二维码"
                         className="w-48 h-48"
                       />
                     </div>
@@ -2318,8 +2295,8 @@ export default function ProfilePage() {
 
                   {/* Manual Entry */}
                   <div className="bg-background rounded-lg p-4 space-y-2">
-                    <h4 className="font-semibold">Manual Entry</h4>
-                    <p className="text-sm text-muted-foreground">Secret key for manual entry:</p>
+                    <h4 className="font-semibold">手动输入</h4>
+                    <p className="text-sm text-muted-foreground">手动输入的密钥：</p>
                     <div className="flex items-center gap-2">
                       <code className="flex-1 bg-muted p-2 rounded text-sm break-all">
                         {profileData.totp_secret}
@@ -2328,7 +2305,7 @@ export default function ProfilePage() {
                         size="icon"
                         variant="outline"
                         onClick={() => copyToClipboard(profileData.totp_secret!)}
-                        aria-label="Copy TOTP secret"
+                        aria-label="复制 TOTP 密钥"
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
@@ -2337,22 +2314,22 @@ export default function ProfilePage() {
 
                   {/* Instructions */}
                   <div className="space-y-2">
-                    <p className="font-medium">Setup Instructions:</p>
+                    <p className="font-medium">设置步骤：</p>
                     <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                      <li>Install an authenticator app (Google Authenticator, Authy, etc.)</li>
-                      <li>Scan the QR code above or enter the secret key manually</li>
-                      <li>Save your backup codes in a safe place</li>
+                      <li>安装身份验证器应用（如 Google Authenticator、Authy）</li>
+                      <li>扫描上方二维码或手动输入密钥</li>
+                      <li>将备用恢复码保存在安全的地方</li>
                       <li>
-                        You&apos;ll need the TOTP code to reset your password if you forget it
+                        忘记密码时，需要使用 TOTP 验证码重置密码
                       </li>
                     </ol>
                   </div>
                 </div>
               ) : (
                 <Alert variant="destructive">
-                  <AlertTitle>TOTP Not Available</AlertTitle>
+                  <AlertTitle>TOTP 不可用</AlertTitle>
                   <AlertDescription>
-                    Unable to load TOTP setup. Please contact your administrator.
+                    无法加载 TOTP 设置，请联系管理员。
                   </AlertDescription>
                 </Alert>
               )}
@@ -2367,22 +2344,21 @@ export default function ProfilePage() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-yellow-500" />
-              Restart Required
+              需要重启
             </AlertDialogTitle>
             <AlertDialogDescription className="space-y-3">
               <p>
-                Your configuration has been saved to the{' '}
-                <code className="bg-muted px-1 rounded">.env</code> file.
+                配置已保存到 
+                <code className="bg-muted px-1 rounded">.env</code> 文件。
               </p>
               <p>
-                To apply these changes, please restart the OpenAlgo application using your usual
-                method (terminal, service manager, or container orchestrator).
+                要使更改生效，请通过平时使用的方式（终端、服务管理器或容器管理工具）重启 OpenAlgo。
               </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction onClick={() => setShowRestartDialog(false)}>
-              Got it
+              知道了
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -24,13 +24,13 @@ export const GetQuoteNode = memo(({ data, selected }: GetQuoteNodeProps) => {
             <BarChart3 className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Get Quote</div>
+            <div className="text-xs font-medium leading-tight">获取行情</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NSE'}</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
         </div>

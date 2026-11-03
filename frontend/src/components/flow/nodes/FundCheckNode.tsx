@@ -28,13 +28,13 @@ export const FundCheckNode = memo(({ data, selected }: FundCheckNodeProps) => {
             <Wallet className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Fund</div>
-            <div className="text-[9px] text-muted-foreground">Check</div>
+            <div className="text-xs font-medium leading-tight">资金</div>
+            <div className="text-[9px] text-muted-foreground">检查</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Min</span>
+            <span className="text-[10px] text-muted-foreground">最低</span>
             <span className="mono-data text-[10px] font-medium">
               {data.minAvailable?.toLocaleString() || 0}
             </span>
@@ -45,8 +45,8 @@ export const FundCheckNode = memo(({ data, selected }: FundCheckNodeProps) => {
         </div>
         {/* Handle labels */}
         <div className="mt-2 flex justify-between px-1 text-[8px]">
-          <span className="text-buy">True</span>
-          <span className="text-sell">False</span>
+          <span className="text-buy">真</span>
+          <span className="text-sell">假</span>
         </div>
       </div>
       {/* True output (left) */}

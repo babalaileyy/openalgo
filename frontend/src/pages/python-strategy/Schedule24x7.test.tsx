@@ -86,7 +86,7 @@ describe('a crypto strategy on /python can run 24/7', () => {
     const observer = new MutationObserver(check)
     observer.observe(view.container, { subtree: true, childList: true, attributes: true })
     try {
-      await screen.findByRole('switch', { name: 'Run 24/7' })
+      await screen.findByRole('switch', { name: '全天候运行（24/7）' })
     } finally {
       observer.disconnect()
     }
@@ -100,14 +100,14 @@ describe('a crypto strategy on /python can run 24/7', () => {
     // A crypto broker offers CRYPTO alone, and the form moves onto it. Waited
     // on the switch, which only the form's own state renders, not on the
     // dropdown's value.
-    expect(await screen.findByRole('switch', { name: 'Run 24/7' })).toBeChecked()
-    expect(screen.getByLabelText('Exchange')).toHaveValue('CRYPTO')
-    expect(screen.queryByLabelText('Stop Time (IST)')).toBeNull()
+    expect(await screen.findByRole('switch', { name: '全天候运行（24/7）' })).toBeChecked()
+    expect(screen.getByLabelText('交易所')).toHaveValue('CRYPTO')
+    expect(screen.queryByLabelText('停止时间（印度标准时间）')).toBeNull()
 
-    await user.type(screen.getByLabelText('Strategy Name'), 'Crypto bot')
+    await user.type(screen.getByLabelText('策略名称'), 'Crypto bot')
     const file = new File(['print(1)'], 'bot.py', { type: 'text/x-python' })
-    await user.upload(screen.getByLabelText('Python Script'), file)
-    await user.click(screen.getByRole('button', { name: 'Upload Strategy' }))
+    await user.upload(screen.getByLabelText('Python 脚本'), file)
+    await user.click(screen.getByRole('button', { name: '上传策略' }))
 
     await waitFor(() => expect(api.uploadStrategy).toHaveBeenCalledOnce())
     expect(api.uploadStrategy.mock.calls[0][2]).toEqual({
@@ -123,9 +123,9 @@ describe('a crypto strategy on /python can run 24/7', () => {
     api.getStrategy.mockResolvedValue(strategy({ schedule_stop_time: null }))
     renderAt('/python/c1/schedule', '/python/:strategyId/schedule', <SchedulePythonStrategy />)
 
-    const toggle = await screen.findByRole('switch', { name: 'Run 24/7' })
+    const toggle = await screen.findByRole('switch', { name: '全天候运行（24/7）' })
     expect(toggle).toBeChecked()
-    await user.click(screen.getByRole('button', { name: 'Save Schedule' }))
+    await user.click(screen.getByRole('button', { name: '保存定时设置' }))
 
     await waitFor(() => expect(api.scheduleStrategy).toHaveBeenCalledOnce())
     expect(api.scheduleStrategy).toHaveBeenCalledWith('c1', {
@@ -141,12 +141,12 @@ describe('a crypto strategy on /python can run 24/7', () => {
     api.getStrategy.mockResolvedValue(strategy({}))
     renderAt('/python/c1/schedule', '/python/:strategyId/schedule', <SchedulePythonStrategy />)
 
-    const toggle = await screen.findByRole('switch', { name: 'Run 24/7' })
+    const toggle = await screen.findByRole('switch', { name: '全天候运行（24/7）' })
     expect(toggle).not.toBeChecked()
-    expect(screen.getByLabelText(/Stop Time/)).toHaveValue('23:59')
+    expect(screen.getByLabelText(/停止时间/)).toHaveValue('23:59')
 
     await user.click(toggle)
-    await user.click(screen.getByRole('button', { name: 'Save Schedule' }))
+    await user.click(screen.getByRole('button', { name: '保存定时设置' }))
     await waitFor(() =>
       expect(api.scheduleStrategy).toHaveBeenCalledWith(
         'c1',
@@ -160,12 +160,12 @@ describe('a crypto strategy on /python can run 24/7', () => {
     api.getStrategy.mockResolvedValue(strategy({ schedule_stop_time: '00:00' }))
     renderAt('/python/c1/schedule', '/python/:strategyId/schedule', <SchedulePythonStrategy />)
 
-    await screen.findByRole('switch', { name: 'Run 24/7' })
-    await user.click(screen.getByRole('button', { name: 'Save Schedule' }))
+    await screen.findByRole('switch', { name: '全天候运行（24/7）' })
+    await user.click(screen.getByRole('button', { name: '保存定时设置' }))
 
     const { showToast } = await import('@/utils/toast')
     expect(showToast.error).toHaveBeenCalledWith(
-      'Stop time cannot be the same as the start time. To never stop, turn on Run 24/7.',
+      '停止时间不能与开始时间相同。若要持续运行，请开启全天候运行。',
       'pythonStrategy'
     )
     expect(api.scheduleStrategy).not.toHaveBeenCalled()
@@ -177,8 +177,8 @@ describe('a crypto strategy on /python can run 24/7', () => {
     )
     renderAt('/python/c1/schedule', '/python/:strategyId/schedule', <SchedulePythonStrategy />)
 
-    await waitFor(() => expect(screen.getByLabelText('Exchange')).toHaveValue('NSE'))
-    expect(screen.queryByRole('switch', { name: 'Run 24/7' })).toBeNull()
+    await waitFor(() => expect(screen.getByLabelText('交易所')).toHaveValue('NSE'))
+    expect(screen.queryByRole('switch', { name: '全天候运行（24/7）' })).toBeNull()
   })
 })
 
@@ -213,15 +213,15 @@ describe('Indian exchanges keep their schedule as before', () => {
     renderAt('/python/new', '/python/new', <NewPythonStrategy />)
 
     await waitFor(() => expect(screen.getByRole('option', { name: 'NFO F&O' })).toBeInTheDocument())
-    expect(screen.getByLabelText('Exchange')).toHaveValue('NSE')
-    expect(screen.queryByRole('switch', { name: 'Run 24/7' })).toBeNull()
+    expect(screen.getByLabelText('交易所')).toHaveValue('NSE')
+    expect(screen.queryByRole('switch', { name: '全天候运行（24/7）' })).toBeNull()
 
-    await user.type(screen.getByLabelText('Strategy Name'), 'Nifty bot')
+    await user.type(screen.getByLabelText('策略名称'), 'Nifty bot')
     await user.upload(
-      screen.getByLabelText('Python Script'),
+      screen.getByLabelText('Python 脚本'),
       new File(['print(1)'], 'bot.py', { type: 'text/x-python' })
     )
-    await user.click(screen.getByRole('button', { name: 'Upload Strategy' }))
+    await user.click(screen.getByRole('button', { name: '上传策略' }))
 
     await waitFor(() => expect(api.uploadStrategy).toHaveBeenCalledOnce())
     expect(api.uploadStrategy.mock.calls[0][2]).toEqual({
@@ -245,9 +245,9 @@ describe('Indian exchanges keep their schedule as before', () => {
     )
     renderAt('/python/c1/schedule', '/python/:strategyId/schedule', <SchedulePythonStrategy />)
 
-    await waitFor(() => expect(screen.getByLabelText(/Stop Time/)).toHaveValue('09:15'))
-    expect(screen.queryByRole('switch', { name: 'Run 24/7' })).toBeNull()
-    await user.click(screen.getByRole('button', { name: 'Save Schedule' }))
+    await waitFor(() => expect(screen.getByLabelText(/停止时间/)).toHaveValue('09:15'))
+    expect(screen.queryByRole('switch', { name: '全天候运行（24/7）' })).toBeNull()
+    await user.click(screen.getByRole('button', { name: '保存定时设置' }))
 
     await waitFor(() =>
       expect(api.scheduleStrategy).toHaveBeenCalledWith('c1', {

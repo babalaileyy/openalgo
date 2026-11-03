@@ -285,7 +285,7 @@ MY_PARAM = os.getenv("MY_PARAM", "default_value")`
 
 const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text)
-  showToast.success('Copied to clipboard', 'clipboard')
+  showToast.success('已复制到剪贴板', 'clipboard')
 }
 
 export default function PythonStrategyGuide() {
@@ -300,7 +300,7 @@ export default function PythonStrategyGuide() {
 
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Python Strategy Guide</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Python 策略指南</h1>
         <p className="text-muted-foreground">
           Self-host automated trading strategies inside OpenAlgo. Each strategy runs as an isolated
           subprocess with its own process, memory, and log file &mdash; managed through the{' '}
@@ -314,8 +314,8 @@ export default function PythonStrategyGuide() {
       {/* Quick Start */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Start</CardTitle>
-          <CardDescription>Get your first strategy running in 5 minutes</CardDescription>
+          <CardTitle>快速开始</CardTitle>
+          <CardDescription>5 分钟运行您的第一个策略</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4">
@@ -324,7 +324,7 @@ export default function PythonStrategyGuide() {
                 1
               </Badge>
               <div>
-                <p className="font-medium">Install OpenAlgo SDK</p>
+                <p className="font-medium">安装 OpenAlgo SDK</p>
                 <div className="mt-1 flex items-center gap-2">
                   <code className="bg-muted px-2 py-1 rounded text-sm">pip install openalgo</code>
                   <Button
@@ -332,7 +332,7 @@ export default function PythonStrategyGuide() {
                     size="sm"
                     onClick={() => copyToClipboard('pip install openalgo')}
                   >
-                    Copy
+                    复制
                   </Button>
                 </div>
               </div>
@@ -342,7 +342,7 @@ export default function PythonStrategyGuide() {
                 2
               </Badge>
               <div>
-                <p className="font-medium">Get your API Key</p>
+                <p className="font-medium">获取 API 密钥</p>
                 <p className="text-sm text-muted-foreground">
                   Go to{' '}
                   <Link to="/apikey" className="text-primary hover:underline">
@@ -357,7 +357,7 @@ export default function PythonStrategyGuide() {
                 3
               </Badge>
               <div>
-                <p className="font-medium">Write your strategy</p>
+                <p className="font-medium">编写策略</p>
                 <p className="text-sm text-muted-foreground">
                   Create a Python file (.py) with your trading logic. Read configuration from
                   environment variables so it works both standalone and under the /python runner
@@ -370,13 +370,11 @@ export default function PythonStrategyGuide() {
                 4
               </Badge>
               <div>
-                <p className="font-medium">Upload and configure</p>
+                <p className="font-medium">上传并配置</p>
                 <p className="text-sm text-muted-foreground">
                   On the{' '}
-                  <Link to="/python" className="text-primary hover:underline">
-                    Python Strategies
-                  </Link>{' '}
-                  page, click <strong>Add Strategy</strong>. Pick a name, select the exchange (NSE /
+                  <Link to="/python" className="text-primary hover:underline">Python 策略</Link>{' '}
+                  page, click <strong>添加策略</strong>. Pick a name, select the exchange (NSE /
                   MCX / CRYPTO / etc.), and add any custom parameters as environment variables.
                 </p>
               </div>
@@ -386,9 +384,9 @@ export default function PythonStrategyGuide() {
                 5
               </Badge>
               <div>
-                <p className="font-medium">Start or schedule</p>
+                <p className="font-medium">启动或排程</p>
                 <p className="text-sm text-muted-foreground">
-                  Click <strong>Start</strong> to run immediately, or configure a schedule (e.g.
+                  Click <strong>启动</strong> to run immediately, or configure a schedule (e.g.
                   09:15&ndash;15:30 Mon&ndash;Fri for NSE). The host auto-starts and auto-stops your
                   strategy at the scheduled times, respecting the exchange's holiday calendar.
                 </p>
@@ -401,45 +399,38 @@ export default function PythonStrategyGuide() {
       {/* How It Works */}
       <Card>
         <CardHeader>
-          <CardTitle>How It Works</CardTitle>
-          <CardDescription>
-            Process isolation, environment injection, and exchange-aware scheduling
-          </CardDescription>
+          <CardTitle>工作原理</CardTitle>
+          <CardDescription>进程隔离、环境变量注入与交易所日历调度</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div className="space-y-3">
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Process Isolation</p>
+              <p className="font-medium mb-1">进程隔离</p>
               <p className="text-muted-foreground">
-                Each strategy runs as a separate <code>subprocess.Popen</code> process with its own
-                PID, memory, and file descriptors. A crash in one strategy cannot affect another or
-                the host.
+                每个策略都作为独立的 <code>subprocess.Popen</code> 进程运行，拥有独立的进程 ID、内存和文件描述符。一个策略崩溃不会影响其他策略或主程序。
               </p>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Environment Injection</p>
+              <p className="font-medium mb-1">环境变量注入</p>
               <p className="text-muted-foreground">
-                The host injects <code>OPENALGO_API_KEY</code>, <code>STRATEGY_ID</code>,{' '}
-                <code>STRATEGY_NAME</code>, and <code>OPENALGO_STRATEGY_EXCHANGE</code> into each
-                strategy's environment. Your <code>.env</code> variables (like{' '}
-                <code>HOST_SERVER</code>, <code>WEBSOCKET_URL</code>) are also inherited. Custom
-                parameters from the upload form become additional env vars.
+                主程序向每个策略注入 <code>OPENALGO_API_KEY</code>、<code>STRATEGY_ID</code>、
+                <code>STRATEGY_NAME</code> 和 <code>OPENALGO_STRATEGY_EXCHANGE</code>。策略还会继承
+                <code>.env</code> 中的变量（如 <code>HOST_SERVER</code> 和 <code>WEBSOCKET_URL</code>），
+                上传表单中的自定义参数也会成为环境变量。
               </p>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Exchange-Aware Calendar</p>
+              <p className="font-medium mb-1">按交易所选择交易日历</p>
               <p className="text-muted-foreground">
-                Each strategy is tagged with an exchange. The host uses that exchange's holiday
-                calendar to gate scheduled start/stop &mdash; an MCX strategy keeps running on an
-                NSE holiday during the MCX evening session, a CRYPTO strategy ignores all holidays.
+                每个策略关联一个交易所，主程序根据该交易所的假日历控制定时启动和停止。
+                NSE 休市而 MCX 夜盘开市时，MCX 策略仍会运行；CRYPTO 策略不受假日影响。
               </p>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Logging</p>
+              <p className="font-medium mb-1">日志</p>
               <p className="text-muted-foreground">
-                All <code>print()</code> output is captured in timestamped log files under{' '}
-                <code>log/strategies/</code>. View them from the dashboard or via the Logs button on
-                each strategy card.
+                所有 <code>print()</code> 输出都会写入 <code>log/strategies/</code> 下带时间戳的日志文件。
+                可从仪表盘或各策略卡片上的日志按钮查看。
               </p>
             </div>
           </div>
@@ -449,21 +440,19 @@ export default function PythonStrategyGuide() {
       {/* Environment Variables */}
       <Card>
         <CardHeader>
-          <CardTitle>Environment Variables</CardTitle>
-          <CardDescription>Variables available inside your strategy script</CardDescription>
+          <CardTitle>环境变量</CardTitle>
+          <CardDescription>策略脚本中可用的变量</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
           <div>
-            <p className="font-medium mb-2">Injected by the Platform</p>
-            <p className="text-sm text-muted-foreground mb-3">
-              These are set directly on each strategy subprocess by the /python runner:
-            </p>
+            <p className="font-medium mb-2">由平台注入</p>
+            <p className="text-sm text-muted-foreground mb-3">以下环境变量由 /python 运行器直接设置到每个策略子进程：</p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2 pr-4 font-medium">Variable</th>
-                    <th className="text-left py-2 font-medium">Description</th>
+                    <th className="text-left py-2 pr-4 font-medium">变量</th>
+                    <th className="text-left py-2 font-medium">说明</th>
                   </tr>
                 </thead>
                 <tbody className="text-muted-foreground">
@@ -471,28 +460,26 @@ export default function PythonStrategyGuide() {
                     <td className="py-2 pr-4">
                       <code>OPENALGO_API_KEY</code>
                     </td>
-                    <td className="py-2">Decrypted API key for this user</td>
+                    <td className="py-2">该用户解密后的 API 密钥</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-4">
                       <code>STRATEGY_ID</code>
                     </td>
-                    <td className="py-2">Unique identifier for this strategy</td>
+                    <td className="py-2">此策略的唯一标识符</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-4">
                       <code>STRATEGY_NAME</code>
                     </td>
-                    <td className="py-2">Name of the strategy (as entered at upload)</td>
+                    <td className="py-2">策略名称（上传时填写）</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-4">
                       <code>OPENALGO_STRATEGY_EXCHANGE</code>
                     </td>
                     <td className="py-2">
-                      Exchange picked at upload/edit (NSE / BSE / NFO / BFO / MCX / BCD / CDS /
-                      CRYPTO). Read this so your trading calls match the calendar the host gates
-                      against
+                      上传或编辑时选择的交易所（NSE / BSE / NFO / BFO / MCX / BCD / CDS / CRYPTO）。读取此变量，使交易请求与主程序使用的交易日历保持一致。
                     </td>
                   </tr>
                   <tr className="border-b">
@@ -500,8 +487,7 @@ export default function PythonStrategyGuide() {
                       <code>OPENALGO_HOST</code>
                     </td>
                     <td className="py-2">
-                      Convenience fallback (<code>http://127.0.0.1:5000</code>). Prefer{' '}
-                      <code>HOST_SERVER</code> instead
+                      备用地址（<code>http://127.0.0.1:5000</code>）。建议优先使用 <code>HOST_SERVER</code>。
                     </td>
                   </tr>
                 </tbody>
@@ -510,17 +496,16 @@ export default function PythonStrategyGuide() {
           </div>
 
           <div>
-            <p className="font-medium mb-2">Inherited from .env</p>
+            <p className="font-medium mb-2">继承自 .env</p>
             <p className="text-sm text-muted-foreground mb-3">
-              Strategies inherit every variable from OpenAlgo's <code>.env</code> via{' '}
-              <code>os.environ.copy()</code>. The key ones for connecting back to OpenAlgo:
+              策略通过 <code>os.environ.copy()</code> 继承 OpenAlgo 的 <code>.env</code> 中的所有变量。连接 OpenAlgo 时常用的变量如下：
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2 pr-4 font-medium">Variable</th>
-                    <th className="text-left py-2 font-medium">Description</th>
+                    <th className="text-left py-2 pr-4 font-medium">变量</th>
+                    <th className="text-left py-2 font-medium">说明</th>
                   </tr>
                 </thead>
                 <tbody className="text-muted-foreground">
@@ -529,8 +514,7 @@ export default function PythonStrategyGuide() {
                       <code>HOST_SERVER</code>
                     </td>
                     <td className="py-2">
-                      REST host, e.g. <code>http://127.0.0.1:5000</code> &mdash; canonical name in{' '}
-                      <code>.env</code>, prefer this in scripts
+                      REST 服务地址，例如 <code>http://127.0.0.1:5000</code>。这是 <code>.env</code> 中的标准变量，建议在脚本中优先使用。
                     </td>
                   </tr>
                   <tr className="border-b">
@@ -538,15 +522,14 @@ export default function PythonStrategyGuide() {
                       <code>WEBSOCKET_URL</code>
                     </td>
                     <td className="py-2">
-                      Full WebSocket URL, e.g. <code>ws://127.0.0.1:8765</code>
+                      完整 WebSocket 地址，例如 <code>ws://127.0.0.1:8765</code>
                     </td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-4">
                       <code>WEBSOCKET_HOST</code>
                     </td>
-                    <td className="py-2">
-                      WebSocket host component, e.g. <code>127.0.0.1</code>
+                    <td className="py-2">WebSocket 主机部分，例如<code>127.0.0.1</code>
                     </td>
                   </tr>
                   <tr className="border-b">
@@ -554,7 +537,7 @@ export default function PythonStrategyGuide() {
                       <code>WEBSOCKET_PORT</code>
                     </td>
                     <td className="py-2">
-                      WebSocket port, e.g. <code>8765</code>
+                      WebSocket 端口，例如 <code>8765</code>
                     </td>
                   </tr>
                   <tr className="border-b">
@@ -562,7 +545,7 @@ export default function PythonStrategyGuide() {
                       <code>FLASK_HOST_IP</code> / <code>FLASK_PORT</code>
                     </td>
                     <td className="py-2">
-                      Flask binding address (available if you need raw components)
+                      Flask 绑定地址（需要单独的地址或端口时使用）
                     </td>
                   </tr>
                 </tbody>
@@ -571,7 +554,7 @@ export default function PythonStrategyGuide() {
           </div>
 
           <div>
-            <p className="font-medium mb-2">Recommended Pattern in Scripts</p>
+            <p className="font-medium mb-2">脚本中的推荐写法</p>
             <div className="relative">
               <Button
                 variant="outline"
@@ -579,7 +562,7 @@ export default function PythonStrategyGuide() {
                 className="absolute top-2 right-2 z-10"
                 onClick={() => copyToClipboard(envVarsSnippet)}
               >
-                Copy
+                复制
               </Button>
               <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs">
                 <code>{envVarsSnippet}</code>
@@ -588,14 +571,9 @@ export default function PythonStrategyGuide() {
           </div>
 
           <Alert>
-            <AlertTitle>Reading OPENALGO_STRATEGY_EXCHANGE is strongly recommended</AlertTitle>
+            <AlertTitle>强烈建议读取 OPENALGO_STRATEGY_EXCHANGE</AlertTitle>
             <AlertDescription>
-              If your script hardcodes <code>exchange = "NSE"</code>, the host will still gate it
-              correctly per its config (e.g. the host runs your script during the MCX evening
-              session because <code>exchange=MCX</code>), but your{' '}
-              <code>client.placeorder(exchange="NSE", ...)</code> calls will still send NSE orders
-              &mdash; and the broker will reject them. Wiring the env var keeps host calendar and
-              script orders aligned.
+              如果脚本将 <code>exchange = "NSE"</code> 写死，主程序仍按配置的交易所日历运行（例如配置 <code>exchange=MCX</code> 时在 MCX 夜盘运行），但 <code>client.placeorder(exchange="NSE", ...)</code> 仍会发送 NSE 订单，可能被交易商拒绝。使用环境变量可使交易日历与脚本订单保持一致。
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -604,80 +582,70 @@ export default function PythonStrategyGuide() {
       {/* Exchange-Aware Scheduling */}
       <Card>
         <CardHeader>
-          <CardTitle>Exchange-Aware Scheduling</CardTitle>
+          <CardTitle>按交易所安排运行时间</CardTitle>
           <CardDescription>
-            Each strategy's exchange drives which holiday calendar the host uses
+            主程序根据策略所属交易所选择假日历
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-3 text-sm">
             <p className="text-muted-foreground">
-              When you upload or edit a strategy, you pick an exchange. The host uses that
-              exchange's calendar to decide whether to start/stop the strategy on any given day.
-              This means:
+              上传或编辑策略时需选择交易所。主程序根据该交易所的日历决定每天是否启动或停止策略：
             </p>
             <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
               <li>
-                An <strong>MCX</strong> strategy keeps running on NSE/BSE holidays if MCX has a
-                session
+                如果 MCX 开市，<strong>MCX</strong> 策略会在 NSE/BSE 假日继续运行。
               </li>
               <li>
-                A <strong>CRYPTO</strong> strategy ignores all holidays and weekends (24/7)
+                <strong>CRYPTO</strong> 策略不受节假日或周末限制，全天候运行。
               </li>
               <li>
-                <strong>SPECIAL_SESSION</strong> rows (Muhurat, DR-drill) override weekend rejects
-                per-exchange
+                <strong>SPECIAL_SESSION</strong> 特别交易时段（如 Muhurat、灾备演练）可覆盖对应交易所的周末限制。
               </li>
             </ul>
           </div>
 
           <div>
-            <p className="font-medium mb-2">Supported Exchanges</p>
+            <p className="font-medium mb-2">支持的交易所</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
               {exchanges.map((opt) => (
                 <div key={opt.value} className="bg-muted p-2 rounded">
                   <strong>{opt.value}</strong>
                   {opt.description ? ` — ${opt.description}` : ''}
                   {opt.window ? ` (${opt.window})` : ''}
-                  {opt.is_24x7 ? ' (no holidays)' : ''}
+                  {opt.is_24x7 ? '（无休市日）' : ''}
                 </div>
               ))}
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Windows are read live from the market calendar DB, so an exchange timing change (for
-              example the F&O close moving to 15:40) shows up here on its own. Per-date overrides
-              (partial holidays, special sessions) come from the same DB and are applied by the
-              scheduler.
+              交易时段实时读取市场日历数据库，交易所时间变更（例如期货和期权收盘改为 15:40）会自动显示。单日特殊安排（部分休市、特别交易时段）也由该数据库提供，并由调度器应用。
             </p>
           </div>
 
           <div>
-            <p className="font-medium mb-2">Schedule Intersection Rule</p>
+            <p className="font-medium mb-2">计划时间交集规则</p>
             <p className="text-sm text-muted-foreground mb-3">
-              The effective trading window is the <strong>intersection</strong> of your{' '}
-              <code>start..stop</code> time and the exchange's session for that specific date.
+              有效交易时段是策略 <code>start..stop</code> 时间与交易所在该日期的交易时段的<strong>交集</strong>。
             </p>
             <div className="bg-muted p-3 rounded-lg text-sm space-y-1">
               <p>
-                <strong>Example:</strong> MCX strategy scheduled 09:15&ndash;23:55
+                <strong>示例：</strong> MCX 策略计划运行时间为 09:15&ndash;23:55
               </p>
               <p className="text-muted-foreground">
-                On 14-Apr-2026 (Ambedkar Jayanti), MCX has a partial holiday with an evening session
-                17:00&ndash;23:55. The effective window becomes <strong>17:00&ndash;23:55</strong>{' '}
-                (the intersection). You don't need to change the schedule for partial holidays.
+                2026 年 4 月 14 日（安贝德卡诞辰），MCX 部分休市，夜盘时间为 17:00&ndash;23:55。有效运行时段为两者的交集 <strong>17:00&ndash;23:55</strong>。部分休市时无需修改计划。
               </p>
             </div>
           </div>
 
           <div>
-            <p className="font-medium mb-3">Worked Examples</p>
+            <p className="font-medium mb-3">实际示例</p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2 pr-3 font-medium">Scenario</th>
-                    <th className="text-left py-2 pr-3 font-medium">Exchange</th>
-                    <th className="text-left py-2 font-medium">Strategy Behavior</th>
+                    <th className="text-left py-2 pr-3 font-medium">场景</th>
+                    <th className="text-left py-2 pr-3 font-medium">交易所</th>
+                    <th className="text-left py-2 font-medium">策略行为</th>
                   </tr>
                 </thead>
                 <tbody className="text-muted-foreground">
@@ -685,31 +653,30 @@ export default function PythonStrategyGuide() {
                     <td className="py-2 pr-3" rowSpan={3}>
                       <strong>14-Apr-2026</strong>
                       <br />
-                      <span className="text-xs">Ambedkar Jayanti</span>
+                      <span className="text-xs">安贝德卡诞辰</span>
                     </td>
                     <td className="py-2 pr-3">NSE / BSE / NFO</td>
-                    <td className="py-2">Closed all day. Strategies paused at 00:01 IST</td>
+                    <td className="py-2">全天休市。策略在印度标准时间 00:01 暂停</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-3">MCX</td>
                     <td className="py-2">
-                      Open 17:00&ndash;23:55. MCX strategies auto-start at 17:00
+                      开市时间为 17:00&ndash;23:55，MCX 策略在 17:00 自动启动。
                     </td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-3">CRYPTO</td>
-                    <td className="py-2">Unaffected (24/7)</td>
+                    <td className="py-2">不受影响（全天候）</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-3" rowSpan={3}>
                       <strong>8-Nov-2026</strong>
                       <br />
-                      <span className="text-xs">Sunday Diwali Muhurat</span>
+                      <span className="text-xs">周日排灯节 Muhurat 交易</span>
                     </td>
                     <td className="py-2 pr-3">NSE / BSE / NFO</td>
                     <td className="py-2">
-                      SPECIAL_SESSION 14:20&ndash;15:30 (NFO to 15:40). Runs only inside that
-                      window, despite being Sunday
+                      特别交易时段 14:20&ndash;15:30（NFO 至 15:40）。尽管是周日，策略仍只在该时段运行。
                     </td>
                   </tr>
                   <tr className="border-b">
@@ -718,7 +685,7 @@ export default function PythonStrategyGuide() {
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 pr-3">CRYPTO</td>
-                    <td className="py-2">Unaffected (24/7)</td>
+                    <td className="py-2">不受影响（全天候）</td>
                   </tr>
                 </tbody>
               </table>
@@ -726,32 +693,24 @@ export default function PythonStrategyGuide() {
           </div>
 
           <div>
-            <p className="font-medium mb-2">How the Host Gates Strategies</p>
+            <p className="font-medium mb-2">宿主如何控制策略运行</p>
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="bg-muted p-3 rounded-lg">
-                <strong>1. Cron job</strong> &mdash; Fires <code>start_&lt;sid&gt;</code> at your{' '}
-                <code>start_time</code> on each day in <code>schedule_days</code>.
+                <strong>1. 定时任务</strong> &mdash; 在 <code>schedule_days</code> 指定的每一天，于 <code>start_time</code> 触发 <code>start_&lt;sid&gt;</code>。
               </div>
               <div className="bg-muted p-3 rounded-lg">
-                <strong>2. Daily check (00:01 IST)</strong> &mdash; For each scheduled strategy,
-                looks up <code>get_market_status(config["exchange"])</code>. If the exchange has no
-                session today, the strategy is stopped and marked{' '}
-                <code>paused_reason=holiday|weekend</code>.
+                <strong>2. 每日检查（印度标准时间 00:01）</strong> &mdash; 对每个已排程策略查询 <code>get_market_status(config["exchange"])</code>。如果交易所当天休市，则停止策略并标记 <code>paused_reason=holiday|weekend</code>。
               </div>
               <div className="bg-muted p-3 rounded-lg">
-                <strong>3. Per-minute enforcer</strong> &mdash; Same per-strategy check. When the
-                exchange reopens (or a special session starts), previously-paused strategies are
-                auto-resumed (unless <code>manually_stopped</code>).
+                <strong>3. 每分钟检查</strong> &mdash; 对每个策略执行相同检查。交易所重新开市或特别交易时段开始时，先前暂停的策略会自动恢复，但手动停止的策略（<code>manually_stopped</code>）除外。
               </div>
             </div>
           </div>
 
           <div className="bg-primary/10 border border-primary/20 p-3 rounded-lg text-sm">
-            <p className="font-medium text-primary">Smart Defaults When Uploading</p>
+            <p className="font-medium text-primary">上传时的智能默认值</p>
             <p className="text-muted-foreground mt-1">
-              Picking an exchange pre-fills sensible defaults: CRYPTO auto-selects all 7 days and
-              00:00&ndash;23:59, MCX defaults to 09:00&ndash;23:55 weekdays, and equity exchanges
-              default to 09:15&ndash;15:30 Mon&ndash;Fri.
+              选择交易所后会自动填入默认计划：CRYPTO 为每周七天 00:00&ndash;23:59；MCX 为工作日 09:00&ndash;23:55；股票交易所为周一至周五 09:15&ndash;15:30。
             </p>
           </div>
         </CardContent>
@@ -760,11 +719,9 @@ export default function PythonStrategyGuide() {
       {/* Sample Strategy */}
       <Card>
         <CardHeader>
-          <CardTitle>Sample Strategy: EMA Crossover</CardTitle>
+          <CardTitle>策略示例：EMA（指数移动平均线）交叉</CardTitle>
           <CardDescription>
-            WebSocket-driven EMA crossover with real-time SL/target monitoring. All config is
-            overridable via env vars &mdash; works standalone and under the /python runner without
-            edits. Full version at <code>examples/python/emacrossover_strategy_python.py</code>
+            由 WebSocket 驱动的 EMA（指数移动平均线）交叉策略，实时监控止损和目标价。所有配置均可通过环境变量覆盖；无需修改即可独立运行或通过 /python 运行器运行。完整版本位于 <code>examples/python/emacrossover_strategy_python.py</code>。
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -775,7 +732,7 @@ export default function PythonStrategyGuide() {
               className="absolute top-2 right-2 z-10"
               onClick={() => copyToClipboard(sampleStrategy)}
             >
-              Copy
+              复制
             </Button>
             <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs max-h-[32rem] overflow-y-auto">
               <code>{sampleStrategy}</code>
@@ -787,178 +744,154 @@ export default function PythonStrategyGuide() {
       {/* FAQ */}
       <Card>
         <CardHeader>
-          <CardTitle>Frequently Asked Questions</CardTitle>
+          <CardTitle>常见问题</CardTitle>
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="logs">
-              <AccordionTrigger>How do I see my strategy logs?</AccordionTrigger>
+              <AccordionTrigger>如何查看策略日志？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-2">
                 <p>
-                  All <code>print()</code> statements in your strategy are captured in log files.
+                  所有 <code>print()</code> 语句的输出都会记录到日志文件。
                 </p>
-                <p>To view logs:</p>
+                <p>查看日志：</p>
                 <ol className="list-decimal list-inside space-y-1 ml-2">
                   <li>
-                    Click the <strong>Logs</strong> button on your strategy card
+                    点击策略卡片上的<strong>日志</strong>按钮。
                   </li>
-                  <li>Select a log file from the list (newest first)</li>
+                  <li>从列表选择日志文件（最新的在前）</li>
                   <li>
-                    Enable <strong>Auto-refresh</strong> to see live updates while running
+                    启用<strong>自动刷新</strong>，可在运行时查看实时更新。
                   </li>
                 </ol>
                 <p className="text-sm">
-                  Log files are stored in: <code>log/strategies/</code>. Per-strategy limits: max{' '}
-                  {'{'}STRATEGY_LOG_MAX_FILES{'}'} files, {'{'}STRATEGY_LOG_MAX_SIZE_MB{'}'} MB
-                  total, retained for {'{'}STRATEGY_LOG_RETENTION_DAYS{'}'} days. Override these in{' '}
-                  <code>.env</code>.
+                  日志保存在 <code>log/strategies/</code>。每个策略最多保留 {'{'}STRATEGY_LOG_MAX_FILES{'}'} 个文件，总大小不超过 {'{'}STRATEGY_LOG_MAX_SIZE_MB{'}'} MB，保留 {'{'}STRATEGY_LOG_RETENTION_DAYS{'}'} 天。可在 <code>.env</code> 中调整。
                 </p>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="scheduling">
-              <AccordionTrigger>How does scheduling work?</AccordionTrigger>
+              <AccordionTrigger>调度计划如何工作？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
-                <p>
-                  Every strategy has a schedule that controls when the host automatically starts and
-                  stops it.
-                </p>
+                <p>每个策略都有调度计划，用于控制主程序何时自动启动和停止策略。</p>
 
                 <div className="space-y-2">
-                  <p className="font-medium">Schedule Configuration:</p>
+                  <p className="font-medium">计划配置：</p>
                   <ul className="list-disc list-inside space-y-1 ml-2">
                     <li>
-                      <strong>Exchange:</strong> Drives the holiday calendar (NSE / MCX / CRYPTO /
-                      etc.)
+                      <strong>交易所：</strong>决定使用哪个假日历（NSE / MCX / CRYPTO 等）
                     </li>
                     <li>
-                      <strong>Start Time:</strong> When the strategy auto-starts (IST, 24-hour
-                      format)
+                      <strong>开始时间：</strong>策略自动启动时间（印度标准时间，24 小时制）
                     </li>
                     <li>
-                      <strong>Stop Time:</strong> When to auto-stop (IST, 24-hour format)
+                      <strong>结束时间：</strong>策略自动停止时间（印度标准时间，24 小时制）
                     </li>
                     <li>
-                      <strong>Days:</strong> Which days to run (can include weekends for special
-                      sessions)
+                      <strong>日期：</strong>运行日期（可包含特别交易时段所在的周末）
                     </li>
                   </ul>
                 </div>
 
                 <div className="bg-muted p-3 rounded-lg space-y-2 text-sm">
-                  <p className="font-medium">Example Schedules:</p>
+                  <p className="font-medium">计划示例：</p>
                   <ul className="list-disc list-inside space-y-1 ml-2">
-                    <li>NSE EMA strategy: 09:15&ndash;15:30, Mon&ndash;Fri</li>
-                    <li>MCX evening strategy: 17:00&ndash;23:55, Mon&ndash;Fri</li>
-                    <li>CRYPTO arb: 00:00&ndash;23:59, all 7 days</li>
+                    <li>NSE EMA（指数移动平均线）策略：周一至周五 09:15&ndash;15:30</li>
+                    <li>MCX 夜盘策略：周一至周五 17:00&ndash;23:55</li>
+                    <li>CRYPTO 套利策略：每周七天 00:00&ndash;23:59</li>
                   </ul>
                 </div>
 
                 <Alert>
-                  <AlertTitle>Holiday &amp; Weekend Protection</AlertTitle>
+                  <AlertTitle>节假日与周末保护</AlertTitle>
                   <AlertDescription>
-                    The host checks each strategy's exchange calendar before starting it. An NSE
-                    strategy won't start on NSE holidays, even if scheduled. Weekend strategies are
-                    blocked unless the calendar has a SPECIAL_SESSION row for that exchange on that
-                    date, or the exchange is CRYPTO (always open).
+                    启动前会检查策略所属交易所的日历。NSE 假日即使有计划也不会启动 NSE 策略。周末策略默认不运行，除非日历中对应交易所和日期有 SPECIAL_SESSION 特别交易时段，或交易所为全天候开放的 CRYPTO。
                   </AlertDescription>
                 </Alert>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="status-indicators">
-              <AccordionTrigger>What do the status indicators mean?</AccordionTrigger>
+              <AccordionTrigger>状态标识是什么意思？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
-                <p>Each strategy displays a status badge showing its current state:</p>
+                <p>每个策略会显示当前状态标签：</p>
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-3 p-2 bg-muted rounded">
-                    <Badge className="bg-green-500 text-white">Running</Badge>
-                    <span className="text-sm">
-                      Strategy is actively running and executing trades
-                    </span>
+                    <Badge className="bg-green-500 text-white">运行中</Badge>
+                    <span className="text-sm">策略正在运行并执行交易</span>
                   </div>
                   <div className="flex items-center gap-3 p-2 bg-muted rounded">
-                    <Badge className="bg-blue-500 text-white">Scheduled</Badge>
+                    <Badge className="bg-blue-500 text-white">已排程</Badge>
                     <div className="text-sm">
-                      <p>Strategy is waiting and will start on its own at the scheduled time</p>
+                      <p>策略正在等待，将在计划时间自动启动</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Shows context: "Starts today at 9:15 IST" or "Next: Mon, Tue at 9:15 IST"
+                        例如：“今天印度标准时间 9:15 启动”或“下次：周一、周二印度标准时间 9:15”。
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-2 bg-muted rounded">
-                    <Badge className="bg-orange-500 text-white">Manual Stop</Badge>
+                    <Badge className="bg-orange-500 text-white">手动停止</Badge>
                     <span className="text-sm">
-                      Strategy was manually stopped &mdash; won't auto-start until you click Start
+                      策略已手动停止，点击启动之前不会自动运行。
                     </span>
                   </div>
                   <div className="flex items-center gap-3 p-2 bg-muted rounded">
-                    <Badge className="bg-yellow-500 text-white">Paused</Badge>
-                    <span className="text-sm">
-                      Strategy is paused due to market holiday for its exchange
-                    </span>
+                    <Badge className="bg-yellow-500 text-white">已暂停</Badge>
+                    <span className="text-sm">策略因所属交易所休市而暂停</span>
                   </div>
                   <div className="flex items-center gap-3 p-2 bg-muted rounded">
-                    <Badge className="bg-red-500 text-white">Error</Badge>
-                    <span className="text-sm">Strategy encountered an error and crashed</span>
+                    <Badge className="bg-red-500 text-white">错误</Badge>
+                    <span className="text-sm">策略遇到错误并崩溃</span>
                   </div>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="start-stop">
-              <AccordionTrigger>How does Start and Stop work?</AccordionTrigger>
+              <AccordionTrigger>启动和停止如何工作？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
                 <div className="bg-green-500/10 border border-green-500/20 p-3 rounded-lg">
-                  <p className="font-medium text-green-600">Start Button</p>
+                  <p className="font-medium text-green-600">启动按钮</p>
                   <ul className="list-disc list-inside space-y-1 ml-2 mt-2 text-sm">
                     <li>
-                      <strong>Within schedule:</strong> Strategy starts running immediately
+                      <strong>计划时间内：</strong>策略立即开始运行</li>
+                    <li>
+                      <strong>计划时间之外：</strong>策略等待运行，状态变为“已排程”。
                     </li>
                     <li>
-                      <strong>Outside schedule:</strong> Strategy waits, and its status changes to
-                      "Scheduled"
-                    </li>
-                    <li>
-                      Button changes to <strong>Cancel</strong> once it is scheduled
+                      安排调度后，按钮变为<strong>取消</strong>。
                     </li>
                   </ul>
                 </div>
 
                 <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg">
-                  <p className="font-medium text-red-600">Stop Button (when running)</p>
+                  <p className="font-medium text-red-600">停止按钮（运行中）</p>
                   <ul className="list-disc list-inside space-y-1 ml-2 mt-2 text-sm">
-                    <li>Stops the running strategy process (SIGTERM)</li>
-                    <li>Sets "manually stopped" flag &mdash; won't auto-start</li>
-                    <li>Status shows "Manual Stop"</li>
+                    <li>停止运行中的策略进程（SIGTERM）</li>
+                    <li>设置手动停止标记，策略不会自动启动</li>
+                    <li>状态显示为“手动停止”</li>
                   </ul>
                 </div>
 
                 <div className="bg-orange-500/10 border border-orange-500/20 p-3 rounded-lg">
-                  <p className="font-medium text-orange-600">Cancel Button (when scheduled)</p>
+                  <p className="font-medium text-orange-600">取消按钮（已排程时）</p>
                   <ul className="list-disc list-inside space-y-1 ml-2 mt-2 text-sm">
-                    <li>Cancels the scheduled auto-start</li>
-                    <li>Sets "manually stopped" flag</li>
-                    <li>Click Start again to schedule it once more</li>
+                    <li>取消计划中的自动启动</li>
+                    <li>设置手动停止标记</li>
+                    <li>再次点击启动以重新安排计划</li>
                   </ul>
                 </div>
 
                 <div className="bg-muted p-3 rounded-lg text-sm">
-                  <p className="font-medium">Use Cases</p>
+                  <p className="font-medium">使用场景</p>
                   <ul className="list-disc list-inside space-y-1 ml-2 mt-2">
                     <li>
-                      <strong>Evening setup:</strong> Click Start at night, strategy runs at 9:15 AM
-                      next day
-                    </li>
+                      <strong>晚间设置：</strong>晚上点击启动，策略于次日上午 9:15 运行</li>
                     <li>
-                      <strong>Vacation mode:</strong> Click Stop, strategy stays off until you
-                      return
-                    </li>
+                      <strong>休假模式：</strong>点击停止后，策略保持停止，直到您再次操作</li>
                     <li>
-                      <strong>Testing:</strong> Edit schedule to test now, then revert schedule
-                      after
-                    </li>
+                      <strong>测试：</strong>修改调度计划以立即测试，测试后再改回</li>
                   </ul>
                 </div>
               </AccordionContent>
@@ -966,125 +899,109 @@ export default function PythonStrategyGuide() {
 
             <AccordionItem value="special-sessions">
               <AccordionTrigger>
-                What about special trading sessions (Muhurat, Budget Day)?
+                如何处理特别交易时段（如 Muhurat、预算日）？
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
-                <p>
-                  Exchanges occasionally conduct special sessions on holidays or weekends. The
-                  exchange-aware calendar handles these automatically:
-                </p>
+                <p>交易所偶尔会在节假日或周末安排特别交易时段，交易所日历会自动处理：</p>
 
                 <div className="space-y-2 text-sm">
                   <div className="bg-muted p-3 rounded-lg">
-                    <p className="font-medium">Automatic Handling (Recommended)</p>
+                    <p className="font-medium">自动处理（推荐）</p>
                     <ol className="list-decimal list-inside space-y-1 ml-2 mt-2">
                       <li>
-                        Go to{' '}
+                        前往{' '}
                         <Link to="/admin/holidays" className="text-primary hover:underline">
-                          Admin &rarr; Holidays
+                          管理 &rarr; 假日
                         </Link>
                       </li>
                       <li>
-                        Add a <strong>SPECIAL_SESSION</strong> row for the date and exchange with
-                        the session timing (e.g. Muhurat: NSE 14:20&ndash;15:30)
+                        为对应日期和交易所添加 <strong>SPECIAL_SESSION</strong> 记录并填写交易时间（例如 Muhurat：NSE 14:20&ndash;15:30）。
                       </li>
                       <li>
-                        Ensure the relevant day (Sat/Sun) is in your strategy's{' '}
-                        <code>schedule_days</code>
+                        确保策略的 <code>schedule_days</code> 包含对应的周六或周日。
                       </li>
                       <li>
-                        The host auto-starts the strategy within the special session window &mdash;
-                        no schedule edits needed, no need to revert afterward
+                        主程序会在特别交易时段内自动启动策略，无需修改计划或事后改回。
                       </li>
                     </ol>
                   </div>
 
                   <div className="bg-muted p-3 rounded-lg">
-                    <p className="font-medium">Manual Override</p>
-                    <p className="mt-1">
-                      Log in to OpenAlgo before the session, wait for master contracts to download,
-                      and click <strong>Start</strong> manually. Click <strong>Stop</strong> when
-                      the session ends.
-                    </p>
+                    <p className="font-medium">手动覆盖</p>
+                    <p className="mt-1">请在交易开始前登录 OpenAlgo，等待主合约下载完成，然后手动点击<strong>启动</strong>。交易时段结束时点击<strong>停止</strong>。</p>
                   </div>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="master-contract">
-              <AccordionTrigger>Why does my strategy need master contracts?</AccordionTrigger>
+              <AccordionTrigger>为什么策略需要主合约？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-2">
-                <p>
-                  Master contracts contain the symbol mappings required by your broker. Strategies
-                  cannot start until master contracts are downloaded.
-                </p>
-                <p>Master contracts are automatically downloaded when you:</p>
+                <p>主合约包含交易商所需的交易品种映射。主合约下载完成后，策略才能启动。</p>
+                <p>以下操作会自动下载主合约：</p>
                 <ol className="list-decimal list-inside space-y-1 ml-2">
-                  <li>Log in to OpenAlgo</li>
-                  <li>Wait for the download to complete (shown in header)</li>
+                  <li>登录 OpenAlgo</li>
+                  <li>等待下载完成（状态显示在页面顶部）</li>
                 </ol>
                 <p className="text-sm">
-                  If you see "Waiting for master contracts", just wait a moment after login.
+                  如果看到“等待主合约”，请在登录后稍候。
                 </p>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="resource-limits">
-              <AccordionTrigger>Are there resource limits?</AccordionTrigger>
+              <AccordionTrigger>是否有资源限制？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
-                <p>
-                  On Linux/macOS, per-strategy resource limits prevent buggy scripts from crashing
-                  OpenAlgo. On Windows, these are not enforced at the OS level.
-                </p>
+                <p>在 Linux/macOS 上，每个策略的资源限制可防止异常脚本导致 OpenAlgo 崩溃；Windows 不在操作系统层面强制执行这些限制。</p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm border-collapse">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-2 pr-4 font-medium">Resource</th>
-                        <th className="text-left py-2 pr-4 font-medium">Default Limit</th>
-                        <th className="text-left py-2 font-medium">Override (.env)</th>
+                        <th className="text-left py-2 pr-4 font-medium">资源</th>
+                        <th className="text-left py-2 pr-4 font-medium">默认限制</th>
+                        <th className="text-left py-2 font-medium">覆盖设置（.env）</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-b">
-                        <td className="py-2 pr-4">Memory (virtual)</td>
+                        <td className="py-2 pr-4">虚拟内存</td>
                         <td className="py-2 pr-4">1024 MB</td>
                         <td className="py-2">
                           <code>STRATEGY_MEMORY_LIMIT_MB</code>
                         </td>
                       </tr>
                       <tr className="border-b">
-                        <td className="py-2 pr-4">CPU time (cumulative)</td>
-                        <td className="py-2 pr-4">3600 seconds</td>
-                        <td className="py-2">Hardcoded</td>
+                        <td className="py-2 pr-4">CPU 时间（累计）</td>
+                        <td className="py-2 pr-4">3600 秒</td>
+                        <td className="py-2">硬编码</td>
                       </tr>
                       <tr className="border-b">
-                        <td className="py-2 pr-4">Open file descriptors</td>
+                        <td className="py-2 pr-4">打开的文件描述符</td>
                         <td className="py-2 pr-4">256</td>
-                        <td className="py-2">Hardcoded</td>
+                        <td className="py-2">硬编码</td>
                       </tr>
                       <tr className="border-b">
-                        <td className="py-2 pr-4">Max processes</td>
+                        <td className="py-2 pr-4">最大进程数</td>
                         <td className="py-2 pr-4">256</td>
-                        <td className="py-2">Hardcoded</td>
+                        <td className="py-2">硬编码</td>
                       </tr>
                       <tr className="border-b">
-                        <td className="py-2 pr-4">Log files per strategy</td>
-                        <td className="py-2 pr-4">10 files</td>
+                        <td className="py-2 pr-4">每个策略的日志文件数</td>
+                        <td className="py-2 pr-4">10 个文件</td>
                         <td className="py-2">
                           <code>STRATEGY_LOG_MAX_FILES</code>
                         </td>
                       </tr>
                       <tr className="border-b">
-                        <td className="py-2 pr-4">Log size per strategy</td>
+                        <td className="py-2 pr-4">每个策略的日志大小</td>
                         <td className="py-2 pr-4">50 MB</td>
                         <td className="py-2">
                           <code>STRATEGY_LOG_MAX_SIZE_MB</code>
                         </td>
                       </tr>
                       <tr className="border-b">
-                        <td className="py-2 pr-4">Log retention</td>
-                        <td className="py-2 pr-4">7 days</td>
+                        <td className="py-2 pr-4">日志保留时间</td>
+                        <td className="py-2 pr-4">7 天</td>
                         <td className="py-2">
                           <code>STRATEGY_LOG_RETENTION_DAYS</code>
                         </td>
@@ -1093,210 +1010,181 @@ export default function PythonStrategyGuide() {
                   </table>
                 </div>
                 <p className="text-sm">
-                  A typical EMA/crossover strategy uses 80&ndash;120 MB of RAM and 5&ndash;10 file
-                  descriptors. The defaults are generous. For simple strategies, lower memory to
-                  256&ndash;512 MB and run more strategies concurrently.
+                  典型的 EMA（指数移动平均线）交叉策略使用 80&ndash;120 MB 内存和 5&ndash;10 个文件描述符。默认限制较宽裕；简单策略可将内存限制降至 256&ndash;512 MB，以便同时运行更多策略。
                 </p>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="restart">
-              <AccordionTrigger>What happens if I restart OpenAlgo?</AccordionTrigger>
+              <AccordionTrigger>重启 OpenAlgo 后会发生什么？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
-                <p>OpenAlgo handles restarts gracefully:</p>
+                <p>OpenAlgo 重启后的处理方式：</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Strategy configurations are saved to disk and persist</li>
-                  <li>Schedules are automatically re-created for all strategies</li>
-                  <li>Stale "running" flags are cleaned up on startup</li>
-                  <li>Strategies will auto-start at their next scheduled time</li>
+                  <li>策略配置保存在磁盘上并持续保留</li>
+                  <li>所有策略的计划都会自动重新创建</li>
+                  <li>启动时会清除过期的“运行中”标记</li>
+                  <li>策略会在下一个计划时间自动启动</li>
                 </ul>
 
                 <Alert>
-                  <AlertTitle>Manual Stop Persists</AlertTitle>
+                  <AlertTitle>手动停止状态会保留</AlertTitle>
                   <AlertDescription>
-                    If you manually stopped a strategy before the restart, it stays stopped. The{' '}
-                    <code>manually_stopped</code> flag persists and the strategy won't auto-start
-                    until you click Start.
+                    如果重启前手动停止了策略，重启后仍会保持停止。<code>manually_stopped</code> 标记会保留，在点击启动前策略不会自动运行。
                   </AlertDescription>
                 </Alert>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="migration">
-              <AccordionTrigger>
-                I upgraded to exchange-aware /python. What do I need to do?
-              </AccordionTrigger>
+              <AccordionTrigger>升级到支持交易所日历的 /python 后需要做什么？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
                 <p>
-                  <strong>No data migration required.</strong> On the first restart after upgrading,{' '}
-                  <code>load_configs()</code> writes <code>"exchange": "NSE"</code> into any legacy
-                  entry missing the field.
+                  <strong>无需迁移数据。</strong>升级后首次重启时，<code>load_configs()</code> 会为缺少该字段的旧配置写入 <code>"exchange": "NSE"</code>。
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>No strategy is force-restarted or force-stopped by the upgrade</li>
-                  <li>Legacy strategies keep running gated on NSE</li>
+                  <li>升级不会强制重启或停止策略</li>
+                  <li>旧策略继续按 NSE 日历控制运行</li>
                   <li>
-                    Strategies that trade MCX/CRYPTO need a <strong>one-time UI edit</strong>:
-                    Schedule &rarr; pick the correct exchange &rarr; Save
+                    交易 MCX/CRYPTO 的策略需要在界面<strong>修改一次</strong>：进入计划，选择正确的交易所并保存。
                   </li>
                   <li>
-                    <code>manually_stopped</code> strategies stay manually stopped
-                  </li>
+                    <code>manually_stopped</code>策略会保持手动停止状态</li>
                   <li>
-                    Rolling back to the previous code ignores the new <code>exchange</code> field
-                    &mdash; forward-compatible
+                    回滚到旧代码时会忽略新增的 <code>exchange</code> 字段，保持向前兼容。
                   </li>
                 </ul>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="best-practices">
-              <AccordionTrigger>Best practices for writing strategies</AccordionTrigger>
+              <AccordionTrigger>编写策略的最佳实践</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-2">
                 <ul className="list-disc list-inside space-y-2 ml-2">
                   <li>
-                    <strong>Read config from env vars</strong> &mdash; Use <code>os.getenv()</code>{' '}
-                    with sensible fallbacks so the same script works standalone and under the
-                    /python runner
+                    <strong>从环境变量读取配置</strong> &mdash; 使用 <code>os.getenv()</code> 并设置合理的备用值，使脚本既能独立运行，也能通过 /python 运行器运行。
                   </li>
                   <li>
-                    <strong>Read OPENALGO_STRATEGY_EXCHANGE</strong> &mdash; Wire the exchange from
-                    the host so your orders match the calendar
+                    <strong>读取 OPENALGO_STRATEGY_EXCHANGE</strong> &mdash; 使用主程序传入的交易所，使订单与交易日历一致。
                   </li>
                   <li>
-                    <strong>Use print() for logging</strong> &mdash; All output goes to log files
+                    <strong>使用 print() 记录日志</strong> &mdash; 输出会写入日志文件。
                   </li>
                   <li>
-                    <strong>Handle exceptions</strong> &mdash; Wrap critical code in try/except
+                    <strong>处理异常</strong> &mdash; 用 try/except 包裹关键代码。
                   </li>
                   <li>
-                    <strong>Add sleep intervals</strong> &mdash; Don't spam API calls, use{' '}
-                    <code>time.sleep()</code>
+                    <strong>添加休眠间隔</strong> &mdash; 使用 <code>time.sleep()</code>，避免过于频繁地调用 API。
                   </li>
                   <li>
-                    <strong>Handle KeyboardInterrupt</strong> &mdash; The host sends SIGTERM to stop
-                    strategies; clean up open positions in the handler
+                    <strong>处理中断</strong> &mdash; 主程序发送 SIGTERM 停止策略；请在处理程序中处理未平仓持仓。
                   </li>
                   <li>
-                    <strong>Test with small quantities</strong> &mdash; Start with 1 share/lot
+                    <strong>使用小数量测试</strong> &mdash; 从 1 股或 1 手开始。
                   </li>
                   <li>
-                    <strong>Monitor logs initially</strong> &mdash; Watch the first few runs closely
+                    <strong>初期观察日志</strong> &mdash; 密切关注前几次运行情况。
                   </li>
                 </ul>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="add-libraries">
-              <AccordionTrigger>
-                How do I add new libraries like TA-Lib, pandas-ta, etc.?
-              </AccordionTrigger>
+              <AccordionTrigger>如何添加 TA-Lib、pandas-ta 等库？</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
                 <p>
-                  If your strategy needs additional Python libraries, install them in OpenAlgo's
-                  environment.
+                  如果策略需要额外的 Python 库，请将其安装到 OpenAlgo 的运行环境中。
                 </p>
 
                 <div className="space-y-4">
                   <div className="bg-muted p-3 rounded-lg">
-                    <p className="font-medium mb-2">Using UV (Recommended)</p>
+                    <p className="font-medium mb-2">使用 UV（推荐）</p>
                     <ol className="list-decimal list-inside space-y-1 ml-2 text-sm">
                       <li>
-                        Open <code>pyproject.toml</code> and add your library to the{' '}
-                        <code>dependencies</code> section
+                        打开 <code>pyproject.toml</code>，将所需库添加到 <code>dependencies</code> 部分。
                       </li>
                       <li>
-                        Run <code>uv sync</code> in the openalgo directory
+                        在 OpenAlgo 目录中运行 <code>uv sync</code>。
                       </li>
-                      <li>Restart OpenAlgo</li>
+                      <li>重启 OpenAlgo</li>
                     </ol>
                   </div>
 
                   <div className="bg-muted p-3 rounded-lg">
-                    <p className="font-medium mb-2">Using Regular Python venv</p>
+                    <p className="font-medium mb-2">使用常规 Python venv</p>
                     <ol className="list-decimal list-inside space-y-1 ml-2 text-sm">
                       <li>
-                        Add your library to <code>requirements.txt</code>
+                        将所需库添加到 <code>requirements.txt</code>。
                       </li>
-                      <li>
-                        Activate your venv and run <code>pip install -r requirements.txt</code>
+                      <li>激活虚拟环境并运行<code>pip install -r requirements.txt</code>
                       </li>
-                      <li>Restart OpenAlgo</li>
+                      <li>重启 OpenAlgo</li>
                     </ol>
                   </div>
                 </div>
 
                 <Alert>
-                  <AlertTitle>TA-Lib Installation Note</AlertTitle>
+                  <AlertTitle>TA-Lib 安装说明</AlertTitle>
                   <AlertDescription>
-                    TA-Lib requires the underlying C library to be installed first. On Mac:{' '}
+                    TA-Lib 需要先安装底层 C 库。在 Mac 上运行：{' '}
                     <code>brew install ta-lib</code>
                     {' | '}
-                    On Ubuntu: <code>sudo apt-get install libta-lib-dev</code>
+                    在 Ubuntu 上运行：<code>sudo apt-get install libta-lib-dev</code>
                   </AlertDescription>
                 </Alert>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="troubleshooting">
-              <AccordionTrigger>Troubleshooting common issues</AccordionTrigger>
+              <AccordionTrigger>常见问题排查</AccordionTrigger>
               <AccordionContent className="text-muted-foreground space-y-3">
                 <div className="space-y-2 text-sm">
                   <div className="bg-muted p-3 rounded-lg">
                     <p className="font-medium">
-                      Strategy didn't run on a partial holiday (e.g. MCX evening on NSE holiday)
+                      部分休市日策略没有运行（例如 NSE 假日的 MCX 夜盘）
                     </p>
                     <ul className="list-disc list-inside space-y-1 ml-2 mt-1">
                       <li>
-                        Open the strategy &rarr; Schedule &rarr; confirm <strong>Exchange</strong>{' '}
-                        is set to the right market (legacy strategies default to NSE)
+                        打开策略的计划设置，确认<strong>交易所</strong>已设置为正确的市场（旧策略默认为 NSE）。
                       </li>
                       <li>
-                        Confirm the date has a row in Admin &rarr; Holidays with the partial-open
-                        window for your exchange
+                        确认“管理 → 假日”中该日期有对应交易所的部分开市时段记录。
                       </li>
                       <li>
-                        Confirm your schedule overlaps the calendar window &mdash; they intersect
+                        确认您的计划与交易日历时段有重叠，实际运行时间是两者的交集。
                       </li>
                     </ul>
                   </div>
 
                   <div className="bg-muted p-3 rounded-lg">
                     <p className="font-medium">
-                      Orders rejected with "market closed" while strategy is running
+                      策略运行时订单因“市场已关闭”被拒绝
                     </p>
                     <p className="mt-1">
-                      Your script's hardcoded <code>exchange="NSE"</code> doesn't match the host's{' '}
-                      <code>exchange="MCX"</code>. Read <code>OPENALGO_STRATEGY_EXCHANGE</code> in
-                      your script (see Environment Variables above).
+                      脚本中写死的 <code>exchange="NSE"</code> 与主程序的 <code>exchange="MCX"</code> 不一致。请在脚本中读取 <code>OPENALGO_STRATEGY_EXCHANGE</code>（参见上方环境变量说明）。
                     </p>
                   </div>
 
                   <div className="bg-muted p-3 rounded-lg">
-                    <p className="font-medium">Strategy ran on a Sunday/Saturday unexpectedly</p>
+                    <p className="font-medium">策略意外在周末运行</p>
                     <p className="mt-1">
-                      That's by design &mdash; the calendar's SPECIAL_SESSION row overrides the
-                      weekend reject. To opt out, remove Sat/Sun from <code>schedule_days</code>.
+                      这是预期行为：日历中的 SPECIAL_SESSION 记录会覆盖周末限制。如不希望运行，请从 <code>schedule_days</code> 中移除周六和周日。
                     </p>
                   </div>
 
                   <div className="bg-muted p-3 rounded-lg">
-                    <p className="font-medium">Strategy crashed with MemoryError</p>
-                    <p className="mt-1">
-                      The per-strategy memory limit was exceeded. Check if your strategy loads large
-                      datasets. Increase <code>STRATEGY_MEMORY_LIMIT_MB</code> in <code>.env</code>{' '}
-                      or optimize memory usage.
+                    <p className="font-medium">策略因 MemoryError 而崩溃</p>
+                    <p className="mt-1">策略超出单策略内存限制。请检查策略是否加载了大型数据集，在 <code>.env</code> 中适当提高 <code>STRATEGY_MEMORY_LIMIT_MB</code>，或优化内存使用。
                     </p>
                   </div>
 
                   <div className="bg-muted p-3 rounded-lg">
-                    <p className="font-medium">OPENALGO_API_KEY not set</p>
+                    <p className="font-medium">未设置 OPENALGO_API_KEY</p>
                     <p className="mt-1">
-                      Make sure you have generated an API key at{' '}
+                      请确认已在{' '}
                       <Link to="/apikey" className="text-primary hover:underline">
-                        API Key
+                        API 密钥
                       </Link>
-                      . The /python runner injects it automatically from the database.
+                      页面生成密钥。/python 运行器会从数据库自动注入密钥。
                     </p>
                   </div>
                 </div>
@@ -1309,18 +1197,18 @@ export default function PythonStrategyGuide() {
       {/* SDK Quick Reference */}
       <Card>
         <CardHeader>
-          <CardTitle>OpenAlgo SDK Quick Reference</CardTitle>
+          <CardTitle>OpenAlgo SDK 快速参考</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3 text-sm">
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Initialize Client</p>
+              <p className="font-medium mb-1">初始化客户端</p>
               <code className="text-xs">
                 {'client = api(api_key=API_KEY, host=API_HOST, ws_url=WS_URL)'}
               </code>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Place Order</p>
+              <p className="font-medium mb-1">下单</p>
               <code className="text-xs">
                 {
                   'client.placeorder(strategy, symbol, exchange, action, quantity, price_type, product)'
@@ -1328,34 +1216,34 @@ export default function PythonStrategyGuide() {
               </code>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Historical Data</p>
+              <p className="font-medium mb-1">历史数据</p>
               <code className="text-xs">
                 {'client.history(symbol, exchange, interval, start_date, end_date)'}
               </code>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">WebSocket (LTP)</p>
+              <p className="font-medium mb-1">WebSocket（最新价）</p>
               <code className="text-xs">
                 {'client.connect(); client.subscribe_ltp(instruments, on_data_received=callback)'}
               </code>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Get Quotes</p>
+              <p className="font-medium mb-1">获取行情</p>
               <code className="text-xs">{'client.quotes(symbol="RELIANCE", exchange="NSE")'}</code>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Order Status</p>
+              <p className="font-medium mb-1">委托状态</p>
               <code className="text-xs">
                 {'client.orderstatus(order_id=order_id, strategy=strategy_name)'}
               </code>
             </div>
             <div className="bg-muted p-3 rounded-lg">
-              <p className="font-medium mb-1">Positions / Holdings</p>
+              <p className="font-medium mb-1">持仓 / 资产</p>
               <code className="text-xs">{'client.positionbook()  |  client.holdings()'}</code>
             </div>
           </div>
           <p className="text-sm text-muted-foreground">
-            For complete SDK documentation, visit:{' '}
+            完整的 SDK 文档请访问：{' '}
             <a
               href="https://docs.openalgo.in"
               target="_blank"
@@ -1371,7 +1259,7 @@ export default function PythonStrategyGuide() {
       {/* Directory Structure */}
       <Card>
         <CardHeader>
-          <CardTitle>Directory Structure</CardTitle>
+          <CardTitle>目录结构</CardTitle>
         </CardHeader>
         <CardContent>
           <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs">

@@ -129,7 +129,7 @@ vi.mock('@/components/trading/DrawingRail', async (importOriginal) => {
     DrawingRail: (props: { folded?: boolean; onFold?(): void }) => (
       <div data-testid="drawing-rail" hidden={props.folded}>
         <button type="button" onClick={props.onFold}>
-          Hide drawing tools
+          隐藏画线工具
         </button>
       </div>
     ),
@@ -216,10 +216,10 @@ describe('workspace replay page ownership', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Stop replay' }))
     expect(fake.autosave.paused).toBe(true)
     expect(fake.stop).not.toHaveBeenCalled()
-    fireEvent.click(screen.getByRole('button', { name: 'Stay' }))
+    fireEvent.click(screen.getByRole('button', { name: '继续回放' }))
     expect(fake.autosave.paused).toBe(true)
     fireEvent.click(screen.getByRole('button', { name: 'Replay p0' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Leave' }))
+    fireEvent.click(screen.getByRole('button', { name: '退出回放' }))
     expect(fake.autosave.paused).toBe(false)
     act(() => fake.lock?.(true))
     expect(fake.stop).toHaveBeenCalledTimes(2)
@@ -288,13 +288,13 @@ describe('terminal header', () => {
     // The page has no navbar of its own any more: the row is the header.
     expect(container.querySelector('[data-testid="navbar-row"]')).toBeNull()
 
-    const dashboard = screen.getByRole('link', { name: 'Dashboard' })
+    const dashboard = screen.getByRole('link', { name: '仪表盘' })
     expect(dashboard).toHaveAttribute('href', '/dashboard')
-    expect(screen.getByRole('button', { name: 'Switch to Analyze mode' })).toBeEnabled()
-    expect(screen.getByRole('button', { name: /^Switch to (dark|light) mode$/ })).toBeEnabled()
-    const profile = screen.getByRole('button', { name: 'Open user menu' })
+    expect(screen.getByRole('button', { name: '切换到模拟模式' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /^切换到(深色|浅色)模式$/ })).toBeEnabled()
+    const profile = screen.getByRole('button', { name: '打开用户菜单' })
     expect(screen.getByText('fixturebroker')).toBeInTheDocument()
-    expect(screen.getByText('Live', { exact: true })).toBeInTheDocument()
+    expect(screen.getByText('实盘', { exact: true })).toBeInTheDocument()
 
     // All four sit outside the chart toolbar's scrolling region, so a narrow
     // screen scrolls the chart controls and never these.
@@ -302,8 +302,8 @@ describe('terminal header', () => {
     for (const control of [
       dashboard,
       profile,
-      screen.getByRole('button', { name: 'Switch to Analyze mode' }),
-      screen.getByRole('button', { name: /^Switch to (dark|light) mode$/ }),
+      screen.getByRole('button', { name: '切换到模拟模式' }),
+      screen.getByRole('button', { name: /^切换到(深色|浅色)模式$/ }),
     ]) {
       expect(host.contains(control)).toBe(false)
       expect(host.parentElement?.contains(control)).toBe(true)
@@ -312,7 +312,7 @@ describe('terminal header', () => {
     await user.click(profile)
     const menu = await screen.findByRole('menu')
     expect(within(menu).getByRole('menuitem', { name: 'Profile' })).toBeVisible()
-    expect(within(menu).getByRole('menuitem', { name: 'Logout' })).toBeVisible()
+    expect(within(menu).getByRole('menuitem', { name: '退出登录' })).toBeVisible()
   })
 })
 
@@ -322,12 +322,12 @@ describe('folding the drawing rail', () => {
     const first = render(<Trading />)
     await waitFor(() => expect(screen.getByRole('button', { name: 'Replay p0' })).toBeVisible())
     expect(screen.getByTestId('drawing-rail')).toBeVisible()
-    expect(screen.queryByRole('button', { name: 'Show drawing tools' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '显示画线工具' })).toBeNull()
 
-    await user.click(screen.getByRole('button', { name: 'Hide drawing tools' }))
+    await user.click(screen.getByRole('button', { name: '隐藏画线工具' }))
     // Folded, not removed: the rail keeps its tool and its chords.
     expect(screen.getByTestId('drawing-rail')).not.toBeVisible()
-    const tab = screen.getByRole('button', { name: 'Show drawing tools' })
+    const tab = screen.getByRole('button', { name: '显示画线工具' })
     expect(localStorage.getItem('oa-trading-rail-folded')).toBe('1')
 
     // The tab keeps its press from the chart, whose pointer handling listens
@@ -342,9 +342,9 @@ describe('folding the drawing rail', () => {
     render(<Trading />)
     await waitFor(() => expect(screen.getByRole('button', { name: 'Replay p0' })).toBeVisible())
     expect(screen.getByTestId('drawing-rail')).not.toBeVisible()
-    await user.click(screen.getByRole('button', { name: 'Show drawing tools' }))
+    await user.click(screen.getByRole('button', { name: '显示画线工具' }))
     expect(screen.getByTestId('drawing-rail')).toBeVisible()
-    expect(screen.queryByRole('button', { name: 'Show drawing tools' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '显示画线工具' })).toBeNull()
     expect(localStorage.getItem('oa-trading-rail-folded')).toBe('0')
   })
 })

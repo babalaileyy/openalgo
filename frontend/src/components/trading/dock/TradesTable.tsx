@@ -14,6 +14,7 @@ import {
   ROW_ACTIVE,
   SymbolCell,
   sideClass,
+  sideLabel,
   TD,
   TD_NUM,
   TH,
@@ -34,34 +35,34 @@ export function TradesTable({ trades, activeSymbol, onPick, isLoading }: Props) 
       <thead>
         <tr>
           <th scope="col" className={TH}>
-            Time
+            时间
           </th>
           <th scope="col" className={TH}>
-            Symbol
+            交易品种
           </th>
           <th scope="col" className={TH}>
-            Exch
+            交易所
           </th>
           <th scope="col" className={TH}>
-            Side
+            方向
           </th>
           <th scope="col" className={TH}>
-            Product
+            产品类型
           </th>
           <th scope="col" className={TH_NUM}>
-            Qty
+            数量
           </th>
           <th scope="col" className={TH_NUM}>
-            Avg price
+            成交均价
           </th>
           <th scope="col" className={TH_NUM}>
-            Value
+            成交金额
           </th>
         </tr>
       </thead>
       <tbody>
         {trades.length === 0 && (
-          <EmptyRows colSpan={8}>{isLoading ? 'Loading trades' : 'No trades today.'}</EmptyRows>
+          <EmptyRows colSpan={8}>{isLoading ? '正在加载成交记录' : '今日暂无成交。'}</EmptyRows>
         )}
         {trades.map((t, i) => {
           const active = isActiveRow(activeSymbol, t)
@@ -80,7 +81,7 @@ export function TradesTable({ trades, activeSymbol, onPick, isLoading }: Props) 
               </td>
               <SymbolCell symbol={t.symbol} exchange={t.exchange} active={active} onPick={onPick} />
               <td className={cn(TD, 'text-muted-foreground')}>{t.exchange}</td>
-              <td className={cn(TD, 'font-medium', sideClass(t.action))}>{t.action}</td>
+              <td className={cn(TD, 'font-medium', sideClass(t.action))}>{sideLabel(t.action)}</td>
               <td className={cn(TD, 'text-muted-foreground')}>{t.product}</td>
               <td className={TD_NUM}>{t.quantity}</td>
               <td className={TD_NUM}>{fmt2(t.average_price)}</td>

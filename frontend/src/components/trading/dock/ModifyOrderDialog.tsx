@@ -19,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { DockOrder } from './blotter'
+import { priceTypeLabel, sideLabel } from './cells'
 
 export interface ModifyValues {
   quantity: number
@@ -80,15 +81,15 @@ export function ModifyOrderDialog({ order, onOpenChange, onSubmit }: Props) {
       <DialogContent className="sm:max-w-[380px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            Modify order
+            修改委托
             {order && (
               <Badge variant={order.action === 'BUY' ? 'default' : 'destructive'}>
-                {order.action}
+                {sideLabel(order.action)}
               </Badge>
             )}
           </DialogTitle>
           <DialogDescription>
-            {order?.symbol} on {order?.exchange}, {order?.pricetype} {order?.product}, id{' '}
+            {order?.exchange} · {order?.symbol} · {order ? priceTypeLabel(order.pricetype) : ''} · {order?.product} · 委托编号{' '}
             <span className="font-mono">{order?.orderid}</span>
           </DialogDescription>
         </DialogHeader>
@@ -100,7 +101,7 @@ export function ModifyOrderDialog({ order, onOpenChange, onSubmit }: Props) {
           }}
         >
           <div className="grid grid-cols-[96px_1fr] items-center gap-2">
-            <Label htmlFor="dock-modify-qty">Quantity</Label>
+            <Label htmlFor="dock-modify-qty">数量</Label>
             <Input
               id="dock-modify-qty"
               type="number"
@@ -113,7 +114,7 @@ export function ModifyOrderDialog({ order, onOpenChange, onSubmit }: Props) {
           </div>
           {withPrice && (
             <div className="grid grid-cols-[96px_1fr] items-center gap-2">
-              <Label htmlFor="dock-modify-price">Price</Label>
+              <Label htmlFor="dock-modify-price">价格</Label>
               <Input
                 id="dock-modify-price"
                 type="number"
@@ -127,7 +128,7 @@ export function ModifyOrderDialog({ order, onOpenChange, onSubmit }: Props) {
           )}
           {withTrigger && (
             <div className="grid grid-cols-[96px_1fr] items-center gap-2">
-              <Label htmlFor="dock-modify-trigger">Trigger</Label>
+              <Label htmlFor="dock-modify-trigger">触发价</Label>
               <Input
                 id="dock-modify-trigger"
                 type="number"
@@ -143,10 +144,10 @@ export function ModifyOrderDialog({ order, onOpenChange, onSubmit }: Props) {
           )}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Keep as is
+              保持不变
             </Button>
             <Button type="submit" disabled={!valid || busy}>
-              {busy ? 'Modifying' : 'Modify'}
+              {busy ? '修改中' : '确认修改'}
             </Button>
           </DialogFooter>
         </form>

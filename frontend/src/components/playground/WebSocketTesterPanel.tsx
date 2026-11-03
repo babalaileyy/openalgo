@@ -42,7 +42,7 @@ export function WebSocketTesterPanel({ apiKey, initialMessage }: WebSocketTester
   const handleSendMessage = (message: string) => {
     const success = sendMessage(message)
     if (success) {
-      showToast.success('Message sent')
+      showToast.success('消息已发送')
     }
   }
 

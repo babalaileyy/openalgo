@@ -235,7 +235,7 @@ function ToolRow({ tool }: { tool: ToolCall }) {
           {hasArgs ? (
             <JsonBlock value={tool.args} label="Arguments" />
           ) : (
-            <p className="text-[11px] text-muted-foreground">No arguments.</p>
+            <p className="text-[11px] text-muted-foreground">无参数。</p>
           )}
           {rows ? (
             <div className="space-y-1">
@@ -247,7 +247,7 @@ function ToolRow({ tool }: { tool: ToolCall }) {
           ) : tool.ok === undefined ? (
             <p className="text-[11px] text-muted-foreground">Running.</p>
           ) : (
-            <p className="text-[11px] text-muted-foreground">No result returned.</p>
+            <p className="text-[11px] text-muted-foreground">未返回结果。</p>
           )}
         </div>
       </CollapsibleContent>

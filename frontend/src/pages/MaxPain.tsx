@@ -142,11 +142,11 @@ export default function MaxPain() {
       if (response.status === 'success') {
         setMaxPainData(response)
       } else {
-        showToast.error(response.message || 'Failed to calculate Max Pain')
+        showToast.error(response.message || '计算最大痛点失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to calculate Max Pain'))
+      showToast.error(serverSentence(error, '计算最大痛点失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -209,9 +209,9 @@ export default function MaxPain() {
         x: xIndices,
         y: totalPainCr,
         type: 'bar' as const,
-        name: 'Max Pain',
+        name: 'Max Pain（最大痛点）',
         marker: { color: barColors },
-        hovertemplate: 'Strike %{text}<br>MaxPain: %{y:.2f} Crs.<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>Max Pain（最大痛点）：%{y:.2f} 千万<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
       },
@@ -229,7 +229,7 @@ export default function MaxPain() {
               x: maxPainIndex,
               y: 1,
               yref: 'paper' as const,
-              text: `Max Pain ${maxPainStrike}`,
+              text: `Max Pain（最大痛点） ${maxPainStrike}`,
               showarrow: false,
               font: { color: themeColors.text, size: 12, family: 'system-ui, sans-serif' },
               yanchor: 'bottom' as const,
@@ -275,13 +275,13 @@ export default function MaxPain() {
         tickmode: 'array' as const,
         tickvals: tickVals,
         ticktext: tickText,
-        title: { text: 'Strike Price', font: { color: themeColors.text, size: 12 } },
+        title: { text: '行权价', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
         tickangle: -45,
       },
       yaxis: {
-        title: { text: 'Max-Pain (Crs.)', font: { color: themeColors.text, size: 12 } },
+        title: { text: 'Max-Pain（最大痛点，千万）', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
       },
@@ -312,12 +312,12 @@ export default function MaxPain() {
     <div className="py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">Max Pain</h1>
+        <h1 className="text-2xl font-bold">Max Pain（最大痛点）</h1>
         <div className="flex items-center gap-3">
           {/* Exchange selector */}
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {toolsFnoExchanges.map((ex) => (
@@ -337,15 +337,15 @@ export default function MaxPain() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -375,7 +375,7 @@ export default function MaxPain() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((e) => (
@@ -388,7 +388,7 @@ export default function MaxPain() {
 
           {/* Refresh */}
           <Button variant="outline" size="sm" onClick={fetchMaxPain} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
         </div>
       </div>
@@ -397,27 +397,27 @@ export default function MaxPain() {
       {maxPainData && maxPainData.status === 'success' && (
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Spot: {maxPainData.spot_price?.toFixed(1)}
+            现货价：{maxPainData.spot_price?.toFixed(1)}
           </Badge>
           {maxPainData.futures_price && (
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              Futures: {maxPainData.futures_price.toFixed(1)}
+              期货价：{maxPainData.futures_price.toFixed(1)}
             </Badge>
           )}
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Lot Size: {maxPainData.lot_size}
+            每手数量：{maxPainData.lot_size}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            PCR (OI): {maxPainData.pcr_oi?.toFixed(2)}
+            PCR (OI)（持仓量看跌看涨比）：{maxPainData.pcr_oi?.toFixed(2)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            PCR (Vol): {maxPainData.pcr_volume?.toFixed(2)}
+            PCR (Vol)（成交量看跌看涨比）：{maxPainData.pcr_volume?.toFixed(2)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1 font-semibold">
-            Max Pain: {maxPainData.max_pain_strike}
+            Max Pain（最大痛点）：{maxPainData.max_pain_strike}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            ATM: {maxPainData.atm_strike}
+            ATM（平值行权价）：{maxPainData.atm_strike}
           </Badge>
         </div>
       )}
@@ -427,7 +427,7 @@ export default function MaxPain() {
         <CardContent className="p-2 sm:p-4">
           {isLoading && !maxPainData ? (
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
-              Calculating Max Pain...
+              正在计算最大痛点...
             </div>
           ) : maxPainData?.pain_data && maxPainData.pain_data.length > 0 ? (
             <Plot
@@ -440,8 +440,8 @@ export default function MaxPain() {
           ) : (
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
               {selectedExpiry
-                ? 'No data available for Max Pain calculation'
-                : 'Select an underlying and expiry to view Max Pain'}
+                ? '没有可用于计算最大痛点的数据'
+                : '请选择标的和到期日以查看最大痛点'}
             </div>
           )}
         </CardContent>

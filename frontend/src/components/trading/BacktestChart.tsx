@@ -195,7 +195,7 @@ export function BacktestChart({
             paneSeparator: colours.axisLine,
           },
           priceAxisWidth: 56,
-          ariaLabel: show === 'equity' ? 'Equity curve' : 'Drawdown',
+          ariaLabel: show === 'equity' ? '权益曲线' : '回撤',
           ...(core.isValidTimezone(timeZone) ? { timezone: timeZone } : {}),
           // This panel is a report and not a workspace. The keyboard belongs to
           // the page, and a hover rail on a chart this size is more chrome than

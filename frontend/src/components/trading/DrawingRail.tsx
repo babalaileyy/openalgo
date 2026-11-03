@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ERASER_TOOL } from '@/lib/trading/drawingActions'
+import { drawingGroupName, drawingToolName } from '@/lib/trading/drawingChinese'
 import { chartMayTakeKey, MOD_KEY } from '@/lib/trading/drawingKeys'
 import { DRAW_GROUPS, drawToolIcon } from '@/lib/trading/drawTools'
 import { ChromeIcon } from '@/lib/trading/glyphs'
@@ -106,20 +107,20 @@ function toolLabel(toolId: string): string {
   for (const g of DRAW_GROUPS)
     for (const sec of g.sections) {
       const tool = sec.tools.find((t) => t.id === toolId)
-      if (tool) return tool.label
+      if (tool) return drawingToolName(tool.id, tool.label)
     }
   return toolId
 }
 
 const MAGNET_LABEL: Record<MagnetMode, string> = {
-  off: 'Magnet off',
-  weak: 'Weak magnet',
-  strong: 'Strong magnet',
+  off: '关闭磁吸',
+  weak: '弱磁吸',
+  strong: '强磁吸',
 }
 const MAGNET_HINT: Record<MagnetMode, string> = {
-  off: 'Anchors land where you click',
-  weak: 'Snaps when a price is within a few pixels',
-  strong: 'Every anchor snaps to the nearest O/H/L/C',
+  off: '锚点落在点击位置',
+  weak: '价格位于附近时自动吸附',
+  strong: '锚点吸附到最近的开盘、最高、最低或收盘价',
 }
 
 /**
@@ -255,17 +256,17 @@ export function DrawingRail({
           side="right"
           disabled={open === 'cursor'}
           tip={{
-            title: erasing ? 'Eraser' : 'Cursor',
+            title: erasing ? '橡皮擦' : '光标',
             chord: 'Esc',
             sub: erasing
-              ? 'Click a drawing to delete it. Esc returns to the cursor.'
-              : 'Select and move drawings. Right-click for the eraser.',
+              ? '点击画线即可删除，按 Esc 返回光标。'
+              : '选择和移动画线，右键可选择橡皮擦。',
           }}
         >
           <div className="oa-rail__slot">
             <button
               type="button"
-              aria-label={erasing ? 'Eraser' : 'Cursor'}
+              aria-label={erasing ? '橡皮擦' : '光标'}
               aria-pressed={erasing || !stats.tool}
               onClick={() => onPick(null)}
               onContextMenu={(e) => {
@@ -278,7 +279,7 @@ export function DrawingRail({
                 {erasing ? chrome('eraser') : drawToolIcon('cursor')}
               </span>
             </button>
-            <Caret label="Cursor menu" />
+            <Caret label="光标菜单" />
           </div>
         </Tip>
         {menuContent(
@@ -288,7 +289,7 @@ export function DrawingRail({
               className={cn(ROW, !stats.tool && ROW_ON)}
             >
               {rowTool('cursor')}
-              <span className="flex-1">Cursor</span>
+              <span className="flex-1">光标</span>
               <span className={CHORD}>Esc</span>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -296,11 +297,10 @@ export function DrawingRail({
               className={cn(ROW, erasing && ROW_ON)}
             >
               <span className="grid size-5 shrink-0 place-items-center">{rowChrome('eraser')}</span>
-              <span className="flex-1">Eraser</span>
+              <span className="flex-1">橡皮擦</span>
             </DropdownMenuItem>
             <p className={NOTE}>
-              Click a drawing, or drag across several, to delete them. {MOD_KEY} + Z brings them
-              back.
+              点击画线或拖过多条画线即可删除。按 {MOD_KEY} + Z 可撤销。
             </p>
           </>,
           'w-60'
@@ -319,19 +319,19 @@ export function DrawingRail({
               side="right"
               disabled={open === g.key}
               tip={{
-                title: lastTool ? toolLabel(lastTool) : g.label,
+                title: lastTool ? toolLabel(lastTool) : drawingGroupName(g.label),
                 chord: lastTool ? stats.shortcuts[lastTool]?.replace('+', ' + ') : undefined,
                 sub: lastTool
                   ? held
-                    ? 'Held until Esc'
-                    : 'Double-click to keep it for several drawings. The corner caret lists the rest.'
-                  : 'Choose a tool from the list',
+                    ? '持续使用，直到按 Esc'
+                    : '双击可连续画线，点击角落箭头可查看其他工具。'
+                  : '从列表选择工具',
               }}
             >
               <div className="oa-rail__slot">
                 <button
                   type="button"
-                  aria-label={g.label}
+                  aria-label={drawingGroupName(g.label)}
                   aria-pressed={active}
                   onClick={() => {
                     // Re-arm the group's last tool; open the list if there is none.
@@ -350,14 +350,14 @@ export function DrawingRail({
                 >
                   <span className="oa-rail__glyph">{drawToolIcon(lastTool ?? g.iconKey)}</span>
                 </button>
-                <Caret label={`${g.label} menu`} />
+                <Caret label={`${drawingGroupName(g.label)}菜单`} />
               </div>
             </Tip>
 
             {menuContent(
               g.sections.map((sec, si) => (
                 <div key={sec.head ?? `s${si}`}>
-                  {sec.head && <div className={cn(HEAD, si > 0 && 'mt-1')}>{sec.head}</div>}
+                  {sec.head && <div className={cn(HEAD, si > 0 && 'mt-1')}>{drawingGroupName(sec.head)}</div>}
                   {sec.tools.map((t) => {
                     const chord = t.id ? stats.shortcuts[t.id] : undefined
                     return (
@@ -367,7 +367,7 @@ export function DrawingRail({
                         className={cn(ROW, t.id === stats.tool && ROW_ON)}
                       >
                         {rowTool(t.iconKey)}
-                        <span className="flex-1 truncate">{t.label}</span>
+                        <span className="flex-1 truncate">{drawingToolName(t.id, t.label)}</span>
                         {/* Right-aligned and dimmed: discoverable, never competing
                             with the name it belongs to. */}
                         {chord && <span className={CHORD}>{chord.replace('+', ' + ')}</span>}
@@ -390,14 +390,14 @@ export function DrawingRail({
             disabled={open === 'magnet'}
             tip={{
               title: MAGNET_LABEL[stats.magnetMode],
-              chord: `Hold ${MOD_KEY}`,
-              sub: `${MAGNET_HINT[stats.magnetMode]}. Hold ${MOD_KEY} to snap with it off.`,
+              chord: `按住 ${MOD_KEY}`,
+              sub: `${MAGNET_HINT[stats.magnetMode]}。关闭磁吸时按住 ${MOD_KEY} 可临时吸附。`,
             }}
           >
             <div className="oa-rail__slot">
               <button
                 type="button"
-                aria-label="Magnet"
+                aria-label="磁吸"
                 aria-pressed={stats.magnetMode !== 'off'}
                 // The dot in the corner: solid for strong, a ring for weak.
                 data-mode={stats.magnetMode === 'off' ? undefined : stats.magnetMode}
@@ -410,7 +410,7 @@ export function DrawingRail({
               >
                 {chrome('magnet')}
               </button>
-              <Caret label="Magnet menu" />
+              <Caret label="磁吸菜单" />
             </div>
           </Tip>
           {menuContent(
@@ -430,7 +430,7 @@ export function DrawingRail({
                 </DropdownMenuItem>
               ))}
               <p className={NOTE}>
-                Hold {MOD_KEY} while placing or dragging an anchor to snap with the magnet off.
+                关闭磁吸时，放置或拖动锚点可按住 {MOD_KEY} 临时吸附。
               </p>
             </>
           )}
@@ -445,14 +445,14 @@ export function DrawingRail({
         <Tip
           side="right"
           tip={{
-            title: 'Keep tool selected',
-            sub: 'The tool stays picked after each drawing, until Esc',
+            title: '保持工具选中',
+            sub: '每次画线后保持选中，按 Esc 退出',
           }}
         >
           <div className="oa-rail__slot">
             <button
               type="button"
-              aria-label="Keep tool selected"
+              aria-label="保持工具选中"
               aria-pressed={stats.stay}
               onClick={() => onStay(!stats.stay)}
               className={btn}
@@ -472,20 +472,20 @@ export function DrawingRail({
             tip={
               stats.hasSelection
                 ? {
-                    title: 'Delete selected',
+                    title: '删除选中项',
                     chord: 'Del',
-                    sub: 'Right-click to hide or lock them instead',
+                    sub: '右键可选择隐藏或锁定',
                   }
                 : {
-                    title: 'Drawing actions',
-                    sub: 'Select all drawings, or remove every drawing on this chart',
+                    title: '画线操作',
+                    sub: '全选画线，或移除当前图表的所有画线',
                   }
             }
           >
             <div className="oa-rail__slot">
               <button
                 type="button"
-                aria-label={stats.hasSelection ? 'Delete selected drawings' : 'Drawing actions'}
+                aria-label={stats.hasSelection ? '删除选中画线' : '画线操作'}
                 disabled={stats.count === 0}
                 onClick={() => (stats.hasSelection ? onDeleteSelected() : setOpen('trash'))}
                 onContextMenu={(e) => {
@@ -496,7 +496,7 @@ export function DrawingRail({
               >
                 {chrome('trash')}
               </button>
-              {stats.count > 0 && <Caret label="Drawing actions menu" />}
+              {stats.count > 0 && <Caret label="画线操作菜单" />}
             </div>
           </Tip>
           {menuContent(
@@ -505,15 +505,15 @@ export function DrawingRail({
                 <>
                   <DropdownMenuItem onSelect={onHideSelected} className={ROW}>
                     {rowChrome('eye-off')}
-                    <span className="flex-1">Hide selected</span>
+                    <span className="flex-1">隐藏选中项</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={onLockSelected} className={ROW}>
                     {rowChrome('lock')}
-                    <span className="flex-1">Lock selected</span>
+                    <span className="flex-1">锁定选中项</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={onDeleteSelected} className={ROW}>
                     {rowChrome('trash')}
-                    <span className="flex-1">Delete selected</span>
+                    <span className="flex-1">删除选中项</span>
                     <span className={CHORD}>Del</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -525,7 +525,7 @@ export function DrawingRail({
                 className={ROW}
               >
                 {rowChrome('cursor')}
-                <span className="flex-1">Select all drawings ({stats.selectable})</span>
+                <span className="flex-1">全选画线（{stats.selectable}）</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={stats.removable === 0}
@@ -533,7 +533,7 @@ export function DrawingRail({
                 className={cn(ROW, 'text-destructive focus:text-destructive')}
               >
                 {rowChrome('trash')}
-                <span className="flex-1">Remove all drawings ({stats.removable})</span>
+                <span className="flex-1">移除所有画线（{stats.removable}）</span>
               </DropdownMenuItem>
             </>,
             'w-64'
@@ -545,15 +545,15 @@ export function DrawingRail({
         <Tip
           side="right"
           tip={{
-            title: 'Undo chart change',
+            title: '撤销图表修改',
             chord: `${MOD_KEY} + Z`,
-            sub: 'Orders are never undone',
+            sub: '不会撤销订单',
           }}
         >
           <div className="oa-rail__slot">
             <button
               type="button"
-              aria-label="Undo chart change"
+              aria-label="撤销图表修改"
               disabled={!stats.canUndo}
               onClick={onUndo}
               className={btn}
@@ -562,11 +562,11 @@ export function DrawingRail({
             </button>
           </div>
         </Tip>
-        <Tip side="right" tip={{ title: 'Redo chart change', chord: `${MOD_KEY} + Y` }}>
+        <Tip side="right" tip={{ title: '重做图表修改', chord: `${MOD_KEY} + Y` }}>
           <div className="oa-rail__slot">
             <button
               type="button"
-              aria-label="Redo chart change"
+              aria-label="重做图表修改"
               disabled={!stats.canRedo}
               onClick={onRedo}
               className={btn}
@@ -582,14 +582,14 @@ export function DrawingRail({
             <Tip
               side="right"
               tip={{
-                title: 'Hide drawing tools',
-                sub: 'The chart takes the width. The tab at its lower left brings the tools back.',
+                title: '隐藏画线工具',
+                sub: '图表将占用此宽度，可通过左下角按钮重新显示工具。',
               }}
             >
               <div className="oa-rail__slot">
                 <button
                   type="button"
-                  aria-label="Hide drawing tools"
+                  aria-label="隐藏画线工具"
                   onClick={onFold}
                   className={btn}
                 >
@@ -611,10 +611,10 @@ export function DrawingRail({
  */
 export function DrawingRailTab({ onUnfold, bottom }: { onUnfold(): void; bottom: number }) {
   return (
-    <Tip side="right" tip={{ title: 'Show drawing tools' }}>
+    <Tip side="right" tip={{ title: '显示画线工具' }}>
       <button
         type="button"
-        aria-label="Show drawing tools"
+        aria-label="显示画线工具"
         className="oa-rail-tab"
         style={{ bottom }}
         onPointerDown={(e) => e.stopPropagation()}

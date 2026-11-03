@@ -46,7 +46,7 @@ import { useBlotter } from './useBlotter'
 const GttTab = lazy(() => import('../GttTab'))
 
 /** The chart's words, so the dock and the chart refuse in one voice. */
-export const REPLAY_REFUSAL = 'Replay is a simulation. Leave replay to trade.'
+export const REPLAY_REFUSAL = '回放为模拟模式，请退出回放后交易。'
 
 interface Props {
   tab: DockTab | null
@@ -127,7 +127,7 @@ export function TradingDock({
       actions,
       freshPositions: async () => {
         const res = await tradingApi.getPositions(apiKey)
-        if (res.status === 'error') throw new Error(res.message || 'Position book unavailable')
+        if (res.status === 'error') throw new Error(res.message || '无法获取持仓记录')
         return (res.data ?? []).map(parsePosition)
       },
     }
@@ -155,9 +155,9 @@ export function TradingDock({
         })
         ok = res.status === 'success'
         if (ok) {
-          if (appMode === 'live') showToast.success(`Order modified: ${order.orderid}`, 'orders')
+          if (appMode === 'live') showToast.success(`委托已修改：${order.orderid}`, 'orders')
         } else if (appMode === 'live') {
-          showToast.error(res.message || 'Modify failed', 'orders')
+          showToast.error(res.message || '修改委托失败', 'orders')
         }
       } catch (e) {
         if (!handledGlobally(e)) showToast.error(apiErrorMessage(e), 'orders')
@@ -202,7 +202,7 @@ export function TradingDock({
         <div className="flex items-center gap-2 border-b bg-destructive/10 px-2 py-1 text-[12px] text-destructive">
           <span className="min-w-0 flex-1 truncate">{error}</span>
           <button type="button" className="underline" onClick={refresh}>
-            Retry
+            重试
           </button>
         </div>
       )}
@@ -235,7 +235,7 @@ export function TradingDock({
       )}
       {tab === 'gtt' && (
         <Suspense
-          fallback={<div className="p-3 text-[12px] text-muted-foreground">Loading GTT</div>}
+          fallback={<div className="p-3 text-[12px] text-muted-foreground">正在加载 GTT 条件单</div>}
         >
           <div className="p-2">
             {/* Its own fetch and dialogs, but the dock's replay lock. */}

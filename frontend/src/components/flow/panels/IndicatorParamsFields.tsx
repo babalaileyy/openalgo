@@ -168,7 +168,7 @@ export function IndicatorParamsFields({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <Label className="text-xs">Parameters</Label>
+        <Label className="text-xs">参数</Label>
         <Button
           type="button"
           variant="ghost"
@@ -198,7 +198,7 @@ export function IndicatorParamsFields({
           )}
         </div>
       ) : specs.length === 0 ? (
-        <p className="text-[10px] text-muted-foreground">This indicator takes no parameters.</p>
+        <p className="text-[10px] text-muted-foreground">此指标无需参数。</p>
       ) : (
         <div className="space-y-3">{specs.map(renderField)}</div>
       )}

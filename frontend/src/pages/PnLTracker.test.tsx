@@ -240,7 +240,7 @@ describe('PnLTracker', () => {
     expect(line.options).toMatchObject({ price: -650, color: '#eab308' })
 
     nextResponse = pnlResponse([[T0, 100]], [[T0, -40]])
-    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }))
+    fireEvent.click(screen.getByRole('button', { name: '刷新' }))
     await waitFor(() => expect(line.setOptions).toHaveBeenCalled())
     expect(line.setOptions).toHaveBeenLastCalledWith(expect.objectContaining({ price: -40 }))
     expect(chart().priceLines).toHaveLength(1)
@@ -276,7 +276,7 @@ describe('PnLTracker', () => {
 
     render(<PnLTracker />)
     await waitFor(() => expect(pnlSeries().setData).toHaveBeenCalled())
-    fireEvent.click(screen.getByRole('button', { name: /Screenshot/ }))
+    fireEvent.click(screen.getByRole('button', { name: /截图/ }))
     await waitFor(() => expect(harness.html2canvas).toHaveBeenCalledTimes(1))
 
     expect(chart().takeScreenshot).toHaveBeenCalledTimes(1)
@@ -288,8 +288,8 @@ describe('PnLTracker', () => {
       },
     ]
     // The whole report, cards included, as before.
-    expect(target.textContent).toContain('Current MTM')
-    expect(target.textContent).toContain('Intraday PnL Curve')
+    expect(target.textContent).toContain('当前盯市盈亏')
+    expect(target.textContent).toContain('日内盈亏曲线')
 
     // The chart's live canvases are left out; any other element is not.
     const liveCanvas = chart().host.querySelector('canvas') as HTMLCanvasElement

@@ -147,7 +147,7 @@ export function ModelPicker({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search all models"
-            aria-label="Search models"
+            aria-label="搜索模型"
             className="h-7 border-none px-0 text-xs shadow-none focus-visible:ring-0"
             // The menu treats typing as type-ahead navigation and would steal
             // these keys, so the field has to claim them while it has focus.
@@ -181,7 +181,7 @@ export function ModelPicker({
               )}
               {model.is_default && (
                 <span className="shrink-0 rounded bg-muted px-1 py-px text-[10px] text-muted-foreground">
-                  default
+                  默认
                 </span>
               )}
               {/* Each row carries its own configured effort, so switching model
@@ -194,7 +194,7 @@ export function ModelPicker({
         ))}
         {filtered.length === 0 && (
           <p className="px-2 py-3 text-center text-xs text-muted-foreground">
-            No model matches that.
+            没有匹配的模型。
           </p>
         )}
       </DropdownMenuRadioGroup>
@@ -236,7 +236,7 @@ export function ModelPicker({
         {showEffort ? (
           <>
             <DropdownMenuLabel className="text-[11px] tracking-wide text-muted-foreground uppercase">
-              Reasoning effort
+              推理强度
             </DropdownMenuLabel>
             <DropdownMenuRadioGroup
               value={effort}
@@ -261,7 +261,7 @@ export function ModelPicker({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="text-xs">
                 <span className="flex min-w-0 flex-1 items-center gap-2">
-                  <span>Model</span>
+                  <span>模型</span>
                   <span className="ml-auto max-w-[8rem] shrink-0 truncate text-muted-foreground">
                     {selectedLabel}
                   </span>
@@ -275,7 +275,7 @@ export function ModelPicker({
         ) : (
           <>
             <DropdownMenuLabel className="text-[11px] tracking-wide text-muted-foreground uppercase">
-              Model
+              模型
             </DropdownMenuLabel>
             {modelList}
             {Boolean(onEffortChange) && !canReason && (

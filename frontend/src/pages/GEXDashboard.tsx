@@ -155,11 +155,11 @@ export default function GEXDashboard() {
       if (response.status === 'success') {
         setGexData(response)
       } else {
-        showToast.error(response.message || 'Failed to fetch GEX data')
+        showToast.error(response.message || '获取 Gamma 敞口数据失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to fetch GEX data'))
+      showToast.error(serverSentence(error, '获取 Gamma 敞口数据失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -247,9 +247,9 @@ export default function GEXDashboard() {
         x: xIndices,
         y: ceOILots,
         type: 'bar' as const,
-        name: 'Call OI (lots)',
+        name: 'Call OI（看涨持仓量，手）',
         marker: { color: themeColors.ceBar },
-        hovertemplate: 'Strike %{text}<br>CE OI: %{y:,}<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>CE OI（看涨持仓量）： %{y:,}<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
       },
@@ -257,9 +257,9 @@ export default function GEXDashboard() {
         x: xIndices,
         y: peOILots,
         type: 'bar' as const,
-        name: 'Put OI (lots)',
+        name: 'Put OI（看跌持仓量，手）',
         marker: { color: themeColors.peBar },
-        hovertemplate: 'Strike %{text}<br>PE OI: %{y:,}<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>PE OI（看跌持仓量）： %{y:,}<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
       },
@@ -274,7 +274,7 @@ export default function GEXDashboard() {
               x: atmIndex,
               y: 1,
               yref: 'paper' as const,
-              text: `ATM ${atmStrike}`,
+              text: `ATM（平值行权价） ${atmStrike}`,
               showarrow: false,
               font: { color: themeColors.text, size: 11 },
               yanchor: 'bottom' as const,
@@ -301,7 +301,7 @@ export default function GEXDashboard() {
 
     const layout: Partial<PlotlyTypes.Layout> = {
       title: {
-        text: `${selectedUnderlying} ${expiryLabel} - OI Walls`,
+        text: `${selectedUnderlying} ${expiryLabel} - OI Walls（持仓量墙）`,
         font: { color: themeColors.text, size: 14 },
       },
       paper_bgcolor: themeColors.paper,
@@ -328,13 +328,13 @@ export default function GEXDashboard() {
         tickmode: 'array' as const,
         tickvals: tickVals,
         ticktext: tickText,
-        title: { text: 'Strike Price', font: { color: themeColors.text, size: 12 } },
+        title: { text: '行权价', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
         tickangle: -45,
       },
       yaxis: {
-        title: { text: 'Open Interest (lots)', font: { color: themeColors.text, size: 12 } },
+        title: { text: 'Open Interest（持仓量，手）', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
       },
@@ -370,9 +370,9 @@ export default function GEXDashboard() {
         x: xIndices,
         y: netGexValues,
         type: 'bar' as const,
-        name: 'Net GEX',
+        name: 'Net GEX（净 Gamma 敞口）',
         marker: { color: barColors },
-        hovertemplate: 'Strike %{text}<br>Net GEX: %{y:,.2f}<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>Net GEX（净 Gamma 敞口）： %{y:,.2f}<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
         showlegend: false,
@@ -388,7 +388,7 @@ export default function GEXDashboard() {
               x: atmIndex,
               y: 1,
               yref: 'paper' as const,
-              text: `ATM ${atmStrike}`,
+              text: `ATM（平值行权价） ${atmStrike}`,
               showarrow: false,
               font: { color: themeColors.text, size: 11 },
               yanchor: 'bottom' as const,
@@ -425,7 +425,7 @@ export default function GEXDashboard() {
 
     const layout: Partial<PlotlyTypes.Layout> = {
       title: {
-        text: `${selectedUnderlying} ${expiryLabel} - Net GEX Walls`,
+        text: `${selectedUnderlying} ${expiryLabel} - Net GEX Walls（净 Gamma 敞口墙）`,
         font: { color: themeColors.text, size: 14 },
       },
       paper_bgcolor: themeColors.paper,
@@ -443,13 +443,13 @@ export default function GEXDashboard() {
         tickmode: 'array' as const,
         tickvals: tickVals,
         ticktext: tickText,
-        title: { text: 'Strike Price', font: { color: themeColors.text, size: 12 } },
+        title: { text: '行权价', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
         tickangle: -45,
       },
       yaxis: {
-        title: { text: 'Net GEX (gamma x OI x lot)', font: { color: themeColors.text, size: 12 } },
+        title: { text: 'Net GEX（净 Gamma 敞口：gamma × 持仓量 × 每手数量）', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
       },
@@ -489,12 +489,12 @@ export default function GEXDashboard() {
     <div className="py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">GEX Dashboard</h1>
+        <h1 className="text-2xl font-bold">GEX Dashboard（Gamma 敞口看板）</h1>
         <div className="flex items-center gap-3 flex-wrap">
           {/* Exchange selector */}
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {toolsFnoExchanges.map((ex) => (
@@ -514,15 +514,15 @@ export default function GEXDashboard() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -552,7 +552,7 @@ export default function GEXDashboard() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((e) => (
@@ -569,12 +569,12 @@ export default function GEXDashboard() {
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
           >
-            {autoRefresh ? 'Auto: ON' : 'Auto: OFF'}
+            {autoRefresh ? '自动刷新：开' : '自动刷新：关'}
           </Button>
 
           {/* Refresh */}
           <Button variant="outline" size="sm" onClick={fetchGEXData} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
         </div>
       </div>
@@ -583,24 +583,24 @@ export default function GEXDashboard() {
       {gexData && gexData.status === 'success' && (
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Spot: {gexData.spot_price?.toFixed(1)}
+            现货价：{gexData.spot_price?.toFixed(1)}
           </Badge>
           {gexData.futures_price && (
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              Futures: {gexData.futures_price.toFixed(1)}
+              期货价：{gexData.futures_price.toFixed(1)}
             </Badge>
           )}
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Lot Size: {gexData.lot_size}
+            每手数量：{gexData.lot_size}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            PCR: {gexData.pcr_oi?.toFixed(2)}
+            PCR（看跌看涨持仓比）：{gexData.pcr_oi?.toFixed(2)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            ATM: {gexData.atm_strike}
+            ATM（平值行权价）：{gexData.atm_strike}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Net GEX: {formatNumber(gexData.total_net_gex || 0)}
+            Net GEX（净 Gamma 敞口）：{formatNumber(gexData.total_net_gex || 0)}
           </Badge>
         </div>
       )}
@@ -612,7 +612,7 @@ export default function GEXDashboard() {
           <CardContent className="p-2 sm:p-4">
             {isLoading && !gexData ? (
               <div className="flex items-center justify-center h-[450px] text-muted-foreground">
-                Loading GEX data...
+                正在加载 Gamma 敞口数据...
               </div>
             ) : gexData?.chain && gexData.chain.length > 0 ? (
               <Plot
@@ -625,8 +625,8 @@ export default function GEXDashboard() {
             ) : (
               <div className="flex items-center justify-center h-[450px] text-muted-foreground">
                 {selectedExpiry
-                  ? 'No OI data available'
-                  : 'Select an underlying and expiry to view OI Walls'}
+                  ? '暂无持仓量数据'
+                  : '请选择标的和到期日以查看持仓量墙'}
               </div>
             )}
           </CardContent>
@@ -637,7 +637,7 @@ export default function GEXDashboard() {
           <CardContent className="p-2 sm:p-4">
             {isLoading && !gexData ? (
               <div className="flex items-center justify-center h-[450px] text-muted-foreground">
-                Loading GEX data...
+                正在加载 Gamma 敞口数据...
               </div>
             ) : gexData?.chain && gexData.chain.length > 0 ? (
               <Plot
@@ -650,8 +650,8 @@ export default function GEXDashboard() {
             ) : (
               <div className="flex items-center justify-center h-[450px] text-muted-foreground">
                 {selectedExpiry
-                  ? 'No GEX data available'
-                  : 'Select an underlying and expiry to view Net GEX'}
+                  ? '暂无 Gamma 敞口数据'
+                  : '请选择标的和到期日以查看净 Gamma 敞口'}
               </div>
             )}
           </CardContent>
@@ -664,7 +664,7 @@ export default function GEXDashboard() {
           {/* Top Call OI */}
           <Card>
             <CardContent className="p-4">
-              <h3 className="font-semibold mb-3 text-sm">Top Call OI (Resistance)</h3>
+              <h3 className="font-semibold mb-3 text-sm">Top Call OI（最高看涨持仓量 / 阻力）</h3>
               <div className="space-y-1">
                 {topStrikes.topCallOI.map((item, idx) => (
                   <div
@@ -684,7 +684,7 @@ export default function GEXDashboard() {
           {/* Top Put OI */}
           <Card>
             <CardContent className="p-4">
-              <h3 className="font-semibold mb-3 text-sm">Top Put OI (Support)</h3>
+              <h3 className="font-semibold mb-3 text-sm">Top Put OI（最高看跌持仓量 / 支撑）</h3>
               <div className="space-y-1">
                 {topStrikes.topPutOI.map((item, idx) => (
                   <div
@@ -704,7 +704,7 @@ export default function GEXDashboard() {
           {/* Top Net GEX */}
           <Card>
             <CardContent className="p-4">
-              <h3 className="font-semibold mb-3 text-sm">Top Net GEX Strikes</h3>
+              <h3 className="font-semibold mb-3 text-sm">Top Net GEX Strikes（净 Gamma 敞口最大行权价）</h3>
               <div className="space-y-1">
                 {topStrikes.topNetGex.map((item, idx) => (
                   <div
@@ -732,22 +732,22 @@ export default function GEXDashboard() {
       {gexData?.chain && gexData.chain.length > 0 && (
         <Card>
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-3 text-sm">GEX Table</h3>
+            <h3 className="font-semibold mb-3 text-sm">GEX Table（Gamma 敞口表）</h3>
             <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-background z-10">
                   <tr className="border-b border-border">
                     <th className="text-left py-2 px-3 font-medium text-muted-foreground">
-                      Strike
+                      行权价
                     </th>
                     <th className="text-right py-2 px-3 font-medium text-muted-foreground">
-                      Call GEX
+                      Call GEX（看涨 Gamma 敞口）
                     </th>
                     <th className="text-right py-2 px-3 font-medium text-muted-foreground">
-                      Put GEX
+                      Put GEX（看跌 Gamma 敞口）
                     </th>
                     <th className="text-right py-2 px-3 font-medium text-muted-foreground">
-                      Net GEX
+                      Net GEX（净 Gamma 敞口）
                     </th>
                   </tr>
                 </thead>
@@ -761,7 +761,7 @@ export default function GEXDashboard() {
                       >
                         <td className="py-1.5 px-3">
                           {item.strike}
-                          {isATM && <span className="ml-2 text-xs text-yellow-500">ATM</span>}
+                          {isATM && <span className="ml-2 text-xs text-yellow-500">ATM（平值）</span>}
                         </td>
                         <td className="py-1.5 px-3 text-right text-red-500">
                           {item.ce_gex.toFixed(2)}
@@ -781,7 +781,7 @@ export default function GEXDashboard() {
                 </tbody>
                 <tfoot className="sticky bottom-0 bg-background border-t-2 border-border">
                   <tr className="font-semibold">
-                    <td className="py-2 px-3">Total</td>
+                    <td className="py-2 px-3">合计</td>
                     <td className="py-2 px-3 text-right text-red-500">
                       {(gexData.total_ce_gex || 0).toFixed(2)}
                     </td>

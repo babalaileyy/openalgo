@@ -19,7 +19,7 @@ function renderDialog(onPick: (row: SearchRow) => void = () => {}) {
 /** The dialog focuses and selects its box 30ms after opening; typing before
  *  that races the select() and loses the first character. */
 async function focusedBox() {
-  const box = screen.getByLabelText('Search symbol') as HTMLInputElement
+  const box = screen.getByLabelText('搜索交易品种') as HTMLInputElement
   await waitFor(() => expect(box).toHaveFocus())
   return box
 }
@@ -37,10 +37,10 @@ describe('SymbolSearchDialog', () => {
         onPick={(row) => picked.push(row)}
       />
     )
-    const box = screen.getByRole('textbox', { name: 'Search comparison symbol' })
+    const box = screen.getByRole('textbox', { name: '搜索对比品种' })
     await waitFor(() => expect(box).toHaveFocus())
     expect(screen.getByRole('heading', { name: 'Add comparison symbol' })).toBeVisible()
-    expect(screen.queryByRole('button', { name: 'Add' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '加' })).toBeNull()
     await userEvent.type(box, 'NSE:INFY+NSE:BHEL{Enter}')
     expect(picked).toEqual([])
     expect(screen.queryByText('Operators build an expression.', { exact: false })).toBeNull()
@@ -61,7 +61,7 @@ describe('SymbolSearchDialog', () => {
   it('ranks an index above a same-scoring cash-equity match in ALL results', async () => {
     renderDialog()
 
-    await userEvent.type(screen.getByLabelText('Search symbol'), 'NIFTY')
+    await userEvent.type(screen.getByLabelText('搜索交易品种'), 'NIFTY')
 
     await waitFor(() => expect(screen.getByText('NIFTY100QUALTY30')).toBeInTheDocument())
 
@@ -78,16 +78,16 @@ describe('SymbolSearchDialog', () => {
   it('shows an Index chip when the broker supports index exchanges', () => {
     renderDialog()
 
-    expect(screen.getByRole('button', { name: 'Index' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '指数' })).toBeInTheDocument()
   })
 
   it('filters to only index rows when the Index chip is selected', async () => {
     renderDialog()
 
-    await userEvent.type(screen.getByLabelText('Search symbol'), 'NIFTY')
+    await userEvent.type(screen.getByLabelText('搜索交易品种'), 'NIFTY')
     await waitFor(() => expect(screen.getByText('NIFTY100QUALTY30')).toBeInTheDocument())
 
-    await userEvent.click(screen.getByRole('button', { name: 'Index' }))
+    await userEvent.click(screen.getByRole('button', { name: '指数' }))
 
     expect(screen.getByText('NIFTY100QUALTY30')).toBeInTheDocument()
     expect(screen.queryByText('NIFTY100EW')).not.toBeInTheDocument()
@@ -136,24 +136,24 @@ describe('SymbolSearchDialog', () => {
     const box = (await focusedBox()) as HTMLInputElement
 
     await userEvent.type(box, 'NIFTY100EW')
-    await userEvent.click(screen.getByLabelText('Divide'))
+    await userEvent.click(screen.getByLabelText('除'))
     await userEvent.type(box, 'NIFTY100QUALTY30')
     expect(box.value).toBe('NIFTY100EW/NIFTY100QUALTY30')
 
-    await userEvent.click(screen.getByLabelText('Reciprocal'))
+    await userEvent.click(screen.getByLabelText('倒数'))
     expect(box.value).toBe('1/(NIFTY100EW/NIFTY100QUALTY30)')
   })
 
   it('offers every operator the engine parses, exponentiation included', () => {
     renderDialog()
-    for (const name of ['Divide', 'Subtract', 'Add', 'Multiply', 'Exponentiation', 'Reciprocal']) {
+    for (const name of ['除', '减', '加', '乘', '乘方', '倒数']) {
       expect(screen.getByLabelText(name)).toBeInTheDocument()
     }
   })
 
   it('warns that a computed chart cannot be traded', async () => {
     renderDialog()
-    await userEvent.type(screen.getByLabelText('Search symbol'), 'NIFTY100EW/NIFTY100QUALTY30')
+    await userEvent.type(screen.getByLabelText('搜索交易品种'), 'NIFTY100EW/NIFTY100QUALTY30')
     await waitFor(() => expect(screen.getByText(/cannot be traded/)).toBeInTheDocument())
   })
 

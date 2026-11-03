@@ -132,14 +132,14 @@ describe('WatchlistPanel', () => {
     const change = await screen.findByText('+0.59%')
     // Not opacity-0: the most common reason to point at a row is to read it.
     expect(change.className).not.toContain('group-hover:opacity-0')
-    expect(screen.getByLabelText('Remove RELIANCE')).toBeInTheDocument()
+    expect(screen.getByLabelText('移除 RELIANCE')).toBeInTheDocument()
   })
 
   it('charts the instrument when its row is clicked', async () => {
     const onPick = vi.fn()
     renderPanel({ onPick })
 
-    await userEvent.click(await screen.findByLabelText('Chart RELIANCE on NSE'))
+    await userEvent.click(await screen.findByLabelText('查看 NSE RELIANCE 的图表'))
     expect(onPick).toHaveBeenCalledWith({ symbol: 'RELIANCE', exchange: 'NSE' })
   })
 
@@ -147,11 +147,11 @@ describe('WatchlistPanel', () => {
     api.list.mockRejectedValueOnce(new Error('network down'))
     renderPanel()
 
-    expect(await screen.findByText('Could not load your watchlists')).toBeInTheDocument()
-    expect(screen.queryByText('This list is empty.')).not.toBeInTheDocument()
+    expect(await screen.findByText('无法加载自选列表')).toBeInTheDocument()
+    expect(screen.queryByText('列表为空。')).not.toBeInTheDocument()
 
     api.list.mockResolvedValue([LIST])
-    await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+    await userEvent.click(screen.getByRole('button', { name: '重试' }))
     expect(await screen.findByText('RELIANCE')).toBeInTheDocument()
   })
 
@@ -161,7 +161,7 @@ describe('WatchlistPanel', () => {
     renderPanel()
 
     await waitFor(() => expect(api.create).toHaveBeenCalledWith('Watchlist'))
-    expect(await screen.findByText('This list is empty.')).toBeInTheDocument()
+    expect(await screen.findByText('列表为空。')).toBeInTheDocument()
   })
 
   it('removes an instrument optimistically', async () => {
@@ -169,7 +169,7 @@ describe('WatchlistPanel', () => {
     api.list.mockResolvedValue([LIST])
     renderPanel()
 
-    await userEvent.click(await screen.findByLabelText('Remove RELIANCE'))
+    await userEvent.click(await screen.findByLabelText('移除 RELIANCE'))
     expect(api.removeItem).toHaveBeenCalledWith(1, 10)
   })
 
@@ -178,8 +178,8 @@ describe('WatchlistPanel', () => {
     renderPanel()
 
     await userEvent.click(await screen.findByText('Heavy Weights'))
-    await userEvent.click(await screen.findByText('Make a copy...'))
-    await userEvent.click(screen.getByRole('button', { name: 'Save' }))
+    await userEvent.click(await screen.findByText('复制列表…'))
+    await userEvent.click(screen.getByRole('button', { name: '保存' }))
 
     await waitFor(() => expect(api.create).toHaveBeenCalledWith('Heavy Weights copy', LIST.items))
   })
@@ -191,11 +191,11 @@ describe('WatchlistPanel', () => {
     // aria-current, not a Tailwind class. jsdom has no cascade, so a class
     // assertion passes even when the marker is transparent or zero width,
     // which is exactly how an invalid colour shipped unnoticed once already.
-    expect(screen.getByLabelText('Chart BANKNIFTY on NSE_INDEX')).toHaveAttribute(
+    expect(screen.getByLabelText('查看 NSE_INDEX BANKNIFTY 的图表')).toHaveAttribute(
       'aria-current',
       'true'
     )
-    expect(screen.getByLabelText('Chart RELIANCE on NSE')).not.toHaveAttribute('aria-current')
+    expect(screen.getByLabelText('查看 NSE RELIANCE 的图表')).not.toHaveAttribute('aria-current')
   })
 
   it('shows a dash rather than a zero for an instrument with no quote', async () => {

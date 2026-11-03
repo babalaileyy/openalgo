@@ -48,11 +48,11 @@ import { showToast } from '@/utils/toast'
 // FNO_EXCHANGES and DEFAULT_UNDERLYINGS are now provided by useSupportedExchanges() hook
 
 const STRIKE_COUNTS = [
-  { value: 5, label: '5 strikes' },
-  { value: 10, label: '10 strikes' },
-  { value: 15, label: '15 strikes' },
-  { value: 20, label: '20 strikes' },
-  { value: 25, label: '25 strikes' },
+  { value: 5, label: '5 个行权价' },
+  { value: 10, label: '10 个行权价' },
+  { value: 15, label: '15 个行权价' },
+  { value: 20, label: '20 个行权价' },
+  { value: 25, label: '25 个行权价' },
 ]
 
 // Format number in lakhs (divide by 100000)
@@ -663,7 +663,7 @@ export default function OptionChain() {
         }
       } catch (error) {
         if (cancelled) return
-        showToast.error(serverSentence(error, 'Failed to load expiry dates'))
+        showToast.error(serverSentence(error, '加载到期日失败'))
       }
     }
     fetchExpiries()
@@ -778,11 +778,11 @@ export default function OptionChain() {
         <Card className="max-w-md">
           <CardContent className="p-6">
             <div className="text-center text-red-500">
-              <h2 className="text-xl font-bold mb-2">Error Loading Option Chain</h2>
+              <h2 className="text-xl font-bold mb-2">期权链加载失败</h2>
               <p>{error}</p>
               <Button onClick={handleRefresh} className="mt-4">
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Retry
+                重试
               </Button>
             </div>
           </CardContent>
@@ -796,12 +796,12 @@ export default function OptionChain() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-6 w-6" />
-          <h1 className="text-3xl font-bold">Option Chain</h1>
+          <h1 className="text-3xl font-bold">期权链</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <Select value={selectedExchange} onValueChange={handleExchangeChange}>
             <SelectTrigger className="w-24">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {fnoExchanges.map((ex) => (
@@ -819,15 +819,15 @@ export default function OptionChain() {
                 aria-expanded={underlyingOpen}
                 className="w-36 justify-between"
               >
-                {selectedUnderlying || 'Select Underlying'}
+                {selectedUnderlying || '选择标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的…" />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -855,7 +855,7 @@ export default function OptionChain() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-36">
-              <SelectValue placeholder="Select Expiry" />
+              <SelectValue placeholder="选择到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((exp) => (
@@ -867,7 +867,7 @@ export default function OptionChain() {
           </Select>
           <Select value={String(strikeCount)} onValueChange={(v) => setStrikeCount(Number(v))}>
             <SelectTrigger className="w-36">
-              <SelectValue placeholder="Strike Count" />
+              <SelectValue placeholder="行权价数量" />
             </SelectTrigger>
             <SelectContent>
               {STRIKE_COUNTS.map((sc) => (
@@ -896,7 +896,7 @@ export default function OptionChain() {
           />
           <Button onClick={handleRefresh} disabled={!selectedExpiry || isLoading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            刷新
           </Button>
         </div>
       </div>
@@ -906,20 +906,20 @@ export default function OptionChain() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">{selectedUnderlying} Spot</div>
+                <div className="text-sm text-muted-foreground">{selectedUnderlying} 现货</div>
                 <div className="text-2xl font-bold text-primary">
                   {formatPrice(data.underlying_ltp)}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Prev Close: {formatPrice(data.underlying_prev_close)}
+                  昨收： {formatPrice(data.underlying_prev_close)}
                 </div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">ATM Strike</div>
+                <div className="text-sm text-muted-foreground">平值行权价</div>
                 <div className="text-2xl font-bold">{data.atm_strike}</div>
-                <div className="text-xs text-muted-foreground">Expiry: {data.expiry_date}</div>
+                <div className="text-xs text-muted-foreground">到期日：{data.expiry_date}</div>
               </CardContent>
             </Card>
             <Card>
@@ -930,12 +930,12 @@ export default function OptionChain() {
                 >
                   {pcr.toFixed(2)}
                 </div>
-                <div className="text-xs text-muted-foreground">Put/Call Ratio</div>
+                <div className="text-xs text-muted-foreground">看跌／看涨持仓量比</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Total OI</div>
+                <div className="text-sm text-muted-foreground">总持仓量</div>
                 <div className="text-sm mt-1">
                   <span className="text-green-500 font-mono tabular-nums">
                     {formatInLakhs(totals.ceOi)}
@@ -972,13 +972,13 @@ export default function OptionChain() {
                     <TableRow className="bg-muted/30 border-b-0">
                       {visibleCeColumns.length > 0 && (
                         <TableHead className="text-center text-green-500 font-bold text-sm border-r border-border">
-                          CALLS
+                          看涨期权
                         </TableHead>
                       )}
                       <TableHead className="text-center w-20 min-w-20" />
                       {visiblePeColumns.length > 0 && (
                         <TableHead className="text-center text-red-500 font-bold text-sm border-l border-border">
-                          PUTS
+                          看跌期权
                         </TableHead>
                       )}
                     </TableRow>
@@ -1007,7 +1007,7 @@ export default function OptionChain() {
                         </TableHead>
                       )}
                       <TableHead className="text-center bg-muted/30 text-xs w-20 min-w-20">
-                        Strike
+                        行权价
                       </TableHead>
                       {visiblePeColumns.length > 0 && (
                         <TableHead className="p-0 border-l border-border">
@@ -1066,19 +1066,19 @@ export default function OptionChain() {
                   variant={isStreaming ? 'default' : isConnected ? 'secondary' : 'destructive'}
                 >
                   {isPaused
-                    ? 'Paused'
+                    ? '已暂停'
                     : isStreaming
-                      ? `Streaming ${streamingSymbols} symbols`
+                      ? `实时推送 ${streamingSymbols} 个品种`
                       : isConnected
-                        ? 'Polling'
-                        : 'Disconnected'}
+                        ? '轮询中'
+                        : '未连接'}
                 </Badge>
               </div>
               <div className="text-xs">
-                Bar: {barDataSource === 'oi' ? 'OI' : 'Volume'} ({barStyle})
+                柱状图：{barDataSource === 'oi' ? '持仓量' : '成交量'}（{barStyle === 'gradient' ? '渐变' : '纯色'}）
               </div>
             </div>
-            <div>Last Update: {lastUpdate ? lastUpdate.toLocaleTimeString() : '-'}</div>
+            <div>最后更新： {lastUpdate ? lastUpdate.toLocaleTimeString() : '-'}</div>
           </div>
         </>
       )}

@@ -38,7 +38,7 @@ export function BrokerAuthSignOut() {
     try {
       await authApi.logout()
       logout()
-      showToast.success('Signed out')
+      showToast.success('已退出登录')
       navigate('/login')
     } catch {
       // The XHR path can fail with the server session still alive: if

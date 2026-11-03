@@ -33,13 +33,13 @@ export const HistoryNode = memo(({ data, selected }: HistoryNodeProps) => {
             <TrendingUp className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">History</div>
+            <div className="text-xs font-medium leading-tight">历史数据</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NSE'}</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
           <div className="flex items-center justify-between text-[9px] text-muted-foreground">

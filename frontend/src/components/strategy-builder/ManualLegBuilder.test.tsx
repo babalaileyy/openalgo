@@ -175,7 +175,7 @@ describe('ManualLegBuilder listed contracts', () => {
     render(<ManualLegBuilder {...props({ resolveContract, onAdd })} />)
 
     await screen.findByText('NIFTY13AUG2624600CE')
-    await choose('Expiry', '18AUG26')
+    await choose('到期日', '18AUG26')
 
     expect(await screen.findByText('NIFTY18AUG2624600CE')).toBeVisible()
     fireEvent.click(screen.getByRole('button', { name: /Add Buy/ }))
@@ -220,10 +220,10 @@ describe('ManualLegBuilder listed contracts', () => {
     })
     const view = render(<ManualLegBuilder {...builderProps} />)
     await screen.findByText('NIFTY13AUG2624600CE')
-    await choose('Expiry', '18AUG26')
+    await choose('到期日', '18AUG26')
 
     expect(await screen.findByText('NIFTY18AUG2624750CE')).toBeVisible()
-    expect(screen.getByRole('combobox', { name: 'Strike' })).toHaveTextContent('24750')
+    expect(screen.getByRole('combobox', { name: '行权价' })).toHaveTextContent('24750')
     expect(screen.getAllByText('ATM')).toHaveLength(2)
 
     expect(resolveOptionChain).toHaveBeenCalledTimes(1)
@@ -276,7 +276,7 @@ describe('ManualLegBuilder listed contracts', () => {
     render(<ManualLegBuilder {...props({ resolveContract, onAdd })} />)
     await screen.findByText('NIFTY13AUG2624600CE')
 
-    await choose('Segment', 'Futures')
+    await choose('Segment', '期货')
     expect(await screen.findByText('NIFTY27AUG26FUT')).toBeVisible()
     fireEvent.click(screen.getByRole('button', { name: /Add Buy/ }))
 

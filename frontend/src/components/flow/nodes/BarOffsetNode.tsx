@@ -25,17 +25,17 @@ export const BarOffsetNode = memo(({ data, selected }: BarOffsetNodeProps) => {
             <History className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Bar Offset</div>
+            <div className="text-xs font-medium leading-tight">K 线偏移</div>
             <div className="text-[9px] text-muted-foreground">{data.interval || 'D'}</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Bars back</span>
+            <span className="text-[10px] text-muted-foreground">向前 K 线数</span>
             <span className="mono-data text-[10px] font-medium">{data.offsetBars ?? 0}</span>
           </div>
         </div>

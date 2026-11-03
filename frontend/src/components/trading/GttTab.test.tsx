@@ -57,8 +57,8 @@ describe('GttTab under a refusing host', () => {
   it('does not cancel while the host refuses', async () => {
     const refuse = vi.fn(() => true)
     render(<GttTab refuse={refuse} />)
-    await userEvent.click(await screen.findByRole('button', { name: 'Cancel GTT T1' }))
-    await userEvent.click(await screen.findByRole('button', { name: 'Cancel GTT' }))
+    await userEvent.click(await screen.findByRole('button', { name: '撤销条件单 T1' }))
+    await userEvent.click(await screen.findByRole('button', { name: '确认撤单' }))
     await waitFor(() => expect(refuse).toHaveBeenCalled())
     expect(cancelGttOrder).not.toHaveBeenCalled()
   })
@@ -66,7 +66,7 @@ describe('GttTab under a refusing host', () => {
   it('does not open the modify dialog while the host refuses', async () => {
     const refuse = vi.fn(() => true)
     render(<GttTab refuse={refuse} />)
-    await userEvent.click(await screen.findByRole('button', { name: 'Modify GTT T1' }))
+    await userEvent.click(await screen.findByRole('button', { name: '修改条件单 T1' }))
     expect(refuse).toHaveBeenCalled()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
@@ -74,8 +74,8 @@ describe('GttTab under a refusing host', () => {
   it('cancels as before once the host allows it', async () => {
     cancelGttOrder.mockResolvedValue({ status: 'success', data: { trigger_id: 'T1' } } as never)
     render(<GttTab refuse={() => false} />)
-    await userEvent.click(await screen.findByRole('button', { name: 'Cancel GTT T1' }))
-    await userEvent.click(await screen.findByRole('button', { name: 'Cancel GTT' }))
+    await userEvent.click(await screen.findByRole('button', { name: '撤销条件单 T1' }))
+    await userEvent.click(await screen.findByRole('button', { name: '确认撤单' }))
     await waitFor(() => expect(cancelGttOrder).toHaveBeenCalledWith('T1'))
   })
 })

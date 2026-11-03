@@ -27,8 +27,8 @@ describe('DockShell', () => {
       'false',
     ])
     // The badge is a separate text node, so the accessible name has no space.
-    expect(screen.getByRole('tab', { name: /^Orders\s*2$/ })).toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: /^Trades\s*7$/ })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /^委托\s*2$/ })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /^成交\s*7$/ })).toBeInTheDocument()
     // No count was given for GTT, so it carries no badge, not a zero.
     expect(screen.getByRole('tab', { name: 'GTT' })).toBeInTheDocument()
     expect(screen.queryByRole('tabpanel')).not.toBeInTheDocument()
@@ -36,36 +36,36 @@ describe('DockShell', () => {
 
   it('opens a book from its tab and collapses from the same tab', async () => {
     render(<Host />)
-    await userEvent.click(screen.getByRole('tab', { name: /Positions/ }))
-    expect(screen.getByRole('tab', { name: /Positions/ })).toHaveAttribute('aria-selected', 'true')
+    await userEvent.click(screen.getByRole('tab', { name: /持仓/ }))
+    expect(screen.getByRole('tab', { name: /持仓/ })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByRole('tabpanel')).toHaveTextContent('positions content')
 
-    await userEvent.click(screen.getByRole('tab', { name: /Positions/ }))
+    await userEvent.click(screen.getByRole('tab', { name: /持仓/ }))
     expect(screen.queryByRole('tabpanel')).not.toBeInTheDocument()
   })
 
   it('walks the tabs with the arrow keys', async () => {
     render(<Host initial="orders" />)
-    screen.getByRole('tab', { name: /Orders/ }).focus()
+    screen.getByRole('tab', { name: /委托/ }).focus()
     await userEvent.keyboard('{ArrowRight}')
-    expect(screen.getByRole('tab', { name: /Positions/ })).toHaveAttribute('aria-selected', 'true')
-    expect(screen.getByRole('tab', { name: /Positions/ })).toHaveFocus()
+    expect(screen.getByRole('tab', { name: /持仓/ })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('tab', { name: /持仓/ })).toHaveFocus()
     await userEvent.keyboard('{End}')
     expect(screen.getByRole('tab', { name: 'GTT' })).toHaveAttribute('aria-selected', 'true')
     await userEvent.keyboard('{ArrowRight}')
-    expect(screen.getByRole('tab', { name: /Orders/ })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('tab', { name: /委托/ })).toHaveAttribute('aria-selected', 'true')
   })
 
   it('keeps focus on the tab that opened a book from the collapsed strip', async () => {
     // Collapsed and open used to be two trees, so opening remounted every
     // tab button and the one just pressed or arrowed to lost focus to body.
     render(<Host />)
-    screen.getByRole('tab', { name: /Orders/ }).focus()
+    screen.getByRole('tab', { name: /委托/ }).focus()
     await userEvent.keyboard('{ArrowRight}')
     expect(screen.getByRole('tabpanel')).toHaveTextContent('positions content')
-    expect(screen.getByRole('tab', { name: /Positions/ })).toHaveFocus()
+    expect(screen.getByRole('tab', { name: /持仓/ })).toHaveFocus()
 
-    await userEvent.click(screen.getByRole('tab', { name: /Positions/ }))
+    await userEvent.click(screen.getByRole('tab', { name: /持仓/ }))
     expect(screen.queryByRole('tabpanel')).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('tab', { name: 'GTT' }))
     expect(screen.getByRole('tabpanel')).toHaveTextContent('gtt content')
@@ -74,14 +74,14 @@ describe('DockShell', () => {
 
   it('returns focus to the strip when collapsed from the header button', async () => {
     render(<Host initial="trades" />)
-    await userEvent.click(screen.getByRole('button', { name: 'Collapse trading dock' }))
+    await userEvent.click(screen.getByRole('button', { name: '收起交易面板' }))
     expect(screen.queryByRole('tabpanel')).not.toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: /Trades/ })).toHaveFocus()
+    expect(screen.getByRole('tab', { name: /成交/ })).toHaveFocus()
   })
 
   it('is a horizontal separator that resizes by keyboard and persists on key up', () => {
     render(<Host initial="orders" />)
-    const handle = screen.getByRole('separator', { name: 'Resize trading dock' })
+    const handle = screen.getByRole('separator', { name: '调整交易面板高度' })
     expect(handle).toHaveAttribute('aria-orientation', 'horizontal')
     const before = Number(handle.getAttribute('aria-valuenow'))
     fireEvent.keyDown(handle, { key: 'ArrowUp' })
@@ -95,7 +95,7 @@ describe('DockShell', () => {
   it('carries the id the page finds it by', () => {
     render(<Host initial="orders" />)
     expect(document.getElementById(DOCK_ID)).toBe(
-      screen.getByRole('region', { name: 'Trading dock' })
+      screen.getByRole('region', { name: '交易面板' })
     )
   })
 })

@@ -47,7 +47,7 @@ export function ChartDataDialog({ source, studies, comparisons, onDownload, onCl
       })
       onClose()
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'The chart data could not be exported')
+      setError(cause instanceof Error ? cause.message : '无法导出图表数据')
     }
   }
   const row = 'flex cursor-pointer items-center gap-2 rounded px-1 py-1 text-xs hover:bg-accent'
@@ -66,19 +66,19 @@ export function ChartDataDialog({ source, studies, comparisons, onDownload, onCl
       >
         <div className="px-4 pb-2 pt-3">
           <h4 id={`${id}-title`} className="text-sm font-medium">
-            Download chart data
+            下载图表数据
           </h4>
           <p className="text-xs text-muted-foreground">{source}</p>
         </div>
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 pb-3">
           <fieldset className="space-y-0.5">
             <legend className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-              Bars
+              K 线
             </legend>
             {(
               [
-                ['all', 'All loaded bars'],
-                ['visible', 'Bars on screen'],
+                ['all', '全部已加载的 K 线'],
+                ['visible', '屏幕内的 K 线'],
               ] as const
             ).map(([value, label]) => (
               <label key={value} className={row}>
@@ -96,10 +96,10 @@ export function ChartDataDialog({ source, studies, comparisons, onDownload, onCl
           </fieldset>
           <fieldset className="space-y-0.5">
             <legend className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-              Studies
+              指标
             </legend>
             {studies.length === 0 && (
-              <p className="px-1 text-xs text-muted-foreground">No studies on this chart</p>
+              <p className="px-1 text-xs text-muted-foreground">此图表暂无指标</p>
             )}
             {studies.map((study) => (
               <label key={study.id} className={row}>
@@ -121,7 +121,7 @@ export function ChartDataDialog({ source, studies, comparisons, onDownload, onCl
           {comparisons > 0 && (
             <label className={row}>
               <TickBox checked={withComparisons} onChange={setWithComparisons} />
-              Comparison closes ({comparisons})
+              对比品种收盘价（{comparisons}）
             </label>
           )}
           {error && (
@@ -136,14 +136,14 @@ export function ChartDataDialog({ source, studies, comparisons, onDownload, onCl
             onClick={onClose}
             className="rounded border border-border px-3 py-1.5 text-xs hover:bg-accent"
           >
-            Cancel
+            取消
           </button>
           <button
             type="button"
             onClick={download}
             className="rounded bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
           >
-            Download CSV
+            下载 CSV
           </button>
         </div>
       </div>

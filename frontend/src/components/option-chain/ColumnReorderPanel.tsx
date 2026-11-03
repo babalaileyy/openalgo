@@ -159,21 +159,20 @@ export function ColumnReorderPanel({
       <DialogTrigger asChild>
         <Button variant="outline" size="icon" className="h-9 w-9">
           <Columns3 className="h-4 w-4" />
-          <span className="sr-only">Reorder columns</span>
+          <span className="sr-only">调整列顺序</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Reorder Columns</DialogTitle>
+          <DialogTitle>调整列顺序</DialogTitle>
           <DialogDescription>
-            Drag columns to reorder them. CE and PE columns can only be reordered within their
-            respective sections.
+            拖动列以调整顺序。看涨和看跌期权的列只能在各自区域内排序。
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h4 className="text-sm font-medium mb-2 text-green-500">CALLS (CE)</h4>
+            <h4 className="text-sm font-medium mb-2 text-green-500">看涨期权（CE）</h4>
             <ScrollArea className="h-64 pr-2">
               <div className="space-y-1.5">
                 {ceColumns.map((key) => (
@@ -195,7 +194,7 @@ export function ColumnReorderPanel({
           </div>
 
           <div>
-            <h4 className="text-sm font-medium mb-2 text-red-500">PUTS (PE)</h4>
+            <h4 className="text-sm font-medium mb-2 text-red-500">看跌期权（PE）</h4>
             <ScrollArea className="h-64 pr-2">
               <div className="space-y-1.5">
                 {peColumns.map((key) => (
@@ -219,9 +218,9 @@ export function ColumnReorderPanel({
 
         <DialogFooter className="gap-2 sm:gap-0">
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">取消</Button>
           </DialogClose>
-          <Button onClick={handleSave}>Save Order</Button>
+          <Button onClick={handleSave}>保存顺序</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

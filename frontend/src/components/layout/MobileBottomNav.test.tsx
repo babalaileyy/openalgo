@@ -52,7 +52,7 @@ describe('MobileBottomNav', () => {
     it('highlights Dashboard when on dashboard route', () => {
       renderWithRouter('/dashboard')
 
-      const dashboardLink = screen.getByRole('link', { name: /dashboard/i })
+      const dashboardLink = screen.getByRole('link', { name: /仪表盘/ })
       expect(dashboardLink).toHaveClass('text-primary')
       expect(dashboardLink).toHaveAttribute('aria-current', 'page')
     })
@@ -60,21 +60,21 @@ describe('MobileBottomNav', () => {
     it('highlights Positions when on positions route', () => {
       renderWithRouter('/positions')
 
-      const positionsLink = screen.getByRole('link', { name: /positions/i })
+      const positionsLink = screen.getByRole('link', { name: /持仓/ })
       expect(positionsLink).toHaveClass('text-primary')
     })
 
     it('highlights Tradebook when on the tradebook route', () => {
       renderWithRouter('/tradebook')
 
-      const tradebookLink = screen.getByRole('link', { name: /tradebook/i })
+      const tradebookLink = screen.getByRole('link', { name: /成交/ })
       expect(tradebookLink).toHaveClass('text-primary')
     })
 
     it('non-active items have muted color', () => {
       renderWithRouter('/dashboard')
 
-      const positionsLink = screen.getByRole('link', { name: /positions/i })
+      const positionsLink = screen.getByRole('link', { name: /持仓/ })
       expect(positionsLink).toHaveClass('text-muted-foreground')
     })
   })

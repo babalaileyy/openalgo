@@ -63,7 +63,7 @@ export default function SchedulePythonStrategy() {
         // A crypto strategy saved with no stop time is one that runs 24/7.
         setRunAllDay(data.exchange === CRYPTO_EXCHANGE_VALUE && !data.schedule_stop_time)
       } catch (_error) {
-        showToast.error('Failed to load strategy', 'pythonStrategy')
+        showToast.error('加载策略失败', 'pythonStrategy')
         navigate('/python')
       } finally {
         setLoading(false)
@@ -83,21 +83,21 @@ export default function SchedulePythonStrategy() {
     // A 24/7 strategy has no times or days to check.
     if (!allDay) {
       if (selectedDays.length === 0) {
-        showToast.error('Please select at least one day', 'pythonStrategy')
+        showToast.error('请至少选择一天', 'pythonStrategy')
         return
       }
       if (!startTime) {
-        showToast.error('Start time is required', 'pythonStrategy')
+        showToast.error('请选择开始时间', 'pythonStrategy')
         return
       }
       if (!stopTime) {
-        showToast.error('Stop time is required', 'pythonStrategy')
+        showToast.error('请选择停止时间', 'pythonStrategy')
         return
       }
       // Crypto only: Indian exchange schedules are validated as before.
       if (isCrypto && stopTime === startTime) {
         showToast.error(
-          'Stop time cannot be the same as the start time. To never stop, turn on Run 24/7.',
+          '停止时间不能与开始时间相同。若要持续运行，请开启全天候运行。',
           'pythonStrategy'
         )
         return
@@ -114,13 +114,13 @@ export default function SchedulePythonStrategy() {
       })
 
       if (response.status === 'success') {
-        showToast.success('Schedule saved successfully', 'pythonStrategy')
+        showToast.success('定时设置已保存', 'pythonStrategy')
         navigate('/python')
       } else {
-        showToast.error(response.message || 'Failed to save schedule', 'pythonStrategy')
+        showToast.error(response.message || '保存定时设置失败', 'pythonStrategy')
       }
     } catch (_error) {
-      showToast.error('Failed to save schedule', 'pythonStrategy')
+      showToast.error('保存定时设置失败', 'pythonStrategy')
     } finally {
       setSaving(false)
     }
@@ -146,13 +146,13 @@ export default function SchedulePythonStrategy() {
         <Button variant="ghost" asChild>
           <Link to="/python">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Python Strategies
+            返回 Python 策略
           </Link>
         </Button>
         <Card>
           <CardContent className="pt-6">
             <p className="text-muted-foreground">
-              Cannot modify schedule while strategy is running. Please stop the strategy first.
+              策略运行时无法修改定时设置，请先停止策略。
             </p>
           </CardContent>
         </Card>
@@ -166,13 +166,13 @@ export default function SchedulePythonStrategy() {
       <Button variant="ghost" asChild>
         <Link to="/python">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Python Strategies
+          返回 Python 策略
         </Link>
       </Button>
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Edit Schedule</h1>
+        <h1 className="text-2xl font-bold tracking-tight">编辑定时设置</h1>
         <p className="text-muted-foreground">{strategy.name}</p>
       </div>
 
@@ -181,17 +181,17 @@ export default function SchedulePythonStrategy() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Schedule Settings
+            定时设置
           </CardTitle>
           <CardDescription>
-            Set when the strategy should automatically start and stop (IST)
+            设置策略自动启动和停止的时间（印度标准时间）
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Exchange */}
             <div className="space-y-2">
-              <Label htmlFor="exchange">Exchange</Label>
+              <Label htmlFor="exchange">交易所</Label>
               <select
                 id="exchange"
                 value={exchange}
@@ -210,8 +210,8 @@ export default function SchedulePythonStrategy() {
               </select>
               <p className="text-xs text-muted-foreground">
                 {isCrypto
-                  ? 'CRYPTO trades 24/7. Run the strategy around the clock, or limit it to set hours.'
-                  : 'Drives holiday awareness for this strategy. Each exchange has its own holiday list and per-date session timings (e.g. on 14-Apr-2026 NSE/BSE are closed but MCX runs 17:00-23:55 per the calendar DB). SPECIAL_SESSION entries also override weekend rejects (e.g. Sunday Muhurat).'}
+                  ? '加密货币全天候交易，可让策略持续运行或限制运行时段。'
+                  : '交易所决定策略使用的节假日历和每日交易时段。特殊交易时段也可能允许周末运行，系统以交易日历为准。'}
               </p>
             </div>
 
@@ -225,7 +225,7 @@ export default function SchedulePythonStrategy() {
                     <div className="space-y-2">
                       <Label htmlFor="start_time" className="flex items-center gap-2">
                         <Clock className="h-4 w-4" />
-                        Start Time (IST)
+                        开始时间（印度标准时间）
                       </Label>
                       <Input
                         id="start_time"
@@ -238,7 +238,7 @@ export default function SchedulePythonStrategy() {
                     <div className="space-y-2">
                       <Label htmlFor="stop_time" className="flex items-center gap-2">
                         <Clock className="h-4 w-4" />
-                        Stop Time (IST)
+                        停止时间（印度标准时间）
                       </Label>
                       <Input
                         id="stop_time"
@@ -251,16 +251,14 @@ export default function SchedulePythonStrategy() {
                   </div>
                   {sessionWindow && !isCrypto && (
                     <p className="text-xs text-muted-foreground">
-                      {exchange} trades {sessionWindow.start} - {sessionWindow.stop} IST today. The
-                      strategy is stopped at whichever comes first, your stop time or the session
-                      close.
+                      {exchange} 今日交易时间为 {sessionWindow.start} - {sessionWindow.stop}（印度标准时间）。策略将在设定的停止时间或收盘时间中较早的时刻停止。
                     </p>
                   )}
                 </div>
 
                 {/* Days Selection */}
                 <div className="space-y-3">
-                  <Label>Days to Run</Label>
+                  <Label>运行日期</Label>
                   <div className="flex flex-wrap gap-2">
                     {SCHEDULE_DAYS.map((day) => (
                       <button
@@ -292,7 +290,7 @@ export default function SchedulePythonStrategy() {
                             </svg>
                           )}
                         </div>
-                        <span className="text-sm font-medium">{day.label}</span>
+                        <span className="text-sm font-medium">{{ mon: '周一', tue: '周二', wed: '周三', thu: '周四', fri: '周五', sat: '周六', sun: '周日' }[day.value]}</span>
                       </button>
                     ))}
                   </div>
@@ -306,7 +304,7 @@ export default function SchedulePythonStrategy() {
                     size="sm"
                     onClick={() => setSelectedDays(['mon', 'tue', 'wed', 'thu', 'fri'])}
                   >
-                    Weekdays
+                    工作日
                   </Button>
                   <Button
                     type="button"
@@ -314,7 +312,7 @@ export default function SchedulePythonStrategy() {
                     size="sm"
                     onClick={() => setSelectedDays(['sat', 'sun'])}
                   >
-                    Weekend
+                    周末
                   </Button>
                   <Button
                     type="button"
@@ -324,7 +322,7 @@ export default function SchedulePythonStrategy() {
                       setSelectedDays(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'])
                     }
                   >
-                    Every Day
+                    每天
                   </Button>
                 </div>
               </>
@@ -338,10 +336,10 @@ export default function SchedulePythonStrategy() {
                 className="flex-1"
                 onClick={() => navigate('/python')}
               >
-                Cancel
+                取消
               </Button>
               <Button type="submit" className="flex-1" disabled={saving}>
-                {saving ? 'Saving...' : 'Save Schedule'}
+                {saving ? '保存中…' : '保存定时设置'}
               </Button>
             </div>
           </form>

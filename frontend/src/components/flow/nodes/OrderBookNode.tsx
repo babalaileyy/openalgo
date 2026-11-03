@@ -24,8 +24,8 @@ export const OrderBookNode = memo(({ data, selected }: OrderBookNodeProps) => {
             <ClipboardList className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Order Book</div>
-            <div className="text-[9px] text-muted-foreground">All orders</div>
+            <div className="text-xs font-medium leading-tight">委托列表</div>
+            <div className="text-[9px] text-muted-foreground">所有订单</div>
           </div>
         </div>
         {data.outputVariable && (

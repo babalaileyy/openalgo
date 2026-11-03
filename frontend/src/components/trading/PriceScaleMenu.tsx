@@ -97,7 +97,7 @@ export function PriceScaleMenu({ menu, x, y, onCommand, onSettings }: Props) {
       </button>
 
       <Separator />
-      <Heading>Scale</Heading>
+      <Heading>刻度</Heading>
       {SCALE_MODES.map((mode) => (
         <button
           type="button"
@@ -125,13 +125,13 @@ export function PriceScaleMenu({ menu, x, y, onCommand, onSettings }: Props) {
       </button>
 
       <Separator />
-      <Heading>Price levels</Heading>
+      <Heading>价格水平</Heading>
       {menu.levels.map((level) => (
         <div key={level.kind} className="flex items-center gap-2 px-2 py-0.5 text-[13px]">
           <span className={cn('min-w-0 flex-1 truncate', !level.available && 'opacity-50')}>
             {level.label}
             {!level.available && (
-              <span className="ml-1.5 text-[11px] text-muted-foreground">no data</span>
+              <span className="ml-1.5 text-[11px] text-muted-foreground">无数据</span>
             )}
           </span>
           {(['line', 'tag'] as const).map((half) => {

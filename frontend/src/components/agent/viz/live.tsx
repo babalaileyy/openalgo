@@ -670,9 +670,7 @@ export function Sparkline({
 
   if (!path) {
     return (
-      <span className={cn('text-[10px] text-muted-foreground', className)}>
-        No movement yet since this card opened.
-      </span>
+      <span className={cn('text-[10px] text-muted-foreground', className)}>打开此卡片后暂无变动。</span>
     )
   }
 
@@ -811,9 +809,7 @@ export function readNotices(value: unknown): string[] {
 export function HeldNotice({ held, take }: { held: 'offscreen' | 'queued'; take: () => void }) {
   if (held === 'offscreen') {
     return (
-      <p className="border-t border-border px-3 py-1.5 text-[11px] text-muted-foreground">
-        Not streaming while off screen. Scroll it back into view to resume.
-      </p>
+      <p className="border-t border-border px-3 py-1.5 text-[11px] text-muted-foreground">移出屏幕时暂停实时行情，滚动回来即可恢复。</p>
     )
   }
   return (
@@ -824,9 +820,7 @@ export function HeldNotice({ held, take }: { held: 'offscreen' | 'queued'; take:
         type="button"
         onClick={take}
         className="underline underline-offset-2 hover:text-foreground"
-      >
-        Stream this one instead
-      </button>
+      >改为订阅此项</button>
       .
     </p>
   )

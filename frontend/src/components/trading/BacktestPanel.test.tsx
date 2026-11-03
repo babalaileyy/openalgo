@@ -92,7 +92,7 @@ describe('a run the script stopped part way', () => {
 
     openPanel()
 
-    const heading = await screen.findByText(/This run stopped on bar 18 of 85/)
+    const heading = await screen.findByText(/本次回测在第 18 根 K 线停止（共 85 根）/)
     // The bar's own time, in the zone the run read its clock in.
     expect(heading.textContent).toMatch(/09:00/)
     expect(heading.textContent).toMatch(/2026/)
@@ -102,7 +102,7 @@ describe('a run the script stopped part way', () => {
       )
     ).toBeInTheDocument()
     expect(screen.getByText('4:5 OS7008')).toBeInTheDocument()
-    expect(screen.getByText(/are of the run up to that bar/)).toBeInTheDocument()
+    expect(screen.getByText(/结果仅包含截至停止时的数据/)).toBeInTheDocument()
   })
 })
 
@@ -114,14 +114,14 @@ describe('a run with no trading hours', () => {
       stoppedRun({ stopped: undefined, instrument: { interval: '30m' } })
     )
     openPanel()
-    expect(await screen.findByText(/No trading hours were available/)).toBeInTheDocument()
+    expect(await screen.findByText(/此品种没有可用的交易时段/)).toBeInTheDocument()
     cleanup()
 
     runBacktest.mockResolvedValue(stoppedRun({ stopped: undefined }))
     openPanel()
-    await screen.findByText(/85 bars/)
-    expect(screen.queryByText(/No trading hours were available/)).not.toBeInTheDocument()
-    expect(screen.queryByText(/This run stopped/)).not.toBeInTheDocument()
+    await screen.findByText(/85 根 K 线/)
+    expect(screen.queryByText(/此品种没有可用的交易时段/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/本次回测在第 .* 根 K 线停止/)).not.toBeInTheDocument()
   })
 })
 
@@ -150,50 +150,50 @@ describe('the marks a run puts on the chart', () => {
     const onMarkChart = vi.fn(() => true)
     openWithMarks(onMarkChart)
 
-    const clear = await screen.findByRole('button', { name: /Clear marks/ })
+    const clear = await screen.findByRole('button', { name: /清除标记/ })
     const [marks, owner] = onMarkChart.mock.calls[0] as unknown as [unknown[], { file: string }]
     expect(marks.length).toBeGreaterThan(0)
     expect(owner.file).toBe('probe.oscript')
 
     await act(async () => clear.click())
     expect(onMarkChart).toHaveBeenLastCalledWith([])
-    expect(screen.queryByRole('button', { name: /Clear marks/ })).toBeNull()
+    expect(screen.queryByRole('button', { name: /清除标记/ })).toBeNull()
   })
 
   it('stops counting the marks once removing the strategy took them down', async () => {
     runBacktest.mockResolvedValue(markedRun())
     const onMarkChart = vi.fn(() => true)
     openWithMarks(onMarkChart)
-    await screen.findByRole('button', { name: /Clear marks/ })
+    await screen.findByRole('button', { name: /清除标记/ })
 
     const [, owner] = onMarkChart.mock.calls[0] as unknown as [unknown[], { onCleared(): void }]
     await act(async () => owner.onCleared())
-    expect(screen.queryByText(/fills marked on the chart/)).toBeNull()
+    expect(screen.queryByText(/笔成交/)).toBeNull()
   })
 
   it('shows the count on the button beside Run backtest', async () => {
     runBacktest.mockResolvedValue(markedRun())
     openWithMarks(vi.fn(() => true))
-    expect(await screen.findByRole('button', { name: 'Clear marks (1)' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: '清除标记（1）' })).toBeInTheDocument()
   })
 
   it('draws nothing on the chart with the switch off, and remembers it', async () => {
     runBacktest.mockResolvedValue(markedRun())
     const onMarkChart = vi.fn(() => true)
     const first = openWithMarks(onMarkChart)
-    await screen.findByRole('button', { name: /Clear marks/ })
+    await screen.findByRole('button', { name: /清除标记/ })
 
-    const toggle = screen.getByRole('checkbox', { name: 'Show trades on chart' })
+    const toggle = screen.getByRole('checkbox', { name: '在图表上显示交易' })
     await act(async () => toggle.click())
     expect(onMarkChart).toHaveBeenLastCalledWith([])
-    expect(screen.queryByRole('button', { name: /Clear marks/ })).toBeNull()
+    expect(screen.queryByRole('button', { name: /清除标记/ })).toBeNull()
     first.unmount()
 
     // The next panel, and its automatic run, keep the chart clean.
     onMarkChart.mockClear()
     openWithMarks(onMarkChart)
-    expect(await screen.findByRole('checkbox', { name: 'Show trades on chart' })).not.toBeChecked()
-    await screen.findByText(/bars, /)
+    expect(await screen.findByRole('checkbox', { name: '在图表上显示交易' })).not.toBeChecked()
+    await screen.findByText(/85 根 K 线，耗时/)
     expect(onMarkChart.mock.calls.every(([marks]) => (marks as unknown[]).length === 0)).toBe(true)
   })
 
@@ -202,21 +202,21 @@ describe('the marks a run puts on the chart', () => {
     runBacktest.mockResolvedValue(markedRun())
     const onMarkChart = vi.fn(() => true)
     openWithMarks(onMarkChart)
-    await screen.findByText(/bars, /)
+    await screen.findByText(/85 根 K 线，耗时/)
     const runs = runBacktest.mock.calls.length
 
-    await act(async () => screen.getByRole('checkbox', { name: 'Show trades on chart' }).click())
+    await act(async () => screen.getByRole('checkbox', { name: '在图表上显示交易' }).click())
     const [marks] = onMarkChart.mock.calls.at(-1) as unknown as [unknown[]]
     expect(marks.length).toBe(1)
     expect(runBacktest.mock.calls.length).toBe(runs)
-    expect(await screen.findByRole('button', { name: 'Clear marks (1)' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: '清除标记（1）' })).toBeInTheDocument()
   })
 
   it('takes its marks off the chart when the panel closes', async () => {
     runBacktest.mockResolvedValue(markedRun())
     const onMarkChart = vi.fn(() => true)
     const view = openWithMarks(onMarkChart)
-    await screen.findByRole('button', { name: /Clear marks/ })
+    await screen.findByRole('button', { name: /清除标记/ })
 
     view.unmount()
     expect(onMarkChart).toHaveBeenLastCalledWith([])

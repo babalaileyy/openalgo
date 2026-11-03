@@ -20,7 +20,12 @@
  * on the way into a dialog.
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { fileForScriptId } from '@/lib/trading/openscriptFiles'
+import {
+  indicatorCategory,
+  indicatorInstanceName,
+  indicatorName,
+} from '@/lib/trading/indicatorChinese'
+import { fileForScriptId, isScriptInstance } from '@/lib/trading/openscriptFiles'
 import { cn } from '@/lib/utils'
 
 export interface CatalogEntry {
@@ -157,7 +162,13 @@ export function IndicatorPickerDialog({
   const shown = useMemo(
     () =>
       filter
-        ? rows.filter((d) => d.name.toLowerCase().includes(filter) || d.id.includes(filter))
+        ? rows.filter(
+            (d) =>
+              d.name.toLowerCase().includes(filter) ||
+              d.id.toLowerCase().includes(filter) ||
+              (fileForScriptId(d.id) === null &&
+                indicatorName(d.name).toLowerCase().includes(filter))
+          )
         : rows,
     [rows, filter]
   )
@@ -183,7 +194,7 @@ export function IndicatorPickerDialog({
       onClick={() => setSection(id)}
       // Spelt out, because the visible label and the count are separate
       // elements and concatenate to "Trend3" for a screen reader otherwise.
-      aria-label={`${label}, ${count} indicators`}
+      aria-label={`${label}，${count} 个指标`}
       aria-pressed={section === id}
       className={cn(
         'flex w-full items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-[13px] transition-colors',
@@ -209,11 +220,11 @@ export function IndicatorPickerDialog({
     >
       <div className="flex h-[440px] max-h-[92%] w-[620px] max-w-[94%] flex-col rounded-lg border bg-popover shadow-2xl">
         <div className="flex shrink-0 items-center justify-between px-4 pb-2 pt-3">
-          <h3 className="text-[15px] font-semibold tracking-tight">Indicators</h3>
+          <h3 className="text-[15px] font-semibold tracking-tight">指标</h3>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="关闭"
             className="-mr-1 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <svg
@@ -249,8 +260,8 @@ export function IndicatorPickerDialog({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={catalog.length ? `Search ${catalog.length} indicators` : 'Loading…'}
-              aria-label="Search indicators"
+              placeholder={catalog.length ? `搜索 ${catalog.length} 个指标` : '加载中…'}
+              aria-label="搜索指标"
               className="h-8 w-full rounded border bg-background pl-7 pr-2 text-[13px] outline-none transition-colors focus:border-primary"
             />
           </div>
@@ -259,15 +270,15 @@ export function IndicatorPickerDialog({
         <div className="flex min-h-0 flex-1 border-t">
           {/* Rail */}
           <div className="w-[168px] shrink-0 overflow-y-auto border-r px-2 pb-3">
-            {heading('On this chart')}
-            {railRow('active', 'Active', active.length)}
-            {railRow('favourites', 'Favourites', favourites.length)}
-            {railRow('recent', 'Recent', recent.length)}
-            {heading('Yours')}
-            {railRow('mine', 'My scripts', mine.length)}
-            {heading('Library')}
-            {railRow('all', 'All', catalog.length)}
-            {categories.map(([cat, n]) => railRow(cat, cat, n))}
+            {heading('当前图表')}
+            {railRow('active', '已添加', active.length)}
+            {railRow('favourites', '收藏', favourites.length)}
+            {railRow('recent', '最近使用', recent.length)}
+            {heading('个人')}
+            {railRow('mine', '我的脚本', mine.length)}
+            {heading('指标库')}
+            {railRow('all', '全部', catalog.length)}
+            {categories.map(([cat, n]) => railRow(cat, indicatorCategory(cat), n))}
           </div>
 
           {/* List */}
@@ -277,14 +288,14 @@ export function IndicatorPickerDialog({
             ) : shown.length === 0 ? (
               <p className="px-2 py-6 text-center text-[13px] text-muted-foreground">
                 {catalog.length === 0
-                  ? 'Loading the indicator library…'
+                  ? '正在加载指标库…'
                   : filter
-                    ? 'Nothing matches that.'
+                    ? '没有找到匹配的指标。'
                     : section === 'favourites'
-                      ? 'Star an indicator to keep it here.'
+                      ? '收藏指标后会显示在这里。'
                       : section === 'mine'
-                        ? 'Nothing written yet. Open the scripts panel to write a study, and it appears here the moment it compiles.'
-                        : 'Nothing here yet.'}
+                        ? '尚无脚本。打开脚本面板编写指标，编译后会显示在这里。'
+                        : '这里暂时没有内容。'}
               </p>
             ) : (
               shown.map((d) => (
@@ -295,7 +306,11 @@ export function IndicatorPickerDialog({
                   <button
                     type="button"
                     onClick={() => toggleFavourite(d.id)}
-                    aria-label={favSet.has(d.id) ? `Unstar ${d.name}` : `Star ${d.name}`}
+                    aria-label={
+                      favSet.has(d.id)
+                        ? `取消收藏 ${indicatorName(d.name)}`
+                        : `收藏 ${indicatorName(d.name)}`
+                    }
                     aria-pressed={favSet.has(d.id)}
                     className={cn(
                       'shrink-0 rounded p-1 transition-colors',
@@ -320,12 +335,12 @@ export function IndicatorPickerDialog({
                     type="button"
                     onClick={() => add(d.id)}
                     className="flex-1 truncate py-1.5 text-left text-[13px]"
-                    title={`Add ${d.name}`}
+                    title={`添加 ${fileForScriptId(d.id) === null ? indicatorName(d.name) : d.name}`}
                   >
-                    {d.name}
+                    {fileForScriptId(d.id) === null ? indicatorName(d.name) : d.name}
                   </button>
                   <span className="shrink-0 pr-1 text-[10px] uppercase tracking-wide text-muted-foreground/60 opacity-0 transition-opacity group-hover:opacity-100">
-                    {d.category}
+                    {indicatorCategory(d.category)}
                   </span>
                 </div>
               ))
@@ -355,7 +370,7 @@ function ActiveList({
   if (active.length === 0) {
     return (
       <p className="px-2 py-6 text-center text-[13px] text-muted-foreground">
-        No indicators on this chart yet.
+        当前图表尚未添加指标。
       </p>
     )
   }
@@ -363,20 +378,22 @@ function ActiveList({
     <>
       {active.map((i) => (
         <div key={i.id} className="flex items-center gap-2 rounded px-2 hover:bg-accent/60">
-          <span className="flex-1 truncate py-1.5 text-[13px]">{i.name}</span>
+          <span className="flex-1 truncate py-1.5 text-[13px]">
+            {isScriptInstance(i.id) ? i.name : indicatorInstanceName(i.name)}
+          </span>
           <button
             type="button"
             onClick={() => onSettings(i.id)}
             className="shrink-0 rounded px-1.5 py-0.5 text-[12px] text-primary transition-colors hover:bg-accent"
           >
-            Settings
+            设置
           </button>
           <button
             type="button"
             onClick={() => onRemove(i.id)}
             className="shrink-0 rounded px-1.5 py-0.5 text-[12px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
-            Remove
+            移除
           </button>
         </div>
       ))}

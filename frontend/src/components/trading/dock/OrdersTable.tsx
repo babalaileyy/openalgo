@@ -16,6 +16,8 @@ import {
   StatusBadge,
   SymbolCell,
   sideClass,
+  sideLabel,
+  priceTypeLabel,
   TD,
   TD_NUM,
   TH,
@@ -39,7 +41,7 @@ function qtyText(order: DockOrder): string {
 
 function priceText(order: DockOrder): string {
   if (order.pricetype === 'MARKET' || order.pricetype === 'SL-M') {
-    return order.average_price ? fmt2(order.average_price) : 'MKT'
+    return order.average_price ? fmt2(order.average_price) : '市价'
   }
   return order.price ? fmt2(order.price) : '-'
 }
@@ -57,43 +59,43 @@ export function OrdersTable({
       <thead>
         <tr>
           <th scope="col" className={TH}>
-            Time
+            时间
           </th>
           <th scope="col" className={TH}>
-            Symbol
+            交易品种
           </th>
           <th scope="col" className={TH}>
-            Exch
+            交易所
           </th>
           <th scope="col" className={TH}>
-            Side
+            方向
           </th>
           <th scope="col" className={TH}>
-            Type
+            委托类型
           </th>
           <th scope="col" className={TH}>
-            Product
+            产品类型
           </th>
           <th scope="col" className={TH_NUM}>
-            Qty
+            数量
           </th>
           <th scope="col" className={TH_NUM}>
-            Price
+            价格
           </th>
           <th scope="col" className={TH_NUM}>
-            Trigger
+            触发价
           </th>
           <th scope="col" className={TH}>
-            Status
+            状态
           </th>
           <th scope="col" className={cn(TH, 'text-right')}>
-            <span className="sr-only">Actions</span>
+            <span className="sr-only">操作</span>
           </th>
         </tr>
       </thead>
       <tbody>
         {orders.length === 0 && (
-          <EmptyRows colSpan={11}>{isLoading ? 'Loading orders' : 'No orders today.'}</EmptyRows>
+          <EmptyRows colSpan={11}>{isLoading ? '正在加载委托' : '今日暂无委托。'}</EmptyRows>
         )}
         {orders.map((order) => {
           const working = isWorking(order.order_status)
@@ -116,8 +118,8 @@ export function OrdersTable({
                 onPick={onPick}
               />
               <td className={cn(TD, 'text-muted-foreground')}>{order.exchange}</td>
-              <td className={cn(TD, 'font-medium', sideClass(order.action))}>{order.action}</td>
-              <td className={TD}>{order.pricetype}</td>
+              <td className={cn(TD, 'font-medium', sideClass(order.action))}>{sideLabel(order.action)}</td>
+              <td className={TD}>{priceTypeLabel(order.pricetype)}</td>
               <td className={cn(TD, 'text-muted-foreground')}>{order.product}</td>
               <td className={TD_NUM}>{qtyText(order)}</td>
               <td className={TD_NUM}>{priceText(order)}</td>
@@ -144,9 +146,9 @@ export function OrdersTable({
                         size="sm"
                         className="h-6 px-2 text-[11px]"
                         onClick={() => onModify(order)}
-                        aria-label={`Modify order ${order.orderid} for ${order.symbol}`}
+                        aria-label={`修改 ${order.symbol} 的委托 ${order.orderid}`}
                       >
-                        Modify
+                        修改
                       </Button>
                     )}
                     <Button
@@ -154,9 +156,9 @@ export function OrdersTable({
                       size="sm"
                       className="h-6 px-2 text-[11px] text-rose-600 hover:text-rose-600 dark:text-rose-400"
                       onClick={() => onCancel(order)}
-                      aria-label={`Cancel order ${order.orderid} for ${order.symbol}`}
+                      aria-label={`撤销 ${order.symbol} 的委托 ${order.orderid}`}
                     >
-                      Cancel
+                      撤单
                     </Button>
                   </span>
                 )}

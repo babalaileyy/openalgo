@@ -50,7 +50,7 @@ function mount(type: string, data: Record<string, unknown>) {
 
 /** The Product select's trigger, read the way a user reads it. */
 function productControl(): HTMLElement {
-  const label = screen.getByText('Product')
+  const label = screen.getByText(/^(Product|交易产品)$/)
   const trigger = label.parentElement?.querySelector('button')
   if (!trigger) throw new Error('Product control was not rendered')
   return trigger
@@ -60,7 +60,7 @@ const storedProduct = () => useFlowWorkflowStore.getState().nodes[0].data.produc
 
 /** Change the node's exchange the way the panel offers it. */
 function chooseExchange(value: string) {
-  const trigger = screen.getByText('Exchange').parentElement?.querySelector('button')
+  const trigger = screen.getByText('交易所').parentElement?.querySelector('button')
   if (!trigger) throw new Error('Exchange control was not rendered')
   fireEvent.click(trigger)
   fireEvent.click(within(screen.getByRole('listbox')).getByText(value))
@@ -132,7 +132,7 @@ describe('a basket', () => {
      * wrong for at least one of them. */
     mount('basketOrder', { orders: 'SBIN,NSE,BUY,1\nGOLDM,MCX,BUY,1' })
 
-    expect(productControl().textContent).toBe('By row exchange')
+    expect(productControl().textContent).toBe('按各行交易所')
     expect(storedProduct()).toBeUndefined()
   })
 
@@ -148,7 +148,7 @@ describe('a basket', () => {
     mount('basketOrder', { orders: 'SBIN,NSE,BUY,1', product: 'NRML' })
 
     fireEvent.click(productControl())
-    fireEvent.click(screen.getByText('By row exchange'))
+    fireEvent.click(screen.getByText('按各行交易所'))
 
     expect(storedProduct()).toBeUndefined()
     expect(JSON.parse(JSON.stringify({ data: { product: storedProduct() } }))).toEqual({ data: {} })

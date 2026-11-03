@@ -109,10 +109,10 @@ export default function Holdings() {
           setStats(response.data.statistics)
           setError(null)
         } else {
-          setError(response.message || 'Failed to fetch holdings')
+          setError(response.message || '获取持仓失败')
         }
       } catch {
-        setError('Failed to fetch holdings')
+        setError('获取持仓失败')
       } finally {
         setIsLoading(false)
         setIsRefreshing(false)
@@ -167,7 +167,7 @@ export default function Holdings() {
 
   const exportToCSV = () => {
     if (enhancedHoldings.length === 0) {
-      showToast.error('No data to export', 'system')
+      showToast.error('没有可导出的数据', 'system')
       return
     }
 
@@ -203,9 +203,9 @@ export default function Holdings() {
       a.click()
       // Revoke the object URL to free memory
       URL.revokeObjectURL(url)
-      showToast.success(`Downloaded ${filename}`, 'clipboard')
+      showToast.success(`已下载 ${filename}`, 'clipboard')
     } catch {
-      showToast.error('Failed to export CSV', 'system')
+      showToast.error('导出 CSV 失败', 'system')
     }
   }
 
@@ -218,7 +218,7 @@ export default function Holdings() {
         <Alert variant="default" className="bg-amber-500/10 border-amber-500/30">
           <AlertTriangle className="h-4 w-4 text-amber-600" />
           <AlertDescription className="text-amber-700 dark:text-amber-400">
-            Data is being refreshed after tab was inactive...
+            标签页恢复后正在刷新数据…
           </AlertDescription>
         </Alert>
       )}
@@ -227,14 +227,14 @@ export default function Holdings() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">Investor Summary</h1>
+            <h1 className="text-3xl font-bold tracking-tight">持仓概览</h1>
             {isPaused ? (
               <Badge
                 variant="outline"
                 className="bg-amber-500/10 text-amber-600 border-amber-500/30 gap-1"
               >
                 <Pause className="h-3 w-3" />
-                Paused
+                已暂停
               </Badge>
             ) : isLive ? (
               <Badge
@@ -242,11 +242,11 @@ export default function Holdings() {
                 className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 gap-1"
               >
                 <Radio className="h-3 w-3 animate-pulse" />
-                Live
+                实时
               </Badge>
             ) : null}
           </div>
-          <p className="text-muted-foreground">View your holdings portfolio</p>
+          <p className="text-muted-foreground">查看你的持仓组合</p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -256,11 +256,11 @@ export default function Holdings() {
             disabled={isRefreshing}
           >
             <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
-            Refresh
+            刷新
           </Button>
           <Button variant="outline" size="sm" onClick={exportToCSV}>
             <Download className="h-4 w-4 mr-2" />
-            Export
+            导出
           </Button>
         </div>
       </div>
@@ -269,7 +269,7 @@ export default function Holdings() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Holding Value</CardDescription>
+            <CardDescription>持仓总市值</CardDescription>
             <CardTitle className="text-2xl text-primary">
               {enhancedStats ? formatCurrency(enhancedStats.totalholdingvalue) : '---'}
             </CardTitle>
@@ -277,7 +277,7 @@ export default function Holdings() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Investment Value</CardDescription>
+            <CardDescription>总投入成本</CardDescription>
             <CardTitle className="text-2xl">
               {enhancedStats ? formatCurrency(enhancedStats.totalinvvalue) : '---'}
             </CardTitle>
@@ -285,7 +285,7 @@ export default function Holdings() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Profit and Loss</CardDescription>
+            <CardDescription>总盈亏</CardDescription>
             <CardTitle
               className={cn(
                 'text-2xl',
@@ -311,7 +311,7 @@ export default function Holdings() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total PnL Percentage</CardDescription>
+            <CardDescription>总盈亏比例</CardDescription>
             <CardTitle
               className={cn(
                 'text-2xl',
@@ -338,23 +338,23 @@ export default function Holdings() {
           ) : holdings.length === 0 ? (
             <EmptyState
               icon={Wallet}
-              title="No holdings found"
-              description="Connect a broker to start tracking your portfolio."
+              title="暂无持仓"
+              description="连接券商后即可查看持仓组合。"
             />
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Trading Symbol</TableHead>
-                    <TableHead>Exchange</TableHead>
-                    <TableHead className="text-right">Quantity</TableHead>
-                    <TableHead className="text-right">Avg Price</TableHead>
-                    <TableHead className="text-right">LTP</TableHead>
-                    <TableHead>Product</TableHead>
-                    <TableHead className="text-right">Profit and Loss</TableHead>
-                    <TableHead className="text-right">PnL %</TableHead>
-                    <TableHead className="text-center">Actions</TableHead>
+                    <TableHead>交易品种</TableHead>
+                    <TableHead>交易所</TableHead>
+                    <TableHead className="text-right">持仓数量</TableHead>
+                    <TableHead className="text-right">持仓均价</TableHead>
+                    <TableHead className="text-right">最新价</TableHead>
+                    <TableHead>产品类型</TableHead>
+                    <TableHead className="text-right">盈亏</TableHead>
+                    <TableHead className="text-right">盈亏比例</TableHead>
+                    <TableHead className="text-center">操作</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -414,7 +414,7 @@ export default function Holdings() {
                               })
                             }
                           >
-                            Add
+                            买入加仓
                           </Button>
                           <Button
                             size="sm"
@@ -429,7 +429,7 @@ export default function Holdings() {
                               })
                             }
                           >
-                            Exit
+                            卖出持仓
                           </Button>
                         </div>
                       </TableCell>
@@ -439,7 +439,7 @@ export default function Holdings() {
                 <TableFooter>
                   <TableRow className="bg-muted/50">
                     <TableCell colSpan={6} className="text-right text-muted-foreground">
-                      Total P&L:
+                      总盈亏：
                     </TableCell>
                     <TableCell
                       className={cn(
@@ -490,7 +490,7 @@ export default function Holdings() {
         priceType="MARKET"
         strategy="Holdings"
         onSuccess={(orderId) => {
-          showToast.success(`Order ${orderId} placed`, 'orders')
+          showToast.success(`委托 ${orderId} 已提交`, 'orders')
           setOrderIntent(null)
           fetchHoldings(true)
         }}

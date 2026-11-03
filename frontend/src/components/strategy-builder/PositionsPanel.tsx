@@ -137,7 +137,7 @@ export function PositionsPanel({
             <Layers className="h-3.5 w-3.5" />
           </div>
           <div className="min-w-0">
-            <h3 className="truncate text-sm font-semibold leading-none">Positions</h3>
+            <h3 className="truncate text-sm font-semibold leading-none">持仓</h3>
             <p className="mt-1 truncate text-[10px] text-muted-foreground">
               {legs.length > 0 ? `${activeCount}/${legs.length} active` : 'No legs added yet'}
             </p>
@@ -151,7 +151,7 @@ export function PositionsPanel({
           disabled={legs.length === 0}
         >
           <RotateCw className="mr-1 h-3 w-3" />
-          Reset
+          重置
         </Button>
       </div>
 
@@ -171,7 +171,7 @@ export function PositionsPanel({
               'data-[state=indeterminate]:border-emerald-500 data-[state=indeterminate]:bg-emerald-500 data-[state=indeterminate]:text-white'
             )}
           />
-          <label className="text-[11px] font-medium text-muted-foreground">Select all</label>
+          <label className="text-[11px] font-medium text-muted-foreground">全选</label>
           <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold tabular-nums text-muted-foreground">
             {activeCount}/{legs.length}
           </span>
@@ -182,8 +182,8 @@ export function PositionsPanel({
       <div className="max-h-[280px] flex-1 overflow-y-auto">
         {legs.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-1 p-8 text-center">
-            <p className="text-xs font-medium text-muted-foreground">No legs yet</p>
-            <p className="text-[11px] text-muted-foreground/80">Pick a template or add manually</p>
+            <p className="text-xs font-medium text-muted-foreground">暂无交易腿</p>
+            <p className="text-[11px] text-muted-foreground/80">选择模板或手动添加</p>
           </div>
         ) : (
           <ul>
@@ -374,7 +374,7 @@ export function PositionsPanel({
               className="h-9 gap-1.5 text-xs font-semibold"
             >
               <Send className="h-3.5 w-3.5" />
-              Execute
+              执行
             </Button>
           )}
         </div>
@@ -408,10 +408,10 @@ export function PositionsPanel({
             emphasize
           />
           <MetricTile
-            label="Prob. of Profit"
+            label="Prob. of Profit（盈利概率）"
             value={probOfProfit === null ? '—' : formatPct(probOfProfit * 100)}
           />
-          <MetricTile label="Risk : Reward" value={riskReward} />
+          <MetricTile label="Risk : Reward（风险收益比）" value={riskReward} />
           <MetricTile
             label="Total P&L"
             value={formatCurrency(totalPnl)}
@@ -441,7 +441,7 @@ export function PositionsPanel({
         {breakevens.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 border-t bg-muted/20 px-3.5 py-2.5">
             <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              Breakevens
+              盈亏平衡点
             </span>
             {breakevens.map((b, i) => (
               <span

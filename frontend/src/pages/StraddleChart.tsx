@@ -237,7 +237,7 @@ export default function StraddleChart() {
       theme: chartThemeFor(initial, shown),
       // A read-only analytic chart: the keyboard belongs to the page's controls.
       shortcuts: false,
-      ariaLabel: 'Straddle chart',
+      ariaLabel: '跨式组合图表',
     })
 
     // Straddle first: the primary series, on the right axis.
@@ -247,7 +247,7 @@ export default function StraddleChart() {
       style: {
         color: initial.straddle,
         lineWidth: 2,
-        title: 'Straddle',
+        title: 'Straddle（跨式组合）',
         lastValueVisible: true,
         priceLineVisible: true,
         visible: shown.showStraddle,
@@ -261,7 +261,7 @@ export default function StraddleChart() {
       style: {
         color: initial.spot,
         lineWidth: 2,
-        title: 'Spot',
+        title: '现货价',
         lastValueVisible: true,
         priceLineVisible: true,
         visible: shown.showSpot,
@@ -275,7 +275,7 @@ export default function StraddleChart() {
         color: initial.synthetic,
         lineWidth: 1,
         lineStyle: 'dashed',
-        title: 'Synthetic Fut',
+        title: 'Synthetic Fut（合成期货）',
         lastValueVisible: true,
         priceLineVisible: false,
         visible: shown.showSynthetic,
@@ -307,23 +307,23 @@ export default function StraddleChart() {
 
       tt.innerHTML = `
         <div class="flex justify-between gap-4 font-semibold" style="color:${c.straddle}">
-          <span>Straddle Price</span>
+          <span>Straddle Price（跨式组合价格）</span>
           <span>${point.straddle.toFixed(2)}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">&bull; ${point.atm_strike} Call:</span>
+          <span class="text-muted-foreground">&bull; ${point.atm_strike} 看涨：</span>
           <span>${point.ce_price.toFixed(2)}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">&bull; ${point.atm_strike} Put:</span>
+          <span class="text-muted-foreground">&bull; ${point.atm_strike} 看跌：</span>
           <span>${point.pe_price.toFixed(2)}</span>
         </div>
         <div class="flex justify-between gap-4" style="color:${c.synthetic}">
-          <span>Synthetic Fut</span>
+          <span>Synthetic Fut（合成期货）</span>
           <span>${point.synthetic_future.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
         <div class="flex justify-between gap-4">
-          <span class="text-muted-foreground">Spot Price</span>
+          <span class="text-muted-foreground">现货价</span>
           <span>${point.spot.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
         <div class="mt-1 flex justify-between gap-4 border-t border-border pt-1 text-muted-foreground">
@@ -464,7 +464,7 @@ export default function StraddleChart() {
         }
       } catch (error) {
         if (cancelled) return
-        showToast.error(serverSentence(error, 'Failed to fetch expiry dates'), 'positions')
+        showToast.error(serverSentence(error, '获取到期日失败'), 'positions')
       }
     }
     fetchExpiries()
@@ -491,10 +491,10 @@ export default function StraddleChart() {
         setChartData(res.data)
         applyDataToChart(res.data)
       } else {
-        showToast.error(res.message || 'Failed to load straddle data', 'positions')
+        showToast.error(res.message || '加载跨式组合数据失败', 'positions')
       }
     } catch (error) {
-      showToast.error(serverSentence(error, 'Failed to fetch straddle data'), 'positions')
+      showToast.error(serverSentence(error, '获取跨式组合数据失败'), 'positions')
     } finally {
       setIsLoading(false)
     }
@@ -524,14 +524,14 @@ export default function StraddleChart() {
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-xl font-semibold">Straddle Chart</CardTitle>
+          <CardTitle className="text-xl font-semibold">Straddle Chart（跨式组合图表）</CardTitle>
         </CardHeader>
         <CardContent>
           {/* Controls */}
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <Select value={selectedExchange} onValueChange={setSelectedExchange}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Exchange" />
+                <SelectValue placeholder="交易所" />
               </SelectTrigger>
               <SelectContent>
                 {fnoExchanges.map((ex) => (
@@ -550,15 +550,15 @@ export default function StraddleChart() {
                   aria-expanded={underlyingOpen}
                   className="w-[140px] justify-between"
                 >
-                  {selectedUnderlying || 'Underlying'}
+                  {selectedUnderlying || '标的'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-0" align="start">
                 <Command>
-                  <CommandInput placeholder="Search underlying..." />
+                  <CommandInput placeholder="搜索标的..." />
                   <CommandList>
-                    <CommandEmpty>No underlying found</CommandEmpty>
+                    <CommandEmpty>未找到标的</CommandEmpty>
                     <CommandGroup>
                       {underlyings.map((u) => (
                         <CommandItem
@@ -583,7 +583,7 @@ export default function StraddleChart() {
 
             <Select value={selectedExpiry} onValueChange={setSelectedExpiry}>
               <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Expiry" />
+                <SelectValue placeholder="到期日" />
               </SelectTrigger>
               <SelectContent>
                 {expiries.map((exp) => (
@@ -596,7 +596,7 @@ export default function StraddleChart() {
 
             <Select value={selectedInterval} onValueChange={setSelectedInterval}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Interval" />
+                <SelectValue placeholder="时间周期" />
               </SelectTrigger>
               <SelectContent>
                 {intervals.map((intv) => (
@@ -609,19 +609,19 @@ export default function StraddleChart() {
 
             <Select value={selectedDays} onValueChange={setSelectedDays}>
               <SelectTrigger className="w-[100px]">
-                <SelectValue placeholder="Days" />
+                <SelectValue placeholder="天数" />
               </SelectTrigger>
               <SelectContent>
                 {['1', '3', '5'].map((d) => (
                   <SelectItem key={d} value={d}>
-                    {d} {d === '1' ? 'Day' : 'Days'}
+                    {d} 天
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
             <Button variant="outline" size="sm" onClick={loadData} disabled={isLoading}>
-              {isLoading ? 'Loading...' : 'Refresh'}
+              {isLoading ? '加载中...' : '刷新'}
             </Button>
           </div>
 
@@ -629,25 +629,25 @@ export default function StraddleChart() {
           {latestPoint && chartData && (
             <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mb-4 text-sm">
               <div>
-                <span className="text-muted-foreground">Straddle Price </span>
+                <span className="text-muted-foreground">Straddle Price（跨式组合价格） </span>
                 <span className="font-semibold" style={{ color: look.straddle }}>
                   {latestPoint.straddle.toFixed(2)}
                 </span>
               </div>
               <div>
-                <span className="text-muted-foreground">Spot </span>
+                <span className="text-muted-foreground">现货价 </span>
                 <span className="font-medium">{latestPoint.spot.toFixed(2)}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Straddle Strike </span>
+                <span className="text-muted-foreground">跨式组合行权价 </span>
                 <span className="font-medium">{latestPoint.atm_strike}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">{latestPoint.atm_strike} CE </span>
+                <span className="text-muted-foreground">{latestPoint.atm_strike} 看涨 </span>
                 <span className="font-medium">{latestPoint.ce_price.toFixed(2)}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">{latestPoint.atm_strike} PE </span>
+                <span className="text-muted-foreground">{latestPoint.atm_strike} 看跌 </span>
                 <span className="font-medium">{latestPoint.pe_price.toFixed(2)}</span>
               </div>
             </div>
@@ -671,7 +671,7 @@ export default function StraddleChart() {
               <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-lg">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Loading straddle data...
+                  正在加载跨式组合数据...
                 </div>
               </div>
             )}
@@ -690,7 +690,7 @@ export default function StraddleChart() {
                 className="inline-block h-0.5 w-5 rounded"
                 style={{ backgroundColor: look.straddle }}
               />
-              Straddle
+              Straddle（跨式组合）
             </button>
             <button
               type="button"
@@ -703,7 +703,7 @@ export default function StraddleChart() {
                 className="inline-block h-0.5 w-5 rounded"
                 style={{ backgroundColor: look.spot }}
               />
-              Spot
+              现货价
             </button>
             <button
               type="button"
@@ -716,7 +716,7 @@ export default function StraddleChart() {
                 className="inline-block h-0.5 w-5 rounded border-dashed border-t-2"
                 style={{ borderColor: look.synthetic, backgroundColor: 'transparent' }}
               />
-              Synthetic Fut
+              Synthetic Fut（合成期货）
             </button>
           </div>
         </CardContent>

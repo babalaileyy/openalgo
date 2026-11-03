@@ -238,7 +238,7 @@ export function WebSearchPanel() {
       applyConfig(next)
       setDraft(null)
       setFormError(null)
-      showToast.success('Web search settings saved')
+      showToast.success('网络搜索设置已保存')
     },
     onError: (error) => {
       setFormError(agentErrorMessage(error, 'Could not save the web search settings.'))
@@ -256,7 +256,7 @@ export function WebSearchPanel() {
       showToast.success('Key saved')
     },
     onError: (error) => {
-      showToast.error(agentErrorMessage(error, 'Could not save the key.'))
+      showToast.error(agentErrorMessage(error, '无法保存密钥。'))
     },
   })
 
@@ -269,10 +269,10 @@ export function WebSearchPanel() {
         delete rest[provider]
         return rest
       })
-      showToast.success('Key removed')
+      showToast.success('密钥已移除')
     },
     onError: (error) => {
-      showToast.error(agentErrorMessage(error, 'Could not remove the key.'))
+      showToast.error(agentErrorMessage(error, '无法移除密钥。'))
     },
   })
 
@@ -341,7 +341,7 @@ export function WebSearchPanel() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Globe className="h-4 w-4 text-muted-foreground" aria-hidden />
-          Web search
+          网页搜索
         </CardTitle>
         <CardDescription>
           DuckDuckGo needs no key and answers link searches out of the box; Tavily replaces it for
@@ -365,7 +365,7 @@ export function WebSearchPanel() {
                 )}
               </span>
               <Button size="sm" variant="outline" onClick={() => void query.refetch()}>
-                Retry
+                重试
               </Button>
             </AlertDescription>
           </Alert>
@@ -375,7 +375,7 @@ export function WebSearchPanel() {
           <>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor={`${fieldId}-provider`}>Search provider</Label>
+                <Label htmlFor={`${fieldId}-provider`}>搜索服务商</Label>
                 <Select
                   value={form.provider}
                   onValueChange={(next) =>
@@ -400,7 +400,7 @@ export function WebSearchPanel() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`${fieldId}-perplexity-model`}>Perplexity model</Label>
+                <Label htmlFor={`${fieldId}-perplexity-model`}>Perplexity 模型</Label>
                 <Input
                   id={`${fieldId}-perplexity-model`}
                   value={form.perplexityModel}
@@ -415,7 +415,7 @@ export function WebSearchPanel() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`${fieldId}-calls`}>Searches per turn</Label>
+                <Label htmlFor={`${fieldId}-calls`}>每轮搜索次数</Label>
                 <Input
                   id={`${fieldId}-calls`}
                   type="number"
@@ -431,7 +431,7 @@ export function WebSearchPanel() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`${fieldId}-cap`}>Daily cap</Label>
+                <Label htmlFor={`${fieldId}-cap`}>每日上限</Label>
                 <Input
                   id={`${fieldId}-cap`}
                   type="number"
@@ -473,13 +473,9 @@ export function WebSearchPanel() {
                   setDraft(null)
                   setFormError(null)
                 }}
-              >
-                Discard changes
-              </Button>
+              >放弃更改</Button>
               {dirty ? (
-                <span className="text-xs text-muted-foreground">
-                  Unsaved. The description above still reports what the agent does now.
-                </span>
+                <span className="text-xs text-muted-foreground">更改尚未保存；上方说明仍反映智能体当前的行为。</span>
               ) : null}
             </div>
 
@@ -487,11 +483,8 @@ export function WebSearchPanel() {
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <h3 className="text-sm font-semibold">Provider keys</h3>
-                <p className="text-xs text-muted-foreground">
-                  A key is write only. It is never sent back to this screen, so the field starts
-                  empty even when one is stored and leaving it empty keeps the stored key.
-                </p>
+                <h3 className="text-sm font-semibold">服务商密钥</h3>
+                <p className="text-xs text-muted-foreground">密钥只能写入，不会回传到此页面。因此即使已有密钥，输入框仍为空；留空会保留已存密钥。</p>
               </div>
 
               {config.providers.map((provider) => (
@@ -543,15 +536,13 @@ export function WebSearchPanel() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (clearing) clearKey.mutate(clearing.id)
                 setClearing(null)
               }}
-            >
-              Remove key
-            </AlertDialogAction>
+            >移除密钥</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -592,16 +583,14 @@ function UsageMeter({ config }: { config: WebSearchConfig }) {
 
   if (cap === 0) {
     return (
-      <div className="rounded-md border border-amber-500 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-600 dark:bg-amber-950/50 dark:text-amber-200">
-        The daily cap is 0, so the agent will not search the web at all.
-      </div>
+      <div className="rounded-md border border-amber-500 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-600 dark:bg-amber-950/50 dark:text-amber-200">每日上限为 0，智能体不会进行网络搜索。</div>
     )
   }
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-xs">
-        <span className="font-medium">Searches left today</span>
+        <span className="font-medium">今日剩余搜索次数</span>
         <span className="tabular-nums text-muted-foreground">
           {usage.remaining} of {cap}
         </span>
@@ -651,7 +640,7 @@ function ProviderRow({
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">{provider.label}</span>
-            {selected ? <Badge variant="secondary">Selected</Badge> : null}
+            {selected ? <Badge variant="secondary">已选择</Badge> : null}
             <Badge variant="outline">{resultKindLabel(provider)}</Badge>
             <Badge variant="outline" className="font-mono text-[11px]">
               {provider.tool}
@@ -698,15 +687,13 @@ function ProviderRow({
               Test
             </Button>
             {provider.has_api_key ? (
-              <Button size="sm" variant="ghost" disabled={clearingKey} onClick={onClearKey}>
-                Remove key
-              </Button>
+              <Button size="sm" variant="ghost" disabled={clearingKey} onClick={onClearKey}>移除密钥</Button>
             ) : null}
           </div>
           <p className="text-xs text-muted-foreground">
             {provider.has_api_key ? (
               <>
-                Stored key <span className="font-mono">{provider.api_key_fingerprint}</span>. Last
+                已保存的密钥 <span className="font-mono">{provider.api_key_fingerprint}</span>. Last
                 used {formatUtc(provider.api_key_last_used_at)}.
               </>
             ) : (
@@ -725,9 +712,7 @@ function ProviderRow({
             {testing ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
             Test
           </Button>
-          <span className="text-xs text-muted-foreground">
-            No key needed, so this provider works with nothing configured.
-          </span>
+          <span className="text-xs text-muted-foreground">此服务商无需密钥，无需额外配置即可使用。</span>
         </div>
       )}
 

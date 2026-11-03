@@ -25,13 +25,13 @@ export const StrategyPnlNode = memo(({ data, selected }: StrategyPnlNodeProps) =
             <Wallet className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Strategy P&amp;L</div>
-            <div className="text-[9px] text-muted-foreground">realized + unrealized</div>
+            <div className="text-xs font-medium leading-tight">策略盈亏</div>
+            <div className="text-[9px] text-muted-foreground">已实现＋未实现盈亏</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Strategy</span>
+            <span className="text-[10px] text-muted-foreground">策略</span>
             <span className="mono-data truncate text-[10px] font-medium" style={{ maxWidth: 76 }}>
               {data.strategy || 'this workflow'}
             </span>

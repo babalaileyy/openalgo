@@ -251,7 +251,7 @@ export default function HistorifyCharts() {
   const pageControls = (
     <>
       <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" asChild>
-        <Link to="/historify" title="Back to Historify">
+        <Link to="/historify" title="返回 Historify">
           <ArrowLeft className="h-4 w-4" />
         </Link>
       </Button>
@@ -262,8 +262,8 @@ export default function HistorifyCharts() {
         className="h-7 w-7 shrink-0"
         title={
           catalog.isLoading
-            ? 'Reading your local data'
-            : `Reload downloaded symbols (${symbols.length})`
+            ? '正在读取本地数据'
+            : `重新加载已下载的交易品种（${symbols.length}）`
         }
         onClick={() => void catalog.refetch()}
         disabled={catalog.isFetching}

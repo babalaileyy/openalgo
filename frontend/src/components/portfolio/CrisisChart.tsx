@@ -72,9 +72,9 @@ export function CrisisChart({ periods }: Props) {
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-[15rem_10rem_1fr] gap-3 border-b pb-1.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-        <span>Period</span>
-        <span>When it ran</span>
-        <span>Return over the window</span>
+        <span>时期</span>
+        <span>发生时间</span>
+        <span>区间收益率</span>
       </div>
 
       {ordered.map((p) => {
@@ -92,15 +92,15 @@ export function CrisisChart({ periods }: Props) {
                 {p.partial && (
                   <span
                     className="ml-1 text-[10px] text-amber-500"
-                    title="the backtest covers only part of this window"
+                    title="回测仅覆盖该时段的一部分"
                   >
-                    partial
+                    部分数据
                   </span>
                 )}
               </div>
               <div className="text-[11px] text-muted-foreground">
                 {fmtDate(p.start)} → {fmtDate(p.end)} · {humanSpan(p.days)}
-                {p.sessions ? ` · ${p.sessions} sessions` : ''}
+                {p.sessions ? ` · ${p.sessions} 个交易日` : ''}
               </div>
             </div>
 
@@ -116,7 +116,7 @@ export function CrisisChart({ periods }: Props) {
                   // A single-day event would otherwise be invisible.
                   width: `${Math.max(at(p.end) - at(p.start), 1.5)}%`,
                 }}
-                title={`${p.scope === 'india' ? 'Domestic' : 'Global'} · ${humanSpan(p.days)}`}
+                title={`${p.scope === 'india' ? '印度' : '全球'} · ${humanSpan(p.days)}`}
               />
             </div>
 
@@ -131,7 +131,7 @@ export function CrisisChart({ periods }: Props) {
                     left: `${bench >= 0 ? half : half - span(bench)}%`,
                     width: `${span(bench)}%`,
                   }}
-                  title={`Benchmark ${(bench * 100).toFixed(2)}%`}
+                  title={`基准 ${(bench * 100).toFixed(2)}%`}
                 />
               )}
 
@@ -143,7 +143,7 @@ export function CrisisChart({ periods }: Props) {
                   left: `${port >= 0 ? half : half - span(port)}%`,
                   width: `${span(port)}%`,
                 }}
-                title={`Portfolio ${(port * 100).toFixed(2)}%`}
+                title={`投资组合 ${(port * 100).toFixed(2)}%`}
               />
 
               <span
@@ -172,17 +172,17 @@ export function CrisisChart({ periods }: Props) {
 
       <div className="flex flex-wrap justify-end gap-4 border-t pt-2 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-4 rounded-sm bg-sky-500/70" /> Global
+          <span className="inline-block h-2 w-4 rounded-sm bg-sky-500/70" /> 全球
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-4 rounded-sm bg-violet-500/70" /> Domestic
+          <span className="inline-block h-2 w-4 rounded-sm bg-violet-500/70" /> 印度
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-4 rounded-sm bg-blue-500" /> Portfolio
+          <span className="inline-block h-2 w-4 rounded-sm bg-blue-500" /> 投资组合
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2 w-4 rounded-sm border border-dashed border-muted-foreground/50 bg-muted-foreground/10" />
-          Benchmark
+          基准
         </span>
       </div>
     </div>

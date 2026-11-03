@@ -116,12 +116,12 @@ describe('Message visualizations', () => {
 
   it('shows the thinking indicator until something arrives, block or token', () => {
     const empty = createAgentMessage('assistant', '', { streaming: true })
-    expect(render(<Message message={empty} />).container.textContent).toContain('Thinking')
+    expect(render(<Message message={empty} />).container.textContent).toContain('思考中')
 
     const drawing = createAgentMessage('assistant', '', {
       streaming: true,
       viz: [block('A CHART', 0)],
     })
-    expect(render(<Message message={drawing} />).container.textContent).not.toContain('Thinking')
+    expect(render(<Message message={drawing} />).container.textContent).not.toContain('思考中')
   })
 })

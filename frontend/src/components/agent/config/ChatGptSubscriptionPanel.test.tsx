@@ -154,8 +154,8 @@ describe('ChatGptSubscriptionPanel', () => {
   it('offers one Connect when no plan is attached', async () => {
     wrap(<ChatGptSubscriptionPanel />)
 
-    expect(await screen.findByRole('button', { name: /Connect ChatGPT plan/ })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /Disconnect/ })).not.toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: /连接 ChatGPT 套餐/ })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /断开连接/ })).not.toBeInTheDocument()
     // There is no key to type, and there never can be one.
     expect(screen.queryByLabelText(/API key/i)).not.toBeInTheDocument()
   })
@@ -172,12 +172,12 @@ describe('ChatGptSubscriptionPanel', () => {
     )
     wrap(<ChatGptSubscriptionPanel />)
 
-    await userEvent.click(await screen.findByRole('button', { name: /Connect ChatGPT plan/ }))
+    await userEvent.click(await screen.findByRole('button', { name: /连接 ChatGPT 套餐/ }))
 
     expect(await screen.findByText('ABCD-EFGH')).toBeInTheDocument()
     expect(startLogin).toHaveBeenCalledWith(false)
 
-    const link = screen.getByRole('link', { name: /Open the sign-in page/ })
+    const link = screen.getByRole('link', { name: /打开登录页面/ })
     expect(link).toHaveAttribute('href', 'https://example.invalid/device')
     // A new tab, and never with an opener onto this page.
     expect(link).toHaveAttribute('target', '_blank')
@@ -185,8 +185,8 @@ describe('ChatGptSubscriptionPanel', () => {
 
     // Fifteen minutes, said honestly rather than left for the operator to find
     // out when the code stops working.
-    expect(screen.getByText(/Expires in 1[45]:/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Cancel sign-in/ })).toBeInTheDocument()
+    expect(screen.getByText(/剩余有效时间 1[45]:/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /取消登录/ })).toBeInTheDocument()
   })
 
   it('stops a sign-in and goes back to offering one', async () => {
@@ -199,14 +199,14 @@ describe('ChatGptSubscriptionPanel', () => {
     })
     wrap(<ChatGptSubscriptionPanel />)
 
-    await userEvent.click(await screen.findByRole('button', { name: /Connect ChatGPT plan/ }))
+    await userEvent.click(await screen.findByRole('button', { name: /连接 ChatGPT 套餐/ }))
     await screen.findByText('WXYZ-1234')
 
-    await userEvent.click(screen.getByRole('button', { name: /Cancel sign-in/ }))
+    await userEvent.click(screen.getByRole('button', { name: /取消登录/ }))
 
     expect(cancelLogin).toHaveBeenCalled()
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Connect ChatGPT plan/ })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /连接 ChatGPT 套餐/ })).toBeInTheDocument()
     })
     expect(screen.queryByText('WXYZ-1234')).not.toBeInTheDocument()
   })
@@ -229,8 +229,8 @@ describe('ChatGptSubscriptionPanel', () => {
 
     expect(await screen.findByText('...9f2c sha256:0123456789ab')).toBeInTheDocument()
     expect(screen.getByText('acct_1234')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Disconnect/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Sign in again/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /断开连接/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /重新登录/ })).toBeInTheDocument()
     expect(container.textContent).not.toContain('rt_live_do_not_render_me')
   })
 
@@ -240,8 +240,8 @@ describe('ChatGptSubscriptionPanel', () => {
     })
     wrap(<ChatGptSubscriptionPanel />)
 
-    expect(await screen.findByText(/was not entered in time/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Try connecting again/ })).toBeInTheDocument()
+    expect(await screen.findByText(/未及时输入代码/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /重新连接/ })).toBeInTheDocument()
   })
 
   it('repeats the provider own reason when a sign-in fails', async () => {
@@ -251,7 +251,7 @@ describe('ChatGptSubscriptionPanel', () => {
     wrap(<ChatGptSubscriptionPanel />)
 
     expect(await screen.findByText(/access_denied: the request was refused/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Try connecting again/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /重新连接/ })).toBeInTheDocument()
   })
 
   // The state this panel is in on every server that has not shipped the routes
@@ -261,19 +261,19 @@ describe('ChatGptSubscriptionPanel', () => {
     statusFails = true
     wrap(<ChatGptSubscriptionPanel />)
 
-    expect(await screen.findByText(/cannot answer for a ChatGPT plan yet/)).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /Connect ChatGPT plan/ })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Try again/ })).toBeInTheDocument()
+    expect(await screen.findByText(/暂时无法查询 ChatGPT 套餐/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /连接 ChatGPT 套餐/ })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /重试/ })).toBeInTheDocument()
   })
 
   it('asks before disconnecting, and says the models are left alone', async () => {
     statusAnswer = status({ authorised: true, fingerprint: '...9f2c sha256:0123456789ab' })
     wrap(<ChatGptSubscriptionPanel />)
 
-    await userEvent.click(await screen.findByRole('button', { name: /Disconnect/ }))
+    await userEvent.click(await screen.findByRole('button', { name: /断开连接/ }))
 
-    expect(await screen.findByText('Disconnect the ChatGPT plan')).toBeInTheDocument()
-    expect(screen.getByText(/stays in the registry/)).toBeInTheDocument()
+    expect(await screen.findByText('断开 ChatGPT 订阅')).toBeInTheDocument()
+    expect(screen.getByText(/会保留在列表中/)).toBeInTheDocument()
     // Nothing is removed until the operator confirms it.
     expect(removeSession).not.toHaveBeenCalled()
   })
@@ -282,7 +282,7 @@ describe('ChatGptSubscriptionPanel', () => {
     startLogin.mockRejectedValue(new Error('litellm is too old for the chatgpt provider'))
     wrap(<ChatGptSubscriptionPanel />)
 
-    await userEvent.click(await screen.findByRole('button', { name: /Connect ChatGPT plan/ }))
+    await userEvent.click(await screen.findByRole('button', { name: /连接 ChatGPT 套餐/ }))
 
     expect(
       await screen.findByText(/litellm is too old for the chatgpt provider/)

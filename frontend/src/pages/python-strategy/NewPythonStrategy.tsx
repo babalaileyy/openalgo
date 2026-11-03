@@ -120,33 +120,33 @@ export default function NewPythonStrategy() {
     const newErrors: Record<string, string> = {}
 
     if (!name.trim()) {
-      newErrors.name = 'Strategy name is required'
+      newErrors.name = '请输入策略名称'
     } else if (name.length < 3 || name.length > 50) {
-      newErrors.name = 'Name must be between 3 and 50 characters'
+      newErrors.name = '名称长度须为 3 至 50 个字符'
     } else if (!/^[a-zA-Z0-9\s\-_]+$/.test(name)) {
-      newErrors.name = 'Name can only contain letters, numbers, spaces, hyphens, and underscores'
+      newErrors.name = '名称只能包含英文字母、数字、空格、连字符和下划线'
     }
 
     if (!file) {
-      newErrors.file = 'Please select a Python file'
+      newErrors.file = '请选择 Python 文件'
     } else if (!file.name.endsWith('.py')) {
-      newErrors.file = 'File must be a Python file (.py)'
+      newErrors.file = '文件必须是 Python 文件（.py）'
     }
 
     // Schedule validation. A 24/7 strategy has no times or days to check.
     if (!allDay) {
       if (!startTime) {
-        newErrors.startTime = 'Start time is required'
+        newErrors.startTime = '请选择开始时间'
       }
       if (!stopTime) {
-        newErrors.stopTime = 'Stop time is required'
+        newErrors.stopTime = '请选择停止时间'
       } else if (isCrypto && stopTime === startTime) {
         // Crypto only: Indian exchange schedules are validated as before.
         newErrors.stopTime =
-          'Stop time cannot be the same as the start time. To never stop, turn on Run 24/7.'
+          '停止时间不能与开始时间相同。若要持续运行，请开启全天候运行。'
       }
       if (selectedDays.length === 0) {
-        newErrors.days = 'Select at least one day'
+        newErrors.days = '请至少选择一天'
       }
     }
 
@@ -159,13 +159,13 @@ export default function NewPythonStrategy() {
     if (selectedFile) {
       // Validate file extension
       if (!selectedFile.name.endsWith('.py')) {
-        showToast.error('Please select a Python file (.py)', 'pythonStrategy')
+        showToast.error('请选择 Python 文件（.py）', 'pythonStrategy')
         return
       }
       // Validate file size (max 1MB for Python scripts)
       const maxSizeBytes = 1024 * 1024 // 1MB
       if (selectedFile.size > maxSizeBytes) {
-        showToast.error('File size must be less than 1MB', 'pythonStrategy')
+        showToast.error('文件大小须小于 1 MB', 'pythonStrategy')
         return
       }
       setFile(selectedFile)
@@ -181,7 +181,7 @@ export default function NewPythonStrategy() {
     e.preventDefault()
 
     if (!validateForm()) {
-      showToast.error('Please fix the form errors', 'pythonStrategy')
+      showToast.error('请先修正表单错误', 'pythonStrategy')
       return
     }
 
@@ -196,13 +196,13 @@ export default function NewPythonStrategy() {
       })
 
       if (response.status === 'success') {
-        showToast.success('Strategy uploaded with schedule', 'pythonStrategy')
+        showToast.success('策略和定时设置已上传', 'pythonStrategy')
         navigate('/python')
       } else {
-        showToast.error(response.message || 'Failed to upload strategy', 'pythonStrategy')
+        showToast.error(response.message || '上传策略失败', 'pythonStrategy')
       }
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to upload strategy'
+      const errorMessage = error instanceof Error ? error.message : '上传策略失败'
       showToast.error(errorMessage, 'pythonStrategy')
     } finally {
       setLoading(false)
@@ -215,15 +215,15 @@ export default function NewPythonStrategy() {
       <Button variant="ghost" asChild>
         <Link to="/python">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Python Strategies
+          返回 Python 策略
         </Link>
       </Button>
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Add Python Strategy</h1>
+        <h1 className="text-2xl font-bold tracking-tight">添加 Python 策略</h1>
         <p className="text-muted-foreground">
-          Upload a Python script to run as an automated trading strategy
+          上传 Python 脚本作为自动交易策略运行
         </p>
       </div>
 
@@ -231,8 +231,8 @@ export default function NewPythonStrategy() {
       <Alert>
         <Info className="h-4 w-4" />
         <AlertDescription>
-          Your Python script should use the <code className="bg-muted px-1 rounded">openalgo</code>{' '}
-          SDK. Install it with: <code className="bg-muted px-1 rounded">pip install openalgo</code>
+          Python 脚本应使用 <code className="bg-muted px-1 rounded">openalgo</code>{' '}
+          SDK。安装命令： <code className="bg-muted px-1 rounded">pip install openalgo</code>
         </AlertDescription>
       </Alert>
 
@@ -241,29 +241,29 @@ export default function NewPythonStrategy() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Upload className="h-5 w-5" />
-            Upload Strategy
+            上传策略
           </CardTitle>
-          <CardDescription>Select your Python script file and give it a name</CardDescription>
+          <CardDescription>选择 Python 脚本文件并命名</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Strategy Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Strategy Name</Label>
+              <Label htmlFor="name">策略名称</Label>
               <Input
                 id="name"
-                placeholder="My Trading Strategy"
+                placeholder="例如：My Trading Strategy（仅限英文字母等）"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className={errors.name ? 'border-red-500' : ''}
               />
               {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
-              <p className="text-xs text-muted-foreground">A descriptive name for your strategy</p>
+              <p className="text-xs text-muted-foreground">为策略取一个便于识别的名称</p>
             </div>
 
             {/* File Upload */}
             <div className="space-y-2">
-              <Label htmlFor="file">Python Script</Label>
+              <Label htmlFor="file">Python 脚本</Label>
               <div
                 className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary transition-colors ${
                   errors.file ? 'border-red-500' : ''
@@ -292,9 +292,9 @@ export default function NewPythonStrategy() {
                   <div>
                     <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
                     <p className="text-sm text-muted-foreground">
-                      Click to select a Python file (.py)
+                      点击选择 Python 文件（.py）
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">Maximum file size: 1MB</p>
+                    <p className="text-xs text-muted-foreground mt-1">文件大小上限：1 MB</p>
                   </div>
                 )}
               </div>
@@ -303,7 +303,7 @@ export default function NewPythonStrategy() {
 
             {/* Exchange Section */}
             <div className="space-y-2 border-t pt-6">
-              <Label htmlFor="exchange">Exchange</Label>
+              <Label htmlFor="exchange">交易所</Label>
               <select
                 id="exchange"
                 value={exchange}
@@ -317,11 +317,7 @@ export default function NewPythonStrategy() {
                 ))}
               </select>
               <p className="text-xs text-muted-foreground">
-                Drives the holiday calendar and effective trading window for this strategy. Each
-                exchange has its own holiday list and per-date session timings (e.g. MCX may run a
-                partial 17:00-23:55 session on a date when NSE/BSE are fully closed — the host
-                follows whatever the calendar DB says, not a hardcoded "evening" rule). CRYPTO
-                ignores holidays entirely.
+                交易所决定策略使用的节假日历和有效交易时段。各交易所的节假日与每日交易时间可能不同，系统以日历数据为准；加密货币交易不受节假日限制。
               </p>
             </div>
 
@@ -329,12 +325,12 @@ export default function NewPythonStrategy() {
             <div className="space-y-4 border-t pt-6">
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-muted-foreground" />
-                <h3 className="font-medium">Schedule</h3>
+                <h3 className="font-medium">定时设置</h3>
               </div>
               <p className="text-sm text-muted-foreground">
                 {isCrypto
-                  ? 'CRYPTO trades 24/7. Run the strategy around the clock, or limit it to set hours.'
-                  : 'Configure when this strategy should run. All times are in IST.'}
+                  ? '加密货币全天候交易，可让策略持续运行或限制运行时段。'
+                  : '设置策略运行时间，所有时间均为印度标准时间。'}
               </p>
 
               {isCrypto && <RunAllDaySwitch checked={runAllDay} onCheckedChange={setRunAllDay} />}
@@ -344,7 +340,7 @@ export default function NewPythonStrategy() {
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="startTime">Start Time (IST)</Label>
+                      <Label htmlFor="startTime">开始时间（印度标准时间）</Label>
                       <Input
                         id="startTime"
                         type="time"
@@ -357,7 +353,7 @@ export default function NewPythonStrategy() {
                       )}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="stopTime">Stop Time (IST)</Label>
+                      <Label htmlFor="stopTime">停止时间（印度标准时间）</Label>
                       <Input
                         id="stopTime"
                         type="time"
@@ -371,7 +367,7 @@ export default function NewPythonStrategy() {
 
                   {/* Day Selection */}
                   <div className="space-y-2">
-                    <Label>Schedule Days</Label>
+                    <Label>执行日期</Label>
                     <div className="flex flex-wrap gap-2">
                       {SCHEDULE_DAYS.map((day) => (
                         <button
@@ -403,14 +399,13 @@ export default function NewPythonStrategy() {
                               </svg>
                             )}
                           </div>
-                          <span className="text-sm">{day.label}</span>
+                          <span className="text-sm">{{ mon: '周一', tue: '周二', wed: '周三', thu: '周四', fri: '周五', sat: '周六', sun: '周日' }[day.value]}</span>
                         </button>
                       ))}
                     </div>
                     {errors.days && <p className="text-sm text-red-500">{errors.days}</p>}
                     <p className="text-xs text-muted-foreground">
-                      Select the days when this strategy should run. Weekends can be enabled for
-                      special trading sessions.
+                      选择策略运行的日期。特殊交易时段可启用周末。
                     </p>
                   </div>
                 </>
@@ -425,10 +420,10 @@ export default function NewPythonStrategy() {
                 className="flex-1"
                 onClick={() => navigate('/python')}
               >
-                Cancel
+                取消
               </Button>
               <Button type="submit" className="flex-1" disabled={loading}>
-                {loading ? 'Uploading...' : 'Upload Strategy'}
+                {loading ? '上传中…' : '上传策略'}
               </Button>
             </div>
           </form>
@@ -460,7 +455,7 @@ export default function NewPythonStrategy() {
                 className="mt-4"
                 onClick={() => {
                   navigator.clipboard.writeText(EXAMPLE_STRATEGY)
-                  showToast.success('Copied to clipboard', 'clipboard')
+                  showToast.success('已复制到剪贴板', 'clipboard')
                 }}
               >
                 Copy Template

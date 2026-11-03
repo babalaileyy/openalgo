@@ -6,14 +6,14 @@ describe('ViewModeToggle', () => {
   it.each([
     {
       initialMode: 'price' as const,
-      selectedLabel: 'Price',
-      otherLabel: 'Greeks',
+      selectedLabel: '价格',
+      otherLabel: '希腊值',
       expectedMode: 'greeks' as const,
     },
     {
       initialMode: 'greeks' as const,
-      selectedLabel: 'Greeks',
-      otherLabel: 'Price',
+      selectedLabel: '希腊值',
+      otherLabel: '价格',
       expectedMode: 'price' as const,
     },
   ])(
@@ -30,7 +30,7 @@ describe('ViewModeToggle', () => {
       )
 
       expect(
-        screen.getByRole('group', { name: 'Chain view mode' })
+        screen.getByRole('group', { name: '期权链视图模式' })
       ).toBeInTheDocument()
 
       const selectedButton = screen.getByRole('button', { name: selectedLabel })

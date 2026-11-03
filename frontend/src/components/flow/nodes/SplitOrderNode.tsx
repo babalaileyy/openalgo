@@ -26,13 +26,13 @@ export const SplitOrderNode = memo(({ data, selected }: SplitOrderNodeProps) => 
             <Split className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Split Order</div>
+            <div className="text-xs font-medium leading-tight">拆单</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NSE'}</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || '-'}</span>
           </div>
           <div className="flex items-center justify-between text-[9px]">

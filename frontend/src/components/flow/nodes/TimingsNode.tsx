@@ -24,13 +24,13 @@ export const TimingsNode = memo(({ data, selected }: TimingsNodeProps) => {
             <Clock className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Timings</div>
-            <div className="text-[9px] text-muted-foreground">Market hours</div>
+            <div className="text-xs font-medium leading-tight">交易时间</div>
+            <div className="text-[9px] text-muted-foreground">交易时段</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Date</span>
+            <span className="text-[10px] text-muted-foreground">日期</span>
             <span className="mono-data text-[10px] font-medium">{data.date || 'Today'}</span>
           </div>
         </div>

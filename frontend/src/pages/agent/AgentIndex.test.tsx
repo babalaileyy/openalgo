@@ -49,9 +49,9 @@ describe('AgentIndex setup gate', () => {
   it('asks for a model instead of a conversation when none is configured', async () => {
     wrap(<AgentIndex />)
 
-    expect(await screen.findByText('Set up your agent')).toBeInTheDocument()
+    expect(await screen.findByText('设置助手')).toBeInTheDocument()
     // The gate has to lead somewhere: a fresh install lands here.
-    expect(screen.getByRole('link', { name: /Configure the agent/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /配置助手/ })).toHaveAttribute(
       'href',
       '/agent/config'
     )
@@ -62,7 +62,7 @@ describe('AgentIndex setup gate', () => {
     reachable = false
     wrap(<AgentIndex />)
 
-    expect(await screen.findByText('Set up your agent')).toBeInTheDocument()
+    expect(await screen.findByText('设置助手')).toBeInTheDocument()
   })
 
   it('opens the conversation once a model is configured', async () => {
@@ -70,6 +70,6 @@ describe('AgentIndex setup gate', () => {
     wrap(<AgentIndex />)
 
     expect(await screen.findByLabelText('Message the agent')).toBeInTheDocument()
-    expect(screen.queryByText('Set up your agent')).not.toBeInTheDocument()
+    expect(screen.queryByText('设置助手')).not.toBeInTheDocument()
   })
 })

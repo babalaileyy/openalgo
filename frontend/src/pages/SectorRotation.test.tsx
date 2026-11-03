@@ -165,7 +165,7 @@ describe('SectorRotation', () => {
     await waitFor(() => expect(screen.queryByLabelText('Remove Auto')).not.toBeInTheDocument())
 
     // The default map is still cached, so reset is served without a new request.
-    fireEvent.click(screen.getByText('Reset to sectors'))
+    fireEvent.click(screen.getByText('重置为板块'))
     expect(await screen.findByLabelText('Remove Auto')).toBeInTheDocument()
     expect(useSectorRotationStore.getState().instruments).toBeNull()
   })
@@ -179,7 +179,7 @@ describe('SectorRotation', () => {
 
     fireEvent.click(screen.getByLabelText('Remove IT'))
 
-    expect(await screen.findByText(/No symbols on the map/)).toBeInTheDocument()
+    expect(await screen.findByText(/图中暂无交易品种/)).toBeInTheDocument()
     for (const [request] of harness.getSectorRotation.mock.calls) {
       expect((request as RotationRequest).instruments).not.toEqual([])
     }

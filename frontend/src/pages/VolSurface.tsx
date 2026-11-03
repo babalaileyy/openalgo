@@ -145,7 +145,7 @@ export default function VolSurface() {
         }
       } catch (error) {
         if (cancelled) return
-        showToast.error(serverSentence(error, 'Failed to fetch expiry dates'))
+        showToast.error(serverSentence(error, '获取到期日失败'))
       }
     }
     fetchExpiries()
@@ -181,11 +181,11 @@ export default function VolSurface() {
       if (res.status === 'success' && res.data) {
         setSurfaceData(res.data)
       } else {
-        showToast.error(res.message || 'Failed to load vol surface')
+        showToast.error(res.message || '加载波动率曲面失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to fetch vol surface data'))
+      showToast.error(serverSentence(error, '获取波动率曲面数据失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -212,9 +212,9 @@ export default function VolSurface() {
         z: surface,
         customdata: customdata as unknown as PlotlyTypes.Datum[][],
         colorscale: themeColors.colorscale as PlotlyTypes.ColorScale,
-        hovertemplate: 'Strike: %{x}<br>Expiry: %{customdata}<br>IV: %{z:.2f}%<extra></extra>',
+        hovertemplate: '行权价：%{x}<br>到期日：%{customdata}<br>IV（隐含波动率）：%{z:.2f}%<extra></extra>',
         colorbar: {
-          title: { text: 'IV %', font: { color: themeColors.text, size: 12 } },
+          title: { text: 'IV（隐含波动率，%）', font: { color: themeColors.text, size: 12 } },
           tickfont: { color: themeColors.text },
           outlinewidth: 0,
           len: 0.6,
@@ -234,13 +234,13 @@ export default function VolSurface() {
         aspectratio: { x: 2, y: 1.2, z: 0.8 },
         domain: { x: [0, 1], y: [0, 1] },
         xaxis: {
-          title: { text: 'Strike Price', font: { color: themeColors.text, size: 12 } },
+          title: { text: '行权价', font: { color: themeColors.text, size: 12 } },
           tickfont: { color: themeColors.text, size: 10 },
           gridcolor: themeColors.grid,
           backgroundcolor: 'rgba(0,0,0,0)',
         },
         yaxis: {
-          title: { text: 'Expiry', font: { color: themeColors.text, size: 12 } },
+          title: { text: '到期日', font: { color: themeColors.text, size: 12 } },
           tickfont: { color: themeColors.text, size: 10 },
           tickvals: yIndices,
           ticktext: expiryLabels,
@@ -248,7 +248,7 @@ export default function VolSurface() {
           backgroundcolor: 'rgba(0,0,0,0)',
         },
         zaxis: {
-          title: { text: 'Implied Volatility', font: { color: themeColors.text, size: 12 } },
+          title: { text: 'Implied Volatility（隐含波动率）', font: { color: themeColors.text, size: 12 } },
           tickfont: { color: themeColors.text, size: 10 },
           gridcolor: themeColors.grid,
           backgroundcolor: 'rgba(0,0,0,0)',
@@ -289,11 +289,11 @@ export default function VolSurface() {
     <div className="py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">Vol Surface</h1>
+        <h1 className="text-2xl font-bold">Vol Surface（波动率曲面）</h1>
         <div className="flex items-center gap-3">
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {toolsFnoExchanges.map((ex) => (
@@ -312,15 +312,15 @@ export default function VolSurface() {
                 aria-expanded={underlyingOpen}
                 className="w-[140px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -345,12 +345,12 @@ export default function VolSurface() {
 
           <Select value={strikeCount} onValueChange={setStrikeCount}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Strikes" />
+              <SelectValue placeholder="行权价数量" />
             </SelectTrigger>
             <SelectContent>
               {STRIKE_COUNTS.map((s) => (
                 <SelectItem key={s.value} value={s.value}>
-                  {s.label} Strikes
+                  {s.label} 个行权价
                 </SelectItem>
               ))}
             </SelectContent>
@@ -362,7 +362,7 @@ export default function VolSurface() {
             onClick={loadData}
             disabled={isLoading || selectedExpiries.length === 0}
           >
-            {isLoading ? 'Loading...' : 'Load Surface'}
+            {isLoading ? '加载中...' : '加载曲面'}
           </Button>
         </div>
       </div>
@@ -370,7 +370,7 @@ export default function VolSurface() {
       {/* Expiry selection */}
       {expiries.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          <span className="text-sm text-muted-foreground self-center mr-1">Expiries:</span>
+          <span className="text-sm text-muted-foreground self-center mr-1">到期日：</span>
           {expiries.map((exp) => (
             <button
               key={exp}
@@ -392,16 +392,16 @@ export default function VolSurface() {
       {surfaceData && (
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Spot: {surfaceData.underlying_ltp?.toFixed(2)}
+            现货价：{surfaceData.underlying_ltp?.toFixed(2)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            ATM: {surfaceData.atm_strike}
+            ATM（平值行权价）：{surfaceData.atm_strike}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Expiries: {surfaceData.expiries.length}
+            到期日数量：{surfaceData.expiries.length}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Strikes: {surfaceData.strikes.length}
+            行权价数量：{surfaceData.strikes.length}
           </Badge>
         </div>
       )}
@@ -413,7 +413,7 @@ export default function VolSurface() {
             <div className="flex items-center justify-center h-[700px] text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                Computing volatility surface...
+                正在计算波动率曲面...
               </div>
             </div>
           ) : surfaceData ? (
@@ -427,8 +427,8 @@ export default function VolSurface() {
           ) : (
             <div className="flex items-center justify-center h-[700px] text-muted-foreground">
               {expiries.length > 0
-                ? 'Select expiries and click "Load Surface" to view the volatility surface'
-                : 'Select an underlying to begin'}
+                ? '请选择到期日并点击“加载曲面”以查看波动率曲面'
+                : '请选择标的以开始'}
             </div>
           )}
         </CardContent>

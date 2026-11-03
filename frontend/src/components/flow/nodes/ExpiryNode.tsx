@@ -24,17 +24,17 @@ export const ExpiryNode = memo(({ data, selected }: ExpiryNodeProps) => {
             <Calendar className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Expiry</div>
+            <div className="text-xs font-medium leading-tight">到期日</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NFO'}</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Symbol</span>
+            <span className="text-[10px] text-muted-foreground">交易品种</span>
             <span className="mono-data text-[10px] font-medium">{data.symbol || 'NIFTY'}</span>
           </div>
           <div className="flex items-center justify-between rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Type</span>
+            <span className="text-[10px] text-muted-foreground">类型</span>
             <span className="mono-data text-[10px] font-medium uppercase">
               {data.instrumenttype || 'options'}
             </span>

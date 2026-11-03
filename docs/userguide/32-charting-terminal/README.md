@@ -19,6 +19,34 @@ Navigate to **Trading** in the top bar, or go to
 You need an API key before the chart can load history. If none exists the page
 says so and links to `/apikey`.
 
+### Public perpetual charts
+
+To use Binance USD-M USDT perpetual data without exchange credentials, configure
+a separate application database and the public market-data provider in `.env`:
+
+```dotenv
+DATABASE_URL = 'sqlite:///db/openalgo_crypto.db'
+LOGS_DATABASE_URL = 'sqlite:///db/logs_crypto.db'
+LATENCY_DATABASE_URL = 'sqlite:///db/latency_crypto.db'
+HEALTH_DATABASE_URL = 'sqlite:///db/health_crypto.db'
+SANDBOX_DATABASE_URL = 'sqlite:///db/sandbox_crypto.db'
+HISTORIFY_DATABASE_URL = 'db/historify_crypto.duckdb'
+VALID_BROKERS = 'binance'
+OPENALGO_MARKET_DATA_BROKER = 'binance'
+```
+
+The new database requires the normal OpenAlgo user setup and API key. Keep the
+existing database files as a backup. Restart the application after changing
+configuration. If access requires a local proxy, set both `HTTP_PROXY` and
+`HTTPS_PROXY` to its address in the application's environment, and ensure the
+WebSocket proxy process inherits those settings as well.
+
+After password and any configured second-factor verification, the app starts a
+public-data session and downloads the instrument list. The first chart waits for
+that download; its default is `BTCUSDT.P`. History is fetched on demand through
+the existing data feed, not saved to a new candle database. This provider is
+for charts only; account data, order placement and simulation are not supported.
+
 ## The Layout
 
 | Region | What it holds |

@@ -52,7 +52,7 @@ function KV({ label, value }: { label: string; value: React.ReactNode }) {
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="text-sm font-medium text-right break-all">
         {value === null || value === undefined || value === '' ? (
-          <span className="text-muted-foreground italic">not set</span>
+          <span className="text-muted-foreground italic">未设置</span>
         ) : typeof value === 'boolean' ? (
           value ? (
             'Yes'
@@ -214,23 +214,18 @@ export default function Diagnostics() {
         <div className="flex items-center gap-3">
           <Link to="/admin">
             <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-1" /> Back
-            </Button>
+              <ArrowLeft className="h-4 w-4 mr-1" />返回</Button>
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Gauge className="h-6 w-6" /> Diagnostics
-          </h1>
+            <Gauge className="h-6 w-6" />诊断</h1>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={loadAll}>
-            <RefreshCw className="h-4 w-4 mr-1" /> Refresh
-          </Button>
+            <RefreshCw className="h-4 w-4 mr-1" />刷新</Button>
           <Button variant="outline" size="sm" onClick={() => downloadReport('md')}>
-            <Download className="h-4 w-4 mr-1" /> Download .md
-          </Button>
+            <Download className="h-4 w-4 mr-1" />下载 .md</Button>
           <Button variant="outline" size="sm" onClick={() => downloadReport('txt')}>
-            <FileText className="h-4 w-4 mr-1" /> Download .txt
-          </Button>
+            <FileText className="h-4 w-4 mr-1" />下载 .txt</Button>
         </div>
       </div>
 
@@ -245,9 +240,7 @@ export default function Diagnostics() {
         >
           <CardContent className="pt-6 flex items-center justify-between flex-wrap gap-3">
             <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                Trading Mode
-              </div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">交易模式</div>
               <div
                 className={`text-2xl font-bold ${
                   isAnalyze
@@ -269,7 +262,7 @@ export default function Diagnostics() {
 
       <p className="text-sm text-muted-foreground">
         Use this page to troubleshoot issues. Click{' '}
-        <span className="font-semibold">Download .md</span> and attach it when asking for help on
+        <span className="font-semibold">下载 Markdown</span> and attach it when asking for help on
         the OpenAlgo community — secrets and tokens are never included.
       </p>
 
@@ -412,7 +405,7 @@ export default function Diagnostics() {
         </div>
         {info?.config.secrets_present ? (
           <div className="mt-4">
-            <div className="text-sm font-semibold mb-2">Secrets (presence only)</div>
+            <div className="text-sm font-semibold mb-2">密钥（仅显示是否存在）</div>
             <div className="flex flex-wrap gap-2">
               {Object.entries(info.config.secrets_present).map(([key, present]) => (
                 <Badge key={key} variant={present ? 'default' : 'secondary'}>
@@ -446,10 +439,10 @@ export default function Diagnostics() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Size</TableHead>
-              <TableHead>Modified</TableHead>
+              <TableHead>名称</TableHead>
+              <TableHead>状态</TableHead>
+              <TableHead>大小</TableHead>
+              <TableHead>修改时间</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -458,9 +451,9 @@ export default function Diagnostics() {
                 <TableCell className="font-medium">{db.name}</TableCell>
                 <TableCell>
                   {db.exists ? (
-                    <Badge variant="default">present</Badge>
+                    <Badge variant="default">已设置</Badge>
                   ) : (
-                    <Badge variant="secondary">missing</Badge>
+                    <Badge variant="secondary">缺失</Badge>
                   )}
                 </TableCell>
                 <TableCell>{db.exists ? `${db.size_mb} MB` : '—'}</TableCell>
@@ -482,18 +475,16 @@ export default function Diagnostics() {
             {diagRanAt ? `Last run: ${diagRanAt}` : 'Not run yet'}
           </div>
           <Button onClick={runDiagnostics} disabled={isRunningDiag} size="sm">
-            <RefreshCw className={`h-4 w-4 mr-1 ${isRunningDiag ? 'animate-spin' : ''}`} />
-            Run checks
-          </Button>
+            <RefreshCw className={`h-4 w-4 mr-1 ${isRunningDiag ? 'animate-spin' : ''}`} />运行检查</Button>
         </div>
         {diagChecks ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-12">Status</TableHead>
-                <TableHead>Check</TableHead>
-                <TableHead>Latency</TableHead>
-                <TableHead>Detail</TableHead>
+                <TableHead className="w-12">状态</TableHead>
+                <TableHead>检查</TableHead>
+                <TableHead>延迟</TableHead>
+                <TableHead>详情</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -559,7 +550,7 @@ export default function Diagnostics() {
 
         {errorView === 'grouped' ? (
           groups.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No errors recorded.</p>
+            <p className="text-sm text-muted-foreground">暂无错误记录。</p>
           ) : (
             <div className="space-y-2">
               {groups.map((group) => {
@@ -605,15 +596,15 @@ export default function Diagnostics() {
                       <div className="border-t bg-muted/30 px-3 py-2 space-y-2">
                         <div className="text-xs grid grid-cols-1 md:grid-cols-3 gap-2">
                           <div>
-                            <span className="text-muted-foreground">Fingerprint:</span>{' '}
+                            <span className="text-muted-foreground">指纹：</span>{' '}
                             <span className="font-mono">{group.fingerprint}</span>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">First seen:</span>{' '}
+                            <span className="text-muted-foreground">首次出现：</span>{' '}
                             <span className="font-mono">{group.first_seen ?? '—'}</span>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Logger:</span>{' '}
+                            <span className="text-muted-foreground">日志记录器：</span>{' '}
                             <span className="font-mono break-all">{group.logger ?? '—'}</span>
                           </div>
                         </div>
@@ -651,13 +642,11 @@ export default function Diagnostics() {
                 onChange={(e) => setErrorQuery(e.target.value.slice(0, 200))}
                 className="max-w-sm"
               />
-              <Button size="sm" variant="outline" onClick={reloadErrors}>
-                Apply
-              </Button>
+              <Button size="sm" variant="outline" onClick={reloadErrors}>应用</Button>
             </div>
 
             {filteredErrors.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No errors recorded.</p>
+              <p className="text-sm text-muted-foreground">暂无错误记录。</p>
             ) : (
               <div className="space-y-2">
                 {filteredErrors
@@ -705,16 +694,16 @@ export default function Diagnostics() {
                           <div className="border-t bg-muted/30 px-3 py-2 space-y-2">
                             <div className="text-xs grid grid-cols-1 md:grid-cols-3 gap-2">
                               <div>
-                                <span className="text-muted-foreground">Logger:</span>{' '}
+                                <span className="text-muted-foreground">日志记录器：</span>{' '}
                                 <span className="font-mono">{err.logger ?? '—'}</span>
                               </div>
                               <div>
-                                <span className="text-muted-foreground">File:</span>{' '}
+                                <span className="text-muted-foreground">文件：</span>{' '}
                                 <span className="font-mono break-all">{err.file ?? '—'}</span>
                               </div>
                               {err.request ? (
                                 <div>
-                                  <span className="text-muted-foreground">Request:</span>{' '}
+                                  <span className="text-muted-foreground">请求：</span>{' '}
                                   <span className="font-mono">
                                     {err.request.method} {err.request.path}
                                   </span>

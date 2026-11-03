@@ -48,12 +48,12 @@ import { showToast } from '@/utils/toast'
 const AUTO_REFRESH_INTERVAL = 60000
 const DEFAULT_EXPIRY_COUNT = 6
 const MAX_EXPIRIES = 20
-const FETCH_FALLBACK = 'Failed to fetch strike profile'
+const FETCH_FALLBACK = '获取行权价分布失败'
 
 type View = 'table' | 'chart'
 type Scale = 'global' | 'expiry'
 
-const METRIC_LABEL: Record<Metric, string> = { gex: 'GEX', dex: 'DEX' }
+const METRIC_LABEL: Record<Metric, string> = { gex: 'GEX（Gamma 敞口）', dex: 'DEX（Delta 敞口）' }
 
 /** Positive and negative colours per metric, validated for colour-blind separation. */
 function metricColors(metric: Metric, isDark: boolean): { pos: string; neg: string } {
@@ -185,7 +185,7 @@ function ProfilePane({
   const nearest = columns.find((c) => c.expiry.available && c.total !== null)
 
   const copyTable = useCallback(async () => {
-    const header = ['Strike', ...columns.map((c) => `${c.heading.dte} ${c.heading.date}`)]
+    const header = ['行权价', ...columns.map((c) => `${c.heading.dte} ${c.heading.date}`)]
     const lines = [header.join('\t')]
     for (const i of rows) {
       lines.push(
@@ -196,15 +196,15 @@ function ProfilePane({
       )
     }
     lines.push(
-      [`Net ${label}`, ...columns.map((c) => (c.total === null ? '' : c.total.toFixed(2)))].join(
+      [`净 ${label}`, ...columns.map((c) => (c.total === null ? '' : c.total.toFixed(2)))].join(
         '\t'
       )
     )
     try {
       await navigator.clipboard.writeText(lines.join('\n'))
-      showToast.success('Table copied')
+      showToast.success('表格已复制')
     } catch {
-      showToast.error('Could not copy the table. Your browser blocked clipboard access.')
+      showToast.error('无法复制表格，浏览器阻止了剪贴板访问。')
     }
   }, [columns, rows, strikes, label])
 
@@ -223,7 +223,7 @@ function ProfilePane({
       }
       ys.push(strikes[i])
       xs.push(total)
-      breakdown.push(parts.slice(0, 10).join('<br>') || 'No exposure')
+      breakdown.push(parts.slice(0, 10).join('<br>') || '无敞口')
     }
     const text = isDark ? '#e0e0e0' : '#333333'
     const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
@@ -236,7 +236,7 @@ function ProfilePane({
         y: ys,
         marker: { color: xs.map((v) => (v >= 0 ? colors.pos : colors.neg)) },
         customdata: breakdown,
-        hovertemplate: `Strike %{y}<br>Net ${label} %{x:,.1f} Cr<br><br>%{customdata}<extra></extra>`,
+        hovertemplate: `行权价 %{y}<br>净 ${label} %{x:,.1f} 千万卢比<br><br>%{customdata}<extra></extra>`,
       },
     ]
     const shapes: Partial<PlotlyTypes.Shape>[] = [
@@ -257,7 +257,7 @@ function ProfilePane({
         y: spot,
         xanchor: 'right',
         yanchor: 'bottom',
-        text: `Spot ${formatPrice(spot)}`,
+        text: `现货价 ${formatPrice(spot)}`,
         showarrow: false,
         font: { color: text, size: 11 },
       },
@@ -278,7 +278,7 @@ function ProfilePane({
         y: data.flip,
         xanchor: 'left',
         yanchor: 'bottom',
-        text: `Flip ${formatPrice(data.flip)}`,
+        text: `Flip（翻转点） ${formatPrice(data.flip)}`,
         showarrow: false,
         font: { color: text, size: 11 },
       })
@@ -292,7 +292,7 @@ function ProfilePane({
       showlegend: false,
       hoverlabel: { bgcolor: isDark ? '#1e293b' : '#ffffff', font: { color: text } },
       xaxis: {
-        title: { text: `Net ${label}, Rs crore, sum of ${columns.length} expiries` },
+        title: { text: `净 ${label}（千万卢比），${columns.length} 个到期日合计` },
         gridcolor: grid,
         zerolinecolor: line,
       },
@@ -308,42 +308,42 @@ function ProfilePane({
       <CardContent className="p-3 space-y-3">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Segmented<Metric>
-            label="Exposure"
+            label="敞口"
             value={metric}
             onChange={setMetric}
             options={[
-              { value: 'gex', label: 'GEX' },
-              { value: 'dex', label: 'DEX' },
+              { value: 'gex', label: 'GEX（Gamma 敞口）' },
+              { value: 'dex', label: 'DEX（Delta 敞口）' },
             ]}
           />
           <Segmented<View>
-            label="View"
+            label="视图"
             value={view}
             onChange={setView}
             options={[
-              { value: 'table', label: 'Table' },
-              { value: 'chart', label: 'Chart' },
+              { value: 'table', label: '表格' },
+              { value: 'chart', label: '图表' },
             ]}
           />
           {view === 'table' && (
             <>
               <Segmented<PeakMode>
-                label="Peaks"
+                label="峰值"
                 value={peaks}
                 onChange={setPeaks}
                 options={[
-                  { value: 'all', label: 'All' },
-                  { value: 'max', label: 'Max' },
-                  { value: 'off', label: 'Off' },
+                  { value: 'all', label: '全部' },
+                  { value: 'max', label: '最大值' },
+                  { value: 'off', label: '关闭' },
                 ]}
               />
               <Segmented<Scale>
-                label="Shade"
+                label="着色范围"
                 value={scale}
                 onChange={setScale}
                 options={[
-                  { value: 'global', label: 'Global' },
-                  { value: 'expiry', label: 'Per expiry' },
+                  { value: 'global', label: '全局' },
+                  { value: 'expiry', label: '按到期日' },
                 ]}
               />
             </>
@@ -353,7 +353,7 @@ function ProfilePane({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
             <span>
-              Net {label}{' '}
+              净 {label}{' '}
               <span
                 className="text-sm normal-case"
                 style={{
@@ -361,7 +361,7 @@ function ProfilePane({
                 }}
               >
                 {nearest?.total !== null && nearest?.total !== undefined
-                  ? `${formatExposure(nearest.total, true)} Cr`
+                  ? `${formatExposure(nearest.total, true)} 千万卢比`
                   : 'n/a'}
               </span>
               {nearest && (
@@ -369,24 +369,24 @@ function ProfilePane({
               )}
             </span>
             <span>
-              Flip <span className="text-sm text-foreground">{formatPrice(data.flip)}</span>
+              Flip（翻转点） <span className="text-sm text-foreground">{formatPrice(data.flip)}</span>
             </span>
             <span>
-              C wall <span className="text-sm text-foreground">{formatPrice(data.call_wall)}</span>
+              C wall（看涨墙） <span className="text-sm text-foreground">{formatPrice(data.call_wall)}</span>
             </span>
             <span>
-              P wall <span className="text-sm text-foreground">{formatPrice(data.put_wall)}</span>
+              P wall（看跌墙） <span className="text-sm text-foreground">{formatPrice(data.put_wall)}</span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <Segmented<StrikeRange>
-              label="Range"
+              label="范围"
               value={range}
               onChange={(next) => {
                 setRange(next)
                 onRequestRange(next)
               }}
-              options={RANGES.map((r) => ({ value: r, label: r === null ? 'All' : `±${r}%` }))}
+              options={RANGES.map((r) => ({ value: r, label: r === null ? '全部' : `±${r}%` }))}
             />
             {view === 'table' && (
               <Button
@@ -394,8 +394,8 @@ function ProfilePane({
                 size="icon"
                 className="h-7 w-7"
                 onClick={copyTable}
-                aria-label="Copy table"
-                title="Copy table"
+                aria-label="复制表格"
+                title="复制表格"
               >
                 <Copy className="h-3.5 w-3.5" />
               </Button>
@@ -405,7 +405,7 @@ function ProfilePane({
 
         {rows.length === 0 ? (
           <div className="flex h-[300px] items-center justify-center text-sm text-muted-foreground">
-            No strikes in this range
+            此范围内没有行权价
           </div>
         ) : view === 'chart' ? (
           <Plot
@@ -421,7 +421,7 @@ function ProfilePane({
           >
             <table className="w-full border-separate border-spacing-0 text-xs tabular-nums">
               <caption className="sr-only">
-                Net {label} in rupees crore by strike and expiry
+                净 {label} 按行权价与到期日划分（千万卢比）
               </caption>
               <thead>
                 <tr>
@@ -429,7 +429,7 @@ function ProfilePane({
                     scope="col"
                     className="sticky left-0 top-0 z-30 bg-card px-3 py-2 text-left font-medium text-muted-foreground border-b border-border"
                   >
-                    Strike
+                    行权价
                   </th>
                   {columns.map((c) => (
                     <th
@@ -473,10 +473,10 @@ function ProfilePane({
                         const strength = shadeStrength(v, scale === 'expiry' ? c.max : globalMax)
                         const tip = [
                           `${formatPrice(strikes[i])} ${c.heading.dte} (${c.heading.date})`,
-                          `Net ${label}: ${formatExposure(v, true)} Cr`,
-                          `Call ${label}: ${formatExposure(metric === 'gex' ? (cell?.ce_gex ?? 0) : (cell?.ce_dex ?? 0), true)} Cr, OI ${(cell?.ce_oi ?? 0).toLocaleString('en-IN')}`,
-                          `Put ${label}: ${formatExposure(metric === 'gex' ? (cell?.pe_gex ?? 0) : (cell?.pe_dex ?? 0), true)} Cr, OI ${(cell?.pe_oi ?? 0).toLocaleString('en-IN')}`,
-                          cell?.unpriced ? 'Some open interest could not be priced' : '',
+                          `净 ${label}： ${formatExposure(v, true)} 千万卢比`,
+                          `看涨 ${label}： ${formatExposure(metric === 'gex' ? (cell?.ce_gex ?? 0) : (cell?.ce_dex ?? 0), true)} 千万卢比，OI（持仓量） ${(cell?.ce_oi ?? 0).toLocaleString('en-IN')}`,
+                          `看跌 ${label}： ${formatExposure(metric === 'gex' ? (cell?.pe_gex ?? 0) : (cell?.pe_dex ?? 0), true)} 千万卢比，OI（持仓量） ${(cell?.pe_oi ?? 0).toLocaleString('en-IN')}`,
+                          cell?.unpriced ? '部分持仓量无法估值' : '',
                         ]
                           .filter(Boolean)
                           .join('\n')
@@ -513,9 +513,9 @@ function ProfilePane({
                   <th
                     scope="row"
                     className="sticky bottom-0 left-0 z-30 bg-card px-3 py-2 text-left font-medium text-muted-foreground border-t border-border whitespace-nowrap"
-                    title="Sum of the strikes shown"
+                    title="所显示行权价的合计"
                   >
-                    Net {label}
+                    净 {label}
                   </th>
                   {columns.map((c) => (
                     <td
@@ -682,25 +682,24 @@ export default function StrikeProfile() {
 
   const expiryButtonLabel =
     selectedExpiries.length === 0
-      ? 'Expiries'
+      ? '到期日'
       : selectedExpiries.length === expiries.length
-        ? `All ${expiries.length} expiries`
-        : `${selectedExpiries.length} of ${expiries.length} expiries`
+        ? `全部 ${expiries.length} 个到期日`
+        : `已选 ${selectedExpiries.length} / ${expiries.length} 个到期日`
 
   return (
     <div className="py-6 space-y-4">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Strike Profile</h1>
+          <h1 className="text-2xl font-bold">Strike Profile（行权价敞口分布）</h1>
           <p className="text-sm text-muted-foreground">
-            Gamma and delta exposure by strike and expiry, in rupees crore. GEX is per 1% move in
-            the underlying; DEX is delta-weighted open interest.
+            按行权价和到期日展示 Gamma 与 Delta 敞口，单位为千万卢比。GEX 对应标的价格变动 1% 的敞口；DEX 为按 Delta 加权的持仓量。
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
-            <SelectTrigger className="w-[100px]" aria-label="Exchange">
-              <SelectValue placeholder="Exchange" />
+            <SelectTrigger className="w-[100px]" aria-label="交易所">
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {toolsFnoExchanges.map((ex) => (
@@ -719,15 +718,15 @@ export default function StrikeProfile() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -775,7 +774,7 @@ export default function StrikeProfile() {
                   className="h-7 px-2"
                   onClick={() => setDraftExpiries(expiries.slice(0, MAX_EXPIRIES))}
                 >
-                  {expiries.length > MAX_EXPIRIES ? `Nearest ${MAX_EXPIRIES}` : 'All'}
+                  {expiries.length > MAX_EXPIRIES ? `最近 ${MAX_EXPIRIES} 个` : '全部'}
                 </Button>
                 <Button
                   variant="ghost"
@@ -783,7 +782,7 @@ export default function StrikeProfile() {
                   className="h-7 px-2"
                   onClick={() => setDraftExpiries(expiries.slice(0, DEFAULT_EXPIRY_COUNT))}
                 >
-                  Nearest {DEFAULT_EXPIRY_COUNT}
+                  最近 {DEFAULT_EXPIRY_COUNT} 个
                 </Button>
                 <Button
                   variant="ghost"
@@ -791,8 +790,7 @@ export default function StrikeProfile() {
                   className="h-7 px-2"
                   onClick={() => setDraftExpiries(expiries.slice(0, 1))}
                 >
-                  Nearest
-                </Button>
+                  最近到期                </Button>
               </div>
               <div className="max-h-72 overflow-y-auto p-2 space-y-1">
                 {expiries.map((e) => {
@@ -822,17 +820,17 @@ export default function StrikeProfile() {
               </div>
               <div className="flex items-center justify-between gap-2 border-t border-border p-2">
                 <span className="text-xs text-muted-foreground">
-                  {draftExpiries.length} selected
+                  已选择 {draftExpiries.length} 个
                 </span>
                 <Button size="sm" onClick={applyExpiries} disabled={draftExpiries.length === 0}>
-                  Apply
+                  应用
                 </Button>
               </div>
             </PopoverContent>
           </Popover>
 
           <Segmented<1 | 2>
-            label="Panes"
+            label="面板数"
             value={paneCount}
             onChange={setPaneCount}
             options={[
@@ -846,11 +844,11 @@ export default function StrikeProfile() {
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
           >
-            {autoRefresh ? 'Auto: ON' : 'Auto: OFF'}
+            {autoRefresh ? '自动刷新：开' : '自动刷新：关'}
           </Button>
 
           <Button variant="outline" size="sm" onClick={fetchProfile} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
         </div>
       </div>
@@ -858,15 +856,15 @@ export default function StrikeProfile() {
       {data?.status === 'success' && (
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
           <span>
-            {data.underlying} spot{' '}
+            {data.underlying} 现货价{' '}
             <span className="font-medium text-foreground">
               {data.spot_price?.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
             </span>
           </span>
-          <span>As of {formatTime(data.as_of)} IST</span>
+          <span>截至 {formatTime(data.as_of)} 印度标准时间</span>
           <span>
-            {(data.expiries ?? []).filter((e) => e.available).length} of{' '}
-            {(data.expiries ?? []).length} expiries loaded
+            {(data.expiries ?? []).filter((e) => e.available).length} /{' '}
+            {(data.expiries ?? []).length} 个到期日已加载
           </span>
         </div>
       )}
@@ -875,10 +873,10 @@ export default function StrikeProfile() {
         <Card>
           <CardContent className="flex h-[400px] items-center justify-center text-sm text-muted-foreground">
             {isLoading
-              ? `Loading ${selectedExpiries.length} expiries. Each expiry is one option chain, so this can take a few seconds.`
+              ? `正在加载 ${selectedExpiries.length} 个到期日。每个到期日对应一条期权链，可能需要几秒钟。`
               : selectedExpiries.length > 0
-                ? 'No strike profile loaded'
-                : 'Select an underlying and expiries to view the strike profile'}
+                ? '尚未加载行权价分布'
+                : '请选择标的和到期日以查看行权价分布'}
           </CardContent>
         </Card>
       ) : (

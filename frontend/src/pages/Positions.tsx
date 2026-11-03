@@ -226,10 +226,10 @@ export default function Positions() {
           setPositions(response.data)
           setError(null)
         } else {
-          setError(response.message || 'Failed to fetch positions')
+          setError(response.message || '获取持仓失败')
         }
       } catch {
-        setError('Failed to fetch positions')
+        setError('获取持仓失败')
       } finally {
         setIsLoading(false)
         setIsRefreshing(false)
@@ -452,10 +452,10 @@ export default function Positions() {
         showToast.success(response.message || `Position closed for ${position.symbol}`, 'positions')
         fetchPositions(true)
       } else {
-        showToast.error(response.message || 'Failed to close position', 'positions')
+        showToast.error(response.message || '平仓失败', 'positions')
       }
     } catch (_err) {
-      showToast.error('Failed to close position', 'positions')
+      showToast.error('平仓失败', 'positions')
     }
   }
 
@@ -466,16 +466,16 @@ export default function Positions() {
         // Toast handled by close_position_event socket
         fetchPositions(true)
       } else {
-        showToast.error(response.message || 'Failed to close all positions', 'positions')
+        showToast.error(response.message || '全部平仓失败', 'positions')
       }
     } catch (_err) {
-      showToast.error('Failed to close all positions', 'positions')
+      showToast.error('全部平仓失败', 'positions')
     }
   }
 
   const exportToCSV = () => {
     if (filteredPositions.length === 0) {
-      showToast.error('No data to export', 'system')
+      showToast.error('没有可导出的数据', 'system')
       return
     }
 
@@ -513,7 +513,7 @@ export default function Positions() {
       URL.revokeObjectURL(url)
       showToast.success(`Downloaded ${filename}`, 'clipboard')
     } catch {
-      showToast.error('Failed to export CSV', 'system')
+      showToast.error('导出 CSV 失败', 'system')
     }
   }
 
@@ -605,14 +605,14 @@ export default function Positions() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">Positions</h1>
+            <h1 className="text-3xl font-bold tracking-tight">持仓</h1>
             {isPaused ? (
               <Badge
                 variant="outline"
                 className="bg-amber-500/10 text-amber-600 border-amber-500/30 gap-1"
               >
                 <Pause className="h-3 w-3" />
-                Paused
+                已暂停
               </Badge>
             ) : isLive ? (
               <Badge
@@ -620,11 +620,11 @@ export default function Positions() {
                 className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 gap-1"
               >
                 <Radio className="h-3 w-3 animate-pulse" />
-                Live
+                实时
               </Badge>
             ) : null}
           </div>
-          <p className="text-muted-foreground">Monitor and manage your active trading positions</p>
+          <p className="text-muted-foreground">监控和管理当前持仓</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {/* Settings Button */}
@@ -636,7 +636,7 @@ export default function Positions() {
                 className="relative"
               >
                 <Settings2 className="h-4 w-4 mr-2" />
-                Settings
+                设置
                 {hasActiveFilters && (
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full" />
                 )}
@@ -644,21 +644,21 @@ export default function Positions() {
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Position Settings</DialogTitle>
-                <DialogDescription>Configure grouping and filters</DialogDescription>
+                <DialogTitle>持仓设置</DialogTitle>
+                <DialogDescription>设置分组和筛选条件</DialogDescription>
               </DialogHeader>
 
               <div className="space-y-6 py-4">
                 {/* Grouping */}
                 <div className="space-y-3">
                   <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Grouping
+                    分组方式
                   </Label>
                   <div className="space-y-2">
                     {[
-                      { value: 'none', label: 'None' },
-                      { value: 'underlying', label: 'Underlying' },
-                      { value: 'underlying_expiry', label: 'Underlying & Expiry' },
+                      { value: 'none', label: '不分组' },
+                      { value: 'underlying', label: '标的' },
+                      { value: 'underlying_expiry', label: '标的与到期日' },
                     ].map((opt) => (
                       <label
                         key={opt.value}
@@ -693,7 +693,7 @@ export default function Positions() {
                 {!isCrypto && (
                   <div className="space-y-3">
                     <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Product Type
+                      产品类型
                     </Label>
                     <div className="flex flex-wrap gap-2">
                       <FilterChip type="product" value="CNC" label="CNC" />
@@ -706,18 +706,18 @@ export default function Positions() {
                 {/* Direction */}
                 <div className="space-y-3">
                   <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Direction
+                    持仓方向
                   </Label>
                   <div className="flex flex-wrap gap-2">
-                    <FilterChip type="direction" value="LONG" label="Long" />
-                    <FilterChip type="direction" value="SHORT" label="Short" />
+                    <FilterChip type="direction" value="LONG" label="多头" />
+                    <FilterChip type="direction" value="SHORT" label="空头" />
                   </div>
                 </div>
 
                 {/* Exchange */}
                 <div className="space-y-3">
                   <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Exchange
+                    交易所
                   </Label>
                   <div className="flex flex-wrap gap-2">
                     <FilterChip type="exchange" value="NSE" label="NSE" />
@@ -732,9 +732,9 @@ export default function Positions() {
 
               <DialogFooter>
                 <Button variant="ghost" onClick={clearFilters}>
-                  Clear All
+                  清除全部
                 </Button>
-                <Button onClick={() => setSettingsOpen(false)}>Done</Button>
+                <Button onClick={() => setSettingsOpen(false)}>完成</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -746,32 +746,31 @@ export default function Positions() {
             disabled={isRefreshing}
           >
             <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
-            Refresh
+            刷新
           </Button>
 
           <Button variant="outline" size="sm" onClick={exportToCSV}>
             <Download className="h-4 w-4 mr-2" />
-            Export
+            导出
           </Button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm" disabled={stats.total === 0}>
                 <X className="h-4 w-4 mr-2" />
-                Close All
+                全部平仓
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Close All Positions?</AlertDialogTitle>
+                <AlertDialogTitle>平掉所有持仓？</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will close all {stats.total} open positions at market price. This action
-                  cannot be undone.
+                  将以市价平掉全部 {stats.total} 笔持仓，此操作无法撤回。
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleCloseAllPositions}>Close All</AlertDialogAction>
+                <AlertDialogCancel>取消</AlertDialogCancel>
+                <AlertDialogAction onClick={handleCloseAllPositions}>全部平仓</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -781,10 +780,10 @@ export default function Positions() {
       {/* Active Filters Bar */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm text-muted-foreground">Active Filters:</span>
+          <span className="text-sm text-muted-foreground">已启用的筛选：</span>
           {grouping !== 'none' && (
             <Badge variant="secondary" className="bg-pink-500/10 text-pink-600 border-pink-500/30">
-              Grouped: {grouping === 'underlying' ? 'Underlying' : 'Underlying & Expiry'}
+              分组：{grouping === 'underlying' ? '标的' : '标的与到期日'}
             </Badge>
           )}
           {!isCrypto &&
@@ -821,7 +820,7 @@ export default function Positions() {
             className="text-red-500 border-red-500/50 hover:bg-red-500/10"
             onClick={clearFilters}
           >
-            Clear All
+            清除全部
           </Button>
         </div>
       )}
@@ -830,25 +829,25 @@ export default function Positions() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Open Positions</CardDescription>
+            <CardDescription>未平仓持仓</CardDescription>
             <CardTitle className="text-2xl">{stats.total}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Long</CardDescription>
+            <CardDescription>多头</CardDescription>
             <CardTitle className="text-2xl text-green-600">{stats.long}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Short</CardDescription>
+            <CardDescription>空头</CardDescription>
             <CardTitle className="text-2xl text-red-600">{stats.short}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total P&L</CardDescription>
+            <CardDescription>总盈亏</CardDescription>
             <CardTitle
               className={cn(
                 'text-2xl',
@@ -873,12 +872,12 @@ export default function Positions() {
           ) : filteredPositions.length === 0 ? (
             <EmptyState
               icon={ChartCandlestick}
-              title="No positions match your filters"
-              description="Try adjusting or clearing your filters to see results."
+              title="没有符合筛选条件的持仓"
+              description="请调整或清除筛选条件后重试。"
               action={
                 hasActiveFilters ? (
                   <Button variant="ghost" size="sm" onClick={clearFilters}>
-                    Clear Filters
+                    清除筛选
                   </Button>
                 ) : undefined
               }
@@ -888,15 +887,15 @@ export default function Positions() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <SortableHeader column={0} label="Symbol" className="w-[140px]" />
-                    <TableHead className="w-[80px]">Exchange</TableHead>
-                    {!isCrypto && <TableHead className="w-[80px]">Product</TableHead>}
-                    <SortableHeader column={3} label="Qty" className="w-[80px] text-right" />
-                    <SortableHeader column={4} label="Avg Price" className="w-[120px] text-right" />
-                    <TableHead className="w-[120px] text-right">LTP</TableHead>
-                    <SortableHeader column={6} label="P&L" className="w-[120px] text-right" />
-                    <SortableHeader column={7} label="P&L %" className="w-[100px] text-right" />
-                    <TableHead className="w-[60px] text-right">Action</TableHead>
+                    <SortableHeader column={0} label="交易品种" className="w-[140px]" />
+                    <TableHead className="w-[80px]">交易所</TableHead>
+                    {!isCrypto && <TableHead className="w-[80px]">产品类型</TableHead>}
+                    <SortableHeader column={3} label="数量" className="w-[80px] text-right" />
+                    <SortableHeader column={4} label="持仓均价" className="w-[120px] text-right" />
+                    <TableHead className="w-[120px] text-right">最新价</TableHead>
+                    <SortableHeader column={6} label="盈亏" className="w-[120px] text-right" />
+                    <SortableHeader column={7} label="盈亏比例" className="w-[100px] text-right" />
+                    <TableHead className="w-[60px] text-right">操作</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

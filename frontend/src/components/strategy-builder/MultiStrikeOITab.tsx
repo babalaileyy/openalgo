@@ -379,7 +379,7 @@ export default function MultiStrikeOITab({
         chartData ? (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs">
             <div>
-              <span className="text-muted-foreground">Spot </span>
+              <span className="text-muted-foreground">现货价 </span>
               <span className="font-medium" style={{ color: underlyingColor }}>
                 {chartData.underlying_ltp?.toLocaleString('en-IN', {
                   minimumFractionDigits: 2,
@@ -388,7 +388,7 @@ export default function MultiStrikeOITab({
               </span>
             </div>
             <div>
-              <span className="text-muted-foreground">Legs </span>
+              <span className="text-muted-foreground">交易腿 </span>
               <span className="font-medium">{legRows.length}</span>
             </div>
           </div>

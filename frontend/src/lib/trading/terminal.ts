@@ -843,6 +843,9 @@ export interface DrawTextStyle {
 
 export interface TerminalOptions {
   apiKey: string
+  /** The data source has no order or depth capability. */
+  marketDataOnly?: boolean
+  defaultChart?: { symbol: string; exchange: string } | null
   /**
    * Who is signed in. Optional, and empty is a working terminal.
    *
@@ -1057,6 +1060,8 @@ export class TradingTerminal {
   private historyPending = false
   private historyFailed = false
   private readonly apiKey: string
+  private readonly marketDataOnly: boolean
+  private readonly defaultChart: { symbol: string; exchange: string } | null
   private readonly wsUrl: string
   private readonly container: HTMLElement
   private readonly legendEl: HTMLElement
@@ -1530,6 +1535,8 @@ export class TradingTerminal {
     this.initialWorkspacePane = initial
     this.preparingWorkspace = initial !== null
     this.apiKey = opts.apiKey
+    this.marketDataOnly = opts.marketDataOnly === true
+    this.defaultChart = opts.defaultChart ?? null
     this.username = opts.username ?? ''
     this.wsUrl = opts.wsUrl
     this.container = opts.container
@@ -7073,7 +7080,7 @@ export class TradingTerminal {
       lots,
       tick: resolveTick(exchange, info.tick_size),
       freezeQty: Number(info.freeze_qty) || 1,
-      quoteOnly: QUOTE_ONLY.has(exchange),
+      quoteOnly: this.marketDataOnly || QUOTE_ONLY.has(exchange),
       hasOpenInterest: openInterestCapability(exchange, info),
       productOptions,
       product: this.product,
@@ -7850,7 +7857,8 @@ export class TradingTerminal {
       },
     })
     this.cachedBars = withBarCache(this.rest, { ttlMs: 10 * 60_000 })
-    this.trade = new OpenAlgoTradeFeed({ baseUrl: '', apiKey: this.apiKey, strategy: STRATEGY })
+    if (!this.marketDataOnly)
+      this.trade = new OpenAlgoTradeFeed({ baseUrl: '', apiKey: this.apiKey, strategy: STRATEGY })
 
     // broker-supported intervals → the timeframe dropdown
     let groups: IntervalGroup[]
@@ -7870,7 +7878,7 @@ export class TradingTerminal {
     }
     this.availableIntervals = groups.flatMap((group) => group.items)
     const savedSymbol = this.initialWorkspacePane ?? savedInstrument(this.lsGet('symbol'))
-    const exchange = savedSymbol?.exchange ?? 'NSE'
+    const exchange = savedSymbol?.exchange ?? this.defaultChart?.exchange ?? 'NSE'
     await prepareSessionHours(this.apiKey, { symbol: '', exchange, interval: 'D' })
     if (this.destroyed) return
     this.timeframes = createTradingTimeframes(this.cachedBars, {
@@ -7989,10 +7997,10 @@ export class TradingTerminal {
       if (!working) this.pollBook() // fills/cancels move the position book too
     })
     this.ws.connect()
-    this.ws.subscribeOrders()
+    if (!this.marketDataOnly) this.ws.subscribeOrders()
 
     if (this.bookTimer) clearInterval(this.bookTimer)
-    this.bookTimer = setInterval(() => this.pollBook(), 8000)
+    if (!this.marketDataOnly) this.bookTimer = setInterval(() => this.pollBook(), 8000)
 
     if (this.initialWorkspacePane) {
       const pane = this.initialWorkspacePane
@@ -8036,9 +8044,10 @@ export class TradingTerminal {
     }
     if (!loaded && !this.destroyed) {
       try {
-        const rows = await this.search('BHEL', 'NSE')
-        const bhel = rows.find((r) => r.symbol === 'BHEL' && r.exchange === 'NSE')
-        if (bhel) await this.loadSymbol(bhel)
+        const fallback = this.defaultChart ?? { symbol: 'BHEL', exchange: 'NSE' }
+        const rows = await this.search(fallback.symbol, fallback.exchange)
+        const row = rows.find((r) => r.symbol === fallback.symbol && r.exchange === fallback.exchange)
+        if (row) await this.loadSymbol(row)
       } catch {
         /* leave the chart empty; the user can search */
       }

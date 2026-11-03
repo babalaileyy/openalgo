@@ -221,11 +221,11 @@ describe('StraddleChart', () => {
     const text = tooltip().textContent ?? ''
     expect(tooltip().style.display).toBe('block')
     // Each label beside its own value, so a call and put swapped would fail.
-    expect(text).toMatch(/Straddle Price\s*233\.90/)
-    expect(text).toMatch(/25000 Call:\s*112\.50/)
-    expect(text).toMatch(/25000 Put:\s*121\.40/)
-    expect(text).toMatch(/Synthetic Fut\s*24,991\.10/)
-    expect(text).toMatch(/Spot Price\s*24,990\.25/)
+    expect(text).toMatch(/Straddle Price（跨式组合价格）\s*233\.90/)
+    expect(text).toMatch(/25000 看涨：\s*112\.50/)
+    expect(text).toMatch(/25000 看跌：\s*121\.40/)
+    expect(text).toMatch(/Synthetic Fut（合成期货）\s*24,991\.10/)
+    expect(text).toMatch(/现货价\s*24,990\.25/)
     expect(text).toMatch(/27 Oct\s*09:15 AM/)
 
     act(() => {
@@ -236,8 +236,8 @@ describe('StraddleChart', () => {
 
   it('shows and hides series from the legend, and the leading value tag follows', async () => {
     await renderLoaded()
-    fireEvent.click(screen.getByRole('button', { name: 'Straddle' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Spot' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Straddle（跨式组合）' }))
+    fireEvent.click(screen.getByRole('button', { name: '现货价' }))
 
     expect(straddle().applyOptions).toHaveBeenLastCalledWith(
       expect.objectContaining({ visible: false })

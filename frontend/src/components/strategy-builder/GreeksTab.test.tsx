@@ -67,7 +67,7 @@ describe('GreeksTab positional units', () => {
     expect(optionRow).not.toBeNull()
     expect(within(optionRow as HTMLElement).getAllByRole('cell')[2]).toHaveTextContent('100.00')
 
-    fireEvent.click(screen.getByText('Currency values'))
+    fireEvent.click(screen.getByText('金额值'))
     expect(screen.getByTestId('net-delta')).toHaveTextContent('100.00')
     expect(screen.getByTestId('net-delta')).not.toHaveTextContent('₹')
     expect(screen.getByTestId('net-theta')).toHaveTextContent('-₹600.00')
@@ -99,17 +99,17 @@ describe('GreeksTab positional units', () => {
       />
     )
 
-    expect(screen.getByRole('columnheader', { name: /Delta.*underlying units/i })).toBeVisible()
-    expect(screen.getByRole('columnheader', { name: /Gamma.*delta.*price point/i })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: /Delta.*标的单位/ })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: /Gamma.*价格点/ })).toBeVisible()
     expect(
-      screen.getByRole('columnheader', { name: /Theta.*position currency.*per day/i })
+      screen.getByRole('columnheader', { name: /Theta.*每日持仓货币金额/ })
     ).toBeVisible()
     expect(
       screen.getByRole('columnheader', { name: /Vega.*position currency.*1% IV/i })
     ).toBeVisible()
     expect(screen.getByRole('table')).not.toHaveTextContent('₹')
 
-    fireEvent.click(screen.getByText('Currency values'))
+    fireEvent.click(screen.getByText('金额值'))
     expect(screen.getByTestId('net-theta')).toHaveTextContent('-$600.00')
     expect(screen.getByTestId('net-vega')).toHaveTextContent('$1,000.00')
     expect(screen.getByTestId('net-delta')).not.toHaveTextContent('$')

@@ -163,7 +163,7 @@ export default function GoCharting() {
   const generateJson = useCallback((showError = true) => {
     if (!symbol || !exchange) {
       if (showError) {
-        showToast.error('Please select a symbol and exchange', 'system')
+        showToast.error('请选择交易品种和交易所', 'system')
       }
       return
     }
@@ -192,7 +192,7 @@ export default function GoCharting() {
       await navigator.clipboard.writeText(text)
       showToast.success(`${label} copied to clipboard`, 'clipboard')
     } catch {
-      showToast.error('Copy failed - please copy manually', 'system')
+      showToast.error('复制失败，请手动复制', 'system')
     }
   }
 
@@ -200,10 +200,8 @@ export default function GoCharting() {
     <div className="container mx-auto py-6 px-4 max-w-6xl">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold">GoCharting Configuration</h1>
-        <p className="text-muted-foreground mt-2">
-          Generate webhook configuration for GoCharting strategy alerts
-        </p>
+        <h1 className="text-3xl font-bold">GoCharting 配置</h1>
+        <p className="text-muted-foreground mt-2">为 GoCharting 策略提醒生成 Webhook 配置</p>
       </div>
 
       {/* Localhost Warning - only show if HOST_SERVER is not configured to external URL */}
@@ -211,11 +209,7 @@ export default function GoCharting() {
         <Alert variant="destructive" className="mb-8">
           <AlertTriangle className="h-5 w-5" />
           <AlertDescription className="ml-2">
-            <strong>Webhook URL not accessible!</strong> GoCharting cannot send alerts to localhost.
-            Use <strong>ngrok</strong>, <strong>Cloudflare Tunnel</strong>,{' '}
-            <strong>VS Code Dev Tunnel</strong>, or a <strong>custom domain</strong> to expose your
-            OpenAlgo instance to the internet. Update <code>HOST_SERVER</code> in your{' '}
-            <code>.env</code> file with your external URL.
+            <strong>无法访问 Webhook 地址！</strong> GoCharting 无法向本机地址发送提醒。请使用 <strong>ngrok</strong>、<strong>Cloudflare Tunnel</strong>、<strong>VS Code Dev Tunnel</strong> 或<strong>自定义域名</strong>使 OpenAlgo 可从外网访问，并将外网地址填入 <code>.env</code> 文件中的 <code>HOST_SERVER</code>。
           </AlertDescription>
         </Alert>
       )}
@@ -227,7 +221,7 @@ export default function GoCharting() {
           <Card>
             <CardHeader>
               <CardTitle className="text-primary">Webhook URL</CardTitle>
-              <CardDescription>Use this URL in your GoCharting alerts</CardDescription>
+              <CardDescription>在 GoCharting 提醒中使用此地址</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
@@ -240,7 +234,7 @@ export default function GoCharting() {
                   onClick={() => copyToClipboard(webhookUrl, 'Webhook URL')}
                 >
                   <Copy className="h-4 w-4 mr-1" />
-                  Copy
+                  复制
                 </Button>
               </div>
             </CardContent>
@@ -249,17 +243,17 @@ export default function GoCharting() {
           {/* Configuration Form */}
           <Card>
             <CardHeader>
-              <CardTitle>Configuration</CardTitle>
+              <CardTitle>配置</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Symbol Search */}
               <div className="space-y-2">
-                <Label htmlFor="symbol">Symbol</Label>
+                <Label htmlFor="symbol">交易品种</Label>
                 <div className="relative" ref={inputWrapperRef}>
                   <Input
                     id="symbol"
                     type="text"
-                    placeholder="Search for symbol..."
+                    placeholder="搜索交易品种..."
                     value={symbol}
                     onChange={(e) => setSymbol(e.target.value)}
                     onFocus={() => {
@@ -300,10 +294,10 @@ export default function GoCharting() {
 
               {/* Exchange */}
               <div className="space-y-2">
-                <Label htmlFor="exchange">Exchange</Label>
+                <Label htmlFor="exchange">交易所</Label>
                 <Select value={exchange} onValueChange={setExchange}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select Exchange" />
+                    <SelectValue placeholder="选择交易所" />
                   </SelectTrigger>
                   <SelectContent>
                     {tradingExchanges.map((ex) => (
@@ -318,7 +312,7 @@ export default function GoCharting() {
               {/* Product Type (hidden for crypto — Delta Exchange ignores it) */}
               {!isCrypto && (
                 <div className="space-y-2">
-                  <Label htmlFor="product">Product Type</Label>
+                  <Label htmlFor="product">产品类型</Label>
                   <Select value={product} onValueChange={setProduct}>
                     <SelectTrigger>
                       <SelectValue />
@@ -336,36 +330,34 @@ export default function GoCharting() {
 
               {/* Action */}
               <div className="space-y-2">
-                <Label htmlFor="action">Action</Label>
+                <Label htmlFor="action">操作</Label>
                 <Select value={action} onValueChange={setAction}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="BUY">BUY</SelectItem>
-                    <SelectItem value="SELL">SELL</SelectItem>
+                    <SelectItem value="SELL">SELL（卖出）</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Quantity */}
               <div className="space-y-2">
-                <Label htmlFor="quantity">Quantity</Label>
+                <Label htmlFor="quantity">数量</Label>
                 <Input
                   id="quantity"
                   type="number"
                   min="1"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
-                  placeholder="Enter quantity"
+                  placeholder="输入数量"
                 />
               </div>
 
               {/* Generate Button */}
               <Button onClick={() => generateJson()} className="w-full">
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Generate JSON
-              </Button>
+                <RefreshCw className="h-4 w-4 mr-2" />生成 JSON</Button>
             </CardContent>
           </Card>
         </div>
@@ -376,7 +368,7 @@ export default function GoCharting() {
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle>Generated JSON</CardTitle>
+                <CardTitle>生成的 JSON</CardTitle>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -384,7 +376,7 @@ export default function GoCharting() {
                   disabled={!generatedJson}
                 >
                   <Copy className="h-4 w-4 mr-1" />
-                  Copy
+                  复制
                 </Button>
               </div>
             </CardHeader>
@@ -406,28 +398,22 @@ export default function GoCharting() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5" />
-                Need Help?
+                需要帮助？
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p>
-                Learn how to set up automated trading using GoCharting webhooks with our
-                comprehensive step-by-step guide.
-              </p>
+              <p>通过分步指南了解如何使用 GoCharting Webhook 设置自动交易。</p>
 
               {/* Premium Notice */}
               <Alert className="bg-blue-500/10 border-blue-500">
                 <Info className="h-4 w-4 text-blue-500" />
                 <AlertDescription className="ml-2 text-sm">
-                  <strong>Premium Required:</strong> Webhook alerts require GoCharting Premium Plan.
-                </AlertDescription>
+                  <strong>需要高级账户：</strong>Webhook 提醒需要 GoCharting Premium 套餐。</AlertDescription>
               </Alert>
 
               <div className="flex gap-3">
                 <Button asChild variant="outline" size="sm">
-                  <a href="/docs/gocharting_webhook_setup.md" download>
-                    Download Guide
-                  </a>
+                  <a href="/docs/gocharting_webhook_setup.md" download>下载指南</a>
                 </Button>
                 <Button asChild variant="default" size="sm">
                   <a
@@ -435,7 +421,7 @@ export default function GoCharting() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Online Docs
+                    在线文档
                     <ExternalLink className="h-4 w-4 ml-2" />
                   </a>
                 </Button>

@@ -23,14 +23,14 @@ export const FundsNode = memo(({ data, selected }: FundsNodeProps) => {
             <Wallet className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Funds</div>
-            <div className="text-[9px] text-muted-foreground">Account Balance</div>
+            <div className="text-xs font-medium leading-tight">资金</div>
+            <div className="text-[9px] text-muted-foreground">账户余额</div>
           </div>
         </div>
         {data.outputVariable && (
           <div className="mt-1 text-[10px]">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Output:</span>
+              <span className="text-muted-foreground">输出：</span>
               <span className="mono-data text-amber-500">{`{{${data.outputVariable}}}`}</span>
             </div>
           </div>

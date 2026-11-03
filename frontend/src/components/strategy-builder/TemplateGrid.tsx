@@ -93,7 +93,7 @@ export function TemplateGrid({ direction, onDirectionChange, onPick }: TemplateG
             <Sparkles className="h-3.5 w-3.5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold leading-none">Strategy Library</h3>
+            <h3 className="text-sm font-semibold leading-none">策略库</h3>
             <p className="mt-1 text-[11px] text-muted-foreground">
               {filtered.length} {filtered.length === 1 ? 'template' : 'templates'} · click to
               configure

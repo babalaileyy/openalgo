@@ -72,7 +72,7 @@ export default function LogsPage() {
         setTotalPages(response.data.total_pages || 1)
         setCurrentPage(response.data.current_page || 1)
       } catch (_error) {
-        showToast.error('Failed to load logs', 'monitoring')
+        showToast.error('加载日志失败', 'monitoring')
       } finally {
         setIsLoading(false)
         setIsRefreshing(false)
@@ -101,7 +101,7 @@ export default function LogsPage() {
   const handleRefresh = async () => {
     setIsRefreshing(true)
     await fetchLogs(currentPage)
-    showToast.success('Logs refreshed', 'monitoring')
+    showToast.success('日志已刷新', 'monitoring')
   }
 
   const handleExport = () => {
@@ -186,7 +186,7 @@ export default function LogsPage() {
           size="icon"
           onClick={() => fetchLogs(currentPage - 1)}
           disabled={currentPage <= 1}
-          aria-label="Previous page"
+          aria-label="上一页"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -206,7 +206,7 @@ export default function LogsPage() {
           size="icon"
           onClick={() => fetchLogs(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          aria-label="Next page"
+          aria-label="下一页"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -236,7 +236,7 @@ export default function LogsPage() {
               Live Trading Logs
             </h1>
           </div>
-          <p className="text-muted-foreground">View and search your real-time API trading logs</p>
+          <p className="text-muted-foreground">查看和搜索实时 API 交易日志</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing}>
@@ -253,12 +253,12 @@ export default function LogsPage() {
       {/* Filters */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Filters</CardTitle>
+          <CardTitle className="text-lg">筛选条件</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Start Date</label>
+              <label className="text-sm font-medium">开始日期</label>
               <Input
                 type="date"
                 value={startDate}
@@ -268,7 +268,7 @@ export default function LogsPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">End Date</label>
+              <label className="text-sm font-medium">结束日期</label>
               <Input
                 type="date"
                 value={endDate}
@@ -278,12 +278,12 @@ export default function LogsPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Search</label>
+              <label className="text-sm font-medium">搜索</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
                 <Input
                   type="text"
-                  placeholder="Search logs..."
+                  placeholder="搜索日志..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -300,7 +300,7 @@ export default function LogsPage() {
           <Card>
             <CardContent className="py-16 text-center text-muted-foreground">
               <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No logs found for the selected date range</p>
+              <p>所选日期范围内没有日志</p>
             </CardContent>
           </Card>
         ) : (
@@ -351,37 +351,37 @@ export default function LogsPage() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
                       {requestData.symbol ? (
                         <div className="bg-muted rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground uppercase">Symbol</p>
+                          <p className="text-xs text-muted-foreground uppercase">交易品种</p>
                           <p className="font-semibold">{String(requestData.symbol)}</p>
                         </div>
                       ) : null}
                       {requestData.quantity ? (
                         <div className="bg-muted rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground uppercase">Quantity</p>
+                          <p className="text-xs text-muted-foreground uppercase">数量</p>
                           <p className="font-semibold">{String(requestData.quantity)}</p>
                         </div>
                       ) : null}
                       {requestData.price && String(requestData.price) !== '0' ? (
                         <div className="bg-muted rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground uppercase">Price</p>
+                          <p className="text-xs text-muted-foreground uppercase">价格</p>
                           <p className="font-semibold">{String(requestData.price)}</p>
                         </div>
                       ) : null}
                       {requestData.product ? (
                         <div className="bg-muted rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground uppercase">Product</p>
+                          <p className="text-xs text-muted-foreground uppercase">产品类型</p>
                           <p className="font-semibold">{String(requestData.product)}</p>
                         </div>
                       ) : null}
                       {requestData.pricetype ? (
                         <div className="bg-muted rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground uppercase">Price Type</p>
+                          <p className="text-xs text-muted-foreground uppercase">价格类型</p>
                           <p className="font-semibold">{String(requestData.pricetype)}</p>
                         </div>
                       ) : null}
                       {requestData.orderid ? (
                         <div className="bg-muted rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground uppercase">Order ID</p>
+                          <p className="text-xs text-muted-foreground uppercase">委托编号</p>
                           <p className="font-semibold text-sm truncate">
                             {String(requestData.orderid)}
                           </p>
@@ -426,7 +426,7 @@ export default function LogsPage() {
                         return (
                           <>
                             <div className="bg-muted rounded-lg p-4">
-                              <h4 className="text-sm font-medium mb-2">Request Data</h4>
+                              <h4 className="text-sm font-medium mb-2">请求数据</h4>
                               <div
                                 className="rounded-lg border bg-card/50"
                                 style={{ height: requestHeight }}
@@ -439,7 +439,7 @@ export default function LogsPage() {
                               </div>
                             </div>
                             <div className="bg-muted rounded-lg p-4">
-                              <h4 className="text-sm font-medium mb-2">Response Data</h4>
+                              <h4 className="text-sm font-medium mb-2">响应数据</h4>
                               <div
                                 className="rounded-lg border bg-card/50"
                                 style={{ height: responseHeight }}

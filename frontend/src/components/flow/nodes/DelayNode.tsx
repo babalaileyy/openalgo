@@ -54,8 +54,8 @@ export const DelayNode = memo(({ data, selected }: DelayNodeProps) => {
             <Timer className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Wait Duration</div>
-            <div className="text-[9px] text-muted-foreground">Delay</div>
+            <div className="text-xs font-medium leading-tight">等待时长</div>
+            <div className="text-[9px] text-muted-foreground">延时</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1 text-center">

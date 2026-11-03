@@ -72,12 +72,12 @@ export default function StrategyList() {
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteStrategy(id),
     onSuccess: () => {
-      showToast.success('Strategy deleted')
+      showToast.success('策略已删除')
       queryClient.invalidateQueries({ queryKey: strategyQueryKeys.strategies() })
       setDeleteTargetId(null)
     },
     onError: (err: Error) => {
-      showToast.error(err.message || 'Delete failed')
+      showToast.error(err.message || '删除失败')
     },
   })
 
@@ -85,35 +85,33 @@ export default function StrategyList() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Strategies</h1>
+          <h1 className="text-2xl font-bold tracking-tight">策略</h1>
           <p className="text-sm text-muted-foreground">
-            Multi-leg options strategies with end-to-end risk management. Sandbox by default; live
-            mode requires explicit per-strategy opt-in.
+            支持全程风险管理的多腿期权策略。默认使用模拟盘；实盘模式需要为每个策略单独启用。
           </p>
         </div>
-        <Button onClick={() => navigate('/strategy/new')}>+ New strategy</Button>
+        <Button onClick={() => navigate('/strategy/new')}>+ 新建策略</Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Saved strategies</CardTitle>
+          <CardTitle>已保存的策略</CardTitle>
           <CardDescription>
-            P&amp;L columns are live for running strategies and reflect the last-run snapshot for
-            stopped strategies. Status shows whether a run is currently active.
+            运行中策略的盈亏实时更新；已停止策略显示上次运行的快照。状态表示当前是否正在运行。
           </CardDescription>
         </CardHeader>
         <CardContent>
           {error ? (
             <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              Failed to load strategies. Check the backend logs.
+              加载策略失败，请检查后端日志。
             </p>
           ) : isLoading ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">Loading…</p>
+            <p className="py-8 text-center text-sm text-muted-foreground">加载中…</p>
           ) : rows.length === 0 ? (
             <div className="space-y-3 py-8 text-center">
-              <p className="text-sm text-muted-foreground">No strategies yet.</p>
+              <p className="text-sm text-muted-foreground">暂无策略。</p>
               <Button variant="secondary" onClick={() => navigate('/strategy/new')}>
-                Create your first strategy
+                创建第一个策略
               </Button>
             </div>
           ) : (
@@ -121,17 +119,17 @@ export default function StrategyList() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Mode</TableHead>
-                    <TableHead>Underlying</TableHead>
-                    <TableHead>Tab</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead className="text-right">Realized</TableHead>
-                    <TableHead className="text-right">Unrealized</TableHead>
-                    <TableHead className="text-right">Total P&amp;L</TableHead>
-                    <TableHead>Updated</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>名称</TableHead>
+                    <TableHead>状态</TableHead>
+                    <TableHead>模式</TableHead>
+                    <TableHead>标的</TableHead>
+                    <TableHead>分类</TableHead>
+                    <TableHead>类型</TableHead>
+                    <TableHead className="text-right">已实现盈亏</TableHead>
+                    <TableHead className="text-right">未实现盈亏</TableHead>
+                    <TableHead className="text-right">总盈亏</TableHead>
+                    <TableHead>更新时间</TableHead>
+                    <TableHead className="text-right">操作</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -145,11 +143,11 @@ export default function StrategyList() {
                           </Link>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={statusBadgeVariant(row.status)}>{row.status}</Badge>
+                          <Badge variant={statusBadgeVariant(row.status)}>{({ running: '运行中', paused: '已暂停', errored: '出错', stopped: '已停止', draft: '草稿' } as Record<string, string>)[row.status] ?? row.status}</Badge>
                         </TableCell>
                         <TableCell>
                           <Badge variant={row.live_enabled ? 'destructive' : 'secondary'}>
-                            {row.live_enabled ? 'LIVE-enabled' : 'SANDBOX-only'}
+                            {row.live_enabled ? '已启用实盘' : '仅模拟盘'}
                           </Badge>
                         </TableCell>
                         <TableCell className="font-medium">{row.underlying}</TableCell>
@@ -157,7 +155,7 @@ export default function StrategyList() {
                           {universeTabLabel(row.universe_tab)}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline">{row.strategy_type}</Badge>
+                          <Badge variant="outline">{({ batch: '批量', signal: '信号' } as Record<string, string>)[row.strategy_type] ?? row.strategy_type}</Badge>
                         </TableCell>
                         <TableCell
                           className={cn('text-right font-mono', pnlToneClass(pnl?.realized))}
@@ -189,7 +187,7 @@ export default function StrategyList() {
                               variant="outline"
                               onClick={() => navigate(`/strategy/${row.id}`)}
                             >
-                              Open
+                              打开
                             </Button>
                             <Button
                               size="sm"
@@ -197,12 +195,12 @@ export default function StrategyList() {
                               disabled={row.status === 'running'}
                               title={
                                 row.status === 'running'
-                                  ? `Cannot delete while ${row.status}`
+                                  ? '运行中无法删除'
                                   : undefined
                               }
                               onClick={() => setDeleteTargetId(row.id)}
                             >
-                              Delete
+                              删除
                             </Button>
                           </div>
                         </TableCell>
@@ -224,9 +222,9 @@ export default function StrategyList() {
       >
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-base">Delete this strategy?</DialogTitle>
+            <DialogTitle className="text-base">删除此策略？</DialogTitle>
             <DialogDescription>
-              This permanently removes the strategy and its audit trail. This cannot be undone.
+              此操作将永久删除策略及其审计记录，无法撤销。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -235,7 +233,7 @@ export default function StrategyList() {
               onClick={() => setDeleteTargetId(null)}
               disabled={deleteMutation.isPending}
             >
-              Cancel
+              取消
             </Button>
             <Button
               variant="destructive"
@@ -245,7 +243,7 @@ export default function StrategyList() {
                 if (deleteTargetId !== null) deleteMutation.mutate(deleteTargetId)
               }}
             >
-              {deleteMutation.isPending ? 'Working…' : 'Delete'}
+              {deleteMutation.isPending ? '处理中…' : '删除'}
             </Button>
           </DialogFooter>
         </DialogContent>

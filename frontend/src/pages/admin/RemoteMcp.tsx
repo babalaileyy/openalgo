@@ -104,41 +104,41 @@ function ClientCard({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Badge variant={badgeVariant}>{status}</Badge>
-          {client.is_public ? <Badge variant="outline">public client</Badge> : null}
+          {client.is_public ? <Badge variant="outline">公共客户端</Badge> : null}
         </div>
       </div>
 
       <div className="text-xs grid grid-cols-1 md:grid-cols-2 gap-1 text-muted-foreground">
         <div>
-          <span className="font-medium text-foreground">Scopes requested: </span>
+          <span className="font-medium text-foreground">请求的权限范围：</span>
           {client.scopes_requested.length > 0 ? client.scopes_requested.join(', ') : '—'}
         </div>
         <div>
-          <span className="font-medium text-foreground">Created: </span>
+          <span className="font-medium text-foreground">创建时间：</span>
           {client.created_at ? new Date(client.created_at).toLocaleString() : '—'}
         </div>
         {client.approved_at ? (
           <div>
-            <span className="font-medium text-foreground">Approved: </span>
+            <span className="font-medium text-foreground">批准时间：</span>
             {new Date(client.approved_at).toLocaleString()}
           </div>
         ) : null}
         {client.revoked_at ? (
           <div>
-            <span className="font-medium text-foreground">Revoked: </span>
+            <span className="font-medium text-foreground">撤销时间：</span>
             {new Date(client.revoked_at).toLocaleString()}
           </div>
         ) : null}
         {client.last_used_at ? (
           <div>
-            <span className="font-medium text-foreground">Last used: </span>
+            <span className="font-medium text-foreground">最近使用：</span>
             {new Date(client.last_used_at).toLocaleString()}
           </div>
         ) : null}
       </div>
 
       <div className="text-xs">
-        <span className="font-medium">Redirect URIs: </span>
+        <span className="font-medium">重定向 URI：</span>
         <span className="font-mono break-all text-muted-foreground">
           {client.redirect_uris.join(', ')}
         </span>
@@ -247,7 +247,7 @@ export default function RemoteMcp() {
         write_scope_enabled: pendingSettings.write_scope_enabled,
       })
       if (res.status !== 'success') {
-        showToast.error(res.message ?? 'Failed to save settings', 'admin')
+        showToast.error(res.message ?? '保存设置失败', 'admin')
         return
       }
       // Persist the saved values so we can show the "restart required"
@@ -333,7 +333,7 @@ export default function RemoteMcp() {
       setKillSwitchOpen(false)
       await loadAll()
     } catch {
-      showToast.error('Kill switch failed', 'admin')
+      showToast.error('紧急停用失败', 'admin')
     } finally {
       setKillSwitchBusy(false)
     }
@@ -358,25 +358,25 @@ export default function RemoteMcp() {
         <div className="flex items-center gap-3">
           <Link to="/admin">
             <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-1" /> Back
+              <ArrowLeft className="h-4 w-4 mr-1" /> 返回
             </Button>
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Globe className="h-6 w-6" /> Remote MCP
+            <Globe className="h-6 w-6" /> 远程 MCP
           </h1>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={loadAll}>
-            <RefreshCw className="h-4 w-4 mr-1" /> Refresh
+            <RefreshCw className="h-4 w-4 mr-1" /> 刷新
           </Button>
           {mcpEnabled ? (
             <Button
               variant="destructive"
               size="sm"
               onClick={() => setKillSwitchOpen(true)}
-              title="Revoke every active refresh token"
+              title="撤销所有有效的刷新令牌"
             >
-              <AlertTriangle className="h-4 w-4 mr-1" /> Kill switch
+              <AlertTriangle className="h-4 w-4 mr-1" /> 紧急停用
             </Button>
           ) : null}
         </div>
@@ -390,16 +390,15 @@ export default function RemoteMcp() {
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Power className="h-5 w-5" />
-                  Remote MCP settings
+                  远程 MCP 设置
                 </CardTitle>
                 <CardDescription>
-                  Toggle Remote MCP on or off and adjust its OAuth posture. Changes are written to
-                  <code className="mx-1">.env</code>; the openalgo service must be restarted before
-                  they take effect.
+                  启用或关闭远程 MCP 并调整 OAuth 设置。更改将写入
+                  <code className="mx-1">.env</code>，重启 OpenAlgo 服务后生效。
                 </CardDescription>
               </div>
               <Badge variant={mcpEnabled ? 'default' : 'secondary'}>
-                Currently {mcpEnabled ? 'enabled' : 'disabled'}
+                当前{mcpEnabled ? '已启用' : '已禁用'}
               </Badge>
             </div>
           </CardHeader>
@@ -417,11 +416,11 @@ export default function RemoteMcp() {
                     variant="outline"
                     onClick={() => handleCopyMcpUrl(pendingSettings.mcp_url)}
                   >
-                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                    <Copy className="h-3.5 w-3.5 mr-1" /> 复制
                   </Button>
                 </div>
                 <div className="text-xs text-muted-foreground mt-2">
-                  Point your hosted AI client (claude.ai, chatgpt.com) at this URL.
+                  在托管的 AI 客户端（如 claude.ai、chatgpt.com）中填写此地址。
                 </div>
               </div>
             ) : null}
@@ -429,7 +428,7 @@ export default function RemoteMcp() {
             {/* Public URL input — required when enabling */}
             <div className="space-y-1.5">
               <label htmlFor="mcp-public-url" className="text-sm font-medium">
-                Public HTTPS origin
+                公网 HTTPS 地址
               </label>
               <Input
                 id="mcp-public-url"
@@ -440,8 +439,7 @@ export default function RemoteMcp() {
                 placeholder="https://yourdomain.com"
               />
               <p className="text-xs text-muted-foreground">
-                Same as your OpenAlgo dashboard URL. Required when MCP is enabled. Used as the JWT
-                issuer / audience claim — tokens are scoped to this exact origin.
+                与 OpenAlgo 仪表盘的地址相同。启用 MCP 时必填；此地址用于 JWT 的签发者和受众声明，令牌仅适用于此地址。
               </p>
             </div>
 
@@ -449,10 +447,9 @@ export default function RemoteMcp() {
             <div className="space-y-4">
               <div className="flex items-start justify-between gap-4 py-2 border-t pt-4">
                 <div>
-                  <div className="text-sm font-medium">Remote MCP enabled</div>
+                  <div className="text-sm font-medium">远程 MCP 已启用</div>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Master switch for the <code>/mcp</code> and <code>/oauth/*</code> endpoints.
-                    Local stdio MCP (Claude Desktop / Cursor) is unaffected.
+                    <code>/mcp</code> 和 <code>/oauth/*</code> 接口的总开关。本地 stdio MCP（Claude Desktop / Cursor）不受影响。
                   </p>
                 </div>
                 <Switch
@@ -465,11 +462,9 @@ export default function RemoteMcp() {
 
               <div className="flex items-start justify-between gap-4 py-2">
                 <div>
-                  <div className="text-sm font-medium">Auto-approve hosted clients</div>
+                  <div className="text-sm font-medium">自动批准托管客户端</div>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    When ON, DCR-registered clients can complete OAuth without admin approval.
-                    Suitable for single-trader self-hosted installs. Turn OFF on shared deployments
-                    to require manual approval per client.
+                    开启后，动态客户端注册（DCR）的客户端无需管理员批准即可完成 OAuth 授权，适用于单人自托管部署。共享部署应关闭此选项，对每个客户端进行人工审批。
                   </p>
                 </div>
                 <Switch
@@ -482,10 +477,9 @@ export default function RemoteMcp() {
 
               <div className="flex items-start justify-between gap-4 py-2">
                 <div>
-                  <div className="text-sm font-medium">Allow order placement (write:orders)</div>
+                  <div className="text-sm font-medium">允许下单（write:orders）</div>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    When ON, AI clients can place / modify / cancel orders via MCP. Turn OFF for
-                    read-only access (quotes, holdings, positions, market data only).
+                    开启后，AI 客户端可通过 MCP 下单、修改或撤销订单。关闭后仅允许读取行情、持仓等数据。
                   </p>
                 </div>
                 <Switch
@@ -500,7 +494,7 @@ export default function RemoteMcp() {
             {/* Save button */}
             <div className="flex items-center justify-between pt-2 border-t">
               <div className="text-xs text-muted-foreground">
-                {settingsDirty ? 'Unsaved changes' : 'No pending changes'}
+                {settingsDirty ? '有未保存的更改' : '没有待保存的更改'}
               </div>
               <div className="flex gap-2">
                 {settingsDirty ? (
@@ -510,7 +504,7 @@ export default function RemoteMcp() {
                     onClick={() => setPendingSettings(settings)}
                     disabled={savingSettings}
                   >
-                    Discard
+                    放弃更改
                   </Button>
                 ) : null}
                 <Button
@@ -523,7 +517,7 @@ export default function RemoteMcp() {
                   ) : (
                     <Save className="h-4 w-4 mr-1" />
                   )}
-                  Save changes
+                  保存更改
                 </Button>
               </div>
             </div>
@@ -535,14 +529,14 @@ export default function RemoteMcp() {
       {restartPending ? (
         <Alert variant="default" className="border-amber-300 dark:border-amber-700">
           <AlertTriangle className="h-4 w-4 text-amber-600" />
-          <AlertTitle>Restart required to apply changes</AlertTitle>
+          <AlertTitle>重启后更改才会生效</AlertTitle>
           <AlertDescription>
-            Settings saved to <code>.env</code>. Run the following on your server to load them:
+            设置已保存到 <code>.env</code>。请在服务器上运行以下命令使其生效：
             <pre className="mt-2 rounded bg-muted px-3 py-2 text-xs font-mono">
               sudo systemctl restart openalgo
             </pre>
             <span className="block mt-2 text-xs">
-              This banner clears automatically once the running service reflects the new values.
+              运行中的服务应用新设置后，此提示会自动消失。
             </span>
           </AlertDescription>
         </Alert>
@@ -552,11 +546,9 @@ export default function RemoteMcp() {
       {!mcpEnabled ? (
         <Alert>
           <ShieldAlert className="h-4 w-4" />
-          <AlertTitle>Remote MCP is currently disabled</AlertTitle>
+          <AlertTitle>远程 MCP 当前已禁用</AlertTitle>
           <AlertDescription>
-            Hosted AI clients can't reach <code>/mcp</code> right now. Enable it from the settings
-            card above, then restart the service. Local stdio MCP (Claude Desktop / Cursor /
-            Windsurf) is unaffected and works regardless.
+            托管 AI 客户端目前无法访问 <code>/mcp</code>。请在上方设置中启用并重启服务。本地 stdio MCP（Claude Desktop / Cursor / Windsurf）不受影响。
           </AlertDescription>
         </Alert>
       ) : null}
@@ -568,23 +560,23 @@ export default function RemoteMcp() {
           <div className="grid grid-cols-3 gap-4">
             <Card>
               <CardContent className="pt-6">
-                <div className="text-xs uppercase text-muted-foreground">Pending</div>
+                <div className="text-xs uppercase text-muted-foreground">待处理</div>
                 <div className="text-3xl font-bold text-amber-600">{summary.pending}</div>
-                <div className="text-xs text-muted-foreground">awaiting approval</div>
+                <div className="text-xs text-muted-foreground">等待批准</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="text-xs uppercase text-muted-foreground">Approved</div>
+                <div className="text-xs uppercase text-muted-foreground">已批准</div>
                 <div className="text-3xl font-bold text-emerald-600">{summary.approved}</div>
-                <div className="text-xs text-muted-foreground">active clients</div>
+                <div className="text-xs text-muted-foreground">个活跃客户端</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="text-xs uppercase text-muted-foreground">Revoked</div>
+                <div className="text-xs uppercase text-muted-foreground">已撤销</div>
                 <div className="text-3xl font-bold text-muted-foreground">{summary.revoked}</div>
-                <div className="text-xs text-muted-foreground">disabled</div>
+                <div className="text-xs text-muted-foreground">已禁用</div>
               </CardContent>
             </Card>
           </div>
@@ -592,14 +584,12 @@ export default function RemoteMcp() {
           {/* Pending */}
           <Card>
             <CardHeader>
-              <CardTitle>Pending approvals</CardTitle>
-              <CardDescription>
-                New DCR-registered clients land here. Approve only ones you recognize.
-              </CardDescription>
+              <CardTitle>待审批</CardTitle>
+              <CardDescription>新注册的 DCR 客户端会显示在这里。请只批准您认识的客户端。</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {pending.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No clients awaiting approval.</p>
+                <p className="text-sm text-muted-foreground">暂无等待批准的客户端。</p>
               ) : (
                 pending.map((c) => (
                   <ClientCard
@@ -617,14 +607,12 @@ export default function RemoteMcp() {
           {/* Approved */}
           <Card>
             <CardHeader>
-              <CardTitle>Approved clients</CardTitle>
-              <CardDescription>
-                Currently authorized to complete OAuth flows and call MCP tools.
-              </CardDescription>
+              <CardTitle>已批准的客户端</CardTitle>
+              <CardDescription>当前获准完成 OAuth 授权并调用 MCP 工具的客户端。</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {approved.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No approved clients yet.</p>
+                <p className="text-sm text-muted-foreground">暂无已批准的客户端。</p>
               ) : (
                 approved.map((c) => (
                   <ClientCard
@@ -644,7 +632,7 @@ export default function RemoteMcp() {
             <Card>
               <CardHeader>
                 <CardTitle>Revoked clients ({revoked.length})</CardTitle>
-                <CardDescription>Historical record. These cannot complete OAuth.</CardDescription>
+                <CardDescription>历史记录，无法再完成 OAuth 授权。</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {revoked.map((c) => (
@@ -663,7 +651,7 @@ export default function RemoteMcp() {
           {/* Audit log */}
           <Card>
             <CardHeader>
-              <CardTitle>MCP tool call audit</CardTitle>
+              <CardTitle>MCP 工具调用审计</CardTitle>
               <CardDescription>
                 Tail of <code>log/mcp.jsonl</code>. Every tool call by any client is recorded with
                 timestamp, jti, scope, and outcome — params themselves are stored as a SHA-256 hash.
@@ -701,9 +689,7 @@ export default function RemoteMcp() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button variant="outline" size="sm" onClick={reloadAudit}>
-                  Apply
-                </Button>
+                <Button variant="outline" size="sm" onClick={reloadAudit}>应用</Button>
               </div>
 
               <div className="text-xs text-muted-foreground mb-2">
@@ -711,17 +697,17 @@ export default function RemoteMcp() {
               </div>
 
               {audit.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No tool calls yet.</p>
+                <p className="text-sm text-muted-foreground">暂无工具调用。</p>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-8" />
-                      <TableHead>Time</TableHead>
-                      <TableHead>Tool</TableHead>
-                      <TableHead>Scope</TableHead>
-                      <TableHead>Outcome</TableHead>
-                      <TableHead>Latency</TableHead>
+                      <TableHead>时间</TableHead>
+                      <TableHead>工具</TableHead>
+                      <TableHead>权限范围</TableHead>
+                      <TableHead>结果</TableHead>
+                      <TableHead>延迟</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -768,7 +754,7 @@ export default function RemoteMcp() {
                                 <TableCell colSpan={6} className="bg-muted/30 text-xs">
                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2 py-2">
                                     <div>
-                                      <span className="text-muted-foreground">Client:</span>{' '}
+                                      <span className="text-muted-foreground">客户端：</span>{' '}
                                       <span className="font-mono">{entry.client_id ?? '—'}</span>
                                     </div>
                                     <div>
@@ -780,7 +766,7 @@ export default function RemoteMcp() {
                                       <span className="font-mono">{entry.request_ip ?? '—'}</span>
                                     </div>
                                     <div className="md:col-span-3">
-                                      <span className="text-muted-foreground">Params hash:</span>{' '}
+                                      <span className="text-muted-foreground">参数哈希：</span>{' '}
                                       <span className="font-mono">{entry.params_hash ?? '—'}</span>
                                     </div>
                                   </div>
@@ -814,13 +800,11 @@ export default function RemoteMcp() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleRevoke}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Revoke client
-            </AlertDialogAction>
+            >撤销客户端授权</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -830,12 +814,10 @@ export default function RemoteMcp() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              Trigger the Remote MCP kill switch?
-            </AlertDialogTitle>
+              <AlertTriangle className="h-5 w-5 text-destructive" />确定紧急停用远程 MCP 吗？</AlertDialogTitle>
             <AlertDialogDescription className="space-y-2">
               <span className="block">
-                This revokes <strong>every</strong> refresh token across <strong>all</strong>{' '}
+                This revokes <strong>每</strong> refresh token across <strong>all</strong>{' '}
                 approved MCP clients in one shot. Use it if you suspect a stolen token, an
                 unexpected order, or before disabling Remote MCP entirely.
               </span>
@@ -847,7 +829,7 @@ export default function RemoteMcp() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={killSwitchBusy}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={killSwitchBusy}>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleKillSwitch}
               disabled={killSwitchBusy}

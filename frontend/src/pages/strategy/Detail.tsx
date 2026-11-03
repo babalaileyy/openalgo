@@ -306,7 +306,7 @@ function TrailCell({ leg, live }: { leg: Leg; live: LegState | undefined }) {
           {armPrice != null ? (
             <span className="text-muted-foreground">trails from {armPrice.toFixed(2)}</span>
           ) : (
-            <span className="text-muted-foreground">trail pending</span>
+            <span className="text-muted-foreground">等待触发移动止损</span>
           )}
           <span className="text-[10px] text-muted-foreground">
             {peakShown != null ? peakShown.toFixed(2) : '—'} / {trailX} {unit}
@@ -423,19 +423,19 @@ function LiveTab({
           {(checkpoint || showLast) && (
             <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-4">
               <span>
-                Peak: <span className="font-mono">{formatCurrentPnl(pnlPeak)}</span>
+                峰值：<span className="font-mono">{formatCurrentPnl(pnlPeak)}</span>
               </span>
               <span>
-                Trough: <span className="font-mono">{formatCurrentPnl(pnlTrough)}</span>
+                谷值：<span className="font-mono">{formatCurrentPnl(pnlTrough)}</span>
               </span>
               {checkpoint && (
                 <span>
-                  Updated: <span className="font-mono">{formatIst(checkpoint.ts)}</span>
+                  更新时间：<span className="font-mono">{formatIst(checkpoint.ts)}</span>
                 </span>
               )}
               {showLast && lastRun?.stopped_at && (
                 <span>
-                  Stopped: <span className="font-mono">{formatIst(lastRun.stopped_at)}</span>
+                  停止时间：<span className="font-mono">{formatIst(lastRun.stopped_at)}</span>
                 </span>
               )}
             </div>
@@ -445,7 +445,7 @@ function LiveTab({
 
       <Card>
         <CardHeader>
-          <CardTitle>Legs</CardTitle>
+          <CardTitle>策略腿</CardTitle>
           <CardDescription>
             {isRunning
               ? 'Active run — LTP, MTM and effective SL from the engine.'
@@ -458,17 +458,17 @@ function LiveTab({
               <TableHeader>
                 <TableRow>
                   <TableHead>#</TableHead>
-                  <TableHead>Symbol</TableHead>
-                  <TableHead>Pos</TableHead>
-                  <TableHead className="text-right">Qty</TableHead>
-                  <TableHead className="text-right">Entry</TableHead>
-                  <TableHead className="text-right">LTP</TableHead>
-                  <TableHead className="text-right">MTM</TableHead>
-                  <TableHead className="text-right">Eff. SL</TableHead>
-                  <TableHead className="text-right">Eff. Tgt</TableHead>
-                  <TableHead className="text-right">Trail</TableHead>
-                  <TableHead>State</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>交易品种</TableHead>
+                  <TableHead>持仓</TableHead>
+                  <TableHead className="text-right">数量</TableHead>
+                  <TableHead className="text-right">入场价</TableHead>
+                  <TableHead className="text-right">最新成交价</TableHead>
+                  <TableHead className="text-right">盯市盈亏</TableHead>
+                  <TableHead className="text-right">有效止损</TableHead>
+                  <TableHead className="text-right">有效止盈</TableHead>
+                  <TableHead className="text-right">移动止损</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead className="text-right">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -529,7 +529,7 @@ function LiveTab({
                       <TableCell className="text-right font-mono">
                         {formatPrice(legLive?.effective_sl)}
                         {Boolean(legLive?.trail_active) && (
-                          <span className="ml-1 text-[10px] text-amber-600">(trail)</span>
+                          <span className="ml-1 text-[10px] text-amber-600">（移动止损）</span>
                         )}
                       </TableCell>
                       <TableCell className="text-right font-mono">
@@ -606,38 +606,38 @@ function SetupTab({ strategy }: { strategy: Strategy }) {
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-3">
           <div>
-            <CardTitle>Strategy setup</CardTitle>
-            <CardDescription>Full configuration as last saved. Edit when stopped.</CardDescription>
+            <CardTitle>策略配置</CardTitle>
+            <CardDescription>显示上次保存的完整配置。停止后可编辑。</CardDescription>
           </div>
           <Button
             variant="outline"
             size="sm"
             disabled={!isStopped}
-            title={!isStopped ? `Cannot edit while ${strategy.status}` : undefined}
+            title={!isStopped ? `策略处于 ${strategy.status} 状态时无法编辑` : undefined}
             onClick={() => navigate(`/strategy/${strategy.id}/edit`)}
           >
-            Edit
+            编辑
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
-          <RiskRow label="Name" value={strategy.name} />
-          <RiskRow label="Kind" value={strategy.strategy_kind} />
-          <RiskRow label="Universe" value={universeTabLabel(strategy.universe_tab)} />
+          <RiskRow label="名称" value={strategy.name} />
+          <RiskRow label="策略类别" value={strategy.strategy_kind} />
+          <RiskRow label="交易范围" value={universeTabLabel(strategy.universe_tab)} />
           <RiskRow
-            label="Underlying"
+            label="标的"
             value={`${strategy.underlying} (${strategy.underlying_exchange})`}
           />
-          <RiskRow label="Type" value={strategy.strategy_type} />
+          <RiskRow label="类型" value={strategy.strategy_type} />
           {strategy.strategy_type === 'intraday' && (
             <>
-              <RiskRow label="Entry time" value={strategy.entry_time ?? '—'} />
-              <RiskRow label="Exit time" value={strategy.exit_time ?? '—'} />
+              <RiskRow label="入场时间" value={strategy.entry_time ?? '—'} />
+              <RiskRow label="退出时间" value={strategy.exit_time ?? '—'} />
             </>
           )}
-          <RiskRow label="Product" value={strategy.product} />
-          <RiskRow label="Pricetype" value={strategy.pricetype} />
+          <RiskRow label="产品类型" value={strategy.product} />
+          <RiskRow label="价格类型" value={strategy.pricetype} />
           <RiskRow
-            label="Daily loss limit"
+            label="每日亏损上限"
             value={
               strategy.daily_loss_limit_inr != null
                 ? `₹${strategy.daily_loss_limit_inr.toFixed(2)}`
@@ -649,7 +649,7 @@ function SetupTab({ strategy }: { strategy: Strategy }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Legs</CardTitle>
+          <CardTitle>策略腿</CardTitle>
           <CardDescription>
             {strategy.legs.length} leg{strategy.legs.length === 1 ? '' : 's'} configured.
           </CardDescription>
@@ -663,12 +663,12 @@ function SetupTab({ strategy }: { strategy: Strategy }) {
                 <thead className="text-xs text-muted-foreground">
                   <tr>
                     <th className="px-2 py-1 text-left">#</th>
-                    <th className="px-2 py-1 text-left">Symbol</th>
-                    <th className="px-2 py-1 text-left">Exchange</th>
-                    <th className="px-2 py-1 text-left">Segment</th>
-                    <th className="px-2 py-1 text-left">Side</th>
-                    <th className="px-2 py-1 text-right">Qty</th>
-                    <th className="px-2 py-1 text-left">Expiry</th>
+                    <th className="px-2 py-1 text-left">交易品种</th>
+                    <th className="px-2 py-1 text-left">交易所</th>
+                    <th className="px-2 py-1 text-left">市场分段</th>
+                    <th className="px-2 py-1 text-left">方向</th>
+                    <th className="px-2 py-1 text-right">数量</th>
+                    <th className="px-2 py-1 text-left">到期日</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -711,13 +711,13 @@ function SetupTab({ strategy }: { strategy: Strategy }) {
                 <thead className="text-xs text-muted-foreground">
                   <tr>
                     <th className="px-2 py-1 text-left">#</th>
-                    <th className="px-2 py-1 text-left">Segment</th>
-                    <th className="px-2 py-1 text-left">Instrument</th>
-                    <th className="px-2 py-1 text-left">Pos</th>
-                    <th className="px-2 py-1 text-right">Qty</th>
-                    <th className="px-2 py-1 text-left">Expiry</th>
-                    <th className="px-2 py-1 text-left">Type</th>
-                    <th className="px-2 py-1 text-left">Strike</th>
+                    <th className="px-2 py-1 text-left">市场分段</th>
+                    <th className="px-2 py-1 text-left">交易品种</th>
+                    <th className="px-2 py-1 text-left">持仓</th>
+                    <th className="px-2 py-1 text-right">数量</th>
+                    <th className="px-2 py-1 text-left">到期日</th>
+                    <th className="px-2 py-1 text-left">类型</th>
+                    <th className="px-2 py-1 text-left">行权价</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -772,20 +772,20 @@ function SetupTab({ strategy }: { strategy: Strategy }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Scheduler</CardTitle>
+          <CardTitle>定时任务</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {scheduler?.enabled ? (
             <>
-              <RiskRow label="Enabled" value="yes" />
-              <RiskRow label="Days" value={scheduler.days.join(', ')} />
-              <RiskRow label="Start time (IST)" value={scheduler.start_time ?? '—'} />
-              <RiskRow label="Auto-stop time (IST)" value={scheduler.auto_stop_time ?? '—'} />
-              <RiskRow label="Default mode" value={scheduler.default_mode} />
+              <RiskRow label="已启用" value="yes" />
+              <RiskRow label="交易日" value={scheduler.days.join(', ')} />
+              <RiskRow label="开始时间（印度时间）" value={scheduler.start_time ?? '—'} />
+              <RiskRow label="自动停止时间（印度时间）" value={scheduler.auto_stop_time ?? '—'} />
+              <RiskRow label="默认模式" value={scheduler.default_mode} />
             </>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Scheduler is off. Strategy can still be started manually or via the webhook.
+              定时任务已关闭，仍可手动或通过 Webhook 启动策略。
             </p>
           )}
         </CardContent>
@@ -927,7 +927,7 @@ export function PositionsTab({
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Strategy positions</CardTitle>
+          <CardTitle>策略持仓</CardTitle>
           <CardDescription>
             {broker.rows
               ? 'Broker quantities are overlaid on every attributable unresolved owner across all runs. Rows marked local/unreconciled were omitted by the broker book or cannot be divided safely; broker/shared is the undivided contract aggregate.'
@@ -945,53 +945,53 @@ export function PositionsTab({
         <CardContent>
           <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div className="rounded-md border p-3">
-              <div className="text-xs uppercase text-muted-foreground">Realized (this run)</div>
+              <div className="text-xs uppercase text-muted-foreground">已实现盈亏（本次运行）</div>
               <div className={cn('font-mono text-xl', pnlToneClass(runRealized))}>
                 {formatCurrentPnl(runRealized)}
               </div>
             </div>
             <div className="rounded-md border p-3">
-              <div className="text-xs uppercase text-muted-foreground">Unrealized</div>
+              <div className="text-xs uppercase text-muted-foreground">未实现盈亏</div>
               <div className={cn('font-mono text-xl', pnlToneClass(runUnrealized))}>
                 {formatCurrentPnl(runUnrealized)}
               </div>
             </div>
             <div className="rounded-md border p-3">
-              <div className="text-xs uppercase text-muted-foreground">Run total</div>
+              <div className="text-xs uppercase text-muted-foreground">本次总盈亏</div>
               <div className={cn('font-mono text-xl', pnlToneClass(runTotal))}>
                 {formatCurrentPnl(runTotal)}
               </div>
             </div>
             <div className="rounded-md border-2 p-3">
-              <div className="text-xs uppercase text-muted-foreground">Cumulative realized</div>
+              <div className="text-xs uppercase text-muted-foreground">累计已实现盈亏</div>
               <div className={cn('font-mono text-xl font-bold', pnlToneClass(cumulativeRealized))}>
                 {formatLivePnl(cumulativeRealized)}
               </div>
-              <div className="text-[10px] text-muted-foreground">Lifetime across all runs</div>
+              <div className="text-[10px] text-muted-foreground">所有运行的累计结果</div>
             </div>
           </div>
 
           {loading ? (
-            <p className="py-6 text-center text-sm text-muted-foreground">Loading…</p>
+            <p className="py-6 text-center text-sm text-muted-foreground">加载中…</p>
           ) : positions.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">
-              No positions for the current run.
+              当前运行没有持仓。
             </p>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Symbol</TableHead>
-                    <TableHead>Exchange</TableHead>
-                    <TableHead>Product</TableHead>
-                    <TableHead>Source</TableHead>
-                    <TableHead>Side</TableHead>
-                    <TableHead className="text-right">Net Qty</TableHead>
-                    <TableHead className="text-right">Avg Entry</TableHead>
-                    <TableHead className="text-right">LTP</TableHead>
-                    <TableHead className="text-right">Unrealized</TableHead>
-                    <TableHead className="text-right">Realized (lifetime)</TableHead>
+                    <TableHead>交易品种</TableHead>
+                    <TableHead>交易所</TableHead>
+                    <TableHead>交易产品</TableHead>
+                    <TableHead>来源</TableHead>
+                    <TableHead>方向</TableHead>
+                    <TableHead className="text-right">净持仓量</TableHead>
+                    <TableHead className="text-right">平均入场价</TableHead>
+                    <TableHead className="text-right">最新成交价</TableHead>
+                    <TableHead className="text-right">未实现盈亏</TableHead>
+                    <TableHead className="text-right">已实现盈亏（累计）</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1051,7 +1051,7 @@ export function PositionsTab({
                           'text-right font-mono',
                           pnlToneClass(position.realized_pnl_lifetime)
                         )}
-                        title="Lifetime realized on this contract across all runs"
+                        title="此合约在所有运行中的累计已实现盈亏"
                       >
                         {position.realized_pnl_lifetime === null
                           ? 'Unavailable'
@@ -1078,10 +1078,9 @@ function LocalOrderAudit({ orders }: { orders: Order[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Strategy audit records</CardTitle>
+        <CardTitle>策略审计记录</CardTitle>
         <CardDescription>
-          Recorded by the strategy engine. These rows are local audit history, not broker
-          confirmation.
+          由策略引擎记录。这些是本地审计记录，不代表交易商确认。
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -1089,15 +1088,15 @@ function LocalOrderAudit({ orders }: { orders: Order[] }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Placed</TableHead>
-                <TableHead>Kind</TableHead>
-                <TableHead>Leg</TableHead>
-                <TableHead>Symbol</TableHead>
-                <TableHead>Action</TableHead>
-                <TableHead className="text-right">Qty</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Broker order id</TableHead>
-                <TableHead>Reject reason</TableHead>
+                <TableHead>下单时间</TableHead>
+                <TableHead>类型</TableHead>
+                <TableHead>策略腿</TableHead>
+                <TableHead>交易品种</TableHead>
+                <TableHead>买卖</TableHead>
+                <TableHead className="text-right">数量</TableHead>
+                <TableHead>状态</TableHead>
+                <TableHead>券商订单号</TableHead>
+                <TableHead>拒单原因</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -1144,32 +1143,31 @@ function LocalTradeAudit({ orders, loading }: { orders: Order[]; loading: boolea
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Strategy audit records</CardTitle>
+        <CardTitle>策略审计记录</CardTitle>
         <CardDescription>
-          Filled rows recorded by the strategy engine. These are local audit history, not broker
-          confirmation.
+          策略引擎记录的成交行。这些是本地审计记录，不代表交易商确认。
         </CardDescription>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">Loading…</p>
+          <p className="py-6 text-center text-sm text-muted-foreground">加载中…</p>
         ) : trades.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">No trades yet.</p>
+          <p className="py-6 text-center text-sm text-muted-foreground">暂无成交。</p>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Filled</TableHead>
-                  <TableHead>Run</TableHead>
-                  <TableHead>Kind</TableHead>
-                  <TableHead>Symbol</TableHead>
-                  <TableHead>Exchange</TableHead>
-                  <TableHead>Action</TableHead>
-                  <TableHead className="text-right">Qty</TableHead>
-                  <TableHead className="text-right">Executed Price</TableHead>
-                  <TableHead className="text-right">Trade Value</TableHead>
-                  <TableHead>Order ID</TableHead>
+                  <TableHead>成交时间</TableHead>
+                  <TableHead>运行</TableHead>
+                  <TableHead>类型</TableHead>
+                  <TableHead>交易品种</TableHead>
+                  <TableHead>交易所</TableHead>
+                  <TableHead>买卖</TableHead>
+                  <TableHead className="text-right">数量</TableHead>
+                  <TableHead className="text-right">成交价</TableHead>
+                  <TableHead className="text-right">成交金额</TableHead>
+                  <TableHead>订单号</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1268,14 +1266,13 @@ export function OrdersTab({
     <div className="space-y-4">
       {runId === null ? (
         <output className="block rounded-md border border-amber-500/50 p-3 text-sm">
-          Broker orderbook was not requested because no strategy run is available. Showing recorded
-          strategy audit data, which is not broker confirmation.
+          当前没有可用的策略运行记录，因此未查询交易商委托簿。此处显示策略审计记录，不代表交易商确认。
         </output>
       ) : broker.isLoading || loading ? (
         <Card>
           <CardContent className="py-12 text-center">
             <p aria-live="polite" className="text-sm text-muted-foreground">
-              Loading broker orderbook...
+              正在加载交易商委托簿...
             </p>
           </CardContent>
         </Card>
@@ -1286,7 +1283,7 @@ export function OrdersTab({
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Broker-confirmed orders</CardTitle>
+            <CardTitle>券商确认的订单</CardTitle>
             <CardDescription>
               Broker status, quantity and prices are primary. Strategy context is attached only by
               an exact, unique broker order id. Run {runId ? `#${runId}` : 'not available'}.
@@ -1302,22 +1299,22 @@ export function OrdersTab({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Broker time</TableHead>
-                      <TableHead>Broker order id</TableHead>
-                      <TableHead>Run</TableHead>
-                      <TableHead>Leg</TableHead>
-                      <TableHead>Kind</TableHead>
-                      <TableHead>Symbol</TableHead>
-                      <TableHead>Exchange</TableHead>
-                      <TableHead>Action</TableHead>
-                      <TableHead>Product</TableHead>
-                      <TableHead className="text-right">Qty</TableHead>
-                      <TableHead className="text-right">Price</TableHead>
-                      <TableHead className="text-right">Trigger</TableHead>
-                      <TableHead>Broker status</TableHead>
-                      <TableHead>Local status/ref</TableHead>
-                      <TableHead>Local rejection</TableHead>
-                      <TableHead>Reconciliation</TableHead>
+                      <TableHead>券商时间</TableHead>
+                      <TableHead>券商订单号</TableHead>
+                      <TableHead>运行</TableHead>
+                      <TableHead>策略腿</TableHead>
+                      <TableHead>类型</TableHead>
+                      <TableHead>交易品种</TableHead>
+                      <TableHead>交易所</TableHead>
+                      <TableHead>买卖</TableHead>
+                      <TableHead>交易产品</TableHead>
+                      <TableHead className="text-right">数量</TableHead>
+                      <TableHead className="text-right">价格</TableHead>
+                      <TableHead className="text-right">触发价</TableHead>
+                      <TableHead>券商状态</TableHead>
+                      <TableHead>本地状态／引用</TableHead>
+                      <TableHead>本地拒绝原因</TableHead>
+                      <TableHead>对账状态</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -1429,14 +1426,13 @@ export function TradesTab({
     <div className="space-y-4">
       {runId === null ? (
         <output className="block rounded-md border border-amber-500/50 p-3 text-sm">
-          Broker tradebook was not requested because no strategy run is available. Showing recorded
-          strategy audit data, which is not broker confirmation.
+          当前没有可用的策略运行记录，因此未查询交易商成交簿。此处显示策略审计记录，不代表交易商确认。
         </output>
       ) : broker.isLoading || loading ? (
         <Card>
           <CardContent className="py-12 text-center">
             <p aria-live="polite" className="text-sm text-muted-foreground">
-              Loading broker tradebook...
+              正在加载交易商成交簿...
             </p>
           </CardContent>
         </Card>
@@ -1447,7 +1443,7 @@ export function TradesTab({
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Broker-confirmed trades</CardTitle>
+            <CardTitle>券商确认的成交</CardTitle>
             <CardDescription>
               Broker fill quantity, average price and trade value are primary. Run{' '}
               {runId ? `#${runId}` : 'not available'}.
@@ -1463,21 +1459,21 @@ export function TradesTab({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Broker time</TableHead>
-                      <TableHead>Broker order id</TableHead>
-                      <TableHead>Run</TableHead>
-                      <TableHead>Leg</TableHead>
-                      <TableHead>Kind</TableHead>
-                      <TableHead>Symbol</TableHead>
-                      <TableHead>Exchange</TableHead>
-                      <TableHead>Action</TableHead>
-                      <TableHead>Product</TableHead>
-                      <TableHead className="text-right">Qty</TableHead>
-                      <TableHead className="text-right">Average price</TableHead>
-                      <TableHead className="text-right">Trade value</TableHead>
-                      <TableHead>Local status/ref</TableHead>
-                      <TableHead>Local rejection</TableHead>
-                      <TableHead>Reconciliation</TableHead>
+                      <TableHead>券商时间</TableHead>
+                      <TableHead>券商订单号</TableHead>
+                      <TableHead>运行</TableHead>
+                      <TableHead>策略腿</TableHead>
+                      <TableHead>类型</TableHead>
+                      <TableHead>交易品种</TableHead>
+                      <TableHead>交易所</TableHead>
+                      <TableHead>买卖</TableHead>
+                      <TableHead>交易产品</TableHead>
+                      <TableHead className="text-right">数量</TableHead>
+                      <TableHead className="text-right">成交均价</TableHead>
+                      <TableHead className="text-right">成交金额</TableHead>
+                      <TableHead>本地状态／引用</TableHead>
+                      <TableHead>本地拒绝原因</TableHead>
+                      <TableHead>对账状态</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -1546,7 +1542,7 @@ function EventsTab({ events }: { events: StrategyEvent[] }) {
       <Card>
         <CardContent className="py-12 text-center">
           <p className="text-sm text-muted-foreground">
-            No events yet. Every state change writes one row.
+            暂无事件。每次状态变化都会写入一条记录。
           </p>
         </CardContent>
       </Card>
@@ -1556,9 +1552,9 @@ function EventsTab({ events }: { events: StrategyEvent[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Audit trail</CardTitle>
+        <CardTitle>审计记录</CardTitle>
         <CardDescription>
-          Every event the strategy module publishes lands here, newest first.
+          策略模块发布的事件均显示在这里，最新事件在前。
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -1605,7 +1601,7 @@ function RiskTab({ strategy }: { strategy: Strategy }) {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Strategy-level risk</CardTitle>
+          <CardTitle>策略整体风险</CardTitle>
           <CardDescription>
             Overall SL and Overall Target trigger exits from LTP-based MTM. MARKET orders fill at
             the available bid/ask, so final realized P&amp;L can differ from the trigger value.
@@ -1613,13 +1609,13 @@ function RiskTab({ strategy }: { strategy: Strategy }) {
         </CardHeader>
         <CardContent className="space-y-3">
           <RiskRow
-            label="Overall SL"
+            label="整体止损"
             value={
               strategy.overall_sl_mtm != null ? `₹${strategy.overall_sl_mtm.toFixed(2)} MTM` : 'off'
             }
           />
           <RiskRow
-            label="Overall Target"
+            label="整体止盈目标"
             value={
               strategy.overall_target_mtm != null
                 ? `₹${strategy.overall_target_mtm.toFixed(2)} MTM`
@@ -1627,14 +1623,14 @@ function RiskTab({ strategy }: { strategy: Strategy }) {
             }
           />
           <RiskRow
-            label="Trail-SL-to-entry"
+            label="移动止损至入场价"
             value={strategy.trail_sl_to_entry ? 'enabled' : 'off'}
           />
           {strategy.lock_profit ? (
             <>
               <Separator />
               <RiskRow
-                label="Lock-profit mode"
+                label="锁盈模式"
                 value={
                   strategy.lock_profit.mode === 'lock'
                     ? 'Lock (static floor)'
@@ -1642,30 +1638,30 @@ function RiskTab({ strategy }: { strategy: Strategy }) {
                 }
               />
               <RiskRow
-                label="If profit reaches"
+                label="当盈利达到"
                 value={`₹${strategy.lock_profit.if_profit_reaches.toFixed(2)}`}
               />
               <RiskRow
-                label="Lock floor"
+                label="锁盈下限"
                 value={`₹${strategy.lock_profit.lock_profit.toFixed(2)}`}
               />
               {strategy.lock_profit.mode === 'lock_and_trail' &&
                 strategy.lock_profit.trail_step != null && (
                   <RiskRow
-                    label="Trail step"
+                    label="移动步长"
                     value={`₹${strategy.lock_profit.trail_step.toFixed(2)}`}
                   />
                 )}
             </>
           ) : (
-            <RiskRow label="Lock-profit" value="off" />
+            <RiskRow label="锁盈" value="off" />
           )}
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Per-leg risk</CardTitle>
+          <CardTitle>各腿风险</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -1673,11 +1669,11 @@ function RiskTab({ strategy }: { strategy: Strategy }) {
               <thead className="text-xs text-muted-foreground">
                 <tr>
                   <th className="px-2 py-1 text-left">#</th>
-                  <th className="px-2 py-1 text-left">Type</th>
-                  <th className="px-2 py-1 text-left">Measured in</th>
-                  <th className="px-2 py-1 text-right">Stop loss</th>
-                  <th className="px-2 py-1 text-right">Target</th>
-                  <th className="px-2 py-1 text-right">Trail X / Y</th>
+                  <th className="px-2 py-1 text-left">类型</th>
+                  <th className="px-2 py-1 text-left">计量方式</th>
+                  <th className="px-2 py-1 text-right">止损</th>
+                  <th className="px-2 py-1 text-right">止盈目标</th>
+                  <th className="px-2 py-1 text-right">移动止损 X / Y</th>
                 </tr>
               </thead>
               <tbody>
@@ -1743,15 +1739,14 @@ function WebhookTab({
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>TradingView webhook</CardTitle>
+          <CardTitle>TradingView Webhook</CardTitle>
           <CardDescription>
-            The URL carries a per-strategy secret token. The token is shown once on create or
-            rotate, and stored only as a hash.
+            此地址包含策略专用的秘密令牌。令牌只在创建或轮换时显示一次，系统仅保存其哈希值。
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1.5">
-            <Label>Webhook URL (token redacted)</Label>
+            <Label>Webhook 地址（令牌已隐藏）</Label>
             <Input
               readOnly
               value={`${window.location.origin}/strategy/webhook/••••••••••••`}
@@ -1765,7 +1760,7 @@ function WebhookTab({
           {isSignal ? (
             <>
               <div className="space-y-1.5">
-                <Label>TradingView alert payloads (one per signal action)</Label>
+                <Label>TradingView 提醒消息（每个信号动作一条）</Label>
                 <p className="text-xs text-muted-foreground">
                   Each TradingView alert sends one of the four payloads below. Mismatched signals (a{' '}
                   <span className="font-mono">long_exit</span> on a flat leg) are no-ops, so a
@@ -1775,7 +1770,7 @@ function WebhookTab({
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label className="text-xs uppercase text-green-700 dark:text-green-400">
-                    Long entry
+                    多头开仓
                   </Label>
                   <pre className="rounded-md bg-muted p-3 text-xs">
                     {`{"action":"long_entry","leg_id":${sampleLegId}}`}
@@ -1783,7 +1778,7 @@ function WebhookTab({
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs uppercase text-amber-700 dark:text-amber-400">
-                    Long exit
+                    多头平仓
                   </Label>
                   <pre className="rounded-md bg-muted p-3 text-xs">
                     {`{"action":"long_exit","leg_id":${sampleLegId}}`}
@@ -1791,7 +1786,7 @@ function WebhookTab({
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs uppercase text-red-700 dark:text-red-400">
-                    Short entry
+                    空头开仓
                   </Label>
                   <pre className="rounded-md bg-muted p-3 text-xs">
                     {`{"action":"short_entry","leg_id":${sampleLegId}}`}
@@ -1799,7 +1794,7 @@ function WebhookTab({
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs uppercase text-amber-700 dark:text-amber-400">
-                    Short exit
+                    空头平仓
                   </Label>
                   <pre className="rounded-md bg-muted p-3 text-xs">
                     {`{"action":"short_exit","leg_id":${sampleLegId}}`}
@@ -1809,27 +1804,23 @@ function WebhookTab({
             </>
           ) : (
             <div className="space-y-1.5">
-              <Label>TradingView alert message body</Label>
+              <Label>TradingView 提醒消息内容</Label>
               <pre className="rounded-md bg-muted p-3 text-xs">
                 {'{"action":"start","mode":"sandbox"}'}
               </pre>
               <p className="text-xs text-muted-foreground">
-                Send <span className="font-mono">{'{"action":"stop"}'}</span> to square off and
-                finalize the run.
+                发送 <span className="font-mono">{'{"action":"stop"}'}</span> 可平仓并结束本次运行。
               </p>
             </div>
           )}
 
           {strategy.webhook_locked && (
-            <p className="rounded-md bg-destructive/10 p-2 text-xs text-destructive">
-              The webhook is locked. Every inbound signal is refused and audited until it is
-              unlocked from the header.
-            </p>
+            <p className="rounded-md bg-destructive/10 p-2 text-xs text-destructive">Webhook 已锁定。在页面顶部解锁前，所有传入信号都会被拒绝并记录审计日志。</p>
           )}
 
           <div className="flex justify-end">
             <Button variant="outline" onClick={onRotate} disabled={rotating}>
-              {rotating ? 'Rotating…' : 'Rotate token'}
+              {rotating ? '正在更新…' : '重新生成令牌'}
             </Button>
           </div>
         </CardContent>
@@ -2023,7 +2014,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
           <div>
-            <CardTitle>Strategy performance</CardTitle>
+            <CardTitle>策略表现</CardTitle>
             <CardDescription>
               {modeFilter === 'all'
                 ? 'Aggregated across every closed trade — all runs, all days, both modes.'
@@ -2065,47 +2056,47 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
           ) : (
             <>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
-                <Stat label="Trades" value={String(totalTrades)} />
+                <Stat label="交易笔数" value={String(totalTrades)} />
                 <Stat
-                  label="Win rate"
+                  label="Win rate（胜率）"
                   value={`${stats.winRate.toFixed(1)}%`}
                   tone={stats.winRate >= 50 ? 'good' : stats.winRate > 0 ? 'warn' : 'bad'}
                 />
                 <Stat
-                  label="Wins / Losses"
+                  label="盈利／亏损次数"
                   value={`${stats.wins} / ${stats.losses}${
                     stats.scratches ? ` (+${stats.scratches})` : ''
                   }`}
                 />
                 <Stat
-                  label="Total P&L"
+                  label="P&L（总盈亏）"
                   value={formatPnl(stats.totalPnl)}
                   tone={stats.totalPnl > 0 ? 'good' : stats.totalPnl < 0 ? 'bad' : 'neutral'}
                   bold
                 />
                 <Stat
-                  label="Avg P&L / run"
+                  label="P&L（每次运行平均盈亏）"
                   value={formatPnl(stats.avgPnl)}
                   tone={stats.avgPnl > 0 ? 'good' : stats.avgPnl < 0 ? 'bad' : 'neutral'}
                 />
               </div>
 
               <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                Winner / loser profile
+                盈利 / 亏损分布
               </p>
               <div className="mt-1 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
                 <Stat
-                  label="Avg win"
+                  label="平均盈利"
                   value={stats.avgWin === 0 ? '—' : formatPnl(stats.avgWin)}
                   tone="good"
                 />
                 <Stat
-                  label="Avg loss"
+                  label="平均亏损"
                   value={stats.avgLoss === 0 ? '—' : formatPnl(stats.avgLoss)}
                   tone="bad"
                 />
                 <Stat
-                  label="Reward / Risk"
+                  label="Reward / Risk（盈亏比）"
                   value={
                     stats.rrRatio === Infinity
                       ? '∞'
@@ -2116,7 +2107,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
                   tone={stats.rrRatio >= 2 ? 'good' : stats.rrRatio > 1 ? 'warn' : 'bad'}
                 />
                 <Stat
-                  label="Profit factor"
+                  label="Profit factor（盈利因子）"
                   value={
                     stats.profitFactor === Infinity
                       ? '∞'
@@ -2129,7 +2120,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
                   }
                 />
                 <Stat
-                  label="Best / Worst"
+                  label="最佳／最差"
                   value={`${formatPnl(stats.bestTrade)} / ${formatPnl(stats.worstTrade)}`}
                 />
               </div>
@@ -2139,23 +2130,23 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
               </p>
               <div className="mt-1 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
                 <Stat
-                  label="Max drawdown"
+                  label="Max drawdown（最大回撤）"
                   value={stats.maxDrawdown === 0 ? '—' : formatPnl(stats.maxDrawdown)}
                   tone="bad"
                 />
                 <Stat
-                  label="Worst losing streak"
+                  label="最长连亏"
                   value={`${stats.maxLoseStreak} ${stats.maxLoseStreak === 1 ? 'loss' : 'losses'}`}
                   tone={stats.maxLoseStreak >= 5 ? 'bad' : undefined}
                 />
                 <Stat
-                  label="Best winning streak"
+                  label="最长连赢"
                   value={`${stats.maxWinStreak} ${stats.maxWinStreak === 1 ? 'win' : 'wins'}`}
                   tone={stats.maxWinStreak >= 3 ? 'good' : undefined}
                 />
-                <Stat label="Avg trade duration" value={formatDuration(stats.avgDurationMinutes)} />
+                <Stat label="平均交易时长" value={formatDuration(stats.avgDurationMinutes)} />
                 <Stat
-                  label="Gross win / loss"
+                  label="总盈利／总亏损"
                   value={`${formatPnl(stats.grossWin)} / ${formatPnl(stats.grossLoss)}`}
                 />
               </div>
@@ -2163,7 +2154,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
               {Object.keys(stats.exitKindCounts).length > 0 && (
                 <>
                   <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                    Exit reasons
+                    退出原因
                   </p>
                   <div className="mt-1 flex flex-wrap gap-2">
                     {Object.entries(stats.exitKindCounts)
@@ -2198,7 +2189,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
       {(tripsByMode.live.length > 0 || tripsByMode.sandbox.length > 0) && (
         <Card>
           <CardHeader>
-            <CardTitle>By mode</CardTitle>
+            <CardTitle>按模式</CardTitle>
             <CardDescription>
               Sandbox trades are paper; live trades touched real money. Win rate counts a multi-leg
               basket as one trade attempt.
@@ -2244,13 +2235,13 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase text-muted-foreground">Win rate</p>
+                        <p className="text-[10px] uppercase text-muted-foreground">胜率</p>
                         <p className="font-mono font-semibold">
                           {total === 0 ? '—' : `${winRate.toFixed(1)}%`}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase text-muted-foreground">Wins / Total</p>
+                        <p className="text-[10px] uppercase text-muted-foreground">盈利次数／总次数</p>
                         <p className="font-mono font-semibold">
                           {wins} / {total}
                         </p>
@@ -2266,7 +2257,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Trade summary (per run)</CardTitle>
+          <CardTitle>成交汇总（按次运行）</CardTitle>
           <CardDescription>
             One row per run (= one trade attempt). Net P&amp;L is the sum of every leg's round-trip
             in that run.
@@ -2274,19 +2265,19 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
         </CardHeader>
         <CardContent>
           {runTrades.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">No closed runs yet.</p>
+            <p className="py-8 text-center text-sm text-muted-foreground">暂无已结束的运行。</p>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-xs">Run</TableHead>
-                    <TableHead className="text-xs">Mode</TableHead>
-                    <TableHead className="text-right text-xs">Legs</TableHead>
-                    <TableHead className="text-xs">Entry (first leg)</TableHead>
-                    <TableHead className="text-xs">Exit (last leg)</TableHead>
-                    <TableHead className="text-xs">Duration</TableHead>
-                    <TableHead className="text-xs">Exit kinds</TableHead>
+                    <TableHead className="text-xs">运行</TableHead>
+                    <TableHead className="text-xs">模式</TableHead>
+                    <TableHead className="text-right text-xs">策略腿</TableHead>
+                    <TableHead className="text-xs">入场（首腿）</TableHead>
+                    <TableHead className="text-xs">出场（末腿）</TableHead>
+                    <TableHead className="text-xs">持仓时长</TableHead>
+                    <TableHead className="text-xs">出场类型</TableHead>
                     <TableHead className="text-right text-xs">Net P&amp;L</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -2345,7 +2336,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Leg detail</CardTitle>
+          <CardTitle>策略腿明细</CardTitle>
           <CardDescription>
             One row per leg round-trip, FIFO-matched within each leg. Useful for diagnosing which
             leg of a basket carried the run's P&amp;L.
@@ -2361,16 +2352,16 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-xs">Run</TableHead>
-                    <TableHead className="text-xs">Mode</TableHead>
-                    <TableHead className="text-xs">Symbol</TableHead>
-                    <TableHead className="text-xs">Side</TableHead>
-                    <TableHead className="text-right text-xs">Qty</TableHead>
-                    <TableHead className="text-xs">Entry time</TableHead>
-                    <TableHead className="text-right text-xs">Entry</TableHead>
-                    <TableHead className="text-xs">Exit time</TableHead>
-                    <TableHead className="text-right text-xs">Exit</TableHead>
-                    <TableHead className="text-xs">Exit kind</TableHead>
+                    <TableHead className="text-xs">运行</TableHead>
+                    <TableHead className="text-xs">模式</TableHead>
+                    <TableHead className="text-xs">交易品种</TableHead>
+                    <TableHead className="text-xs">方向</TableHead>
+                    <TableHead className="text-right text-xs">数量</TableHead>
+                    <TableHead className="text-xs">入场时间</TableHead>
+                    <TableHead className="text-right text-xs">入场价</TableHead>
+                    <TableHead className="text-xs">出场时间</TableHead>
+                    <TableHead className="text-right text-xs">出场价</TableHead>
+                    <TableHead className="text-xs">出场类型</TableHead>
                     <TableHead className="text-right text-xs">P&amp;L</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -2439,7 +2430,7 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
       {runs.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Run history</CardTitle>
+            <CardTitle>运行历史</CardTitle>
             <CardDescription>
               Every Start spawns a run row; each row aggregates the leg trades above into a single
               finalised P&amp;L.
@@ -2450,12 +2441,12 @@ function HistoryTab({ runs, orders }: { runs: Run[]; orders: Order[] }) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Run #</TableHead>
-                    <TableHead>Mode</TableHead>
-                    <TableHead>Started</TableHead>
-                    <TableHead>Stopped</TableHead>
-                    <TableHead>Reason</TableHead>
-                    <TableHead>Trigger</TableHead>
+                    <TableHead>运行编号</TableHead>
+                    <TableHead>模式</TableHead>
+                    <TableHead>启动时间</TableHead>
+                    <TableHead>停止时间</TableHead>
+                    <TableHead>原因</TableHead>
+                    <TableHead>触发价</TableHead>
                     <TableHead className="text-right">P&amp;L</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -2647,7 +2638,7 @@ export default function StrategyDetail() {
       setConfirmKill(false)
       invalidateAll()
     },
-    onError: (err: Error) => showToast.error(err.message || 'Kill switch failed'),
+    onError: (err: Error) => showToast.error(err.message || '紧急停用失败'),
   })
 
   const unlockMutation = useMutation({
@@ -2666,19 +2657,19 @@ export default function StrategyDetail() {
       queryClient.invalidateQueries({ queryKey: strategyQueryKeys.strategies() })
       navigate('/strategy')
     },
-    onError: (err: Error) => showToast.error(err.message || 'Delete failed'),
+    onError: (err: Error) => showToast.error(err.message || '删除失败'),
   })
 
   if (!validId) {
-    return <p className="text-sm text-destructive">Invalid strategy id.</p>
+    return <p className="text-sm text-destructive">无效的策略编号。</p>
   }
   if (strategyQuery.isLoading) {
-    return <p className="text-sm text-muted-foreground">Loading…</p>
+    return <p className="text-sm text-muted-foreground">加载中…</p>
   }
   if (strategyQuery.error || !strategyQuery.data) {
     return (
       <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-        Failed to load strategy.
+        加载策略失败。
       </p>
     )
   }
@@ -2705,12 +2696,12 @@ export default function StrategyDetail() {
             </Badge>
             {strategy.webhook_locked && (
               <Badge variant="destructive" className="font-semibold">
-                WEBHOOK LOCKED
+                WEBHOOK 已锁定
               </Badge>
             )}
             {strategy.strategy_kind === 'signal' && (
               <Badge variant="default" className="bg-blue-600 hover:bg-blue-600">
-                Signal mode
+                信号模式
               </Badge>
             )}
             <Badge variant="outline">{strategy.strategy_type}</Badge>
@@ -2738,7 +2729,7 @@ export default function StrategyDetail() {
             className="font-bold"
             disabled={killSwitchMutation.isPending}
             onClick={() => setConfirmKill(true)}
-            title="Cancel pending orders, flatten positions, and block all webhook signals"
+            title="撤销待处理委托、平掉所有持仓并阻止全部 Webhook 信号"
           >
             {killSwitchMutation.isPending ? 'Killing…' : 'KILL SWITCH'}
           </Button>
@@ -2747,7 +2738,7 @@ export default function StrategyDetail() {
               variant="outline"
               disabled={unlockMutation.isPending}
               onClick={() => unlockMutation.mutate()}
-              title="Resume accepting webhook signals"
+              title="恢复接收 Webhook 信号"
             >
               {unlockMutation.isPending ? 'Unlocking…' : 'Unlock webhook'}
             </Button>
@@ -2758,14 +2749,14 @@ export default function StrategyDetail() {
               lifecycle over legs that carry an accepted side rather than a
               position to enter at. */}
           {stopped && !strategy.webhook_locked && strategy.strategy_kind !== 'signal' && (
-            <Button onClick={() => setStartDialogOpen(true)}>Start run</Button>
+            <Button onClick={() => setStartDialogOpen(true)}>启动策略</Button>
           )}
           {stopped && !strategy.webhook_locked && strategy.strategy_kind === 'signal' && (
             <span
               className="text-xs text-muted-foreground"
-              title="A signal strategy has no start. Send a long_entry or short_entry to its webhook."
+              title="信号策略无需手动启动，请向 Webhook 发送 long_entry 或 short_entry。"
             >
-              Starts on its first signal
+              首次收到信号时启动
             </span>
           )}
           {running && (
@@ -2773,7 +2764,7 @@ export default function StrategyDetail() {
               variant="outline"
               disabled={stopMutation.isPending}
               onClick={() => setConfirmStop(true)}
-              title="Exit all held legs at MARKET and stop this run"
+              title="以市价平掉所有持仓策略腿并停止本次运行"
             >
               {stopMutation.isPending ? 'Stopping…' : 'Stop & Close Positions'}
             </Button>
@@ -2782,9 +2773,9 @@ export default function StrategyDetail() {
             <Button
               variant="destructive"
               onClick={() => setConfirmEnableLive(true)}
-              title="Enable live mode - real broker orders"
+              title="启用实盘模式，将向交易商发送真实委托"
             >
-              Enable LIVE
+              启用实盘
             </Button>
           )}
           {stopped && strategy.live_enabled && (
@@ -2792,53 +2783,53 @@ export default function StrategyDetail() {
               variant="outline"
               onClick={() => liveModeMutation.mutate(false)}
               disabled={liveModeMutation.isPending}
-              title="Disable live mode — strategy reverts to sandbox-only"
+              title="关闭实盘模式，策略将仅使用模拟盘"
             >
-              {liveModeMutation.isPending ? 'Disabling…' : 'Disable LIVE'}
+              {liveModeMutation.isPending ? '正在关闭…' : '关闭实盘'}
             </Button>
           )}
           <Button
             variant="outline"
             disabled={!stopped}
-            title={!stopped ? `Cannot edit while ${strategy.status}` : undefined}
+            title={!stopped ? `策略处于 ${strategy.status} 状态时无法编辑` : undefined}
             onClick={() => navigate(`/strategy/${strategy.id}/edit`)}
           >
-            Edit
+            编辑
           </Button>
           <Button variant="outline" onClick={() => navigate('/strategy')}>
-            Back
+            返回
           </Button>
           <Button
             variant="destructive"
             disabled={!stopped}
             onClick={() => setConfirmDelete(true)}
-            title={!stopped ? `Cannot delete while ${strategy.status}` : undefined}
+            title={!stopped ? `策略处于 ${strategy.status} 状态时无法删除` : undefined}
           >
-            Delete
+            删除
           </Button>
         </div>
       </div>
 
       <div className="text-xs text-muted-foreground">
-        Created {formatIst(strategy.created_at)} · Updated {formatIst(strategy.updated_at)}
+        创建时间 {formatIst(strategy.created_at)} · 更新时间 {formatIst(strategy.updated_at)}
         {strategy.current_run_id ? (
           <span className="ml-3">
-            · Current run: <span className="font-mono">#{strategy.current_run_id}</span>
+            · 当前运行： <span className="font-mono">#{strategy.current_run_id}</span>
           </span>
         ) : null}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="flex flex-wrap gap-1 bg-transparent">
-          <TabsTrigger value="live">Live</TabsTrigger>
-          <TabsTrigger value="setup">Setup</TabsTrigger>
-          <TabsTrigger value="positions">Positions</TabsTrigger>
-          <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="trades">Trades</TabsTrigger>
-          <TabsTrigger value="events">Events</TabsTrigger>
-          <TabsTrigger value="risk">Risk</TabsTrigger>
+          <TabsTrigger value="live">实盘</TabsTrigger>
+          <TabsTrigger value="setup">配置</TabsTrigger>
+          <TabsTrigger value="positions">持仓</TabsTrigger>
+          <TabsTrigger value="orders">订单</TabsTrigger>
+          <TabsTrigger value="trades">成交</TabsTrigger>
+          <TabsTrigger value="events">事件</TabsTrigger>
+          <TabsTrigger value="risk">风险</TabsTrigger>
           <TabsTrigger value="webhook">Webhook</TabsTrigger>
-          <TabsTrigger value="history">History</TabsTrigger>
+          <TabsTrigger value="history">历史</TabsTrigger>
         </TabsList>
 
         <TabsContent value="live" className="mt-4">
@@ -2908,9 +2899,9 @@ export default function StrategyDetail() {
       <Dialog open={startDialogOpen} onOpenChange={setStartDialogOpen}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>Start run — pick mode</DialogTitle>
+            <DialogTitle>启动策略：选择模式</DialogTitle>
             <DialogDescription>
-              Live mode places real broker orders. Sandbox mode is paper-only.
+              实盘模式会向交易商提交真实委托；模拟盘模式仅作模拟。
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
@@ -2939,14 +2930,14 @@ export default function StrategyDetail() {
             </div>
             {startMode === 'live' && !strategy.live_enabled && (
               <p className="rounded-md bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-400">
-                Strategy isn't live-enabled. Use "Enable LIVE" on the detail page to unlock live
+                Strategy isn't live-enabled. Use "启用实盘" on the detail page to unlock live
                 mode.
               </p>
             )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setStartDialogOpen(false)}>
-              Cancel
+              取消
             </Button>
             <Button
               disabled={startMutation.isPending || (startMode === 'live' && !strategy.live_enabled)}
@@ -2961,9 +2952,9 @@ export default function StrategyDetail() {
       <ConfirmDialog
         open={confirmEnableLive}
         onOpenChange={setConfirmEnableLive}
-        title="Enable LIVE mode?"
+        title="启用实盘模式？"
         description="Live mode places real broker orders with real margin. Once enabled, any scheduled, webhook or manual start with mode=live will reach your broker. This is recorded in the audit trail."
-        confirmLabel="Enable LIVE"
+        confirmLabel="启用实盘"
         destructive
         loading={liveModeMutation.isPending}
         onConfirm={() => liveModeMutation.mutate(true)}
@@ -2972,7 +2963,7 @@ export default function StrategyDetail() {
       <ConfirmDialog
         open={confirmStop}
         onOpenChange={setConfirmStop}
-        title="Stop and close all positions?"
+        title="停止并平掉所有持仓？"
         description="Requests MARKET exits for every open leg. The run is finalised only after broker fills confirm the strategy is flat; until then the stop remains pending and retryable."
         confirmLabel="Stop & close positions"
         destructive
@@ -2983,7 +2974,7 @@ export default function StrategyDetail() {
       <ConfirmDialog
         open={confirmDelete}
         onOpenChange={setConfirmDelete}
-        title="Delete this strategy?"
+        title="删除此策略？"
         description="Permanently removes the strategy and its audit trail."
         confirmLabel="Delete"
         destructive
@@ -2994,7 +2985,7 @@ export default function StrategyDetail() {
       <ConfirmDialog
         open={confirmKill}
         onOpenChange={setConfirmKill}
-        title="Activate kill switch?"
+        title="启用紧急停止？"
         description="Immediately locks the webhook so external TradingView signals are refused, then requests MARKET exits for open positions. The run is finalised only after broker fills confirm the strategy is flat; pending or refused exits remain visible and retryable."
         confirmLabel="KILL"
         destructive
@@ -3010,15 +3001,15 @@ export default function StrategyDetail() {
       >
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>New webhook token — copy now</DialogTitle>
+            <DialogTitle>新的 Webhook 令牌，请立即复制</DialogTitle>
             <DialogDescription>
-              The previous token stops working immediately. This one is shown once.
+              旧令牌立即失效。新令牌只显示这一次。
             </DialogDescription>
           </DialogHeader>
           {rotatedToken && (
             <div className="space-y-3">
               <div className="space-y-1.5">
-                <Label>New webhook URL</Label>
+                <Label>新的 Webhook 地址</Label>
                 <div className="flex items-center gap-2">
                   <Input
                     readOnly
@@ -3031,17 +3022,15 @@ export default function StrategyDetail() {
                       navigator.clipboard.writeText(
                         `${window.location.origin}/strategy/webhook/${rotatedToken}`
                       )
-                      showToast.success('Copied URL')
+                      showToast.success('地址已复制')
                     }}
-                  >
-                    Copy
-                  </Button>
+                  >复制</Button>
                 </div>
               </div>
             </div>
           )}
           <DialogFooter>
-            <Button onClick={() => setRotatedToken(null)}>Done</Button>
+            <Button onClick={() => setRotatedToken(null)}>完成</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

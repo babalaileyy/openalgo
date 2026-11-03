@@ -26,13 +26,13 @@ export const CalendarNode = memo(({ data, selected }: CalendarNodeProps) => {
             <CalendarRange className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Calendar</div>
-            <div className="text-[9px] text-muted-foreground">new day / week / month</div>
+            <div className="text-xs font-medium leading-tight">交易日历</div>
+            <div className="text-[9px] text-muted-foreground">新的一天／周／月</div>
           </div>
         </div>
         <div className="rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Date</span>
+            <span className="text-[10px] text-muted-foreground">日期</span>
             <span className="mono-data text-[10px] font-medium">{data.date || 'today'}</span>
           </div>
         </div>

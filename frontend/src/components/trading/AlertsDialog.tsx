@@ -97,7 +97,7 @@ function Choice({
       </SelectTrigger>
       <SelectContent>
         {options.length === 0 && (
-          <div className="px-2 py-1.5 text-xs text-muted-foreground">Nothing to choose yet.</div>
+          <div className="px-2 py-1.5 text-xs text-muted-foreground">暂无可选项。</div>
         )}
         {options.map((one) => (
           <SelectItem key={one.value} value={one.value} className="text-sm">
@@ -115,10 +115,10 @@ const DELIVERY_CHOICES: readonly {
   readonly label: string
   readonly means: string
 }[] = [
-  { key: 'sound', label: 'Sound', means: 'A short tone from this tab' },
-  { key: 'notify', label: 'Desktop notification', means: 'Shown only while this tab is hidden' },
-  { key: 'telegram', label: 'Telegram', means: 'Needs the bot running and your account linked' },
-  { key: 'whatsapp', label: 'WhatsApp', means: 'Needs a paired device' },
+  { key: 'sound', label: '声音', means: '在此标签页播放短提示音' },
+  { key: 'notify', label: '桌面通知', means: '仅在此标签页隐藏时显示' },
+  { key: 'telegram', label: 'Telegram', means: '需要运行机器人并关联账户' },
+  { key: 'whatsapp', label: 'WhatsApp', means: '需要已配对的设备' },
 ]
 
 interface Props {
@@ -180,7 +180,21 @@ export function AlertsDialog({ handle, onClose }: Props) {
     if (!handle || draft === null) return
     const fault = draftProblem(draft, handle.chart, handle.drawings)
     if (fault !== null) {
-      setProblem(fault)
+      const messages: Record<string, string> = {
+        'Enter a price to watch.': '请输入要监测的价格。',
+        'Enter a value to watch.': '请输入要监测的数值。',
+        'A channel needs both of its bounds.': '请输入区间上下限。',
+        'A channel needs two different bounds.': '区间上下限不能相同。',
+        'Choose a study. This chart has none, or the one chosen has been removed.': '请选择技术指标。当前图表没有指标，或所选指标已移除。',
+        'Choose a plot from that study.': '请选择指标线。',
+        'Drawings are still loading. Try again in a moment.': '画线仍在加载，请稍后重试。',
+        'Draw something on the chart first, then alert on its level.': '请先在图表上画线，再设置价位提醒。',
+        'Choose which level of that drawing to watch.': '请选择要监测的画线价位。',
+        'Choose a candle condition.': '请选择 K 线条件。',
+        'A cooldown is a number of seconds, or nothing at all.': '冷却时间应为秒数，或留空。',
+        'Enter an expiry date and time, or switch the expiry off.': '请输入到期日期和时间，或关闭到期设置。',
+      }
+      setProblem(messages[fault] ?? fault)
       return
     }
     const input = toAlertInput(draft, handle.chart, handle.drawings, handle.symbol, handle.at)
@@ -216,9 +230,9 @@ export function AlertsDialog({ handle, onClose }: Props) {
     <Dialog open={handle !== null} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[88dvh] overflow-y-auto sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base">{editing ? 'Edit alert' : 'Create alert'}</DialogTitle>
+          <DialogTitle className="text-base">{editing ? '编辑提醒' : '创建提醒'}</DialogTitle>
           <DialogDescription className="text-xs">
-            {handle?.symbol ? `${handle.symbol} on this chart` : 'This chart'}
+            {handle?.symbol ? `${handle.symbol} · 当前图表` : '当前图表'}
           </DialogDescription>
         </DialogHeader>
 
@@ -231,11 +245,11 @@ export function AlertsDialog({ handle, onClose }: Props) {
             {/* What to watch. Stacked and full width, so the three controls read
                 as one sentence instead of as three settings. */}
             <div className="space-y-2">
-              <Section>Condition</Section>
+              <Section>提醒条件</Section>
               <Choice
-                label="What to watch"
+                label="监测对象"
                 value={draft.kind}
-                options={ALERT_KINDS}
+                options={ALERT_KINDS.map((one) => ({ ...one, label: ({ price: '价格', indicator: '指标线', drawing: '画线价位', barCondition: 'K线条件' } as Record<string, string>)[one.value] ?? one.label }))}
                 onChange={(next) => {
                   const kind = next as AlertKind
                   const seededValue =
@@ -258,7 +272,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
               {draft.kind === 'indicator' && (
                 <>
                   <Choice
-                    label="Study"
+                    label="技术指标"
                     value={draft.instanceId}
                     options={studies}
                     onChange={(instanceId) => {
@@ -273,7 +287,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
                     }}
                   />
                   <Choice
-                    label="Plot"
+                    label="指标线"
                     value={draft.plotKey}
                     options={plots}
                     onChange={(plotKey) => {
@@ -288,7 +302,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
               {draft.kind === 'drawing' && (
                 <>
                   <Choice
-                    label="Drawing"
+                    label="画线"
                     value={draft.drawingId}
                     options={drawings}
                     onChange={(drawingId) => {
@@ -297,7 +311,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
                     }}
                   />
                   <Choice
-                    label="Level"
+                    label="价位"
                     value={draft.level}
                     options={levels}
                     onChange={(level) => patch({ level })}
@@ -305,9 +319,9 @@ export function AlertsDialog({ handle, onClose }: Props) {
                 </>
               )}
               <Choice
-                label="Condition"
+                label="触发条件"
                 value={draft.condition}
-                options={ALERT_CONDITIONS}
+                options={ALERT_CONDITIONS.map((one) => ({ ...one, label: ({ crossing: '穿越', crossingUp: '向上穿越', crossingDown: '向下穿越', greaterThan: '大于', lessThan: '小于', enteringRange: '进入区间', leavingRange: '离开区间' } as Record<string, string>)[one.value] ?? one.label }))}
                 onChange={(condition) => patch({ condition: condition as AlertConditionId })}
               />
               {needsThreshold(draft.kind) && (
@@ -318,8 +332,8 @@ export function AlertsDialog({ handle, onClose }: Props) {
                     inputMode="decimal"
                     value={draft.value}
                     onChange={(event) => patch({ value: event.target.value })}
-                    aria-label={isRangeCondition(draft.condition) ? 'Lower bound' : 'Value'}
-                    placeholder={isRangeCondition(draft.condition) ? 'Lower' : 'Value'}
+                    aria-label={isRangeCondition(draft.condition) ? '下限' : '数值'}
+                    placeholder={isRangeCondition(draft.condition) ? '下限' : '数值'}
                     className="h-9 text-sm"
                   />
                   {isRangeCondition(draft.condition) && (
@@ -327,8 +341,8 @@ export function AlertsDialog({ handle, onClose }: Props) {
                       inputMode="decimal"
                       value={draft.upperValue}
                       onChange={(event) => patch({ upperValue: event.target.value })}
-                      aria-label="Upper bound"
-                      placeholder="Upper"
+                      aria-label="上限"
+                      placeholder="上限"
                       className="h-9 text-sm"
                     />
                   )}
@@ -339,38 +353,38 @@ export function AlertsDialog({ handle, onClose }: Props) {
             {/* When it fires. Two questions, both of which change what the alert
                 does rather than how it looks, so they are not buried. */}
             <div className="space-y-2">
-              <Section>Trigger</Section>
+              <Section>触发方式</Section>
               <div className="grid grid-cols-2 gap-2">
                 <Choice
-                  label="Repeat"
+                  label="触发频率"
                   value={draft.repeat}
                   options={[
-                    { value: 'once', label: 'Only once' },
-                    { value: 'everyTime', label: 'Every time' },
+                    { value: 'once', label: '仅一次' },
+                    { value: 'everyTime', label: '每次满足条件' },
                   ]}
                   onChange={(repeat) => patch({ repeat: repeat as AlertDraft['repeat'] })}
                 />
                 <Choice
-                  label="Evaluate"
+                  label="判断时机"
                   value={draft.policy}
                   options={[
-                    { value: 'onBarClose', label: 'On bar close' },
-                    { value: 'onTouch', label: 'Intrabar touch' },
+                    { value: 'onBarClose', label: 'K线收盘时' },
+                    { value: 'onTouch', label: 'K线内触及' },
                   ]}
                   onChange={(policy) => patch({ policy: policy as AlertDraft['policy'] })}
                 />
               </div>
               <p className="text-[11px] leading-snug text-muted-foreground">
                 {draft.policy === 'onBarClose'
-                  ? 'Fires on a confirmed bar. A wick that is later revised will not fire it.'
-                  : 'Fires the moment price touches, including on a wick that final history may not keep.'}
+                  ? '在 K 线收盘确认后触发，之后被修正的影线不会触发提醒。'
+                  : '价格触及时立即触发，包括最终历史数据可能不会保留的影线。'}
               </p>
             </div>
 
             {/* When it stops. The checkbox is the switch, so an open-ended alert
                 is a deliberate choice rather than an empty field. */}
             <div className="space-y-2">
-              <Section>Expiration</Section>
+              <Section>到期设置</Section>
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="alert-expires"
@@ -380,7 +394,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
                   }
                 />
                 <Label htmlFor="alert-expires" className="text-xs font-normal">
-                  Expires
+                  设置到期时间
                 </Label>
                 <Input
                   type="datetime-local"
@@ -388,37 +402,37 @@ export function AlertsDialog({ handle, onClose }: Props) {
                   value={draft.expiresAt}
                   disabled={draft.expiresAt === ''}
                   onChange={(event) => patch({ expiresAt: event.target.value })}
-                  aria-label={`Expiry, ${zone}`}
+                  aria-label={`到期时间，${zone}`}
                   className="h-9 flex-1 text-sm"
                 />
               </div>
               <p className="text-[11px] text-muted-foreground">
                 {draft.expiresAt === ''
-                  ? 'Open-ended: this alert keeps watching until you remove it.'
-                  : `Times are ${zone}, the same clock as the chart's axis.`}
+                  ? '无到期时间：提醒将持续监测，直到你移除它。'
+                  : `时间采用 ${zone} 时区，与图表坐标轴一致。`}
               </p>
             </div>
 
             {/* What to call it, and what it says. Last, because both have a
                 sensible answer already and neither stops anyone saving. */}
             <div className="space-y-2">
-              <Section>Alert name</Section>
+              <Section>提醒名称</Section>
               <Input
                 value={draft.title}
                 onChange={(event) => patch({ title: event.target.value })}
                 placeholder={handle ? titleFor(draft, handle.chart, handle.symbol, handle.at) : ''}
-                aria-label="Alert name"
+                aria-label="提醒名称"
                 className="h-9 text-sm"
               />
               <Input
                 value={draft.message}
                 onChange={(event) => patch({ message: event.target.value })}
-                placeholder="Message (optional)"
-                aria-label="Message"
+                placeholder="消息内容（可选）"
+                aria-label="消息内容"
                 className="h-9 text-sm"
               />
               <p className="text-[11px] leading-relaxed text-muted-foreground">
-                A message can carry values filled in when it fires:{' '}
+                消息可包含触发时自动填入的变量：{' '}
                 {ALERT_PLACEHOLDERS.slice(0, 5).map((one, index) => (
                   <span key={one.name}>
                     {index > 0 && ', '}
@@ -432,9 +446,8 @@ export function AlertsDialog({ handle, onClose }: Props) {
                     </button>
                   </span>
                 ))}
-                {' and '}
-                {ALERT_PLACEHOLDERS.length - 5} more. One spelled wrong is left as you typed it
-                rather than blanked.
+                {'，另有 '}
+                {ALERT_PLACEHOLDERS.length - 5} 项。拼写错误的变量会保留原文。
               </p>
               <div className="flex items-center gap-2 pt-1">
                 <Checkbox
@@ -443,7 +456,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
                   onCheckedChange={(checked) => patch({ enabled: checked === true })}
                 />
                 <Label htmlFor="alert-enabled" className="text-xs font-normal">
-                  Active as soon as it is saved
+                  保存后立即启用
                 </Label>
               </div>
             </div>
@@ -451,7 +464,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
             {/* How to be told. Last, because every one of them has an answer
                 already and none of them stops anyone saving. */}
             <div className="space-y-2">
-              <Section>When it fires</Section>
+              <Section>通知方式</Section>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                 {DELIVERY_CHOICES.map((choice) => (
                   <div key={choice.key} className="flex items-center gap-2">
@@ -473,9 +486,7 @@ export function AlertsDialog({ handle, onClose }: Props) {
                 ))}
               </div>
               <p className="text-[11px] leading-relaxed text-muted-foreground">
-                Sound and the desktop notification reach you with the tab behind another window and
-                never leave this machine. Telegram and WhatsApp send the message out, and each needs
-                to be set up on its own page first.
+                声音和桌面通知在本机提示；Telegram 和 WhatsApp 会向外发送消息，需先在各自页面完成设置。
               </p>
             </div>
 
@@ -487,10 +498,10 @@ export function AlertsDialog({ handle, onClose }: Props) {
 
             <DialogFooter className="gap-2 pt-1">
               <Button variant="outline" size="sm" onClick={onClose}>
-                Cancel
+                取消
               </Button>
               <Button size="sm" onClick={save}>
-                {editing ? 'Save' : 'Create'}
+                {editing ? '保存' : '创建'}
               </Button>
             </DialogFooter>
           </div>

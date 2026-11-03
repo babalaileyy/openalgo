@@ -128,10 +128,10 @@ export default function PortfolioBacktesterResults() {
         <Card>
           <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
             <p className="text-sm text-muted-foreground">
-              No backtest result to show. Run a backtest first.
+              暂无回测结果，请先运行回测。
             </p>
             <Button onClick={() => navigate('/portfolio-backtester')}>
-              Go to Portfolio Backtester
+              前往投资组合回测
             </Button>
           </CardContent>
         </Card>
@@ -160,7 +160,7 @@ export default function PortfolioBacktesterResults() {
     <div className="container mx-auto space-y-4 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Backtest Report</h1>
+          <h1 className="text-2xl font-bold tracking-tight">回测报告</h1>
           <p className="text-sm text-muted-foreground">
             {result.meta.start} to {result.meta.end}
             {result.meta.benchmark ? ` · benchmark ${result.meta.benchmark}` : ''}
@@ -176,7 +176,7 @@ export default function PortfolioBacktesterResults() {
             {exporting ? 'Building…' : 'Tearsheet'}
           </Button>
           <Button variant="outline" onClick={() => navigate('/portfolio-backtester')}>
-            Back to Builder
+            返回构建器
           </Button>
         </div>
       </div>
@@ -190,7 +190,7 @@ export default function PortfolioBacktesterResults() {
       {warnings.length > 0 && (
         <Card className="border-amber-500/40">
           <CardContent className="p-4 text-sm">
-            <span className="font-medium text-amber-500">Check the data: </span>
+            <span className="font-medium text-amber-500">请检查数据：</span>
             {warnings.join(', ')} moved far enough in one session to look like an
             unadjusted split or bonus. Re-ingest that history before trusting these
             numbers.
@@ -200,27 +200,27 @@ export default function PortfolioBacktesterResults() {
 
       <Tabs defaultValue="overview">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="returns">Cumulative Returns</TabsTrigger>
-          <TabsTrigger value="stats">Performance Stats</TabsTrigger>
+          <TabsTrigger value="overview">概览</TabsTrigger>
+          <TabsTrigger value="returns">Cumulative Returns（累计收益率）</TabsTrigger>
+          <TabsTrigger value="stats">表现统计</TabsTrigger>
           <TabsTrigger value="pnl">Itemised P&amp;L</TabsTrigger>
-          <TabsTrigger value="correlation">Correlation</TabsTrigger>
-          <TabsTrigger value="drawdown">Drawdown</TabsTrigger>
-          <TabsTrigger value="periodreturns">Returns</TabsTrigger>
-          <TabsTrigger value="rolling">Rolling Stats</TabsTrigger>
-          <TabsTrigger value="compare">Compare</TabsTrigger>
-          <TabsTrigger value="robustness">Robustness</TabsTrigger>
-          <TabsTrigger value="allocation">Allocation</TabsTrigger>
-          <TabsTrigger value="structure">Structure</TabsTrigger>
-          <TabsTrigger value="attribution">Attribution</TabsTrigger>
-          <TabsTrigger value="crisis">Crisis</TabsTrigger>
-          <TabsTrigger value="health">Health</TabsTrigger>
+          <TabsTrigger value="correlation">Correlation（相关性）</TabsTrigger>
+          <TabsTrigger value="drawdown">Drawdown（回撤）</TabsTrigger>
+          <TabsTrigger value="periodreturns">收益率</TabsTrigger>
+          <TabsTrigger value="rolling">滚动统计</TabsTrigger>
+          <TabsTrigger value="compare">比较</TabsTrigger>
+          <TabsTrigger value="robustness">稳健性</TabsTrigger>
+          <TabsTrigger value="allocation">资产配置</TabsTrigger>
+          <TabsTrigger value="structure">结构</TabsTrigger>
+          <TabsTrigger value="attribution">收益归因</TabsTrigger>
+          <TabsTrigger value="crisis">危机</TabsTrigger>
+          <TabsTrigger value="health">健康状况</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-3 md:grid-cols-4">
             <Stat
-              label="Total Return"
+              label="Total Return（总收益率）"
               value={pct(
                 result.equity.length
                   ? result.equity[result.equity.length - 1].value /
@@ -231,36 +231,32 @@ export default function PortfolioBacktesterResults() {
               sub={`${result.meta.sessions} sessions`}
               tone="good"
             />
-            <Stat label="CAGR" value={pct(m.cagr)} sub={`benchmark ${pct(m.benchmark_cagr)}`} />
-            <Stat label="Max Drawdown" value={pct(m.max_drawdown)} tone="bad" />
+            <Stat label="CAGR（年化复合增长率）" value={pct(m.cagr)} sub={`benchmark ${pct(m.benchmark_cagr)}`} />
+            <Stat label="Max Drawdown（最大回撤）" value={pct(m.max_drawdown)} tone="bad" />
             <Stat
-              label="Effective Holdings"
+              label="Effective Holdings（有效持仓数）"
               value={num(result.diversification.effective_holdings, 1)}
               sub={`of ${result.diversification.holdings} names`}
             />
           </div>
           <div className="grid gap-3 md:grid-cols-4">
-            <Stat label="Sharpe" value={num(m.sharpe)} />
-            <Stat label="Sortino" value={num(m.sortino)} />
+            <Stat label="Sharpe（夏普比率）" value={num(m.sharpe)} />
+            <Stat label="Sortino（索提诺比率）" value={num(m.sortino)} />
             <Stat
-              label="Up / Down Capture"
+              label="Up / Down Capture（上涨／下跌捕获率）"
               value={`${num(m.up_capture)} / ${num(m.down_capture)}`}
               sub="of the benchmark's moves"
             />
             <Stat
-              label="Cost Drag"
+              label="Cost Drag（费用拖累）"
               value={pct(result.rebalancing.cost_drag)}
               sub={`${result.rebalancing.count} rebalances`}
             />
           </div>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">What the trading cost</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                The real schedule, itemised. Note which line dominates, it is
-                not brokerage, which is why zero-brokerage does not make
-                rebalancing free.
-              </p>
+              <CardTitle className="text-base">交易成本</CardTitle>
+              <p className="text-sm text-muted-foreground">实际费用明细。注意占比最大的费用项目并非经纪佣金，因此零佣金不代表调仓没有成本。</p>
             </CardHeader>
             <CardContent className="p-0">
               <table className="w-full text-sm">
@@ -284,7 +280,7 @@ export default function PortfolioBacktesterResults() {
                       </tr>
                     ))}
                   <tr className="font-semibold">
-                    <td className="p-2.5 pl-4">Total tax and charges</td>
+                    <td className="p-2.5 pl-4">税费及费用合计</td>
                     <td className="p-2.5 pr-4 text-right tabular-nums">
                       {money(result.costs.total)}
                     </td>
@@ -302,16 +298,13 @@ export default function PortfolioBacktesterResults() {
               </table>
             </CardContent>
           </Card>
-          <p className="text-xs text-muted-foreground">
-            Returns are price-only: broker history excludes dividends, so income
-            is not counted here.
-          </p>
+          <p className="text-xs text-muted-foreground">收益仅计算价格变动：交易商历史数据不含股息，因此未计入股息收入。</p>
         </TabsContent>
 
         <TabsContent value="returns">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Cumulative Returns</CardTitle>
+              <CardTitle className="text-base">Cumulative Returns（累计收益率）</CardTitle>
               <p className="text-sm text-muted-foreground">
                 Value of {money(result.meta.initial_capital)} invested on{' '}
                 {result.meta.start}
@@ -340,11 +333,8 @@ export default function PortfolioBacktesterResults() {
 
         <TabsContent value="stats" className="space-y-4">
           <div>
-            <h3 className="text-base font-semibold">Understanding your results</h3>
-            <p className="text-sm text-muted-foreground">
-              What each number means, what good looks like, and where this
-              portfolio landed.
-            </p>
+            <h3 className="text-base font-semibold">如何理解结果</h3>
+            <p className="text-sm text-muted-foreground">了解各项指标的含义、参考标准及本组合的实际表现。</p>
           </div>
           <MetricGuide metrics={m as unknown as Record<string, number | null>} />
           <Card>
@@ -352,8 +342,8 @@ export default function PortfolioBacktesterResults() {
               <table className="w-full text-sm">
                 <thead className="border-b text-xs text-muted-foreground">
                   <tr>
-                    <th className="p-3 text-left">Metric</th>
-                    <th className="p-3 text-right">Value</th>
+                    <th className="p-3 text-left">指标</th>
+                    <th className="p-3 text-right">价值</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -405,12 +395,12 @@ export default function PortfolioBacktesterResults() {
                 <table className="w-full text-sm">
                   <thead className="border-b text-xs text-muted-foreground">
                     <tr>
-                      <th className="p-3 text-left">Symbol</th>
-                      <th className="p-3 text-right">Invested</th>
+                      <th className="p-3 text-left">交易品种</th>
+                      <th className="p-3 text-right">已投入</th>
                       <th className="p-3 text-right">Net P&amp;L</th>
-                      <th className="p-3 text-right">Costs</th>
-                      <th className="p-3 text-right">Own Return</th>
-                      <th className="p-3 text-right">Contribution</th>
+                      <th className="p-3 text-right">成本</th>
+                      <th className="p-3 text-right">自身收益率</th>
+                      <th className="p-3 text-right">贡献</th>
                       <th className="p-3 text-right">Weight → Final</th>
                     </tr>
                   </thead>
@@ -453,28 +443,25 @@ export default function PortfolioBacktesterResults() {
         <TabsContent value="correlation" className="space-y-4">
           <div className="grid gap-3 md:grid-cols-3">
             <Stat
-              label="Average Correlation"
+              label="Average Correlation（平均相关性）"
               value={num(result.correlation.average_pairwise)}
               sub="between holdings"
             />
             <Stat
-              label="Diversification Ratio"
+              label="Diversification Ratio（分散化比率）"
               value={num(result.diversification.diversification_ratio)}
               sub="1.0 means none at all"
             />
             <Stat
-              label="Largest Weight"
+              label="Largest Weight（最大持仓权重）"
               value={pct(result.diversification.largest_weight, 1)}
               sub={`HHI ${num(result.diversification.hhi, 3)}`}
             />
           </div>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Correlation Heatmap</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Red moves together, blue moves apart. Holdings that all move
-                together are one bet wearing several names.
-              </p>
+              <CardTitle className="text-base">Correlation Heatmap（相关性热力图）</CardTitle>
+              <p className="text-sm text-muted-foreground">红色表示同向变动，蓝色表示反向变动。如果持仓走势高度一致，即使名称不同，也可能承担相似风险。</p>
             </CardHeader>
             <CardContent>
               <CorrelationHeatmap
@@ -488,11 +475,8 @@ export default function PortfolioBacktesterResults() {
         <TabsContent value="drawdown" className="space-y-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Drawdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                How far below the previous peak, and for how long. The shape
-                matters more than the worst number.
-              </p>
+              <CardTitle className="text-base">Drawdown（回撤）</CardTitle>
+              <p className="text-sm text-muted-foreground">展示净值较前期峰值的跌幅及持续时间。回撤过程的形态与最大回撤数值同样值得关注。</p>
             </CardHeader>
             <CardContent>
               <PortfolioLineChart
@@ -513,17 +497,17 @@ export default function PortfolioBacktesterResults() {
             result.series.drawdown_episodes.length > 0 && (
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Worst Episodes</CardTitle>
+                  <CardTitle className="text-base">最差区间</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                   <table className="w-full text-sm">
                     <thead className="border-b text-xs text-muted-foreground">
                       <tr>
-                        <th className="p-3 text-left">Start</th>
-                        <th className="p-3 text-left">Valley</th>
-                        <th className="p-3 text-left">Recovered</th>
-                        <th className="p-3 text-right">Days</th>
-                        <th className="p-3 text-right">Depth</th>
+                        <th className="p-3 text-left">开始</th>
+                        <th className="p-3 text-left">谷底</th>
+                        <th className="p-3 text-left">已恢复</th>
+                        <th className="p-3 text-right">天数</th>
+                        <th className="p-3 text-right">深度</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -555,7 +539,7 @@ export default function PortfolioBacktesterResults() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">
-                    EOY Returns vs Benchmark
+                    年末收益率与基准比较
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
                     One pair of bars per calendar year. The dashed red line is the
@@ -574,7 +558,7 @@ export default function PortfolioBacktesterResults() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Yearly Returns</CardTitle>
+                  <CardTitle className="text-base">Yearly Returns（年度收益率）</CardTitle>
                   <p className="text-sm text-muted-foreground">
                     An investor lives through calendar years, not annualised
                     averages, "did it beat the index this year" is the question
@@ -585,11 +569,11 @@ export default function PortfolioBacktesterResults() {
                   <table className="w-full text-sm">
                     <thead className="border-b text-xs text-muted-foreground">
                       <tr>
-                        <th className="p-3 text-left">Year</th>
-                        <th className="p-3 text-right">Portfolio</th>
-                        <th className="p-3 text-right">Benchmark</th>
-                        <th className="p-3 text-right">Difference</th>
-                        <th className="p-3 text-right">Multiplier</th>
+                        <th className="p-3 text-left">年份</th>
+                        <th className="p-3 text-right">投资组合</th>
+                        <th className="p-3 text-right">基准</th>
+                        <th className="p-3 text-right">差额</th>
+                        <th className="p-3 text-right">倍数</th>
                         <th className="p-3 text-center">Won</th>
                       </tr>
                     </thead>
@@ -646,11 +630,8 @@ export default function PortfolioBacktesterResults() {
           {result.series.monthly_returns && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Monthly Returns</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  A run of bad months is what makes people abandon a strategy, and
-                  an annualised number cannot show one.
-                </p>
+                <CardTitle className="text-base">Monthly Returns（月度收益率）</CardTitle>
+                <p className="text-sm text-muted-foreground">连续数月表现不佳可能使投资者放弃策略，年化指标无法反映这一过程。</p>
               </CardHeader>
               <CardContent>
                 <MonthlyReturnsHeatmap
@@ -664,9 +645,9 @@ export default function PortfolioBacktesterResults() {
           {result.series.weekly_returns.length > 0 && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Weekly Returns</CardTitle>
+                <CardTitle className="text-base">Weekly Returns（周收益率）</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Select a year to see every week.
+                  选择年份以查看各周数据。
                 </p>
               </CardHeader>
               <CardContent>
@@ -677,31 +658,31 @@ export default function PortfolioBacktesterResults() {
           {result.series.seasonality && (
             <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-6">
               <Stat
-                label="Best Month"
+                label="Best Month（最佳月收益）"
                 value={pct(result.series.seasonality.best_month)}
                 tone="good"
               />
               <Stat
-                label="Worst Month"
+                label="Worst Month（最差月收益）"
                 value={pct(result.series.seasonality.worst_month)}
                 tone="bad"
               />
               <Stat
-                label="Avg Up Month"
+                label="Avg Up Month（上涨月平均收益）"
                 value={pct(result.series.seasonality.avg_up_month)}
                 tone="good"
               />
               <Stat
-                label="Avg Down Month"
+                label="Avg Down Month（下跌月平均收益）"
                 value={pct(result.series.seasonality.avg_down_month)}
                 tone="bad"
               />
               <Stat
-                label="Win Months"
+                label="Win Months（盈利月占比）"
                 value={pct(result.series.seasonality.win_months, 0)}
               />
               <Stat
-                label="Win Quarters"
+                label="Win Quarters（盈利季度占比）"
                 value={pct(result.series.seasonality.win_quarters, 0)}
               />
             </div>
@@ -710,25 +691,22 @@ export default function PortfolioBacktesterResults() {
             result.series.return_quantiles.length > 0 && (
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Return Quantiles</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    How the spread narrows with holding period. The share of
-                    periods that ended down is the practical read.
-                  </p>
+                  <CardTitle className="text-base">Return Quantiles（收益率分位数）</CardTitle>
+                  <p className="text-sm text-muted-foreground">观察持有期延长后收益分布如何收窄，以及最终亏损的区间占比。</p>
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead className="border-b text-xs text-muted-foreground">
                         <tr>
-                          <th className="p-3 text-left">Period</th>
+                          <th className="p-3 text-left">期间</th>
                           <th className="p-3 text-right">n</th>
-                          <th className="p-3 text-right">Worst</th>
+                          <th className="p-3 text-right">最差</th>
                           <th className="p-3 text-right">25%</th>
-                          <th className="p-3 text-right">Median</th>
+                          <th className="p-3 text-right">中位数</th>
                           <th className="p-3 text-right">75%</th>
-                          <th className="p-3 text-right">Best</th>
-                          <th className="p-3 text-right">Ended down</th>
+                          <th className="p-3 text-right">最佳</th>
+                          <th className="p-3 text-right">结束时下跌</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -770,10 +748,7 @@ export default function PortfolioBacktesterResults() {
                   <CardTitle className="text-base">
                     Rolling Sharpe ({result.series.rolling.window} sessions)
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    A flattering full-period Sharpe can hide one that has been
-                    deteriorating for a year.
-                  </p>
+                  <p className="text-sm text-muted-foreground">全周期 Sharpe Ratio（夏普比率）表现良好，也可能掩盖近一年持续恶化的情况。</p>
                 </CardHeader>
                 <CardContent>
                   <PortfolioLineChart
@@ -791,7 +766,7 @@ export default function PortfolioBacktesterResults() {
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Rolling Volatility</CardTitle>
+                  <CardTitle className="text-base">Rolling Volatility（滚动波动率）</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <PortfolioLineChart
@@ -811,7 +786,7 @@ export default function PortfolioBacktesterResults() {
           ) : (
             <Card>
               <CardContent className="p-4 text-sm text-muted-foreground">
-                Not enough history for a rolling window over this period.
+                此期间的历史数据不足，无法计算滚动窗口。
               </CardContent>
             </Card>
           )}
@@ -820,13 +795,13 @@ export default function PortfolioBacktesterResults() {
         <TabsContent value="compare" className="space-y-4">
           <div className="grid gap-3 md:grid-cols-2">
             <Stat
-              label="Best Risk-Adjusted"
+              label="Best Risk-Adjusted（最佳风险调整后收益）"
               value={result.rebalancing_sweep.best_by_sharpe ?? '-'}
               sub="highest Sharpe"
               tone="good"
             />
             <Stat
-              label="Highest Return"
+              label="Highest Return（最高收益）"
               value={result.rebalancing_sweep.best_by_return ?? '-'}
               sub="often not the same thing"
             />
@@ -834,25 +809,22 @@ export default function PortfolioBacktesterResults() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Rebalancing Comparison</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                The same holdings under every rule. Trading more is not better -
-                watch the cost drag column against what the extra trades bought.
-              </p>
+              <CardTitle className="text-base">再平衡比较</CardTitle>
+              <p className="text-sm text-muted-foreground">使用相同持仓比较不同调仓规则。交易越频繁未必越好，应结合额外交易带来的收益与成本拖累判断。</p>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b text-xs text-muted-foreground">
                     <tr>
-                      <th className="p-3 text-left">Rule</th>
-                      <th className="p-3 text-right">Total</th>
-                      <th className="p-3 text-right">CAGR</th>
-                      <th className="p-3 text-right">Sharpe</th>
-                      <th className="p-3 text-right">Max DD</th>
-                      <th className="p-3 text-right">Cost drag</th>
-                      <th className="p-3 text-right">Turnover</th>
-                      <th className="p-3 text-right">Rebalances</th>
+                      <th className="p-3 text-left">规则</th>
+                      <th className="p-3 text-right">合计</th>
+                      <th className="p-3 text-right">CAGR（年化复合增长率）</th>
+                      <th className="p-3 text-right">Sharpe（夏普比率）</th>
+                      <th className="p-3 text-right">Max DD（最大回撤）</th>
+                      <th className="p-3 text-right">成本拖累</th>
+                      <th className="p-3 text-right">Turnover（换手率）</th>
+                      <th className="p-3 text-right">再平衡次数</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -869,7 +841,7 @@ export default function PortfolioBacktesterResults() {
                           <td className="p-3 font-medium">
                             {v.label}
                             {bestSharpe && (
-                              <span className="ml-2 text-xs text-emerald-500">best</span>
+                              <span className="ml-2 text-xs text-emerald-500">最佳</span>
                             )}
                           </td>
                           <td className="p-3 text-right tabular-nums">
@@ -902,11 +874,8 @@ export default function PortfolioBacktesterResults() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Equity Curves</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                On one axis, because the difference between two schedules is
-                usually invisible in their headline returns.
-              </p>
+              <CardTitle className="text-base">Equity Curves（资金曲线）</CardTitle>
+              <p className="text-sm text-muted-foreground">将结果放在同一坐标轴上比较，因为不同调仓计划的差异通常难以从汇总收益中看出。</p>
             </CardHeader>
             <CardContent>
               <PortfolioLineChart
@@ -934,7 +903,7 @@ export default function PortfolioBacktesterResults() {
             <>
               <div className="grid gap-3 md:grid-cols-4">
                 <Stat
-                  label="Windows Positive"
+                  label="Windows Positive（盈利窗口占比）"
                   value={pct(result.walk_forward.summary.positive_share, 0)}
                   sub={`of ${result.walk_forward.summary.count} rolling windows`}
                   tone={
@@ -942,32 +911,28 @@ export default function PortfolioBacktesterResults() {
                   }
                 />
                 <Stat
-                  label="Median Window"
+                  label="Median Window（窗口收益中位数）"
                   value={pct(result.walk_forward.summary.median)}
                   sub={`${result.walk_forward.summary.window_years}y windows`}
                 />
-                <Stat label="Best" value={pct(result.walk_forward.summary.best)} tone="good" />
-                <Stat label="Worst" value={pct(result.walk_forward.summary.worst)} tone="bad" />
+                <Stat label="Best（最佳）" value={pct(result.walk_forward.summary.best)} tone="good" />
+                <Stat label="Worst（最差）" value={pct(result.walk_forward.summary.worst)} tone="bad" />
               </div>
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Walk-Forward Windows</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    The spread is the point, not the average. A strategy whose whole
-                    result came from one exceptional stretch looks very different
-                    here from one that worked repeatedly.
-                  </p>
+                  <CardTitle className="text-base">滚动前推窗口</CardTitle>
+                  <p className="text-sm text-muted-foreground">重点关注收益分布，而非仅看平均值。主要依赖单个异常时段获利的策略，与多次取得成果的策略，在这里会呈现不同分布。</p>
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="max-h-80 overflow-y-auto">
                     <table className="w-full text-sm">
                       <thead className="sticky top-0 border-b bg-card text-xs text-muted-foreground">
                         <tr>
-                          <th className="p-3 text-left">Window</th>
-                          <th className="p-3 text-right">Return</th>
-                          <th className="p-3 text-right">CAGR</th>
-                          <th className="p-3 text-right">Max DD</th>
+                          <th className="p-3 text-left">窗口</th>
+                          <th className="p-3 text-right">收益率</th>
+                          <th className="p-3 text-right">CAGR（年化复合增长率）</th>
+                          <th className="p-3 text-right">Max DD（最大回撤）</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1010,27 +975,22 @@ export default function PortfolioBacktesterResults() {
                 <CardTitle className="text-base">
                   Monte Carlo, {result.monte_carlo.paths.toLocaleString()} paths
                 </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Block bootstrap, not independent days: drawing single days
-                  destroys volatility clustering and makes drawdowns look far
-                  milder than markets produce. Seeded, so the risk numbers do not
-                  change each time you look at them.
-                </p>
+                <p className="text-sm text-muted-foreground">采用区块自助抽样，而非独立抽取每日数据：后者会破坏波动聚集特征，使模拟回撤明显偏小。抽样使用固定随机种子，避免每次查看时风险数值变化。</p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-3 md:grid-cols-3">
                   <Stat
-                    label="Probability of Loss"
+                    label="Probability of Loss（亏损概率）"
                     value={pct(result.monte_carlo.probability_of_loss, 1)}
                     sub="of resampled paths ended down"
                   />
                   <Stat
-                    label="Median CAGR"
+                    label="Median CAGR（年化复合增长率中位数）"
                     value={pct(result.monte_carlo.cagr.median)}
                     sub={`5th-95th: ${pct(result.monte_carlo.cagr.p05)} to ${pct(result.monte_carlo.cagr.p95)}`}
                   />
                   <Stat
-                    label="Worst Drawdown Seen"
+                    label="Worst Drawdown Seen（最大回撤）"
                     value={pct(result.monte_carlo.worst_drawdown_seen)}
                     sub="across all paths"
                     tone="bad"
@@ -1040,10 +1000,10 @@ export default function PortfolioBacktesterResults() {
                 <table className="w-full text-sm">
                   <thead className="border-b text-xs text-muted-foreground">
                     <tr>
-                      <th className="p-3 text-left">Outcome</th>
+                      <th className="p-3 text-left">结果</th>
                       <th className="p-3 text-right">5%</th>
                       <th className="p-3 text-right">25%</th>
-                      <th className="p-3 text-right">Median</th>
+                      <th className="p-3 text-right">中位数</th>
                       <th className="p-3 text-right">75%</th>
                       <th className="p-3 text-right">95%</th>
                     </tr>
@@ -1084,13 +1044,9 @@ export default function PortfolioBacktesterResults() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">
-                Portfolio Allocation Over Time
+                投资组合配置随时间变化
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                What you actually held, session by session. Bands widen as winners
-                run and snap back on each rebalance. A portfolio left alone stops
-                being the one you chose.
-              </p>
+              <p className="text-sm text-muted-foreground">展示每个交易日实际持仓的权重。上涨资产的色带会逐渐变宽，并在调仓时回归目标权重；长期不调整会使组合偏离最初配置。</p>
             </CardHeader>
             <CardContent className="pl-12">
               <AllocationChart
@@ -1105,21 +1061,18 @@ export default function PortfolioBacktesterResults() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Target versus Realised</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                The average weight actually held differs from the target whenever
-                the portfolio was allowed to drift.
-              </p>
+              <CardTitle className="text-base">目标与实际</CardTitle>
+              <p className="text-sm text-muted-foreground">允许权重随行情漂移时，实际平均持仓权重会与目标权重不同。</p>
             </CardHeader>
             <CardContent className="p-0">
               <table className="w-full text-sm">
                 <thead className="border-b text-xs text-muted-foreground">
                   <tr>
-                    <th className="p-3 text-left">Symbol</th>
-                    <th className="p-3 text-right">Target</th>
-                    <th className="p-3 text-right">Average held</th>
-                    <th className="p-3 text-right">Final</th>
-                    <th className="p-3 text-right">Drift</th>
+                    <th className="p-3 text-left">交易品种</th>
+                    <th className="p-3 text-right">目标</th>
+                    <th className="p-3 text-right">平均持仓权重</th>
+                    <th className="p-3 text-right">最终</th>
+                    <th className="p-3 text-right">权重偏离</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1157,18 +1110,18 @@ export default function PortfolioBacktesterResults() {
         <TabsContent value="structure" className="space-y-4">
           <div className="grid gap-3 md:grid-cols-3">
             <Stat
-              label="Effective Bets"
+              label="Effective Bets（有效风险来源数）"
               value={String(result.structure.effective_bets)}
               sub={`from ${result.items.length} holdings`}
             />
             <Stat
-              label="Largest Cluster"
+              label="Largest Cluster（最大相关性分组）"
               value={pct(result.structure.largest_cluster_weight, 1)}
               sub="moves as one position"
               tone={result.structure.largest_cluster_weight > 0.5 ? 'bad' : undefined}
             />
             <Stat
-              label="Funds vs Stocks"
+              label="Funds vs Stocks（基金与股票）"
               value={`${pct(result.structure.instrument_classes.fund ?? 0, 0)} / ${pct(
                 result.structure.instrument_classes.stock ?? 0,
                 0
@@ -1179,7 +1132,7 @@ export default function PortfolioBacktesterResults() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Co-movement Clusters</CardTitle>
+              <CardTitle className="text-base">联动分组</CardTitle>
               <p className="text-sm text-muted-foreground">
                 Holdings correlated above {result.structure.threshold} are grouped:
                 they behave as one position, whatever their names or sectors say.
@@ -1231,23 +1184,23 @@ export default function PortfolioBacktesterResults() {
             <>
               <div className="grid gap-3 md:grid-cols-4">
                 <Stat
-                  label="Excess vs Benchmark"
+                  label="Excess vs Benchmark（相对基准超额收益）"
                   value={pct(result.attribution.excess_return)}
                   sub="what has to be explained"
                   tone={(result.attribution.excess_return ?? 0) >= 0 ? 'good' : 'bad'}
                 />
                 <Stat
-                  label="Selection"
+                  label="Selection（选股贡献）"
                   value={pct(result.attribution.selection_effect)}
                   sub="were these the right things to own"
                 />
                 <Stat
-                  label="Allocation"
+                  label="Allocation（配置贡献）"
                   value={pct(result.attribution.allocation_effect)}
                   sub="did the weighting help"
                 />
                 <Stat
-                  label="Trading costs"
+                  label="Trading costs（交易成本）"
                   value={pct(result.attribution.cost_effect)}
                   sub="net return versus gross"
                 />
@@ -1255,14 +1208,8 @@ export default function PortfolioBacktesterResults() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">How it splits</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Selection is an equal-weighted basket of the same holdings
-                    against the benchmark: the picks, with sizing removed.
-                    Allocation is the realized gross portfolio against that
-                    basket. Trading costs bridge gross to net. Together they
-                    sum to the net excess.
-                  </p>
+                  <CardTitle className="text-base">构成明细</CardTitle>
+                  <p className="text-sm text-muted-foreground">选股效应比较相同持仓的等权组合与基准，排除仓位大小的影响。配置效应比较实际组合的总收益与等权组合。交易成本是总收益与净收益的差额，三者合计为净超额收益。</p>
                 </CardHeader>
                 <CardContent className="p-0">
                   <table className="w-full text-sm">
@@ -1286,7 +1233,7 @@ export default function PortfolioBacktesterResults() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Contribution by Holding</CardTitle>
+                  <CardTitle className="text-base">各持仓贡献</CardTitle>
                   <p className="text-sm text-muted-foreground">
                     Each holding's share of the out- or under-performance, not its
                     standalone result, the column sums to the excess.
@@ -1297,11 +1244,11 @@ export default function PortfolioBacktesterResults() {
                     <table className="w-full text-sm">
                     <thead className="border-b text-xs text-muted-foreground">
                       <tr>
-                        <th className="p-3 text-left">Symbol</th>
-                        <th className="p-3 text-right">Weight</th>
-                        <th className="p-3 text-right">Own return</th>
-                        <th className="p-3 text-right">vs benchmark</th>
-                        <th className="p-3 text-right">Contribution</th>
+                        <th className="p-3 text-left">交易品种</th>
+                        <th className="p-3 text-right">权重</th>
+                        <th className="p-3 text-right">自身收益率</th>
+                        <th className="p-3 text-right">相对基准</th>
+                        <th className="p-3 text-right">贡献</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1359,22 +1306,22 @@ export default function PortfolioBacktesterResults() {
           {result.crisis.summary && (
             <div className="grid gap-3 md:grid-cols-4">
               <Stat
-                label="Average Return"
+                label="Average Return（平均收益率）"
                 value={pct(result.crisis.summary.average_return)}
                 sub={`across ${result.crisis.summary.count} periods`}
               />
               <Stat
-                label="Hit Rate"
+                label="Hit Rate（胜率）"
                 value={pct(result.crisis.summary.hit_rate, 0)}
                 sub="beat the benchmark"
               />
               <Stat
-                label="Worst Crisis"
+                label="Worst Crisis（最差危机表现）"
                 value={pct(result.crisis.summary.worst)}
                 tone="bad"
               />
               <Stat
-                label="Best Period"
+                label="Best Period（最佳时期）"
                 value={pct(result.crisis.summary.best)}
                 tone="good"
               />
@@ -1405,12 +1352,8 @@ export default function PortfolioBacktesterResults() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Crisis Period Summary</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                How the portfolio held up when it mattered, against the benchmark
-                over the same window. Recoveries are included on purpose, a
-                crashes-only view flatters anything defensive.
-              </p>
+              <CardTitle className="text-base">危机期间汇总</CardTitle>
+              <p className="text-sm text-muted-foreground">比较关键时段内组合与基准的表现。这里也纳入反弹阶段，因为只看下跌行情可能高估防御型组合的表现。</p>
             </CardHeader>
             <CardContent>
               <CrisisChart periods={result.crisis.periods} />
@@ -1423,12 +1366,12 @@ export default function PortfolioBacktesterResults() {
                 <table className="w-full text-sm">
                   <thead className="border-b text-xs text-muted-foreground">
                     <tr>
-                      <th className="p-3 text-left">Period</th>
-                      <th className="p-3 text-left">Scope</th>
-                      <th className="p-3 text-left">Window</th>
-                      <th className="p-3 text-right">Portfolio</th>
-                      <th className="p-3 text-right">Benchmark</th>
-                      <th className="p-3 text-right">Excess</th>
+                      <th className="p-3 text-left">期间</th>
+                      <th className="p-3 text-left">范围</th>
+                      <th className="p-3 text-left">窗口</th>
+                      <th className="p-3 text-right">投资组合</th>
+                      <th className="p-3 text-right">基准</th>
+                      <th className="p-3 text-right">超额</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1443,7 +1386,7 @@ export default function PortfolioBacktesterResults() {
                         <td className="p-3 text-xs text-muted-foreground">
                           {c.scope === 'india' ? 'Domestic' : 'Global'}
                           {c.partial && (
-                            <span className="ml-1 text-amber-500">partial</span>
+                            <span className="ml-1 text-amber-500">部分</span>
                           )}
                         </td>
                         <td className="p-3 text-xs text-muted-foreground">
@@ -1486,12 +1429,8 @@ export default function PortfolioBacktesterResults() {
         <TabsContent value="health" className="space-y-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Portfolio Health</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Every pillar shows the inputs it read, the formula it applied and
-                the weight it carried, so you can disagree with the grade and see
-                exactly where.
-              </p>
+              <CardTitle className="text-base">组合健康状况</CardTitle>
+              <p className="text-sm text-muted-foreground">每个评分维度均展示使用的数据、计算公式和权重，方便核对评分依据。</p>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-baseline gap-4">
@@ -1546,7 +1485,7 @@ export default function PortfolioBacktesterResults() {
                     )}
                     <p className="mt-2 text-sm">{p.comment}</p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      <span className="font-medium">Formula: </span>
+                      <span className="font-medium">公式：</span>
                       {p.formula}
                     </p>
                     <p className="mt-0.5 font-mono text-xs text-muted-foreground">

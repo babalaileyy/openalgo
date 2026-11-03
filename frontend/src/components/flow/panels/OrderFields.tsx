@@ -50,7 +50,7 @@ interface FieldProps {
 export function ExchangeField({
   value,
   onChange,
-  label = 'Exchange',
+  label = '交易所',
   fallback = 'NSE',
 }: FieldProps) {
   return (
@@ -77,7 +77,7 @@ export function ExchangeField({
   )
 }
 
-export function ActionField({ value, onChange, label = 'Action', fallback = 'BUY' }: FieldProps) {
+export function ActionField({ value, onChange, label = '买卖方向', fallback = 'BUY' }: FieldProps) {
   return (
     <TemplatableField
       label={label}
@@ -85,7 +85,7 @@ export function ActionField({ value, onChange, label = 'Action', fallback = 'BUY
       onChange={onChange}
       fallback={fallback}
       placeholder="{{webhook.action}}"
-      hint="Must resolve to BUY or SELL."
+      hint="变量解析结果必须为 BUY 或 SELL。"
     >
       <div className="grid grid-cols-2 gap-2">
         {ORDER_ACTIONS.map((a) => (
@@ -102,7 +102,7 @@ export function ActionField({ value, onChange, label = 'Action', fallback = 'BUY
                 : 'border-border bg-muted'
             )}
           >
-            {a.label}
+            {a.value === 'BUY' ? '买入' : '卖出'}
           </button>
         ))}
       </div>
@@ -113,7 +113,7 @@ export function ActionField({ value, onChange, label = 'Action', fallback = 'BUY
 export function QuantityField({
   value,
   onChange,
-  label = 'Quantity',
+  label = '数量',
   fallback = 1,
   min = 1,
 }: FieldProps) {
@@ -124,7 +124,7 @@ export function QuantityField({
       onChange={onChange}
       fallback={fallback}
       placeholder="{{webhook.quantity}}"
-      hint="A field holding one whole token keeps its type, so this arrives as a number."
+      hint="整个字段使用一个变量时会保留原有类型，数量应解析为数字。"
     >
       <Input
         type="number"
@@ -142,7 +142,7 @@ export function QuantityField({
   )
 }
 
-export function ProductField({ value, onChange, label = 'Product', fallback = 'MIS' }: FieldProps) {
+export function ProductField({ value, onChange, label = '交易产品', fallback = 'MIS' }: FieldProps) {
   return (
     <TemplatableField
       label={label}
@@ -170,7 +170,7 @@ export function ProductField({ value, onChange, label = 'Product', fallback = 'M
 export function PriceTypeField({
   value,
   onChange,
-  label = 'Price Type',
+  label = '价格类型',
   fallback = 'MARKET',
 }: FieldProps) {
   return (
@@ -180,7 +180,7 @@ export function PriceTypeField({
       onChange={onChange}
       fallback={fallback}
       placeholder="{{webhook.priceType}}"
-      hint="Must resolve to MARKET, LIMIT, SL or SL-M."
+      hint="变量解析结果必须为 MARKET、LIMIT、SL 或 SL-M。"
     >
       <Select value={value as string} onValueChange={onChange}>
         <SelectTrigger className="h-8">
@@ -189,7 +189,7 @@ export function PriceTypeField({
         <SelectContent>
           {PRICE_TYPES.map((t) => (
             <SelectItem key={t.value} value={t.value}>
-              {t.label}
+              {({ MARKET: '市价（MARKET）', LIMIT: '限价（LIMIT）', SL: '止损限价（SL）', 'SL-M': '止损市价（SL-M）' } as Record<string, string>)[t.value] ?? t.label}
             </SelectItem>
           ))}
         </SelectContent>
@@ -222,12 +222,12 @@ interface ExpiryFieldProps {
 export function ExpiryField({ value, onChange, options }: ExpiryFieldProps) {
   return (
     <TemplatableField
-      label="Expiry"
+      label="到期日"
       value={value}
       onChange={onChange}
       fallback="current_week"
       placeholder="{{webhook.expiry}}"
-      hint="A relative type, an exact date such as 28OCT25, or a reference."
+      hint="可使用相对到期日、精确日期（如 28OCT25）或变量引用。"
     >
       <Select value={value as string} onValueChange={onChange}>
         <SelectTrigger className="h-8">

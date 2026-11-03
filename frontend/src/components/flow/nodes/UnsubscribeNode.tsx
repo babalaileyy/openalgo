@@ -32,19 +32,19 @@ export const UnsubscribeNode = memo(({ data, selected }: UnsubscribeNodeProps) =
             <WifiOff className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Unsubscribe</div>
-            <div className="text-[9px] text-muted-foreground">Stop Stream</div>
+            <div className="text-xs font-medium leading-tight">取消订阅</div>
+            <div className="text-[9px] text-muted-foreground">停止行情流</div>
           </div>
         </div>
         <div className="mt-1 space-y-0.5 text-[10px]">
           {data.symbol && (
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Symbol:</span>
+              <span className="text-muted-foreground">品种：</span>
               <span className="mono-data font-medium">{data.symbol}</span>
             </div>
           )}
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Type:</span>
+            <span className="text-muted-foreground">类型：</span>
             <span className="mono-data text-red-500">{streamLabels[data.streamType || 'all']}</span>
           </div>
         </div>

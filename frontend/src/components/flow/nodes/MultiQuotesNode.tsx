@@ -31,13 +31,13 @@ export const MultiQuotesNode = memo(({ data, selected }: MultiQuotesNodeProps) =
             <BarChart3 className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Multi Quotes</div>
+            <div className="text-xs font-medium leading-tight">批量行情</div>
             <div className="text-[9px] text-muted-foreground">{data.exchange || 'NSE'}</div>
           </div>
         </div>
         <div className="space-y-1">
           <div className="rounded bg-muted/50 px-1.5 py-1">
-            <span className="text-[10px] text-muted-foreground">Symbols: </span>
+            <span className="text-[10px] text-muted-foreground">品种： </span>
             <span className="mono-data text-[10px] font-medium">
               {symbolList.length > 0 ? symbolList.length : 0}
             </span>
@@ -52,7 +52,7 @@ export const MultiQuotesNode = memo(({ data, selected }: MultiQuotesNodeProps) =
           )}
           {data.outputVariable && (
             <div className="rounded border border-border/50 bg-surface-2 px-1.5 py-0.5">
-              <span className="text-[9px] text-muted-foreground">Output: </span>
+              <span className="text-[9px] text-muted-foreground">输出： </span>
               <span className="mono-data text-[9px] font-medium text-primary">
                 {data.outputVariable}
               </span>

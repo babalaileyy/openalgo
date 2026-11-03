@@ -26,8 +26,8 @@ export function ColumnConfigDropdown({
   // together. Listing them per side meant unchecking Delta twice to get it off
   // the table, and doubled the length of this menu.
   const groups = [
-    { label: 'Price Columns', greek: false },
-    { label: 'Greeks', greek: true },
+    { label: '价格列', greek: false },
+    { label: '希腊值', greek: true },
   ] as const
 
   return (
@@ -35,7 +35,7 @@ export function ColumnConfigDropdown({
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="h-9 w-9">
           <Settings2 className="h-4 w-4" />
-          <span className="sr-only">Column settings</span>
+          <span className="sr-only">列设置</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52 max-h-[70vh] overflow-y-auto">
@@ -69,7 +69,7 @@ export function ColumnConfigDropdown({
           onClick={onResetToDefaults}
         >
           <RotateCcw className="mr-2 h-4 w-4" />
-          Reset to Defaults
+          恢复默认设置
         </Button>
       </DropdownMenuContent>
     </DropdownMenu>

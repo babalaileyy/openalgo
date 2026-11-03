@@ -35,10 +35,10 @@ import { cn } from '@/lib/utils'
 import { DEFAULT_CHARGES, buildPortfolioRequest, type ChargeState } from '@/lib/portfolioRequest'
 
 const REBALANCE: { value: RebalanceRule; label: string; note: string }[] = [
-  { value: 'never', label: 'Never', note: 'Buy & Hold' },
-  { value: 'monthly', label: 'Monthly', note: '12x per year' },
-  { value: 'quarterly', label: 'Quarterly', note: '4x per year' },
-  { value: 'yearly', label: 'Yearly', note: '1x per year' },
+  { value: 'never', label: '从不', note: '买入并持有' },
+  { value: 'monthly', label: '每月', note: '每年 12 次' },
+  { value: 'quarterly', label: '每季度', note: '每年 4 次' },
+  { value: 'yearly', label: '每年', note: '每年 1 次' },
 ]
 
 function todayISO(offsetYears = 0): string {
@@ -155,7 +155,7 @@ export default function PortfolioBacktester() {
 
   const exportTearsheet = async () => {
     if (!apiKey) {
-      setError('No API key found. Generate one on the API Key page.')
+      setError('未找到 API 密钥，请在 API 密钥页面生成。')
       return
     }
     setExporting(true)
@@ -172,7 +172,7 @@ export default function PortfolioBacktester() {
 
   const analyse = async () => {
     if (!apiKey) {
-      setError('No API key found. Generate one on the API Key page.')
+      setError('未找到 API 密钥，请在 API 密钥页面生成。')
       return
     }
     setBusy(true)
@@ -180,12 +180,12 @@ export default function PortfolioBacktester() {
     try {
       const req = buildRequest()
       const res = await runPortfolioBacktest(req)
-      if (res.status !== 'success') throw new Error(res.message || 'backtest failed')
+      if (res.status !== 'success') throw new Error(res.message || '回测失败')
       setBacktestResult(res, req)
       navigate('/portfolio-backtester/results')
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: unknown } }; message?: string }
-      const msg = e.response?.data?.message ?? e.message ?? 'backtest failed'
+      const msg = e.response?.data?.message ?? e.message ?? '回测失败'
       setError(typeof msg === 'string' ? msg : JSON.stringify(msg))
     } finally {
       setBusy(false)
@@ -195,10 +195,9 @@ export default function PortfolioBacktester() {
   return (
     <div className="container mx-auto space-y-4 p-4">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Portfolio Backtester</h1>
+        <h1 className="text-2xl font-bold tracking-tight">投资组合回测</h1>
         <p className="text-sm text-muted-foreground">
-          Build a portfolio, set weights, pick a benchmark, and see how it would have
-          performed. Costs and rebalancing are modelled, not assumed away.
+          创建投资组合、设置权重并选择基准，查看组合的历史表现。回测会考虑交易成本和再平衡。
         </p>
       </div>
 
@@ -206,7 +205,7 @@ export default function PortfolioBacktester() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Benchmark</CardTitle>
+            <CardTitle className="text-sm">基准</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <Select value={benchmark} onValueChange={setBenchmark}>
@@ -214,7 +213,7 @@ export default function PortfolioBacktester() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="none">无</SelectItem>
                 {benchmarks.map((b) => (
                   <SelectItem key={`${b.exchange}-${b.symbol}`} value={b.symbol}>
                     {b.symbol}{' '}
@@ -226,15 +225,14 @@ export default function PortfolioBacktester() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Indices only, from your broker's instrument master -- alpha and
-              beta against a single stock would not mean anything.
+              仅使用交易商合约主表中的指数作为基准；以单只股票计算 Alpha 和 Beta 缺乏意义。
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Rebalancing</CardTitle>
+            <CardTitle className="text-sm">再平衡</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <Select
@@ -253,19 +251,19 @@ export default function PortfolioBacktester() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              More often is not better, it costs turnover.
+              再平衡并非越频繁越好，换仓会产生交易成本。
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Analysis Period</CardTitle>
+            <CardTitle className="text-sm">分析区间</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-2">
             <div>
               <Label htmlFor={startDateId} className="text-xs">
-                Start
+                开始日期
               </Label>
               <Input
                 id={startDateId}
@@ -276,7 +274,7 @@ export default function PortfolioBacktester() {
             </div>
             <div>
               <Label htmlFor={endDateId} className="text-xs">
-                End
+                结束日期
               </Label>
               <Input
                 id={endDateId}
@@ -294,17 +292,17 @@ export default function PortfolioBacktester() {
         <Card className="lg:col-span-3">
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
             <div>
-              <CardTitle className="text-base">Portfolio Holdings</CardTitle>
+              <CardTitle className="text-base">组合持仓</CardTitle>
               <p className="text-sm text-muted-foreground">
-                NSE and BSE cash equity and ETFs.
+                NSE 和 BSE 现货股票及 ETF。
               </p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={addHolding}>
-                Add Stock
+                添加股票
               </Button>
               <Button variant="outline" size="sm" onClick={distributeEqually}>
-                Distribute Equally
+                平均分配权重
               </Button>
             </div>
           </CardHeader>
@@ -342,7 +340,7 @@ export default function PortfolioBacktester() {
                   disabled={holdings.length <= 1}
                   onClick={() => setHoldings((p) => p.filter((_, n) => n !== i))}
                 >
-                  Remove
+                  移除
                 </Button>
               </div>
             ))}
@@ -350,21 +348,21 @@ export default function PortfolioBacktester() {
             <div className="flex flex-wrap items-end gap-4 border-t pt-3">
               <div>
                 <Label htmlFor={sourceId} className="text-xs">
-                  Data source
+                  数据来源
                 </Label>
                 <Select value={source} onValueChange={(v) => setSource(v as PriceSource)}>
                   <SelectTrigger id={sourceId} className="w-40">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="db">Historify (local)</SelectItem>
-                    <SelectItem value="api">Broker API</SelectItem>
+                    <SelectItem value="db">Historify（本地）</SelectItem>
+                    <SelectItem value="api">交易商 API</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
                 <Label htmlFor={riskFreeId} className="text-xs">
-                  Risk-free rate (%)
+                  无风险利率（%）
                 </Label>
                 <Input
                   id={riskFreeId}
@@ -384,23 +382,23 @@ export default function PortfolioBacktester() {
                       : 'text-muted-foreground'
                   )}
                 >
-                  Total {totalWeight.toFixed(1)}%
+                  权重合计 {totalWeight.toFixed(1)}%
                 </span>
                 <Button
                   variant="outline"
                   onClick={exportTearsheet}
                   disabled={exporting || busy}
-                  title="Full openstatz tearsheet as a self-contained HTML file"
+                  title="导出完整的 openstatz 分析报告（独立 HTML 文件）"
                 >
-                  {exporting ? 'Building…' : 'Tearsheet'}
+                  {exporting ? '生成中…' : '导出分析报告'}
                 </Button>
                 <Button onClick={analyse} disabled={busy}>
-                  {busy ? 'Analysing…' : 'Analyze Portfolio'}
+                  {busy ? '分析中…' : '分析投资组合'}
                 </Button>
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              Weights are normalised, so they need not total 100.
+              权重会自动归一化，因此合计不必恰好为 100。
             </p>
           </CardContent>
         </Card>

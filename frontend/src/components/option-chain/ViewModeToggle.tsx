@@ -19,8 +19,8 @@ export function ViewModeToggle({ viewMode, onViewModeChange }: ViewModeTogglePro
   return (
     <fieldset
       className="inline-flex h-9 items-center rounded-md border bg-muted/40 p-0.5"
-      aria-label="Chain view mode"
-      title="Switch columns between prices and Greeks (shortcut: G)"
+      aria-label="期权链视图模式"
+      title="切换价格与希腊值列（快捷键：G）"
     >
       {VIEW_MODES.map((mode) => {
         const isActive = viewMode === mode.value

@@ -112,7 +112,7 @@ describe('lookup cost', () => {
     // so the debounce rescheduled itself and the panel re-rendered on a 350 ms
     // heartbeat for as long as it stayed open.
     renderEditor(CLEAN_NFO_LEG)
-    await screen.findByText(/130 units/)
+    await screen.findByText(/130 个单位/)
 
     const settled = renders
     await settle(1200)
@@ -122,7 +122,7 @@ describe('lookup cost', () => {
 
   it('does not re-issue a lookup when a non-symbol field is edited', async () => {
     renderControlled(CLEAN_NFO_LEG)
-    const quantity = await screen.findByLabelText('Quantity (Lots)')
+    const quantity = await screen.findByLabelText('数量（手）')
     await waitFor(() => expect(getSymbolLotSizes).toHaveBeenCalledTimes(1))
 
     await userEvent.clear(quantity)
@@ -143,7 +143,7 @@ describe('lookup cost', () => {
     await waitFor(() => expect(getSymbolLotSizes).toHaveBeenCalledTimes(1))
     expect(getSymbolLotSizes.mock.calls[0][0]).toHaveLength(1)
 
-    await userEvent.type(screen.getAllByLabelText('Symbol')[1], 'BANKNIFTY25AUG26FUT')
+    await userEvent.type(screen.getAllByLabelText('交易品种')[1], 'BANKNIFTY25AUG26FUT')
     await waitFor(() => expect(getSymbolLotSizes).toHaveBeenCalledTimes(2))
 
     // The first leg was already cached, so only the new contract goes over the
@@ -157,9 +157,9 @@ describe('lookup cost', () => {
 describe('basket editing', () => {
   it('shows an empty state and can add the first position', async () => {
     const { onChange } = renderEditor('')
-    expect(screen.getByText(/no positions yet/i)).toBeInTheDocument()
+    expect(screen.getByText(/暂无持仓/i)).toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole('button', { name: /add position/i }))
+    await userEvent.click(screen.getByRole('button', { name: /添加持仓/i }))
 
     const written = JSON.parse(onChange.mock.calls[0][0])
     expect(written).toHaveLength(1)
@@ -175,12 +175,12 @@ describe('basket editing', () => {
 
   it('renders a lone object as a one-leg basket', () => {
     renderEditor('{"symbol":"SBIN","exchange":"NSE"}')
-    expect(screen.getByText('Leg 1')).toBeInTheDocument()
+    expect(screen.getByText('策略腿 1')).toBeInTheDocument()
   })
 
   it('writes the edited symbol upper-cased', async () => {
     const { onChange } = renderEditor(NSE_LEG)
-    await userEvent.type(screen.getByLabelText('Symbol'), 'X')
+    await userEvent.type(screen.getByLabelText('交易品种'), 'X')
     expect(JSON.parse(onChange.mock.calls.at(-1)?.[0])[0].symbol).toBe('SBINX')
   })
 
@@ -191,7 +191,7 @@ describe('basket editing', () => {
     ])
     const { onChange } = renderEditor(two)
 
-    await userEvent.click(screen.getByRole('button', { name: /remove leg 1/i }))
+    await userEvent.click(screen.getByRole('button', { name: /移除策略腿 1/i }))
 
     const remaining = JSON.parse(onChange.mock.calls.at(-1)?.[0])
     expect(remaining).toHaveLength(1)
@@ -202,7 +202,7 @@ describe('basket editing', () => {
     const withExtra = JSON.stringify([{ ...JSON.parse(NSE_LEG)[0], broker_hint: 'keep-me' }])
     const { onChange } = renderEditor(withExtra)
 
-    await userEvent.type(screen.getByLabelText('Symbol'), 'X')
+    await userEvent.type(screen.getByLabelText('交易品种'), 'X')
 
     expect(JSON.parse(onChange.mock.calls.at(-1)?.[0])[0].broker_hint).toBe('keep-me')
   })
@@ -212,7 +212,7 @@ describe('JSON mode', () => {
   it('stays in JSON mode for malformed input and preserves the text', () => {
     const raw = '[{"symbol":]'
     renderEditor(raw)
-    const editor = screen.getByLabelText('Positions JSON') as HTMLTextAreaElement
+    const editor = screen.getByLabelText('持仓 JSON') as HTMLTextAreaElement
     expect(editor).toBeInTheDocument()
     expect(editor.value).toBe(raw)
   })
@@ -231,16 +231,16 @@ describe('JSON mode', () => {
     ])
     const { onChange } = renderEditor(templated)
 
-    const editor = screen.getByLabelText('Positions JSON') as HTMLTextAreaElement
+    const editor = screen.getByLabelText('持仓 JSON') as HTMLTextAreaElement
     expect(editor.value).toBe(templated)
-    expect(screen.queryByLabelText('Symbol')).not.toBeInTheDocument()
-    expect(screen.getByText(/interpolated before the JSON is parsed/i)).toBeInTheDocument()
+    expect(screen.queryByLabelText('交易品种')).not.toBeInTheDocument()
+    expect(screen.getByText(/运行时会先替换变量/i)).toBeInTheDocument()
 
     // The switch must be refused, not silently ineffective.
-    const toggle = screen.getByRole('button', { name: /use fields/i })
+    const toggle = screen.getByRole('button', { name: /使用表单/i })
     expect(toggle).toBeDisabled()
     await userEvent.click(toggle)
-    expect(screen.getByLabelText('Positions JSON')).toBeInTheDocument()
+    expect(screen.getByLabelText('持仓 JSON')).toBeInTheDocument()
     expect(onChange).not.toHaveBeenCalled()
   })
 })
@@ -249,9 +249,9 @@ describe('lot-based quantity', () => {
   it('shows NFO quantity in lots and stores units', async () => {
     const { onChange } = renderEditor(CLEAN_NFO_LEG)
 
-    const quantity = await screen.findByLabelText('Quantity (Lots)')
+    const quantity = await screen.findByLabelText('数量（手）')
     expect((quantity as HTMLInputElement).value).toBe('2')
-    expect(screen.getByText(/130 units/)).toBeInTheDocument()
+    expect(screen.getByText(/130 个单位/)).toBeInTheDocument()
 
     await userEvent.clear(quantity)
     await userEvent.type(quantity, '3')
@@ -261,14 +261,14 @@ describe('lot-based quantity', () => {
 
   it('keeps NSE quantity in units and never looks up a lot size', async () => {
     renderEditor(NSE_LEG)
-    expect(screen.getByLabelText('Quantity')).toBeInTheDocument()
+    expect(screen.getByLabelText('数量')).toBeInTheDocument()
     await waitFor(() => expect(getSymbolLotSizes).not.toHaveBeenCalled())
   })
 
   it('falls back to units when the contract has no lot size', async () => {
     getSymbolLotSizes.mockResolvedValue({ 'NFO:NIFTY25AUG26FUT': null })
     renderEditor(CLEAN_NFO_LEG)
-    expect(await screen.findByText(/no lot size is available/i)).toBeInTheDocument()
+    expect(await screen.findByText(/此合约没有可用的每手数量/i)).toBeInTheDocument()
   })
 
   it('issues one request for a basket, not one per leg', async () => {
@@ -292,9 +292,9 @@ describe('lookup failure is distinct from missing metadata', () => {
     getSymbolLotSizes.mockRejectedValue(new Error('boom'))
     renderEditor(CLEAN_NFO_LEG)
 
-    expect(await screen.findByText(/lot-size lookup failed/i)).toBeInTheDocument()
-    expect(screen.queryByText(/no lot size is available/i)).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument()
+    expect(await screen.findByText(/查询每手数量失败/i)).toBeInTheDocument()
+    expect(screen.queryByText(/此合约没有可用的每手数量/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /重试/i })).toBeInTheDocument()
   })
 })
 
@@ -302,8 +302,8 @@ describe('mounting never rewrites stored data', () => {
   it('leaves an irregular saved quantity alone and offers to round it', async () => {
     const { onChange } = renderEditor(IRREGULAR_NFO_LEG)
 
-    const round = await screen.findByRole('button', { name: /round to 2 lots/i })
-    expect(screen.getByText(/100 units is not a multiple of the 65-unit lot/i)).toBeInTheDocument()
+    const round = await screen.findByRole('button', { name: /向上调整至 2 手/i })
+    expect(screen.getByText(/100 个单位不是每手 65 个单位的整数倍/i)).toBeInTheDocument()
     // The regression this guards: opening the panel must not touch the node.
     expect(onChange).not.toHaveBeenCalled()
 
@@ -313,7 +313,7 @@ describe('mounting never rewrites stored data', () => {
 
   it('does not write on mount for a clean basket either', async () => {
     const { onChange } = renderEditor(CLEAN_NFO_LEG)
-    await screen.findByText(/130 units/)
+    await screen.findByText(/130 个单位/)
     expect(onChange).not.toHaveBeenCalled()
   })
 })
@@ -323,7 +323,7 @@ describe('validation feedback', () => {
     const blank = JSON.stringify([{ ...JSON.parse(NSE_LEG)[0], symbol: '' }])
     renderEditor(blank)
     expect(screen.getByText('Symbol is required')).toBeInTheDocument()
-    expect(screen.getByLabelText('Symbol')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByLabelText('交易品种')).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('requires a positive price on a LIMIT leg', () => {
@@ -344,11 +344,11 @@ describe('validation feedback', () => {
 describe('accessibility', () => {
   it('gives every control an accessible name', async () => {
     renderEditor(CLEAN_NFO_LEG)
-    await screen.findByLabelText('Quantity (Lots)')
-    for (const name of ['Symbol', 'Exchange', 'Product', 'Price type']) {
+    await screen.findByLabelText('数量（手）')
+    for (const name of ['交易品种', '交易所', '产品类型', '价格类型']) {
       expect(screen.getByLabelText(name)).toBeInTheDocument()
     }
-    expect(screen.getByRole('button', { name: 'Remove leg 1' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '移除策略腿 1' })).toBeInTheDocument()
   })
 
   it('exposes the selected action as a pressed toggle', () => {
@@ -367,7 +367,7 @@ describe('a leg follows its segment', () => {
    * the author actually picked survives the move.
    */
   async function moveExchange(user: ReturnType<typeof userEvent.setup>, to: string) {
-    await user.click(screen.getByLabelText('Exchange'))
+    await user.click(screen.getByLabelText('交易所'))
     await user.click(await screen.findByRole('option', { name: to }))
   }
 
@@ -377,7 +377,7 @@ describe('a leg follows its segment', () => {
 
     await moveExchange(user, 'NFO')
 
-    await waitFor(() => expect(screen.getByLabelText('Product').textContent).toBe('NRML'))
+    await waitFor(() => expect(screen.getByLabelText('产品类型').textContent).toBe('NRML'))
   })
 
   it('takes a derivative leg moved to cash back to intraday', async () => {
@@ -386,7 +386,7 @@ describe('a leg follows its segment', () => {
 
     await moveExchange(user, 'NSE')
 
-    await waitFor(() => expect(screen.getByLabelText('Product').textContent).toBe('MIS'))
+    await waitFor(() => expect(screen.getByLabelText('产品类型').textContent).toBe('MIS'))
   })
 
   it('leaves a product the author chose alone', async () => {
@@ -395,7 +395,7 @@ describe('a leg follows its segment', () => {
 
     await moveExchange(user, 'NFO')
 
-    await waitFor(() => expect(screen.getByLabelText('Exchange').textContent).toBe('NFO'))
-    expect(screen.getByLabelText('Product').textContent).toBe('CNC')
+    await waitFor(() => expect(screen.getByLabelText('交易所').textContent).toBe('NFO'))
+    expect(screen.getByLabelText('产品类型').textContent).toBe('CNC')
   })
 })

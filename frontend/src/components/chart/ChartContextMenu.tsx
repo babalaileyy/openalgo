@@ -125,12 +125,12 @@ export function ChartContextMenu({
         onClick={() => run(() => widget.chart.setVisibleLogicalRange(defaultRange(widget)))}
       >
         <RefreshCw className={ICON} />
-        Reset chart view
+        重置图表视图
       </button>
 
       <button type="button" className={ROW} onClick={() => run(() => widget.openSettings())}>
         <Settings className={ICON} />
-        Chart settings...
+        图表设置…
       </button>
 
       <button type="button" className={ROW} onClick={() => run(onToggleRail)}>
@@ -155,7 +155,7 @@ export function ChartContextMenu({
           }}
         >
           <GridIcon className={ICON} />
-          Grid
+          网格
           <ChevronDown className="-rotate-90 ml-auto h-3.5 w-3.5 opacity-60" />
         </button>
         {gridOpen && (

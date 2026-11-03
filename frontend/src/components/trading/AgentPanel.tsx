@@ -165,7 +165,7 @@ export function AgentPanel({ getChartContext, onChartCommand, onCaptureChart }: 
           moment without saying anything to the agent. */}
       <div className={PANEL_HEADER}>
         <Bot className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
-        <span className="min-w-0 flex-1 truncate text-[13px] font-medium">Assistant</span>
+        <span className="min-w-0 flex-1 truncate text-[13px] font-medium">助手</span>
         <Button
           type="button"
           variant="ghost"
@@ -193,7 +193,7 @@ export function AgentPanel({ getChartContext, onChartCommand, onCaptureChart }: 
             {messages.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 px-5 text-center">
                 <Bot className="h-8 w-8 text-muted-foreground/50" aria-hidden />
-                <p className="text-sm font-medium">Ask about this chart</p>
+                <p className="text-sm font-medium">询问有关此图表的问题</p>
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   It reads the symbol, interval and bars you are looking at, and it can mark up the
                   chart.{' '}

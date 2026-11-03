@@ -371,10 +371,8 @@ export default function Token() {
     <div className="max-w-4xl mx-auto py-8 px-4">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl lg:text-5xl font-bold mb-4">Symbol Search</h1>
-        <p className="text-lg text-muted-foreground">
-          Search for symbols across different exchanges to get detailed information
-        </p>
+        <h1 className="text-4xl lg:text-5xl font-bold mb-4">交易品种搜索</h1>
+        <p className="text-lg text-muted-foreground">搜索不同交易所的交易品种，查看详细信息</p>
       </div>
 
       {/* Search Form */}
@@ -384,7 +382,7 @@ export default function Token() {
             {/* Symbol Search */}
             <div className="space-y-2">
               <div className="flex justify-between">
-                <Label htmlFor="symbol">Symbol, Name, or Token</Label>
+                <Label htmlFor="symbol">品种代码、名称或令牌</Label>
                 <span
                   className={`text-xs ${symbolError ? 'text-red-500' : exchanges.length > 0 ? 'text-green-600' : 'text-muted-foreground'}`}
                 >
@@ -454,10 +452,8 @@ export default function Token() {
                 {showResults && searchResults.length === 0 && symbol.length >= 2 && !isLoading && (
                   <div className="absolute z-50 w-full mt-1 bg-background border rounded-lg shadow-lg p-8 text-center">
                     <Search className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
-                    <div className="font-medium">No results found</div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      Try a different search term
-                    </div>
+                    <div className="font-medium">未找到结果</div>
+                    <div className="text-sm text-muted-foreground mt-1">请尝试其他搜索词</div>
                   </div>
                 )}
               </div>
@@ -465,7 +461,7 @@ export default function Token() {
 
             {/* Exchange multi-select */}
             <div className="space-y-2">
-              <Label>Exchange</Label>
+              <Label>交易所</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -486,15 +482,13 @@ export default function Token() {
                 </PopoverTrigger>
                 <PopoverContent className="w-72 p-2 max-h-80 overflow-auto" align="start">
                   <div className="flex items-center justify-between px-2 py-1 text-xs text-muted-foreground">
-                    <span>Pick one or more</span>
+                    <span>选择一个或多个</span>
                     {exchanges.length > 0 ? (
                       <button
                         type="button"
                         onClick={() => setExchanges([])}
                         className="hover:text-foreground"
-                      >
-                        Clear
-                      </button>
+                      >清除</button>
                     ) : null}
                   </div>
                   <div className="space-y-1">
@@ -565,13 +559,13 @@ export default function Token() {
                 {/* Row 1: Underlying and Instrument Type */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Underlying</Label>
+                    <Label>标的</Label>
                     <select
                       value={underlying}
                       onChange={(e) => setUnderlying(e.target.value)}
                       className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     >
-                      <option value="">All Underlyings</option>
+                      <option value="">所有标的</option>
                       {(underlyings || []).map((u) => (
                         <option key={u} value={u}>
                           {u}
@@ -581,7 +575,7 @@ export default function Token() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Instrument Type</Label>
+                    <Label>品种类型</Label>
                     <div className="flex flex-wrap gap-3 h-10 items-center">
                       {[
                         { value: 'FUT', label: 'Futures' },
@@ -608,13 +602,13 @@ export default function Token() {
 
                 {/* Row 2: Expiry */}
                 <div className="space-y-2">
-                  <Label>Expiry Date</Label>
+                  <Label>到期日</Label>
                   <select
                     value={expiry}
                     onChange={(e) => setExpiry(e.target.value)}
                     className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   >
-                    <option value="">All Expiries</option>
+                    <option value="">所有到期日</option>
                     {(expiries || []).map((e) => (
                       <option key={e} value={e}>
                         {e}
@@ -627,7 +621,7 @@ export default function Token() {
                 {showStrikeRange && (
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Min Strike</Label>
+                      <Label>最低行权价</Label>
                       <Input
                         type="number"
                         placeholder="e.g., 24000"
@@ -636,7 +630,7 @@ export default function Token() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Max Strike</Label>
+                      <Label>最高行权价</Label>
                       <Input
                         type="number"
                         placeholder="e.g., 26000"
@@ -651,9 +645,7 @@ export default function Token() {
 
             {/* Search Button */}
             <Button type="submit" className="w-full" size="lg">
-              <Search className="mr-2 h-5 w-5" />
-              Search Symbol
-            </Button>
+              <Search className="mr-2 h-5 w-5" />搜索交易品种</Button>
           </form>
         </CardContent>
       </Card>
@@ -664,9 +656,7 @@ export default function Token() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 text-sm font-medium">
-                <History className="h-4 w-4" />
-                Recent Searches
-              </div>
+                <History className="h-4 w-4" />最近搜索</div>
               <Button
                 type="button"
                 variant="ghost"
@@ -674,8 +664,7 @@ export default function Token() {
                 onClick={clearHistory}
                 className="text-muted-foreground hover:text-foreground h-7 px-2"
               >
-                <Trash2 className="h-3.5 w-3.5 mr-1" /> Clear
-              </Button>
+                <Trash2 className="h-3.5 w-3.5 mr-1" />清除</Button>
             </div>
             <div className="flex flex-wrap gap-2">
               {history.map((entry) => {
@@ -697,8 +686,8 @@ export default function Token() {
                       type="button"
                       onClick={() => removeHistoryEntry(key)}
                       className="pr-2 text-muted-foreground hover:text-foreground"
-                      title="Remove from history"
-                      aria-label="Remove from history"
+                      title="从历史记录中移除"
+                      aria-label="从历史记录中移除"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -713,71 +702,68 @@ export default function Token() {
       {/* Search Tips */}
       <Alert>
         <Info className="h-4 w-4" />
-        <AlertTitle>Search Tips</AlertTitle>
+        <AlertTitle>搜索提示</AlertTitle>
         <AlertDescription className="space-y-3 mt-2">
           {isCrypto ? (
             <>
               <div>
-                <div className="font-semibold mb-1">Crypto Search:</div>
+                <div className="font-semibold mb-1">加密货币搜索：</div>
                 <ul className="ml-2 space-y-0.5 text-sm">
                   <li>
-                    Perpetual Futures:{' '}
+                    永续合约：{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">BTCUSDFUT</code>,{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">ETHUSDFUT</code>
                   </li>
                   <li>
-                    Spot: <code className="bg-muted px-2 py-0.5 rounded">BTCINR</code>,{' '}
+                    现货：<code className="bg-muted px-2 py-0.5 rounded">BTCINR</code>,{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">ETHINR</code>
                   </li>
                   <li>
-                    Options: <code className="bg-muted px-2 py-0.5 rounded">BTC 80000 CE</code>,{' '}
+                    期权：<code className="bg-muted px-2 py-0.5 rounded">BTC 80000 CE</code>,{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">ETH 2000 PE</code>
                   </li>
                 </ul>
               </div>
               <div className="text-xs text-muted-foreground mt-2">
-                <strong>Tip:</strong> Use F&O filters to narrow by underlying, expiry, and strike
-                price
-              </div>
+                <strong>提示：</strong>使用期货与期权筛选器按标的、到期日和行权价缩小范围</div>
             </>
           ) : (
             <>
               <div>
-                <div className="font-semibold mb-1">Stock Search:</div>
+                <div className="font-semibold mb-1">股票搜索：</div>
                 <ul className="ml-2 space-y-0.5 text-sm">
                   <li>
-                    By symbol: <code className="bg-muted px-2 py-0.5 rounded">RELIANCE</code>,{' '}
+                    按交易代码：<code className="bg-muted px-2 py-0.5 rounded">RELIANCE</code>,{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">INFY</code>
                   </li>
                   <li>
-                    By company name:{' '}
+                    按公司名称：{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">Reliance Industries</code>
                   </li>
                   <li>
-                    By token number: <code className="bg-muted px-2 py-0.5 rounded">2885</code>
+                    按品种编号：<code className="bg-muted px-2 py-0.5 rounded">2885</code>
                   </li>
                 </ul>
               </div>
               <div>
-                <div className="font-semibold mb-1">Futures & Options:</div>
+                <div className="font-semibold mb-1">期货与期权：</div>
                 <ul className="ml-2 space-y-0.5 text-sm">
                   <li>
-                    Futures: <code className="bg-muted px-2 py-0.5 rounded">nifty oct fut</code>,{' '}
+                    期货：<code className="bg-muted px-2 py-0.5 rounded">nifty oct fut</code>,{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">banknifty dec fut</code>
                   </li>
                   <li>
-                    Call Options:{' '}
+                    看涨期权：{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">nifty 25000 ce</code>
                   </li>
                   <li>
-                    Put Options:{' '}
+                    看跌期权：{' '}
                     <code className="bg-muted px-2 py-0.5 rounded">nifty 24000 pe</code>
                   </li>
                 </ul>
               </div>
               <div className="text-xs text-muted-foreground mt-2">
-                <strong>Tip:</strong> Select the appropriate exchange (NFO for F&O, NSE for stocks)
-                for accurate results
+                <strong>提示：</strong>选择对应交易所（NFO 用于期货和期权，NSE 用于股票），以获得准确结果。
               </div>
             </>
           )}

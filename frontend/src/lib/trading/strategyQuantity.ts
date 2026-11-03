@@ -123,17 +123,16 @@ export function unitsFor(quantity: Quantity, edited: Readonly<Record<string, str
  */
 export function quantityNote(quantity: Quantity): string {
   if (quantity.kind === 'input') {
-    return 'This script takes its size from a setting below, so you choose it.'
+    return '此脚本的下单数量由下方参数决定，可由您设置。'
   }
   if (quantity.kind === 'unknown') {
-    return 'This script does not say what size it trades. Run it once to read its declaration.'
+    return '无法读取此脚本的下单数量，请先运行一次以读取其声明。'
   }
   if (quantity.units === 1) {
     return (
-      'The script sets this size, so it cannot be changed here. It trades 1 unit, which is also ' +
-      'what a script that says nothing about size trades. To choose it yourself, edit the script ' +
-      'to read qty = input(1, "Quantity", min = 1).'
+      '下单数量由脚本设定，无法在此修改。当前每次下单为 1 个单位；脚本未指定数量时默认也是 1 个单位。' +
+      '如需自行设置，请将脚本改为 qty = input(1, "Quantity", min = 1)。'
     )
   }
-  return 'The script sets this size, so it cannot be changed here. Edit the script to change it.'
+  return '下单数量由脚本设定，无法在此修改；如需更改，请编辑脚本。'
 }

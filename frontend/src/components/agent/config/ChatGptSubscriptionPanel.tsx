@@ -315,21 +315,18 @@ export function ChatGptSubscriptionPanel() {
     <Card>
       <CardHeader>
         <CardTitle className="flex flex-wrap items-center gap-2">
-          ChatGPT subscription
-          {state === 'connected' ? <Badge variant="secondary">Connected</Badge> : null}
+          ChatGPT 订阅
+          {state === 'connected' ? <Badge variant="secondary">已连接</Badge> : null}
         </CardTitle>
         <CardDescription>
-          A ChatGPT Plus or Pro plan is a second billing path, not a second key. A model registered
-          under <span className="font-mono">chatgpt/</span> runs on your plan; the same model under{' '}
-          <span className="font-mono">openai/</span> spends API credits. Sign in once here and the{' '}
-          <span className="font-mono">chatgpt/</span> models become available in the catalog below.
+          ChatGPT Plus 或 Pro 套餐提供另一种计费方式。注册在 <span className="font-mono">chatgpt/</span> 下的模型使用您的套餐；<span className="font-mono">openai/</span> 下的同一模型消耗 API 额度。在此登录后，下方目录即可使用 <span className="font-mono">chatgpt/</span> 模型。
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
         {state === 'loading' ? (
           <div className="space-y-2" aria-busy="true">
-            <span className="sr-only">Checking whether a ChatGPT plan is connected</span>
+            <span className="sr-only">正在检查是否已连接 ChatGPT 订阅</span>
             <Skeleton className="h-4 w-64" />
             <Skeleton className="h-9 w-40" />
           </div>
@@ -340,12 +337,11 @@ export function ChatGptSubscriptionPanel() {
             <AlertCircle className="h-4 w-4" aria-hidden />
             <AlertDescription className="space-y-2">
               <p>
-                This server cannot answer for a ChatGPT plan yet.{' '}
-                {agentErrorMessage(query.error, 'The status request failed.')}
+                服务器暂时无法查询 ChatGPT 套餐。{' '}
+                {agentErrorMessage(query.error, '状态请求失败。')}
               </p>
               <p>
-                The subscription needs a LiteLLM new enough to carry its ChatGPT provider.
-                Everything else on this page still works, and a model with an API key is unaffected.
+                此订阅需要支持 ChatGPT 服务商的较新版本 LiteLLM。页面其他功能及使用 API 密钥的模型不受影响。
               </p>
               <Button
                 type="button"
@@ -355,7 +351,7 @@ export function ChatGptSubscriptionPanel() {
                   void refetch()
                 }}
               >
-                Try again
+                重试
               </Button>
             </AlertDescription>
           </Alert>
@@ -364,13 +360,11 @@ export function ChatGptSubscriptionPanel() {
         {state === 'disconnected' ? (
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              No plan is connected, so the <span className="font-mono">chatgpt/</span> models cannot
-              run. Connecting opens OpenAI's own sign-in page and stores nothing but the credential
-              it hands back, encrypted in this instance's database.
+              尚未连接套餐，因此 <span className="font-mono">chatgpt/</span> 模型无法运行。连接时会打开 OpenAI 登录页面，仅将返回的凭据加密保存在此实例的数据库中。
             </p>
             <Button type="button" disabled={busy} onClick={() => connect.mutate(false)}>
               {connect.isPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
-              Connect ChatGPT plan
+              连接 ChatGPT 套餐
             </Button>
           </div>
         ) : null}
@@ -381,13 +375,13 @@ export function ChatGptSubscriptionPanel() {
               <AlertCircle className="h-4 w-4" aria-hidden />
               <AlertDescription>
                 {state === 'expired'
-                  ? 'The code was not entered in time, so it stopped being accepted. Nothing is broken: start again and a new code is issued.'
-                  : login?.message?.trim() || 'The sign-in did not complete.'}
+                  ? '未及时输入代码，代码已失效。请重新开始以获取新代码。'
+                  : login?.message?.trim() || '登录未完成。'}
               </AlertDescription>
             </Alert>
             <Button type="button" disabled={busy} onClick={() => connect.mutate(false)}>
               {connect.isPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
-              Try connecting again
+              重新连接
             </Button>
           </div>
         ) : null}
@@ -396,10 +390,10 @@ export function ChatGptSubscriptionPanel() {
           <div className="space-y-4">
             <div className="rounded-lg border border-border bg-muted/40 p-4">
               <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                Your code
+                您的代码
               </p>
               <p className="mt-2 font-mono text-3xl leading-tight font-semibold break-all select-all">
-                {login.user_code || 'waiting'}
+                {login.user_code || '等待中'}
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <Button
@@ -411,12 +405,12 @@ export function ChatGptSubscriptionPanel() {
                     void copyText(login.user_code).then((ok) => setCopied(ok))
                   }}
                 >
-                  {copied ? 'Copied' : 'Copy code'}
+                  {copied ? '已复制' : '复制代码'}
                 </Button>
                 {login.verification_url ? (
                   <Button asChild size="sm">
                     <a href={login.verification_url} target="_blank" rel="noreferrer noopener">
-                      Open the sign-in page
+                      打开登录页面
                       <ExternalLink className="h-4 w-4" aria-hidden />
                     </a>
                   </Button>
@@ -424,28 +418,27 @@ export function ChatGptSubscriptionPanel() {
                 {remaining === null ? null : (
                   <span className="text-xs tabular-nums text-muted-foreground">
                     {remaining > 0
-                      ? `Expires in ${formatCountdown(remaining)}`
-                      : 'This code has expired. Cancel and start again.'}
+                      ? `剩余有效时间 ${formatCountdown(remaining)}`
+                      : '代码已过期，请取消并重新开始。'}
                   </span>
                 )}
               </div>
             </div>
 
             <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
-              <li>Open the sign-in page. It opens in a new tab, on OpenAI's own site.</li>
-              <li>Sign in with the account your ChatGPT plan belongs to.</li>
-              <li>Enter the code above when it asks for one.</li>
-              <li>Come back here. This panel notices on its own within a couple of seconds.</li>
+              <li>打开登录页面，将在新标签页进入 OpenAI 官方网站。</li>
+              <li>请使用订阅 ChatGPT 的账户登录。</li>
+              <li>出现提示时输入上方代码。</li>
+              <li>返回此处，面板会在几秒内自动检测到。</li>
             </ol>
 
             <p className="text-xs text-muted-foreground">
-              A code is good for about fifteen minutes. Nobody but you should ever be asked for it:
-              if anything else asks you to enter this code, cancel instead.
+              代码有效期约为 15 分钟。此代码仅供您本人使用；如果其他地方要求输入，请取消操作。
             </p>
 
             <Button type="button" variant="outline" disabled={busy} onClick={() => cancel.mutate()}>
               {cancel.isPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
-              Cancel sign-in
+              取消登录
             </Button>
           </div>
         ) : null}
@@ -454,14 +447,14 @@ export function ChatGptSubscriptionPanel() {
           <div className="space-y-4">
             <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
               <div className="min-w-0">
-                <dt className="text-xs text-muted-foreground">Credential</dt>
+                <dt className="text-xs text-muted-foreground">凭据</dt>
                 <dd className="truncate font-mono text-xs" title={status.fingerprint}>
                   {status.fingerprint}
                 </dd>
               </div>
               {status.account_id ? (
                 <div className="min-w-0">
-                  <dt className="text-xs text-muted-foreground">Account</dt>
+                  <dt className="text-xs text-muted-foreground">账户</dt>
                   <dd className="truncate font-mono text-xs" title={status.account_id}>
                     {status.account_id}
                   </dd>
@@ -469,14 +462,14 @@ export function ChatGptSubscriptionPanel() {
               ) : null}
               {status.expiry === null ? null : (
                 <div className="min-w-0">
-                  <dt className="text-xs text-muted-foreground">Access token expires</dt>
+                  <dt className="text-xs text-muted-foreground">访问令牌到期时间</dt>
                   <dd className="text-xs">
-                    {formatMoment(status.expiry)}. It is refreshed on its own.
+                    {formatMoment(status.expiry)}。令牌会自动刷新。
                   </dd>
                 </div>
               )}
               <div className="min-w-0">
-                <dt className="text-xs text-muted-foreground">Stored</dt>
+                <dt className="text-xs text-muted-foreground">已保存</dt>
                 {/* The path is its own element with `break-all`, and that is not
                     cosmetic: a Windows path is one unbroken token, so left in
                     the sentence it sets the column's min-content width and the
@@ -484,17 +477,15 @@ export function ChatGptSubscriptionPanel() {
                     at a 310px card: the row ran 59px past its own border. */}
                 <dd className="text-xs">
                   {status.stored_in_database
-                    ? 'Encrypted in this instance database, and cached for LiteLLM in '
-                    : 'On disk only, in '}
+                    ? '加密保存在此实例的数据库中，LiteLLM 缓存位置：'
+                    : '仅保存在磁盘：'}
                   <span className="font-mono break-all">{status.token_dir}</span>
                 </dd>
               </div>
             </dl>
 
             <p className="text-sm text-muted-foreground">
-              Turns on a <span className="font-mono">chatgpt/</span> model are covered by this plan
-              and carry no per-token price. The same model under{' '}
-              <span className="font-mono">openai/</span> still bills your API credits.
+              使用 <span className="font-mono">chatgpt/</span> 模型的对话由此套餐覆盖，不按 token 单独计费；<span className="font-mono">openai/</span> 下的同一模型仍消耗 API 额度。
             </p>
 
             <div className="flex flex-wrap gap-2">
@@ -507,7 +498,7 @@ export function ChatGptSubscriptionPanel() {
                 {connect.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
                 ) : null}
-                Sign in again
+                重新登录
               </Button>
               <Button
                 type="button"
@@ -515,7 +506,7 @@ export function ChatGptSubscriptionPanel() {
                 disabled={busy}
                 onClick={() => setConfirmingDisconnect(true)}
               >
-                Disconnect
+                断开连接
               </Button>
             </div>
           </div>
@@ -535,22 +526,20 @@ export function ChatGptSubscriptionPanel() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Disconnect the ChatGPT plan</AlertDialogTitle>
+            <AlertDialogTitle>断开 ChatGPT 订阅</AlertDialogTitle>
             <AlertDialogDescription>
-              The stored credential is deleted and cannot be read back, so reconnecting means
-              signing in again. Any model you registered under chatgpt/ stays in the registry and
-              stops working until then, which is why they are not removed for you.
+              已存凭据将被删除且无法找回，重新连接时需要再次登录。已注册的 chatgpt/ 模型会保留在列表中，但在重新连接前无法使用。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep it connected</AlertDialogCancel>
+            <AlertDialogCancel>保持连接</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setConfirmingDisconnect(false)
                 disconnect.mutate()
               }}
             >
-              Disconnect
+              断开连接
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -148,7 +148,7 @@ function loadChartTf(): string {
 // rejection message), falling back to the axios/network message.
 function apiErrorMessage(e: unknown): string {
   const err = e as { response?: { data?: { message?: string } }; message?: string }
-  return err.response?.data?.message || err.message || 'Order failed'
+  return err.response?.data?.message || err.message || '下单失败'
 }
 
 function buildLeg(
@@ -214,13 +214,13 @@ function RangeBar({
           <span
             className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 h-2.5 w-2.5 rounded-full border-2 border-muted-foreground bg-background"
             style={{ left: `${openPct}%` }}
-            title={`Open ${open?.toFixed(decimals)}`}
+            title={`开盘价 ${open?.toFixed(decimals)}`}
           />
         )}
         <span
           className="-translate-x-1/2 -top-1 absolute text-[10px] text-foreground"
           style={{ left: `${ltpPct}%` }}
-          title={`LTP ${ltp.toFixed(decimals)}`}
+          title={`最新价 ${ltp.toFixed(decimals)}`}
         >
           ▲
         </span>
@@ -828,15 +828,15 @@ export default function Scalping() {
     async (leg: SelectedLeg | null, action: ScalpingAction) => {
       const s = stateRef.current
       if (!s.armed) {
-        showToast.error('One-Click is disarmed — enable it to trade', 'orders')
+        showToast.error('一键交易未启用，请先启用后再下单', 'orders')
         return
       }
       if (!leg) {
-        showToast.error('No instrument selected', 'orders')
+        showToast.error('尚未选择交易品种', 'orders')
         return
       }
       if (!leg.lotsize) {
-        showToast.error('Lot/contract size unavailable for this instrument', 'orders')
+        showToast.error('该品种的每手或合约数量不可用', 'orders')
         return
       }
       const now = Date.now()
@@ -847,7 +847,7 @@ export default function Scalping() {
       const quantity = isEquity ? s.equityShares : s.lots * leg.lotsize
       const sentLots = isEquity ? undefined : s.lots
       if (quantity <= 0) {
-        showToast.error('Quantity must be positive', 'orders')
+        showToast.error('委托数量必须大于零', 'orders')
         return
       }
       const t0 = performance.now()
@@ -875,7 +875,7 @@ export default function Scalping() {
           // Books refresh from this order's SocketIO event (order_event / analyzer_update)
           // via useOrderEventRefresh — no manual refetch here, to avoid a double refresh.
         } else if (s.appMode === 'live') {
-          showToast.error(res.message ?? 'Order failed', 'orders')
+          showToast.error(res.message ?? '下单失败', 'orders')
         }
       } catch (e) {
         setLastLatencyMs(Math.round(performance.now() - t0))
@@ -898,7 +898,7 @@ export default function Scalping() {
     try {
       const res = await scalpingApi.closeAll()
       if (res.status !== 'success' && appMode === 'live') {
-        showToast.error(res.message ?? 'Close all failed', 'orders')
+        showToast.error(res.message ?? '全部平仓失败', 'orders')
       }
     } catch (e) {
       const handledGlobally = appMode === 'analyzer' && !!(e as { response?: unknown }).response
@@ -911,7 +911,7 @@ export default function Scalping() {
     try {
       const res = await scalpingApi.cancelAll()
       if (res.status !== 'success' && appMode === 'live') {
-        showToast.error(res.message ?? 'Cancel all failed', 'orders')
+        showToast.error(res.message ?? '全部撤单失败', 'orders')
       }
     } catch (e) {
       const handledGlobally = appMode === 'analyzer' && !!(e as { response?: unknown }).response
@@ -934,7 +934,7 @@ export default function Scalping() {
           product: row.product,
         })
         if (res.status !== 'success' && appMode === 'live') {
-          showToast.error(res.message ?? 'Close failed', 'orders')
+          showToast.error(res.message ?? '平仓失败', 'orders')
         }
       } catch (e) {
         const handledGlobally = appMode === 'analyzer' && !!(e as { response?: unknown }).response
@@ -1048,7 +1048,7 @@ export default function Scalping() {
   return (
     <div className="space-y-4 p-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Scalping Terminal</h1>
+        <h1 className="text-2xl font-bold">短线交易终端</h1>
         <div className="flex items-center gap-3">
           {lastLatencyMs != null && (
             <span className="font-mono text-xs text-muted-foreground">order {lastLatencyMs}ms</span>
@@ -1076,7 +1076,7 @@ export default function Scalping() {
       <Card>
         <CardContent className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-6">
           <div className="space-y-1">
-            <label className="text-sm text-muted-foreground">Exchange</label>
+            <label className="text-sm text-muted-foreground">交易所</label>
             <Select value={exchange} onValueChange={(v) => setExchange(v as ScalpingExchange)}>
               <SelectTrigger>
                 <SelectValue />
@@ -1092,18 +1092,18 @@ export default function Scalping() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm text-muted-foreground">Segment</label>
+            <label className="text-sm text-muted-foreground">市场类别</label>
             <Select value={segment} onValueChange={(v) => setSegment(v as Segment)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {isEquityExch ? (
-                  <SelectItem value="EQUITY">Equity</SelectItem>
+                  <SelectItem value="EQUITY">股票</SelectItem>
                 ) : (
                   <>
-                    <SelectItem value="OPTIONS">Options</SelectItem>
-                    <SelectItem value="FUTURES">Futures</SelectItem>
+                    <SelectItem value="OPTIONS">期权</SelectItem>
+                    <SelectItem value="FUTURES">期货</SelectItem>
                   </>
                 )}
               </SelectContent>
@@ -1113,10 +1113,10 @@ export default function Scalping() {
           {/* Equity (NSE/BSE): symbol search */}
           {isEquityExch && (
             <div className="relative space-y-1 md:col-span-2">
-              <label className="text-sm text-muted-foreground">Symbol</label>
+              <label className="text-sm text-muted-foreground">交易品种</label>
               <Input
                 value={instrument ? instrument.symbol : searchQuery}
-                placeholder="Search e.g. RELIANCE"
+                placeholder="搜索，例如 RELIANCE"
                 onChange={(e) => {
                   setInstrument(null)
                   setSearchQuery(e.target.value)
@@ -1146,10 +1146,10 @@ export default function Scalping() {
           {/* Derivatives (NFO/BFO/MCX/CDS): underlying search shared by options + futures */}
           {!isEquityExch && (
             <div className="relative space-y-1">
-              <label className="text-sm text-muted-foreground">Underlying</label>
+              <label className="text-sm text-muted-foreground">标的</label>
               <Input
                 value={underlyingOpen ? underlyingQuery : underlying}
-                placeholder="Select or search e.g. NIFTY / CRUDEOIL"
+                placeholder="选择或搜索，例如 NIFTY / CRUDEOIL"
                 onFocus={() => {
                   setUnderlyingQuery('')
                   setUnderlyingOpen(true)
@@ -1189,10 +1189,10 @@ export default function Scalping() {
           {optionsMode && (
             <>
               <div className="space-y-1">
-                <label className="text-sm text-muted-foreground">Expiry</label>
+                <label className="text-sm text-muted-foreground">到期日</label>
                 <Select value={expiry} onValueChange={setExpiry} disabled={!underlying}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select expiry" />
+                    <SelectValue placeholder="选择到期日" />
                   </SelectTrigger>
                   <SelectContent>
                     {expiries.map((e) => (
@@ -1205,10 +1205,10 @@ export default function Scalping() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm text-muted-foreground">Call Strike</label>
+                <label className="text-sm text-muted-foreground">看涨行权价</label>
                 <Select value={ceStrike} onValueChange={setCeStrike} disabled={chain.length === 0}>
                   <SelectTrigger>
-                    <SelectValue placeholder="CE strike" />
+                    <SelectValue placeholder="看涨行权价" />
                   </SelectTrigger>
                   <SelectContent>
                     {chain.map((r) => (
@@ -1221,10 +1221,10 @@ export default function Scalping() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm text-muted-foreground">Put Strike</label>
+                <label className="text-sm text-muted-foreground">看跌行权价</label>
                 <Select value={peStrike} onValueChange={setPeStrike} disabled={chain.length === 0}>
                   <SelectTrigger>
-                    <SelectValue placeholder="PE strike" />
+                    <SelectValue placeholder="看跌行权价" />
                   </SelectTrigger>
                   <SelectContent>
                     {chain.map((r) => (
@@ -1241,7 +1241,7 @@ export default function Scalping() {
           {/* Futures: expiry dropdown → framed FUT symbol */}
           {!isEquityExch && segment === 'FUTURES' && (
             <div className="space-y-1">
-              <label className="text-sm text-muted-foreground">Expiry</label>
+              <label className="text-sm text-muted-foreground">到期日</label>
               <Select
                 value={instrument?.symbol ?? ''}
                 disabled={!underlying || futContracts.length === 0}
@@ -1258,7 +1258,7 @@ export default function Scalping() {
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select expiry" />
+                  <SelectValue placeholder="选择到期日" />
                 </SelectTrigger>
                 <SelectContent>
                   {futContracts.map((c) => (
@@ -1277,7 +1277,7 @@ export default function Scalping() {
       {isSingle ? (
         <div className="grid grid-cols-1 gap-4">
           <Ticker
-            title={segment === 'EQUITY' ? 'Equity' : 'Futures'}
+            title={segment === 'EQUITY' ? '股票' : '期货'}
             symbol={singleLeg?.symbol}
             ltp={singleTick?.ltp}
             change={singleTick?.change}
@@ -1291,7 +1291,7 @@ export default function Scalping() {
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <Ticker
-            title="Call (CE)"
+            title="看涨期权（CE）"
             symbol={ceLeg?.symbol}
             ltp={ceTick?.ltp}
             change={ceTick?.change}
@@ -1302,7 +1302,7 @@ export default function Scalping() {
             decimals={priceDecimals(ceLeg?.exchange ?? foExchange)}
           />
           <Ticker
-            title={underlying || 'Underlying'}
+            title={underlying || '标的'}
             symbol={underlying}
             ltp={underlyingTick?.ltp}
             change={underlyingTick?.change}
@@ -1313,7 +1313,7 @@ export default function Scalping() {
             decimals={priceDecimals(underlyingExch)}
           />
           <Ticker
-            title="Put (PE)"
+            title="看跌期权（PE）"
             symbol={peLeg?.symbol}
             ltp={peTick?.ltp}
             change={peTick?.change}
@@ -1332,11 +1332,11 @@ export default function Scalping() {
       <div className="flex flex-wrap items-center gap-4">
         <label className="flex items-center gap-2">
           <Switch checked={showCharts} onCheckedChange={setShowCharts} />
-          <span className="text-sm font-medium">Charts</span>
+          <span className="text-sm font-medium">图表</span>
         </label>
         {showCharts && (
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-muted-foreground">Timeframe</span>
+            <span className="text-xs text-muted-foreground">时间周期</span>
             <div className="inline-flex items-center rounded-md border p-0.5">
               {CHART_TIMEFRAMES.map((tf) => (
                 <button
@@ -1366,7 +1366,7 @@ export default function Scalping() {
                   symbol={singleLeg?.symbol ?? ''}
                   exchange={singleLeg?.exchange ?? ''}
                   interval={chartTf}
-                  title={segment === 'EQUITY' ? 'Equity' : 'Futures'}
+                  title={segment === 'EQUITY' ? '股票' : '期货'}
                 />
               </div>
             </div>
@@ -1377,7 +1377,7 @@ export default function Scalping() {
                   symbol={ceLeg?.symbol ?? ''}
                   exchange={ceLeg?.exchange ?? ''}
                   interval={chartTf}
-                  title="Call (CE)"
+                  title="看涨期权（CE）"
                 />
               </div>
               <div className="h-[340px]">
@@ -1385,7 +1385,7 @@ export default function Scalping() {
                   symbol={underlyingSym}
                   exchange={underlyingExch}
                   interval={chartTf}
-                  title={underlying || 'Underlying'}
+                  title={underlying || '标的'}
                 />
               </div>
               <div className="h-[340px]">
@@ -1393,7 +1393,7 @@ export default function Scalping() {
                   symbol={peLeg?.symbol ?? ''}
                   exchange={peLeg?.exchange ?? ''}
                   interval={chartTf}
-                  title="Put (PE)"
+                  title="看跌期权（PE）"
                 />
               </div>
             </div>
@@ -1407,13 +1407,13 @@ export default function Scalping() {
           <div className="flex flex-wrap items-center gap-6">
             <label className="flex items-center gap-2">
               <Switch checked={armed} onCheckedChange={setArmed} />
-              <span className="text-sm font-medium">One-Click</span>
+              <span className="text-sm font-medium">一键交易</span>
             </label>
 
             {/* Qty: +/- stepper. Equity = shares; derivatives = lots (max 20). */}
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
-                {segment === 'EQUITY' ? 'Qty' : `Qty (In Lot: ${lots})`}
+                {segment === 'EQUITY' ? '数量' : `数量（手数：${lots}）`}
               </span>
               {segment === 'EQUITY' ? (
                 <div className="flex items-center gap-1">
@@ -1462,7 +1462,7 @@ export default function Scalping() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Product Type</span>
+              <span className="text-sm text-muted-foreground">产品类型</span>
               <Select value={product} onValueChange={(v) => setProduct(v as ScalpingProduct)}>
                 <SelectTrigger className="w-28">
                   <SelectValue />
@@ -1478,21 +1478,21 @@ export default function Scalping() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Order Type</span>
+              <span className="text-sm text-muted-foreground">委托类型</span>
               <Select value="MARKET" disabled>
                 <SelectTrigger className="w-28">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="MARKET">Market</SelectItem>
+                  <SelectItem value="MARKET">市价</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {/* Global predefined SL — auto-attached to every entry when enabled */}
-            <div className="flex items-center gap-1.5" title="Auto stop-loss on every entry">
+            <div className="flex items-center gap-1.5" title="每次建仓时自动设置止损">
               <Checkbox checked={predefSlOn} onCheckedChange={(v) => setPredefSlOn(v === true)} />
-              <span className="text-sm text-muted-foreground">SL</span>
+              <span className="text-sm text-muted-foreground">止损</span>
               <Input
                 type="number"
                 inputMode="decimal"
@@ -1510,16 +1510,16 @@ export default function Scalping() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PTS">Pts</SelectItem>
+                  <SelectItem value="PTS">点</SelectItem>
                   <SelectItem value="PCT">%</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {/* Global predefined Target — auto take-profit on every entry */}
-            <div className="flex items-center gap-1.5" title="Auto target on every entry">
+            <div className="flex items-center gap-1.5" title="每次建仓时自动设置止盈">
               <Checkbox checked={predefTgtOn} onCheckedChange={(v) => setPredefTgtOn(v === true)} />
-              <span className="text-sm text-muted-foreground">Target</span>
+              <span className="text-sm text-muted-foreground">止盈目标</span>
               <Input
                 type="number"
                 inputMode="decimal"
@@ -1537,7 +1537,7 @@ export default function Scalping() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PTS">Pts</SelectItem>
+                  <SelectItem value="PTS">点</SelectItem>
                   <SelectItem value="PCT">%</SelectItem>
                 </SelectContent>
               </Select>
@@ -1545,13 +1545,13 @@ export default function Scalping() {
 
             <div
               className="ml-auto flex items-center gap-6 font-mono"
-              title="Sum across the position-book rows below (open + today's closed trades)"
+              title="下方持仓记录合计（未平仓及今日已平仓交易）"
             >
               <span>
-                Net Qty: <span className="font-semibold">{netQty}</span>
+                净持仓数量：<span className="font-semibold">{netQty}</span>
               </span>
               <span>
-                MTM:{' '}
+                MTM（浮动盈亏）：{' '}
                 <span className={`font-semibold ${mtm >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {mtm.toFixed(2)}
                 </span>
@@ -1566,14 +1566,14 @@ export default function Scalping() {
                 disabled={!singleLeg}
                 onClick={() => submitOrder(singleLeg, 'BUY')}
               >
-                ↑ Buy {segment === 'EQUITY' ? 'Stock' : ''}
+                ↑ 买入{segment === 'EQUITY' ? '股票' : ''}
               </Button>
               <Button
                 className="bg-red-600 hover:bg-red-700"
                 disabled={!singleLeg}
                 onClick={() => submitOrder(singleLeg, 'SELL')}
               >
-                ↓ Sell {segment === 'EQUITY' ? 'Stock' : ''}
+                ↓ 卖出{segment === 'EQUITY' ? '股票' : ''}
               </Button>
             </div>
           ) : (
@@ -1582,25 +1582,25 @@ export default function Scalping() {
                 className="bg-green-600 hover:bg-green-700"
                 onClick={() => submitOrder(ceLeg, 'BUY')}
               >
-                ↑ Buy Call
+                ↑ 买入看涨
               </Button>
               <Button
                 className="bg-red-600 hover:bg-red-700"
                 onClick={() => submitOrder(ceLeg, 'SELL')}
               >
-                ↓ Sell Call
+                ↓ 卖出看涨
               </Button>
               <Button
                 className="bg-green-600 hover:bg-green-700"
                 onClick={() => submitOrder(peLeg, 'BUY')}
               >
-                → Buy Put
+                → 买入看跌
               </Button>
               <Button
                 className="bg-red-600 hover:bg-red-700"
                 onClick={() => submitOrder(peLeg, 'SELL')}
               >
-                ← Sell Put
+                ← 卖出看跌
               </Button>
             </div>
           )}
@@ -1609,35 +1609,35 @@ export default function Scalping() {
             {isSingle ? (
               <Button variant="outline" disabled={!singleLeg} onClick={() => openLegSL(singleLeg)}>
                 {singleLeg && findLegSL(slMap, singleLeg.symbol, singleLeg.exchange, product)
-                  ? 'Edit SL'
-                  : 'Set SL'}
+                  ? '修改止损'
+                  : '设置止损'}
               </Button>
             ) : (
               <>
                 <Button variant="outline" disabled={!ceLeg} onClick={() => openLegSL(ceLeg)}>
-                  {ceSL ? 'Edit Call SL' : 'Set Call SL'}
+                  {ceSL ? '修改看涨止损' : '设置看涨止损'}
                 </Button>
                 <Button variant="outline" disabled={!peLeg} onClick={() => openLegSL(peLeg)}>
-                  {peSL ? 'Edit Put SL' : 'Set Put SL'}
+                  {peSL ? '修改看跌止损' : '设置看跌止损'}
                 </Button>
               </>
             )}
             <Button
               variant="outline"
               onClick={doCloseAll}
-              title="Closes only the scalping strategy's positions (freeze-safe), not the whole account"
+              title="仅平掉短线策略的持仓，并按限额拆单"
             >
-              Close All Positions / F6
+              平掉全部策略持仓 / F6
             </Button>
-            <Button variant="outline" onClick={doCancelAll} title="Cancels all open orders">
-              Cancel All Orders / F7
+            <Button variant="outline" onClick={doCancelAll} title="撤销全部未成交委托">
+              撤销全部委托 / F7
             </Button>
           </div>
 
           <span className="text-xs text-muted-foreground">
             {isSingle
-              ? 'Keys: ↑/→ Buy · ↓/← Sell · F6 close · F7 cancel'
-              : 'Keys: ↑ Buy Call · ↓ Sell Call · → Buy Put · ← Sell Put · F6 close · F7 cancel'}
+              ? '快捷键：↑/→ 买入 · ↓/← 卖出 · F6 平仓 · F7 撤单'
+              : '快捷键：↑ 买入看涨 · ↓ 卖出看涨 · → 买入看跌 · ← 卖出看跌 · F6 平仓 · F7 撤单'}
           </span>
         </CardContent>
       </Card>
@@ -1645,9 +1645,9 @@ export default function Scalping() {
       {/* Books */}
       <Tabs defaultValue="positions">
         <TabsList>
-          <TabsTrigger value="positions">Positions</TabsTrigger>
-          <TabsTrigger value="orders">Order Book</TabsTrigger>
-          <TabsTrigger value="trades">Trade Book</TabsTrigger>
+          <TabsTrigger value="positions">持仓</TabsTrigger>
+          <TabsTrigger value="orders">委托簿</TabsTrigger>
+          <TabsTrigger value="trades">成交记录</TabsTrigger>
         </TabsList>
 
         <TabsContent value="positions">
@@ -1655,24 +1655,24 @@ export default function Scalping() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Symbol</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Side</TableHead>
-                  <TableHead className="text-right">Net Qty</TableHead>
+                  <TableHead>交易品种</TableHead>
+                  <TableHead>产品类型</TableHead>
+                  <TableHead>方向</TableHead>
+                  <TableHead className="text-right">净持仓数量</TableHead>
                   <TableHead className="text-right">LTP</TableHead>
                   <TableHead className="text-right">SL</TableHead>
                   <TableHead className="text-right">TP</TableHead>
                   <TableHead className="text-right">TSL</TableHead>
-                  <TableHead>Risk</TableHead>
-                  <TableHead className="text-right">R. P&amp;L</TableHead>
-                  <TableHead className="text-right">UR. P&amp;L</TableHead>
-                  <TableHead className="text-right">P&amp;L</TableHead>
-                  <TableHead>Action</TableHead>
-                  <TableHead className="text-right">Avg Price</TableHead>
-                  <TableHead className="text-right">Buy Qty</TableHead>
-                  <TableHead className="text-right">Buy Price</TableHead>
-                  <TableHead className="text-right">Sell Price</TableHead>
-                  <TableHead className="text-right">Sell Qty</TableHead>
+                  <TableHead>风险</TableHead>
+                  <TableHead className="text-right">已实现盈亏</TableHead>
+                  <TableHead className="text-right">未实现盈亏</TableHead>
+                  <TableHead className="text-right">总盈亏</TableHead>
+                  <TableHead>操作</TableHead>
+                  <TableHead className="text-right">成交均价</TableHead>
+                  <TableHead className="text-right">买入数量</TableHead>
+                  <TableHead className="text-right">买入价格</TableHead>
+                  <TableHead className="text-right">卖出价格</TableHead>
+                  <TableHead className="text-right">卖出数量</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1723,7 +1723,7 @@ export default function Scalping() {
                               })
                             }
                           >
-                            {r.sl != null || r.target != null ? 'Edit' : 'Set'}
+                            {r.sl != null || r.target != null ? '修改' : '设置'}
                           </Button>
                         ) : (
                           '-'
@@ -1747,7 +1747,7 @@ export default function Scalping() {
                       <TableCell>
                         {open ? (
                           <Button variant="outline" size="sm" onClick={() => doCloseRow(r)}>
-                            Close
+                            平仓
                           </Button>
                         ) : (
                           '-'
@@ -1774,7 +1774,7 @@ export default function Scalping() {
                 {positionRows.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={18} className="text-center text-muted-foreground">
-                      No positions or trades today
+                      今日暂无持仓或成交
                     </TableCell>
                   </TableRow>
                 )}
@@ -1787,12 +1787,12 @@ export default function Scalping() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Symbol</TableHead>
-                <TableHead>Side</TableHead>
-                <TableHead className="text-right">Qty</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Order ID</TableHead>
+                <TableHead>交易品种</TableHead>
+                <TableHead>方向</TableHead>
+                <TableHead className="text-right">数量</TableHead>
+                <TableHead>类型</TableHead>
+                <TableHead>状态</TableHead>
+                <TableHead>委托编号</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -1811,7 +1811,7 @@ export default function Scalping() {
               {scopedOrders.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    No orders
+                    暂无委托
                   </TableCell>
                 </TableRow>
               )}
@@ -1823,11 +1823,11 @@ export default function Scalping() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Symbol</TableHead>
-                <TableHead>Side</TableHead>
-                <TableHead className="text-right">Qty</TableHead>
-                <TableHead className="text-right">Avg Price</TableHead>
-                <TableHead>Order ID</TableHead>
+                <TableHead>交易品种</TableHead>
+                <TableHead>方向</TableHead>
+                <TableHead className="text-right">数量</TableHead>
+                <TableHead className="text-right">成交均价</TableHead>
+                <TableHead>委托编号</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -1847,7 +1847,7 @@ export default function Scalping() {
               {scopedTrades.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground">
-                    No trades
+                    暂无成交
                   </TableCell>
                 </TableRow>
               )}

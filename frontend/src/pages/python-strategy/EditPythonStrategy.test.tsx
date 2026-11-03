@@ -109,7 +109,7 @@ describe('run controls in the code editor', () => {
       'pythonStrategy'
     )
 
-    await user.click(screen.getByRole('link', { name: 'View Logs' }))
+    await user.click(screen.getByRole('link', { name: '查看日志' }))
     expect(screen.queryByText('logs page')).toBeNull()
     expect(screen.getByLabelText('Code')).toHaveValue('print(1)\nprint(2)')
   })
@@ -119,7 +119,7 @@ describe('run controls in the code editor', () => {
     api.getStrategy.mockResolvedValue(strategy('stopped'))
     renderEditor()
 
-    await user.click(await screen.findByRole('link', { name: 'View Logs' }))
+    await user.click(await screen.findByRole('link', { name: '查看日志' }))
     await waitFor(() => expect(screen.getByText('logs page')).toBeInTheDocument())
   })
 })

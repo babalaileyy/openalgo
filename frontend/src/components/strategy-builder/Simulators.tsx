@@ -178,9 +178,9 @@ export function Simulators({
             <Sliders className="h-3.5 w-3.5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold leading-none">What-If Simulator</h3>
+            <h3 className="text-sm font-semibold leading-none">假设情景模拟器</h3>
             <p className="mt-1 text-[10px] text-muted-foreground">
-              Stress-test the strategy across spot, IV and time
+              根据现货价格、IV（隐含波动率）和时间对策略进行压力测试
             </p>
           </div>
         </div>
@@ -192,7 +192,7 @@ export function Simulators({
           className="h-7 text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40"
         >
           <RotateCcw className="mr-1 h-3 w-3" />
-          Reset
+          重置
         </Button>
       </div>
       <div className="space-y-5 px-4 py-4">
@@ -200,7 +200,7 @@ export function Simulators({
           icon={<TrendingUp className="h-3.5 w-3.5" />}
           label="Spot Price"
           accessibleLabel="Spot price shift"
-          sublabel="Move underlying up or down"
+          sublabel="上调或下调标的价格"
           value={spotShiftPct}
           min={-10}
           max={10}
@@ -212,9 +212,9 @@ export function Simulators({
         />
         <SliderRow
           icon={<Waves className="h-3.5 w-3.5" />}
-          label="Implied Volatility"
+          label="Implied Volatility（隐含波动率）"
           accessibleLabel="Implied volatility shift"
-          sublabel="Vol expansion or crush"
+          sublabel="波动率上升或下降"
           value={ivShiftPct}
           min={-50}
           max={50}
@@ -228,7 +228,7 @@ export function Simulators({
           icon={<Clock className="h-3.5 w-3.5" />}
           label={isSubDay ? 'Hours Forward' : 'Days Forward'}
           accessibleLabel="Time forward"
-          sublabel="Advance time toward expiry"
+          sublabel="向到期日推进时间"
           value={timeSliderValue}
           min={0}
           max={timeSliderMax}

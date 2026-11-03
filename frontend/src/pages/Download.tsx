@@ -92,10 +92,10 @@ export default function Download() {
       <Card>
         <CardHeader>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle>Available Downloads</CardTitle>
+            <CardTitle>可下载版本</CardTitle>
             <Select value={selectedVersion} onValueChange={setSelectedVersion}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select version" />
+                <SelectValue placeholder="选择版本" />
               </SelectTrigger>
               <SelectContent>
                 {versions.map((v) => (
@@ -132,9 +132,9 @@ export default function Download() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Platform</TableHead>
+                        <TableHead>平台</TableHead>
                         <TableHead>Version</TableHead>
-                        <TableHead className="text-right">Download</TableHead>
+                        <TableHead className="text-right">下载</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>

@@ -75,11 +75,11 @@ export default function TelegramConfig() {
         setToken('') // Clear token field after saving
         fetchConfig() // Refresh config
       } else {
-        showToast.error(response.data.message || 'Failed to save configuration', 'telegram')
+        showToast.error(response.data.message || '保存配置失败', 'telegram')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to save configuration', 'telegram')
+      showToast.error(err.response?.data?.message || '保存配置失败', 'telegram')
     } finally {
       setIsSaving(false)
     }
@@ -102,11 +102,9 @@ export default function TelegramConfig() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Settings className="h-6 w-6" />
-            Bot Configuration
-          </h1>
+            <Settings className="h-6 w-6" />机器人配置</h1>
         </div>
-        <p className="text-muted-foreground">Configure your Telegram bot settings</p>
+        <p className="text-muted-foreground">配置 Telegram 机器人</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -123,7 +121,7 @@ export default function TelegramConfig() {
             {config?.has_token && (
               <div className="flex items-center gap-2 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
                 <Check className="h-4 w-4 text-green-500" />
-                <span className="text-sm">Token is configured</span>
+                <span className="text-sm">令牌已配置</span>
               </div>
             )}
 
@@ -162,24 +160,22 @@ export default function TelegramConfig() {
         {/* Settings */}
         <Card>
           <CardHeader>
-            <CardTitle>Settings</CardTitle>
-            <CardDescription>Configure bot behavior and limits</CardDescription>
+            <CardTitle>设置</CardTitle>
+            <CardDescription>配置机器人行为和限制</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Broadcast Toggle */}
             <div className="flex items-center justify-between">
               <div>
-                <Label>Broadcast Messages</Label>
-                <p className="text-sm text-muted-foreground">
-                  Allow sending broadcast messages to all users
-                </p>
+                <Label>广播消息</Label>
+                <p className="text-sm text-muted-foreground">允许向所有用户发送广播消息</p>
               </div>
               <Switch checked={broadcastEnabled} onCheckedChange={setBroadcastEnabled} />
             </div>
 
             {/* Rate Limit */}
             <div className="space-y-2">
-              <Label>Rate Limit (messages per minute)</Label>
+              <Label>速率限制（每分钟消息数）</Label>
               <Input
                 type="number"
                 value={rateLimit}
@@ -210,9 +206,7 @@ export default function TelegramConfig() {
               fill="currentColor"
             >
               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-            </svg>
-            View Documentation
-          </Button>
+            </svg>查看文档</Button>
         </a>
         <Button onClick={handleSave} disabled={isSaving}>
           <Save className="h-4 w-4 mr-2" />
@@ -223,32 +217,30 @@ export default function TelegramConfig() {
       {/* Setup Guide */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Setup Guide</CardTitle>
+          <CardTitle>快速设置指南</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
             <p className="text-sm">
-              <span className="font-semibold">Need detailed instructions?</span> Visit our complete{' '}
+              <span className="font-semibold">需要详细说明？</span> Visit our complete{' '}
               <a
                 href="https://docs.openalgo.in/trading-platform/telegram"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline font-semibold"
-              >
-                Telegram Bot Setup Guide
-              </a>{' '}
+              >Telegram 机器人设置指南</a>{' '}
               for step-by-step instructions with screenshots.
             </p>
           </div>
 
           <div className="prose prose-sm dark:prose-invert max-w-none">
-            <h4 className="text-base font-semibold mb-2">Quick Steps:</h4>
+            <h4 className="text-base font-semibold mb-2">快速步骤：</h4>
             <ol className="text-muted-foreground space-y-1 list-decimal list-inside text-sm">
               <li>
                 Get a bot token from <strong>@BotFather</strong> on Telegram
               </li>
               <li>Paste the token above and click "Save Configuration"</li>
-              <li>Start the bot from the dashboard</li>
+              <li>在控制台启动机器人</li>
               <li>
                 Open your bot in Telegram and send{' '}
                 <code className="bg-muted px-1 rounded">/start</code>
@@ -265,8 +257,8 @@ export default function TelegramConfig() {
       {/* Bot Commands Reference */}
       <Card>
         <CardHeader>
-          <CardTitle>Bot Commands Available</CardTitle>
-          <CardDescription>Commands users can send to your bot</CardDescription>
+          <CardTitle>可用机器人命令</CardTitle>
+          <CardDescription>用户可向机器人发送的命令</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="bg-muted rounded-lg p-4 font-mono text-sm space-y-4">

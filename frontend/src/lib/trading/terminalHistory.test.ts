@@ -678,27 +678,27 @@ describe('selected candle readout', () => {
         })
       )
     move(1)
-    expect(legendEl.textContent).toContain('C 101.00')
+    expect(legendEl.textContent).toContain('收 101.00')
     state.onTick({ ltp: 150, timeSec: 245 })
-    expect(legendEl.textContent).toContain('C 101.00')
+    expect(legendEl.textContent).toContain('收 101.00')
     state.rawBars = [
       bar(0, 99),
       ...state.rawBars.map((b) => (b.time === 120 ? { ...b, close: 111 } : b)),
     ]
     state.setPriceData()
-    expect(legendEl.textContent).toContain('C 111.00')
+    expect(legendEl.textContent).toContain('收 111.00')
     container.dispatchEvent(new MouseEvent('pointerleave'))
-    expect(legendEl.textContent).toContain('C 150.00')
+    expect(legendEl.textContent).toContain('收 150.00')
   })
 
   it('uses only displayed replay bars when the pointer is outside the data', async () => {
     const { state, terminal, legendEl } = mount()
     await state.beginReplayAt(1)
-    expect(legendEl.textContent).toContain('C 101.00')
+    expect(legendEl.textContent).toContain('收 101.00')
     terminal.replayStep()
-    expect(legendEl.textContent).toContain('C 102.00')
+    expect(legendEl.textContent).toContain('收 102.00')
     terminal.stopReplay()
-    expect(legendEl.textContent).toContain('C 103.00')
+    expect(legendEl.textContent).toContain('收 103.00')
   })
 })
 
@@ -886,7 +886,7 @@ describe('built-in volume and average', () => {
     expect(last?.volume === 0 || last?.volume === 1).toBe(true)
     const under = state.volume.getData().at(-1)?.close
     expect(under).toBeGreaterThan(1)
-    expect(legendEl.textContent).toContain(`V ${under}`)
+    expect(legendEl.textContent).toContain(`量 ${under}`)
   })
 
   it('replays a transformed chart from the raw bar that completed the picked element', async () => {

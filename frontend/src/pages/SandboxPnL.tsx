@@ -138,15 +138,15 @@ export default function SandboxPnL() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold">My P&L History</h1>
+          <h1 className="text-3xl font-bold">我的盈亏历史</h1>
           <p className="text-muted-foreground mt-1">
-            Track your daily and historical profit & loss
+            查看每日及历史盈亏
           </p>
         </div>
         <Button asChild variant="outline">
           <Link to="/sandbox">
             <Settings className="h-4 w-4 mr-2" />
-            Sandbox Config
+            模拟盘设置
           </Link>
         </Button>
       </div>
@@ -156,7 +156,7 @@ export default function SandboxPnL() {
         {/* Today's Realized P&L */}
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">Realized P&L</div>
+            <div className="text-sm text-muted-foreground">已实现盈亏</div>
             <div className={cn('text-2xl font-bold', getPnLColor(summary.today_realized_pnl))}>
               {formatCurrency(summary.today_realized_pnl)}
             </div>
@@ -164,7 +164,7 @@ export default function SandboxPnL() {
               variant={summary.today_realized_pnl >= 0 ? 'default' : 'destructive'}
               className="mt-1"
             >
-              Today
+              今日
             </Badge>
           </CardContent>
         </Card>
@@ -172,14 +172,14 @@ export default function SandboxPnL() {
         {/* Positions Unrealized P&L */}
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">Positions MTM</div>
+            <div className="text-sm text-muted-foreground">持仓盯市盈亏</div>
             <div
               className={cn('text-2xl font-bold', getPnLColor(summary.positions_unrealized_pnl))}
             >
               {formatCurrency(summary.positions_unrealized_pnl)}
             </div>
             <Badge variant="secondary" className="mt-1">
-              Unrealized
+              未实现盈亏
             </Badge>
           </CardContent>
         </Card>
@@ -187,12 +187,12 @@ export default function SandboxPnL() {
         {/* Holdings Unrealized P&L */}
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">Holdings MTM</div>
+            <div className="text-sm text-muted-foreground">持有资产盯市盈亏</div>
             <div className={cn('text-2xl font-bold', getPnLColor(summary.holdings_unrealized_pnl))}>
               {formatCurrency(summary.holdings_unrealized_pnl)}
             </div>
             <Badge variant="outline" className="mt-1">
-              Unrealized
+              未实现盈亏
             </Badge>
           </CardContent>
         </Card>
@@ -200,18 +200,18 @@ export default function SandboxPnL() {
         {/* Today's Total MTM */}
         <Card className="border-2 border-primary">
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">Total MTM</div>
+            <div className="text-sm text-muted-foreground">总盯市盈亏</div>
             <div className={cn('text-2xl font-bold', getPnLColor(summary.today_total_mtm))}>
               {formatCurrency(summary.today_total_mtm)}
             </div>
-            <Badge className="mt-1">Today</Badge>
+            <Badge className="mt-1">今日</Badge>
           </CardContent>
         </Card>
 
         {/* All-Time Realized P&L */}
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">All-Time P&L</div>
+            <div className="text-sm text-muted-foreground">累计盈亏</div>
             <div className={cn('text-2xl font-bold', getPnLColor(summary.all_time_realized_pnl))}>
               {formatCurrency(summary.all_time_realized_pnl)}
             </div>
@@ -219,7 +219,7 @@ export default function SandboxPnL() {
               variant={summary.all_time_realized_pnl >= 0 ? 'default' : 'destructive'}
               className="mt-1"
             >
-              Lifetime
+              累计
             </Badge>
           </CardContent>
         </Card>
@@ -230,19 +230,19 @@ export default function SandboxPnL() {
         <TabsList className="mb-4">
           <TabsTrigger value="daily" className="gap-2">
             <Calendar className="h-4 w-4" />
-            Date-wise P&L
+            按日期查看盈亏
           </TabsTrigger>
           <TabsTrigger value="positions" className="gap-2">
             <Briefcase className="h-4 w-4" />
-            Positions
+            持仓
           </TabsTrigger>
           <TabsTrigger value="holdings" className="gap-2">
             <Package className="h-4 w-4" />
-            Holdings
+            持有资产
           </TabsTrigger>
           <TabsTrigger value="trades" className="gap-2">
             <Activity className="h-4 w-4" />
-            Recent Trades
+            最近成交
           </TabsTrigger>
         </TabsList>
 
@@ -250,11 +250,11 @@ export default function SandboxPnL() {
         <TabsContent value="daily">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Date-wise P&L Report</CardTitle>
+              <CardTitle>按日期盈亏报表</CardTitle>
               {data?.daily_pnl && data.daily_pnl.length > 0 && (
                 <Button variant="outline" size="sm" onClick={() => handleExport('daily')}>
                   <Download className="h-4 w-4 mr-2" />
-                  Export CSV
+                  导出 CSV
                 </Button>
               )}
             </CardHeader>
@@ -264,13 +264,13 @@ export default function SandboxPnL() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead className="text-right">Realized P&L</TableHead>
-                        <TableHead className="text-right">Positions MTM</TableHead>
-                        <TableHead className="text-right">Holdings MTM</TableHead>
-                        <TableHead className="text-right">Total Unrealized</TableHead>
-                        <TableHead className="text-right">Total MTM</TableHead>
-                        <TableHead className="text-right">Portfolio Value</TableHead>
+                        <TableHead>日期</TableHead>
+                        <TableHead className="text-right">已实现盈亏</TableHead>
+                        <TableHead className="text-right">持仓盯市盈亏</TableHead>
+                        <TableHead className="text-right">持有资产盯市盈亏</TableHead>
+                        <TableHead className="text-right">未实现盈亏合计</TableHead>
+                        <TableHead className="text-right">总盯市盈亏</TableHead>
+                        <TableHead className="text-right">组合价值</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -311,8 +311,8 @@ export default function SandboxPnL() {
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p>No daily P&L data yet. Snapshots are captured at 23:59 IST daily.</p>
-                  <p className="text-sm mt-2">Start trading to see your date-wise P&L history.</p>
+                  <p>暂无每日盈亏数据。每天印度标准时间 23:59 保存快照。</p>
+                  <p className="text-sm mt-2">开始交易后可查看按日期统计的盈亏历史。</p>
                 </div>
               )}
             </CardContent>
@@ -323,11 +323,11 @@ export default function SandboxPnL() {
         <TabsContent value="positions">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Position-wise P&L</CardTitle>
+              <CardTitle>按持仓盈亏</CardTitle>
               {data?.positions && data.positions.length > 0 && (
                 <Button variant="outline" size="sm" onClick={() => handleExport('positions')}>
                   <Download className="h-4 w-4 mr-2" />
-                  Export CSV
+                  导出 CSV
                 </Button>
               )}
             </CardHeader>
@@ -337,16 +337,16 @@ export default function SandboxPnL() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Symbol</TableHead>
-                        <TableHead>Exchange</TableHead>
-                        <TableHead>Product</TableHead>
-                        <TableHead className="text-right">Qty</TableHead>
-                        <TableHead className="text-right">Avg Price</TableHead>
-                        <TableHead className="text-right">LTP</TableHead>
-                        <TableHead className="text-right">Today's P&L</TableHead>
-                        <TableHead className="text-right">All-Time P&L</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Last Updated</TableHead>
+                        <TableHead>交易品种</TableHead>
+                        <TableHead>交易所</TableHead>
+                        <TableHead>交易产品</TableHead>
+                        <TableHead className="text-right">数量</TableHead>
+                        <TableHead className="text-right">均价</TableHead>
+                        <TableHead className="text-right">最新成交价</TableHead>
+                        <TableHead className="text-right">今日盈亏</TableHead>
+                        <TableHead className="text-right">累计盈亏</TableHead>
+                        <TableHead>状态</TableHead>
+                        <TableHead>最后更新</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -400,7 +400,7 @@ export default function SandboxPnL() {
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Briefcase className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p>No positions found. Start trading to see your P&L history.</p>
+                  <p>暂无持仓。开始交易后可查看盈亏历史。</p>
                 </div>
               )}
             </CardContent>
@@ -411,11 +411,11 @@ export default function SandboxPnL() {
         <TabsContent value="holdings">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Holdings P&L (T+1 Settled)</CardTitle>
+              <CardTitle>持有资产盈亏（T+1 结算）</CardTitle>
               {data?.holdings && data.holdings.length > 0 && (
                 <Button variant="outline" size="sm" onClick={() => handleExport('holdings')}>
                   <Download className="h-4 w-4 mr-2" />
-                  Export CSV
+                  导出 CSV
                 </Button>
               )}
             </CardHeader>
@@ -425,14 +425,14 @@ export default function SandboxPnL() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Symbol</TableHead>
-                        <TableHead>Exchange</TableHead>
-                        <TableHead className="text-right">Qty</TableHead>
-                        <TableHead className="text-right">Avg Price</TableHead>
-                        <TableHead className="text-right">LTP</TableHead>
-                        <TableHead className="text-right">Unrealized P&L</TableHead>
+                        <TableHead>交易品种</TableHead>
+                        <TableHead>交易所</TableHead>
+                        <TableHead className="text-right">数量</TableHead>
+                        <TableHead className="text-right">均价</TableHead>
+                        <TableHead className="text-right">最新成交价</TableHead>
+                        <TableHead className="text-right">未实现盈亏</TableHead>
                         <TableHead className="text-right">P&L %</TableHead>
-                        <TableHead>Settlement Date</TableHead>
+                        <TableHead>结算日期</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -468,7 +468,7 @@ export default function SandboxPnL() {
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p>No holdings found. CNC positions settle to holdings after T+1.</p>
+                  <p>暂无持有资产。CNC 持仓在 T+1 结算后转为持有资产。</p>
                 </div>
               )}
             </CardContent>
@@ -479,11 +479,11 @@ export default function SandboxPnL() {
         <TabsContent value="trades">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Recent Trades (Last 50)</CardTitle>
+              <CardTitle>最近成交（最新 50 条）</CardTitle>
               {data?.trades && data.trades.length > 0 && (
                 <Button variant="outline" size="sm" onClick={() => handleExport('trades')}>
                   <Download className="h-4 w-4 mr-2" />
-                  Export All CSV
+                  导出全部 CSV
                 </Button>
               )}
             </CardHeader>
@@ -493,14 +493,14 @@ export default function SandboxPnL() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Trade ID</TableHead>
-                        <TableHead>Symbol</TableHead>
-                        <TableHead>Exchange</TableHead>
-                        <TableHead>Action</TableHead>
-                        <TableHead className="text-right">Qty</TableHead>
-                        <TableHead className="text-right">Price</TableHead>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Timestamp</TableHead>
+                        <TableHead>成交编号</TableHead>
+                        <TableHead>交易品种</TableHead>
+                        <TableHead>交易所</TableHead>
+                        <TableHead>买卖</TableHead>
+                        <TableHead className="text-right">数量</TableHead>
+                        <TableHead className="text-right">价格</TableHead>
+                        <TableHead>交易产品</TableHead>
+                        <TableHead>时间</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -515,7 +515,7 @@ export default function SandboxPnL() {
                           </TableCell>
                           <TableCell>
                             <Badge variant={trade.action === 'BUY' ? 'default' : 'destructive'}>
-                              {trade.action}
+                              {trade.action === 'BUY' ? '买入' : trade.action === 'SELL' ? '卖出' : trade.action}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">{trade.quantity}</TableCell>
@@ -546,7 +546,7 @@ export default function SandboxPnL() {
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Activity className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p>No trades found. Start trading to see your trade history.</p>
+                  <p>暂无成交。开始交易后可查看成交历史。</p>
                 </div>
               )}
             </CardContent>

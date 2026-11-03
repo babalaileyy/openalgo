@@ -1,0 +1,36 @@
+services:
+  app:
+    image: ${OPENALGO_IMAGE:?Set OPENALGO_IMAGE}
+    restart: unless-stopped
+    stop_grace_period: 45s
+    volumes:
+      - ./openalgo.env:/app/.env
+      - db:/app/db
+      - logs:/app/log
+      - strategies:/app/strategies
+      - keys:/app/keys
+      - tmp:/app/tmp
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:5000/auth/check-setup"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+  proxy:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "8880:8880"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      app:
+        condition: service_healthy
+volumes:
+  db:
+  logs:
+  strategies:
+  keys:
+  tmp:

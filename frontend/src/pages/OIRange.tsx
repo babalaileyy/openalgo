@@ -173,11 +173,11 @@ export default function OIRange() {
         setOiData(response)
         setLastUpdated(new Date())
       } else {
-        showToast.error(response.message || 'Failed to fetch OI data')
+        showToast.error(response.message || '获取持仓量数据失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to fetch OI data'))
+      showToast.error(serverSentence(error, '获取持仓量数据失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -356,9 +356,9 @@ export default function OIRange() {
         x: xIndices,
         y: ceOILots,
         type: 'bar' as const,
-        name: 'Call Options OI (lots)',
+        name: 'Call Options OI（看涨期权持仓量，手）',
         marker: { color: themeColors.ceBar },
-        hovertemplate: 'Strike %{text}<br>CE OI: %{y:,}<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>CE OI（看涨持仓量）： %{y:,}<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
       },
@@ -366,9 +366,9 @@ export default function OIRange() {
         x: xIndices,
         y: peOILots,
         type: 'bar' as const,
-        name: 'Put Options OI (lots)',
+        name: 'Put Options OI（看跌期权持仓量，手）',
         marker: { color: themeColors.peBar },
-        hovertemplate: 'Strike %{text}<br>PE OI: %{y:,}<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>PE OI（看跌持仓量）： %{y:,}<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
       },
@@ -386,7 +386,7 @@ export default function OIRange() {
               x: atmIndex,
               y: 1,
               yref: 'paper' as const,
-              text: `${selectedUnderlying} ATM Strike ${atmStrike}`,
+              text: `${selectedUnderlying} ATM Strike（平值行权价） ${atmStrike}`,
               showarrow: false,
               font: { color: themeColors.text, size: 12 },
               yanchor: 'bottom' as const,
@@ -441,13 +441,13 @@ export default function OIRange() {
         tickmode: 'array' as const,
         tickvals: tickVals,
         ticktext: tickText,
-        title: { text: 'Strike Price', font: { color: themeColors.text, size: 12 } },
+        title: { text: '行权价', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
         tickangle: -45,
       },
       yaxis: {
-        title: { text: 'Open Interest', font: { color: themeColors.text, size: 12 } },
+        title: { text: 'Open Interest（持仓量）', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
       },
@@ -480,12 +480,12 @@ export default function OIRange() {
     <div className="py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">OI Range</h1>
+        <h1 className="text-2xl font-bold">OI Range（持仓量区间）</h1>
         <div className="flex flex-wrap items-center gap-3">
           {/* Exchange selector */}
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {fnoExchanges.map((ex) => (
@@ -505,15 +505,15 @@ export default function OIRange() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -543,7 +543,7 @@ export default function OIRange() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((e) => (
@@ -556,7 +556,7 @@ export default function OIRange() {
 
           {/* Refresh */}
           <Button variant="outline" size="sm" onClick={fetchOIData} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
 
           {/* Auto-refresh toggle (off by default) */}
@@ -568,7 +568,7 @@ export default function OIRange() {
               disabled={!selectedExpiry}
             />
             <label htmlFor="auto-refresh" className="text-sm whitespace-nowrap cursor-pointer">
-              Auto-refresh (1m)
+              自动刷新（1 分钟）
             </label>
           </div>
         </div>
@@ -580,7 +580,7 @@ export default function OIRange() {
           <div className="flex flex-wrap items-end gap-4">
             {/* Min strike */}
             <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">Min Strike</span>
+              <span className="text-xs text-muted-foreground">最低行权价</span>
               <div className="flex items-center gap-1">
                 <Button
                   variant="outline"
@@ -588,7 +588,7 @@ export default function OIRange() {
                   className="h-9 w-9 shrink-0"
                   onClick={() => adjustMin(-1)}
                   disabled={!hasData}
-                  aria-label="Decrease min strike"
+                  aria-label="降低最低行权价"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -608,7 +608,7 @@ export default function OIRange() {
                   className="h-9 w-9 shrink-0"
                   onClick={() => adjustMin(1)}
                   disabled={!hasData}
-                  aria-label="Increase min strike"
+                  aria-label="提高最低行权价"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -617,7 +617,7 @@ export default function OIRange() {
 
             {/* Max strike */}
             <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">Max Strike</span>
+              <span className="text-xs text-muted-foreground">最高行权价</span>
               <div className="flex items-center gap-1">
                 <Button
                   variant="outline"
@@ -625,7 +625,7 @@ export default function OIRange() {
                   className="h-9 w-9 shrink-0"
                   onClick={() => adjustMax(-1)}
                   disabled={!hasData}
-                  aria-label="Decrease max strike"
+                  aria-label="降低最高行权价"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -645,7 +645,7 @@ export default function OIRange() {
                   className="h-9 w-9 shrink-0"
                   onClick={() => adjustMax(1)}
                   disabled={!hasData}
-                  aria-label="Increase max strike"
+                  aria-label="提高最高行权价"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -654,7 +654,7 @@ export default function OIRange() {
 
             {/* Strikes above/below ATM quick selectors */}
             <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">Strikes above & below ATM</span>
+              <span className="text-xs text-muted-foreground">平值上下行权价数量</span>
               <div className="flex flex-wrap items-center gap-1">
                 {AROUND_OPTIONS.map((n) => (
                   <Button
@@ -673,7 +673,7 @@ export default function OIRange() {
                   onClick={() => applyAround('all')}
                   disabled={!hasData}
                 >
-                  Show All
+                  显示全部
                 </Button>
                 <Button
                   variant="ghost"
@@ -682,7 +682,7 @@ export default function OIRange() {
                   disabled={!hasData}
                 >
                   <RotateCcw className="h-3.5 w-3.5 mr-1" />
-                  Reset
+                  重置
                 </Button>
               </div>
             </div>
@@ -694,34 +694,34 @@ export default function OIRange() {
       {hasData && (
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Spot: {oiData?.spot_price?.toFixed(1)}
+            现货价：{oiData?.spot_price?.toFixed(1)}
           </Badge>
           {oiData?.futures_price && (
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              Futures: {oiData.futures_price.toFixed(1)}
+              期货价：{oiData.futures_price.toFixed(1)}
             </Badge>
           )}
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Lot Size: {oiData?.lot_size}
+            每手数量：{oiData?.lot_size}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            ATM: {oiData?.atm_strike}
+            ATM（平值行权价）：{oiData?.atm_strike}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Strikes in range: {visibleChain.length}
+            区间内行权价数量：{visibleChain.length}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            PCR (range): {rangeStats.pcr.toFixed(2)}
+            PCR (range)（区间看跌看涨持仓比）：{rangeStats.pcr.toFixed(2)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Total CE OI: {formatNumber(rangeStats.totalCe)}
+            Total CE OI（看涨总持仓量）：{formatNumber(rangeStats.totalCe)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Total PE OI: {formatNumber(rangeStats.totalPe)}
+            Total PE OI（看跌总持仓量）：{formatNumber(rangeStats.totalPe)}
           </Badge>
           {lastUpdated && (
             <span className="text-xs text-muted-foreground ml-auto">
-              Last updated: {lastUpdated.toLocaleTimeString()}
+              上次更新：{lastUpdated.toLocaleTimeString()}
             </span>
           )}
         </div>
@@ -732,7 +732,7 @@ export default function OIRange() {
         <CardContent className="p-2 sm:p-4">
           {isLoading && !oiData ? (
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
-              Loading OI data...
+              正在加载持仓量数据...
             </div>
           ) : visibleChain.length > 0 ? (
             <Plot
@@ -746,9 +746,9 @@ export default function OIRange() {
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
               {selectedExpiry
                 ? hasData
-                  ? 'No strikes in the selected range'
-                  : 'No OI data available'
-                : 'Select an underlying and expiry to view OI data'}
+                  ? '所选区间内没有行权价'
+                  : '暂无持仓量数据'
+                : '请选择标的和到期日以查看持仓量数据'}
             </div>
           )}
         </CardContent>

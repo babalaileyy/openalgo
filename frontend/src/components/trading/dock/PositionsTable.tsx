@@ -57,34 +57,34 @@ export function PositionsTable({ positions, activeSymbol, onPick, onClose, isLoa
         <thead>
           <tr>
             <th scope="col" className={TH}>
-              Symbol
+              交易品种
             </th>
             <th scope="col" className={TH}>
-              Exch
+              交易所
             </th>
             <th scope="col" className={TH}>
-              Product
+              产品类型
             </th>
             <th scope="col" className={TH_NUM}>
-              Net qty
+              净持仓数量
             </th>
             <th scope="col" className={TH_NUM}>
-              Avg
+              持仓均价
             </th>
             <th scope="col" className={TH_NUM}>
-              LTP
+              最新价
             </th>
             <th scope="col" className={TH_NUM}>
-              P&amp;L
+              盈亏
             </th>
             <th scope="col" className={cn(TH, 'text-right')}>
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">操作</span>
             </th>
           </tr>
         </thead>
         <tbody>
           {positions.length === 0 && (
-            <EmptyRows colSpan={8}>{isLoading ? 'Loading positions' : 'No positions.'}</EmptyRows>
+            <EmptyRows colSpan={8}>{isLoading ? '正在加载持仓' : '暂无持仓。'}</EmptyRows>
           )}
           {positions.map((p) => {
             const active = isActiveRow(activeSymbol, p)
@@ -118,9 +118,9 @@ export function PositionsTable({ positions, activeSymbol, onPick, onClose, isLoa
                       size="sm"
                       className="h-6 px-2 text-[11px] text-rose-600 hover:text-rose-600 dark:text-rose-400"
                       onClick={() => setPending(p)}
-                      aria-label={`Close ${p.product} position in ${p.symbol}`}
+                      aria-label={`平掉 ${p.symbol} 的 ${p.product} 持仓`}
                     >
-                      Close
+                      平仓
                     </Button>
                   )}
                 </td>
@@ -133,22 +133,21 @@ export function PositionsTable({ positions, activeSymbol, onPick, onClose, isLoa
       <AlertDialog open={pending !== null} onOpenChange={(o) => !o && setPending(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Close {pending?.symbol}?</AlertDialogTitle>
+            <AlertDialogTitle>确认平掉 {pending?.symbol} 的持仓？</AlertDialogTitle>
             <AlertDialogDescription>
-              Places a market order on the opposite side for the net{' '}
-              {pending ? signedQty(pending.quantity) : ''} {pending?.product} position on{' '}
-              {pending?.exchange}. Only this position is squared off.
+              将以市价提交反向委托，平掉 {pending?.exchange} 的 {pending?.product} 净持仓{' '}
+              {pending ? signedQty(pending.quantity) : ''}。仅平掉这笔持仓。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep</AlertDialogCancel>
+            <AlertDialogCancel>保留持仓</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (pending) onClose(pending)
                 setPending(null)
               }}
             >
-              Close position
+              确认平仓
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

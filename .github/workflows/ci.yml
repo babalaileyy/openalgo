@@ -458,63 +458,9 @@ jobs:
         run: uv run pip-audit
         continue-on-error: true
 
-  # Auto-commit built frontend dist (main branch only)
-  commit-dist:
-    runs-on: ubuntu-latest
-    needs: [frontend-build, frontend-lint, frontend-test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          check-latest: true
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      - name: Build frontend
-        working-directory: frontend
-        run: |
-          npm ci
-          npm run build
-      - name: Commit and push dist
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          # -f is needed because frontend/dist/ is gitignored for contributors,
-          # but the pre-compressed variants stay excluded: gzip/brotli output is
-          # incompressible and undeltifiable, so committing it on every rebuild
-          # grew to two thirds of the repository history and tripled clone
-          # times. utils/precompress_assets.py regenerates them at app startup.
-          git add -f frontend/dist/ ':(exclude)frontend/dist/*.gz' ':(exclude)frontend/dist/*.br'
-          git diff --staged --quiet || git commit -m "chore: auto-build frontend dist [skip ci]"
-          git push
-
-  # Docker build, scan, and push to Docker Hub (main branch only).
-  #
-  # Multi-arch (issue #1205): builds linux/amd64 and linux/arm64 natively on
-  # per-arch GitHub runners (ubuntu-latest / ubuntu-24.04-arm). No QEMU
-  # emulation — each matrix leg runs on its own native arch. This is
-  # essential because the image now installs chromium for Kaleido/Plotly
-  # chart rendering, and chromium's apt post-install scripts are painfully
-  # slow under QEMU (15-25 min vs ~2 min native).
-  #
-  # On PRs: each leg builds with `load: true` and runs the Kaleido smoke
-  # test against the locally-loaded image of its own arch. No push. This
-  # gives us native arm64 smoke-test coverage that a single-arch CI could
-  # never provide.
-  #
-  # On main push: each leg builds and pushes by digest (no tag assigned),
-  # then the docker-manifest job downloads all per-arch digests and
-  # assembles them into a single Docker Hub manifest list under the
-  # canonical tags (:latest, :<sha>).
+  # Build and smoke-test each architecture locally; deployment publishes to GHCR.
   docker-build:
     needs: [backend-lint, backend-test, frontend-build, security-scan, gunicorn-boot, eventlet-fallback, gthread-gates, gthread-migration, gthread-platforms]
-    # Skip for fork PRs (secrets not available)
-    if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push'
     strategy:
       fail-fast: false
       matrix:
@@ -531,47 +477,13 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Hub
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: docker/login-action@v4.5.2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # Per-arch metadata — labels only. Final tags are assigned by the
-      # docker-manifest merge job, not here.
-      - name: Extract metadata (labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/openalgo
-
-      # PR path: build single-arch and load into the runner's local Docker
-      # daemon for the smoke test. No push.
-      - name: Build (PR load)
-        if: github.event_name == 'pull_request'
+      - name: Build image for smoke test
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: ${{ matrix.platform }}
           load: true
           tags: openalgo-ci:${{ matrix.suffix }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=${{ matrix.suffix }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.suffix }}
-
-      # Main-push path: build per-arch and push by digest. The manifest
-      # job downstream assembles the per-arch digests into the final
-      # multi-arch tags.
-      - name: Build (main push by digest)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        id: build-main
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: ${{ matrix.platform }}
-          outputs: type=image,name=${{ secrets.DOCKERHUB_USERNAME }}/openalgo,push-by-digest=true,name-canonical=true,push=true
-          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.suffix }}
           cache-to: type=gha,mode=max,scope=${{ matrix.suffix }}
 
@@ -587,7 +499,6 @@ jobs:
       # plain `python -c` has no running loop. See
       # docs/telegram-chart-rendering.md for the full write-up.
       - name: Kaleido + Chromium smoke test
-        if: github.event_name == 'pull_request'
         run: |
           SUFFIX="${{ matrix.suffix }}"
           echo "[smoke] Testing openalgo-ci:$SUFFIX"
@@ -602,71 +513,10 @@ jobs:
           '
           echo "[smoke] $SUFFIX OK"
 
-      # Export the per-arch digest so the docker-manifest job can pick it
-      # up and assemble the final manifest list.
-      - name: Export digest
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: |
-          mkdir -p /tmp/digests
-          digest="${{ steps.build-main.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"
-
-      - name: Upload digest
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: actions/upload-artifact@v6
-        with:
-          name: digests-${{ matrix.suffix }}
-          path: /tmp/digests/*
-          if-no-files-found: error
-          retention-days: 1
-
-  # Assemble the per-arch digests into a single Docker Hub manifest list
-  # (linux/amd64 + linux/arm64) under the canonical tags (:latest, :<sha>).
-  # Runs only on main push; Trivy scan against the assembled image also
-  # happens here.
-  docker-manifest:
-    runs-on: ubuntu-latest
-    needs: docker-build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Download digests
-        uses: actions/download-artifact@v8
-        with:
-          path: /tmp/digests
-          pattern: digests-*
-          merge-multiple: true
-
-      - uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4.5.2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/openalgo
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            type=sha,prefix=
-
-      - name: Create multi-arch manifest list
-        working-directory: /tmp/digests
-        run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ secrets.DOCKERHUB_USERNAME }}/openalgo@sha256:%s ' *)
-
-      - name: Inspect assembled image
-        run: |
-          docker buildx imagetools inspect ${{ secrets.DOCKERHUB_USERNAME }}/openalgo:${{ steps.meta.outputs.version }}
-
       - name: Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/openalgo:latest
+          image-ref: openalgo-ci:${{ matrix.suffix }}
           exit-code: '0'
           severity: 'CRITICAL,HIGH'
           format: 'table'

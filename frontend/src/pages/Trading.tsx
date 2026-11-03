@@ -114,6 +114,7 @@ import {
 } from '@/lib/trading/workspaceReplay'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/authStore'
+import { useBrokerStore } from '@/stores/brokerStore'
 import { showToast } from '@/utils/toast'
 
 const NO_DRAW: DrawStats = {
@@ -246,6 +247,38 @@ export default function Trading() {
 }
 
 function TradingWorkspace({ account }: { account: string | null }) {
+  const marketDataOnly = useBrokerStore((state) => state.capabilities?.market_data_only === true)
+  const [marketReady, setMarketReady] = useState(false)
+  const [marketError, setMarketError] = useState('')
+  useEffect(() => {
+    if (!marketDataOnly) return
+    let cancelled = false
+    let timer: ReturnType<typeof setTimeout> | undefined
+    setMarketReady(false)
+    setMarketError('')
+    const check = async () => {
+      try {
+        const response = await fetch('/api/master-contract/status', { credentials: 'include' })
+        if (!response.ok) throw new Error('Unable to check market data status')
+        const status = await response.json()
+        if (cancelled) return
+        if (status.status === 'error') {
+          setMarketError(status.message || 'Unable to load market symbols')
+        } else if (status.is_ready) {
+          setMarketReady(true)
+        } else {
+          timer = setTimeout(check, 2000)
+        }
+      } catch {
+        if (!cancelled) setMarketError('Unable to check market data status')
+      }
+    }
+    void check()
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
+  }, [marketDataOnly])
   const workspaceCatalog = useChartWorkspaceCatalog(account)
   const workspacePending = useRef(false)
   const visibleGrid = useRef<PreparedChartGrid | null>(null)
@@ -1292,9 +1325,7 @@ function TradingWorkspace({ account }: { account: string | null }) {
         {chartIds.length > 1 && (
           <>
             <DropdownMenuSeparator />
-            <div className="px-2 pb-1 pt-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-              Selected chart
-            </div>
+            <div className="px-2 pb-1 pt-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">当前图表</div>
             {chartIds.map((id, index) => (
               <DropdownMenuItem
                 key={id}
@@ -1350,9 +1381,7 @@ function TradingWorkspace({ account }: { account: string | null }) {
         </span>
       </Tip>
       <DropdownMenuContent align="start" className="w-56">
-        <div className="px-2 pb-1 pt-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-          Sync across panes
-        </div>
+        <div className="px-2 pb-1 pt-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">跨图表同步</div>
         {(
           [
             ['crosshair', 'Crosshair', 'Mirror the hovered bar'],
@@ -1485,9 +1514,7 @@ function TradingWorkspace({ account }: { account: string | null }) {
             </p>
           )}
           {workspace.pending && (
-            <output className="flex items-center gap-3 px-3 py-1 text-sm">
-              Loading workspace...
-              <Button variant="ghost" size="sm" onClick={workspace.cancel}>
+            <output className="flex items-center gap-3 px-3 py-1 text-sm">正在加载工作区…<Button variant="ghost" size="sm" onClick={workspace.cancel}>
                 Cancel
               </Button>
             </output>
@@ -1506,9 +1533,9 @@ function TradingWorkspace({ account }: { account: string | null }) {
             them scroll on a narrow screen. */}
         <div className="oa-terminal-band flex h-10 shrink-0 items-center border-b">
           <Tip tip={{ title: 'Dashboard', sub: 'Leave the terminal for the dashboard' }}>
-            <Link to="/dashboard" aria-label="Dashboard" className={cn(TB_BTN, 'ml-1 gap-1')}>
+            <Link to="/dashboard" aria-label="仪表盘" className={cn(TB_BTN, 'ml-1 gap-1')}>
               <ChromeIcon id="chevron-left" size={14} className="opacity-70" />
-              <span className="hidden md:inline">Dashboard</span>
+              <span className="hidden md:inline">仪表盘</span>
             </Link>
           </Tip>
           <ToolbarDivider />
@@ -1555,10 +1582,12 @@ function TradingWorkspace({ account }: { account: string | null }) {
           <div className="relative min-h-0 min-w-0 flex-1">
             {noApiKey ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-                <p className="text-sm text-muted-foreground">No API key found for charting.</p>
-                <a href="/apikey" className="text-sm font-medium text-primary underline">
-                  Generate an API key
-                </a>
+                <p className="text-sm text-muted-foreground">未找到图表所需的 API 密钥。</p>
+                <a href="/apikey" className="text-sm font-medium text-primary underline">生成 API 密钥</a>
+              </div>
+            ) : marketDataOnly && !marketReady ? (
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                {marketError || 'Loading market symbols…'}
               </div>
             ) : apiKey && wsUrl && linkGroup ? (
               <div className="relative h-full">
@@ -1872,7 +1901,7 @@ function TradingWorkspace({ account }: { account: string | null }) {
         {/* The bottom dock: orders, positions and trades across every symbol.
             Under the rails and the side panel, full width, because the books
             are the workspace's and not one pane's. */}
-        {apiKey && wsUrl && (
+        {apiKey && wsUrl && !marketDataOnly && (
           <TradingDock
             tab={dock}
             onTabChange={setDock}

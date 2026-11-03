@@ -157,11 +157,11 @@ export default function GammaDensity() {
         setData(response)
         setLastUpdated(new Date())
       } else {
-        showToast.error(response.message || 'Failed to fetch gamma density')
+        showToast.error(response.message || '获取 Gamma 密度失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to fetch gamma density'))
+      showToast.error(serverSentence(error, '获取 Gamma 密度失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -238,21 +238,21 @@ export default function GammaDensity() {
           y: gy,
           type: 'scatter' as const,
           mode: 'lines' as const,
-          name: 'Convexity Zone',
+          name: 'Convexity Zone（凸性区间）',
           line: { color: themeColors.convexity, width: 2 },
           fill: 'tozeroy' as const,
           fillcolor: themeColors.convexityFill,
-          hovertemplate: 'Price %{x:,.0f}<extra>Convexity</extra>',
+          hovertemplate: '价格 %{x:,.0f}<extra>Convexity（凸性）</extra>',
         },
         {
           x: strikes,
           y: density,
           type: 'scatter' as const,
           mode: 'lines+markers' as const,
-          name: 'Density (Γ×OI)',
+          name: 'Density (Γ×OI)（Gamma 持仓密度）',
           line: { color: themeColors.density, width: 2, shape: 'linear' as const },
           marker: { color: themeColors.density, size: 3 },
-          hovertemplate: 'Strike %{x:,.0f}<br>Density %{y:.2f}<extra></extra>',
+          hovertemplate: '行权价 %{x:,.0f}<br>Density（密度） %{y:.2f}<extra></extra>',
         },
       ]
 
@@ -290,7 +290,7 @@ export default function GammaDensity() {
         x: spot,
         y: 1,
         yref: 'paper' as const,
-        text: 'Spot',
+        text: '现货价',
         showarrow: false,
         font: { color: themeColors.spot, size: 11 },
         yanchor: 'bottom' as const,
@@ -317,7 +317,7 @@ export default function GammaDensity() {
         margin: { l: 50, r: 20, t: 30, b: 40 },
         xaxis: {
           range: [minK, maxK],
-          title: { text: 'Strike / Price', font: { color: themeColors.text, size: 11 } },
+          title: { text: '行权价 / 价格', font: { color: themeColors.text, size: 11 } },
           tickfont: { color: themeColors.text, size: 10 },
           gridcolor: themeColors.grid,
         },
@@ -361,15 +361,15 @@ export default function GammaDensity() {
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold">Gamma Density</h1>
+            <h1 className="text-2xl font-bold">Gamma Density（Gamma 密度）</h1>
             {lastUpdated && (
               <Badge variant={autoRefresh ? 'default' : 'secondary'} className="uppercase">
-                {autoRefresh ? 'Live' : 'Snapshot'}
+                {autoRefresh ? '实时' : '快照'}
               </Badge>
             )}
           </div>
           <p className="text-muted-foreground text-sm mt-1">
-            Γ×OI density and convexity zones — where hedging pressure concentrates
+            Γ×OI 密度与凸性区间，展示对冲压力集中的位置
           </p>
         </div>
 
@@ -377,7 +377,7 @@ export default function GammaDensity() {
           {/* Exchange selector */}
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {fnoExchanges.map((ex) => (
@@ -397,15 +397,15 @@ export default function GammaDensity() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -435,7 +435,7 @@ export default function GammaDensity() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((e) => (
@@ -453,12 +453,12 @@ export default function GammaDensity() {
             onClick={() => setAutoRefresh((v) => !v)}
             disabled={!selectedExpiry}
           >
-            Auto: {autoRefresh ? 'ON' : 'OFF'}
+            自动刷新：{autoRefresh ? '开' : '关'}
           </Button>
 
           {/* Refresh */}
           <Button variant="outline" size="sm" onClick={fetchData} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
         </div>
       </div>
@@ -466,65 +466,63 @@ export default function GammaDensity() {
       {/* Stat cards */}
       {hasData && (
         <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-3">
-          <StatCard label="Spot" value={formatNum(data?.spot_price, 1)} />
-          <StatCard label="ATM IV" value={`${formatNum(data?.atm_iv)}%`} />
+          <StatCard label="现货价" value={formatNum(data?.spot_price, 1)} />
+          <StatCard label="ATM IV（平值隐含波动率）" value={`${formatNum(data?.atm_iv)}%`} />
           <StatCard
-            label="Sigma Move"
+            label="Sigma Move（标准差波动幅度）"
             value={`±${formatNum(data?.sigma_move)}`}
-            sub={`${formatNum(data?.dte_days, 1)}d to expiry`}
+            sub={`${formatNum(data?.dte_days, 1)} 天后到期`}
           />
           <StatCard
-            label="1σ Low"
+            label="1σ Low（1 倍标准差下界）"
             value={formatNum(data?.one_sigma_low, 0)}
             valueClass="text-red-500"
           />
           <StatCard
-            label="1σ High"
+            label="1σ High（1 倍标准差上界）"
             value={formatNum(data?.one_sigma_high, 0)}
             valueClass="text-green-500"
           />
           <StatCard
-            label="2σ Lower Tail"
+            label="2σ Lower Tail（2 倍标准差下尾）"
             value={formatNum(data?.two_sigma_low, 0)}
             valueClass="text-red-500"
           />
           <StatCard
-            label="2σ Upper Tail"
+            label="2σ Upper Tail（2 倍标准差上尾）"
             value={formatNum(data?.two_sigma_high, 0)}
             valueClass="text-green-500"
           />
-          <StatCard label="DTE" value={formatNum(data?.dte_days, 1)} sub="days" />
+          <StatCard label="DTE（距到期天数）" value={formatNum(data?.dte_days, 1)} sub="天" />
         </div>
       )}
 
       {/* Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <ChartPanel
-          title="Intraday"
-          subtitle="1-day hedging pressure"
+          title="日内"
+          subtitle="单日对冲压力"
           isLoading={isLoading && !data}
           hasData={hasData && intradayPanel.data.length > 0}
           panel={intradayPanel}
           plotConfig={plotConfig}
-          emptyText={selectedExpiry ? 'No gamma data available' : 'Select an underlying and expiry'}
+          emptyText={selectedExpiry ? '暂无 Gamma 数据' : '请选择标的和到期日'}
         />
         <ChartPanel
-          title="To Expiry"
-          subtitle="Terminal pin / gravity"
+          title="截至到期"
+          subtitle="到期时的价格牵引"
           isLoading={isLoading && !data}
           hasData={hasData && expiryPanel.data.length > 0}
           panel={expiryPanel}
           plotConfig={plotConfig}
-          emptyText={selectedExpiry ? 'No gamma data available' : 'Select an underlying and expiry'}
+          emptyText={selectedExpiry ? '暂无 Gamma 数据' : '请选择标的和到期日'}
         />
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Shaded band = ±1σ expected range. The density curve marks strikes where dealer Γ×OI is
-        concentrated — spot gravitates to (long gamma) or accelerates away from (short gamma) these
-        zones. Greeks use the Black-76 model (opengreeks).
+        阴影表示 ±1σ 预期波动区间。密度曲线标示做市商 Γ×OI 集中的行权价；现货价格在多头 Gamma 下可能趋近这些区域，在空头 Gamma 下可能加速远离。希腊值使用 Black-76 模型（opengreeks）。
         {lastUpdated && (
-          <span className="ml-1">Last updated: {lastUpdated.toLocaleTimeString()}.</span>
+          <span className="ml-1">上次更新：{lastUpdated.toLocaleTimeString()}.</span>
         )}
       </p>
     </div>
@@ -579,7 +577,7 @@ function ChartPanel({
         </div>
         {isLoading ? (
           <div className="flex items-center justify-center h-[420px] text-muted-foreground">
-            Loading…
+            加载中…
           </div>
         ) : hasData ? (
           <Plot

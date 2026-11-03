@@ -180,7 +180,7 @@ export function PlotStyleRow({ title, fields, values, onChange }: Props) {
 
             {opacityF && (
               <>
-                <p className="mt-2 text-[11px] text-muted-foreground">Opacity</p>
+                <p className="mt-2 text-[11px] text-muted-foreground">不透明度</p>
                 <div className="mt-1 flex items-center gap-2">
                   <input
                     type="range"
@@ -204,7 +204,7 @@ export function PlotStyleRow({ title, fields, values, onChange }: Props) {
 
             {widthF && (
               <>
-                <p className="mt-2.5 text-[11px] text-muted-foreground">Thickness</p>
+                <p className="mt-2.5 text-[11px] text-muted-foreground">线宽</p>
                 <div className="mt-1 grid grid-cols-4 gap-1">
                   {WIDTHS.map((w) => (
                     <button
@@ -226,7 +226,7 @@ export function PlotStyleRow({ title, fields, values, onChange }: Props) {
 
             {dashF && (
               <>
-                <p className="mt-2.5 text-[11px] text-muted-foreground">Line style</p>
+                <p className="mt-2.5 text-[11px] text-muted-foreground">线型</p>
                 <div className="mt-1 grid grid-cols-3 gap-1">
                   {DASHES.map((d) => (
                     <button

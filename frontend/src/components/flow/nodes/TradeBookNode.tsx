@@ -24,8 +24,8 @@ export const TradeBookNode = memo(({ data, selected }: TradeBookNodeProps) => {
             <Receipt className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Trade Book</div>
-            <div className="text-[9px] text-muted-foreground">Executed trades</div>
+            <div className="text-xs font-medium leading-tight">成交列表</div>
+            <div className="text-[9px] text-muted-foreground">已成交记录</div>
           </div>
         </div>
         {data.outputVariable && (

@@ -382,7 +382,7 @@ export default function StrategyPortfolio() {
       setPendingDelete(null)
       load()
     } catch (err) {
-      showToast.error(err instanceof Error ? err.message : 'Delete failed')
+      showToast.error(err instanceof Error ? err.message : '删除失败')
     } finally {
       setIsDeleting(false)
     }
@@ -446,42 +446,32 @@ export default function StrategyPortfolio() {
             className="mt-1"
           >
             <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-            Back
+            返回
           </Button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold">Strategy Portfolio</h1>
+              <h1 className="text-2xl font-bold">策略组合</h1>
               {streamingState === 'streaming' && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  </span>
-                  Live
-                </span>
+                  </span>实时</span>
               )}
               {streamingState === 'paused' && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-                  <Radio className="h-2.5 w-2.5" />
-                  Paused
-                </span>
+                  <Radio className="h-2.5 w-2.5" />已暂停</span>
               )}
               {streamingState === 'fallback' && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">
-                  <Wifi className="h-2.5 w-2.5" />
-                  Polling
-                </span>
+                  <Wifi className="h-2.5 w-2.5" />轮询中</span>
               )}
               {streamingState === 'connecting' && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  <WifiOff className="h-2.5 w-2.5" />
-                  Connecting
-                </span>
+                  <WifiOff className="h-2.5 w-2.5" />连接中</span>
               )}
             </div>
-            <p className="text-sm text-muted-foreground">
-              Saved strategies across your two watchlists.
-            </p>
+            <p className="text-sm text-muted-foreground">两个自选列表中保存的策略。</p>
           </div>
         </div>
       </div>
@@ -515,9 +505,7 @@ export default function StrategyPortfolio() {
                 <div className="flex h-40 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed text-sm text-muted-foreground">
                   <cfg.icon className="h-6 w-6 opacity-40" />
                   <p>No strategies in {cfg.label} yet.</p>
-                  <Button variant="outline" size="sm" onClick={() => navigate('/strategybuilder')}>
-                    Open Strategy Builder
-                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => navigate('/strategybuilder')}>打开策略构建器</Button>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -555,17 +543,13 @@ export default function StrategyPortfolio() {
                         type="button"
                         onClick={() => expandAll(cfg.items)}
                         className="font-semibold uppercase tracking-wide text-primary hover:underline"
-                      >
-                        Expand All
-                      </button>
+                      >全部展开</button>
                       <span className="text-muted-foreground/60">·</span>
                       <button
                         type="button"
                         onClick={() => collapseAll(cfg.items)}
                         className="font-semibold uppercase tracking-wide text-muted-foreground hover:underline"
-                      >
-                        Collapse All
-                      </button>
+                      >全部折叠</button>
                     </div>
                   </div>
 
@@ -673,14 +657,12 @@ export default function StrategyPortfolio() {
                                   openInBuilder(entry)
                                 }}
                               >
-                                <Play className="mr-1 h-3 w-3" />
-                                View
-                              </Button>
+                                <Play className="mr-1 h-3 w-3" />查看</Button>
                               <Button
                                 size="icon"
                                 variant="ghost"
                                 className="h-8 w-8 text-rose-500 hover:bg-rose-500/10 hover:text-rose-600"
-                                aria-label="Delete"
+                                aria-label="删除"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   setPendingDelete(entry)
@@ -697,15 +679,11 @@ export default function StrategyPortfolio() {
                                 <thead className="bg-muted/40 text-muted-foreground">
                                   <tr>
                                     <th className="px-4 py-2 text-left font-medium">Ticker</th>
-                                    <th className="px-3 py-2 text-left font-medium">Trade Type</th>
+                                    <th className="px-3 py-2 text-left font-medium">交易类型</th>
                                     <th className="px-3 py-2 text-right font-medium">Qty</th>
-                                    <th className="px-3 py-2 text-right font-medium">
-                                      Entry Price
-                                    </th>
-                                    <th className="px-3 py-2 text-right font-medium">
-                                      Current Price
-                                    </th>
-                                    <th className="px-3 py-2 text-right font-medium">Exit Price</th>
+                                    <th className="px-3 py-2 text-right font-medium">入场价格</th>
+                                    <th className="px-3 py-2 text-right font-medium">当前价格</th>
+                                    <th className="px-3 py-2 text-right font-medium">退出价格</th>
                                     <th className="px-3 py-2 text-right font-medium">P&amp;L</th>
                                     <th className="px-3 py-2 text-center font-medium">Status</th>
                                   </tr>
@@ -817,7 +795,7 @@ export default function StrategyPortfolio() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete strategy?</AlertDialogTitle>
+            <AlertDialogTitle>删除策略？</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently remove{' '}
               <span className="font-semibold text-foreground">{pendingDelete?.name}</span> from your

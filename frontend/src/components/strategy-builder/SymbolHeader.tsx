@@ -119,7 +119,7 @@ export function SymbolHeader({
       {/* Top bar — breadcrumb-style selectors + live status */}
       <div className="flex flex-wrap items-center gap-3 border-b bg-gradient-to-r from-muted/40 via-background to-background px-4 py-2.5">
         <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          Analyzing
+          分析中
         </span>
 
         <div
@@ -129,7 +129,7 @@ export function SymbolHeader({
           {/* Exchange */}
           <Select value={selectedExchange} onValueChange={onExchangeChange}>
             <SelectTrigger
-              aria-label="Derivative exchange"
+              aria-label="衍生品交易所"
               className="h-9 w-full min-w-0 rounded-none border-0 bg-transparent text-xs font-semibold focus:ring-0 focus:ring-offset-0"
             >
               <SelectValue />
@@ -160,12 +160,12 @@ export function SymbolHeader({
             <PopoverContent className="w-56 p-0">
               <Command>
                 <CommandInput
-                  aria-label="Search underlyings"
-                  placeholder="Search symbol..."
+                  aria-label="搜索标的"
+                  placeholder="搜索交易品种…"
                   className="h-9 text-xs"
                 />
                 <CommandList>
-                  <CommandEmpty>No symbol found.</CommandEmpty>
+                  <CommandEmpty>未找到交易品种。</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -195,10 +195,10 @@ export function SymbolHeader({
           {/* Expiry */}
           <Select value={selectedExpiry} onValueChange={onExpiryChange}>
             <SelectTrigger
-              aria-label="Option expiry"
+              aria-label="期权到期日"
               className="h-9 w-full min-w-0 rounded-none border-0 bg-transparent text-xs font-semibold focus:ring-0 focus:ring-offset-0"
             >
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((ex) => (
@@ -243,7 +243,7 @@ export function SymbolHeader({
             className="h-8 gap-1.5 text-xs"
           >
             <RefreshCw className={cn('h-3.5 w-3.5', isRefreshing && 'animate-spin')} />
-            Refresh
+            刷新
           </Button>
         </div>
       </div>

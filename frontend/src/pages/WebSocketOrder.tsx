@@ -331,7 +331,7 @@ export default function WebSocketOrder() {
   // Order-update stream toggle (account-level, no symbols)
   const toggleOrderUpdates = () => {
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
-      showToast.error('Not connected')
+      showToast.error('未连接')
       return
     }
     if (ordersSubscribed) {
@@ -404,9 +404,7 @@ export default function WebSocketOrder() {
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
-                    Order Stream
-                    <Badge
+                  <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">订单数据流<Badge
                       variant="outline"
                       className="text-[9px] border-cyan-500/30 text-cyan-400 font-mono"
                     >
@@ -423,7 +421,7 @@ export default function WebSocketOrder() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Switch checked={autoReconnect} onCheckedChange={setAutoReconnect} />
-                  <span>Auto-reconnect</span>
+                  <span>自动重连</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -446,9 +444,7 @@ export default function WebSocketOrder() {
                       variant="outline"
                       className="gap-2 border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
                     >
-                      <Link2Off className="w-4 h-4" />
-                      Disconnect
-                    </Button>
+                      <Link2Off className="w-4 h-4" />断开连接</Button>
                   )}
                 </div>
 
@@ -511,7 +507,7 @@ export default function WebSocketOrder() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Radio className="w-4 h-4 text-cyan-400" />
-                <h2 className="text-sm font-semibold text-foreground">Order Updates</h2>
+                <h2 className="text-sm font-semibold text-foreground">委托更新</h2>
                 {ordersSubscribed && <StatusOrb status="success" size="sm" />}
                 <span className="text-xs text-muted-foreground">
                   {ordersSubscribed
@@ -527,8 +523,7 @@ export default function WebSocketOrder() {
                     size="sm"
                     className="border-border/50 text-muted-foreground hover:bg-muted/50"
                   >
-                    <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Clear
-                  </Button>
+                    <Trash2 className="w-3.5 h-3.5 mr-1.5" />清除</Button>
                 )}
                 <Button
                   onClick={toggleOrderUpdates}
@@ -544,8 +539,7 @@ export default function WebSocketOrder() {
                 >
                   {ordersSubscribed ? (
                     <>
-                      <ZapOff className="w-3.5 h-3.5 mr-1.5" /> Unsubscribe
-                    </>
+                      <ZapOff className="w-3.5 h-3.5 mr-1.5" />取消订阅</>
                   ) : (
                     <>
                       <Zap className="w-3.5 h-3.5 mr-1.5" /> Subscribe
@@ -566,15 +560,15 @@ export default function WebSocketOrder() {
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-left text-muted-foreground border-b border-border/50">
-                      <th className="py-2 pr-3 font-medium">Time</th>
-                      <th className="py-2 pr-3 font-medium">Order ID</th>
-                      <th className="py-2 pr-3 font-medium">Symbol</th>
-                      <th className="py-2 pr-3 font-medium">Action</th>
-                      <th className="py-2 pr-3 font-medium">Type</th>
-                      <th className="py-2 pr-3 font-medium">Status</th>
-                      <th className="py-2 pr-3 font-medium text-right">Filled</th>
-                      <th className="py-2 pr-3 font-medium text-right">Avg Price</th>
-                      <th className="py-2 font-medium">Info</th>
+                      <th className="py-2 pr-3 font-medium">时间</th>
+                      <th className="py-2 pr-3 font-medium">委托编号</th>
+                      <th className="py-2 pr-3 font-medium">交易品种</th>
+                      <th className="py-2 pr-3 font-medium">操作</th>
+                      <th className="py-2 pr-3 font-medium">类型</th>
+                      <th className="py-2 pr-3 font-medium">状态</th>
+                      <th className="py-2 pr-3 font-medium text-right">已成交</th>
+                      <th className="py-2 pr-3 font-medium text-right">成交均价</th>
+                      <th className="py-2 font-medium">信息</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -646,7 +640,7 @@ export default function WebSocketOrder() {
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
               <div className="flex items-center gap-3">
                 <Terminal className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium text-muted-foreground">Console</span>
+                <span className="text-sm font-medium text-muted-foreground">控制台</span>
                 <Badge variant="outline" className="text-[9px] border-border text-muted-foreground">
                   {logs.length}
                 </Badge>
@@ -666,7 +660,7 @@ export default function WebSocketOrder() {
               className="h-56 overflow-y-auto p-4 font-mono text-xs space-y-0.5"
             >
               {logs.length === 0 ? (
-                <div className="text-muted-foreground/60">Waiting for events...</div>
+                <div className="text-muted-foreground/60">等待事件...</div>
               ) : (
                 logs.map((log, i) => (
                   <div

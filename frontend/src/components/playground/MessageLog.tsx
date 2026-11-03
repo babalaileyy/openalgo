@@ -131,7 +131,7 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
             variant="outline"
             className="bg-sky-500/20 text-sky-400 border-sky-500/30 text-[10px] px-1.5 h-5"
           >
-            SENT
+            已发送
           </Badge>
         )
       case 'received':
@@ -140,7 +140,7 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
             variant="outline"
             className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px] px-1.5 h-5"
           >
-            RECEIVED
+            已接收
           </Badge>
         )
       case 'error':
@@ -149,7 +149,7 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
             variant="outline"
             className="bg-red-500/20 text-red-400 border-red-500/30 text-[10px] px-1.5 h-5"
           >
-            ERROR
+            错误
           </Badge>
         )
       case 'system':
@@ -158,7 +158,7 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
             variant="outline"
             className="bg-purple-500/20 text-purple-400 border-purple-500/30 text-[10px] px-1.5 h-5"
           >
-            SYSTEM
+            系统
           </Badge>
         )
     }
@@ -218,7 +218,7 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-card/30">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium">Message Log</span>
+          <span className="text-xs font-medium">消息日志</span>
           <Badge variant="outline" className="text-[10px] px-1.5 h-5 bg-muted/50">
             {filteredMessages.length}
           </Badge>
@@ -230,8 +230,8 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
             className="h-6 w-6 text-muted-foreground hover:text-foreground"
             onClick={onClear}
             disabled={messages.length === 0}
-            title="Clear messages"
-            aria-label="Clear messages"
+            title="清空消息"
+            aria-label="清空消息"
           >
             <Trash2 className="h-3 w-3" />
           </Button>
@@ -241,8 +241,8 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
             className="h-6 w-6 text-muted-foreground hover:text-foreground"
             onClick={onExport}
             disabled={messages.length === 0}
-            title="Export messages"
-            aria-label="Export messages"
+            title="导出消息"
+            aria-label="导出消息"
           >
             <Download className="h-3 w-3" />
           </Button>
@@ -273,7 +273,7 @@ export function MessageLog({ messages, onClear, onExport }: MessageLogProps) {
               </p>
               {!searchQuery && (
                 <p className="text-xs text-muted-foreground/70 mt-1">
-                  Send a message to see it here
+                  发送消息后将在此显示
                 </p>
               )}
             </div>

@@ -88,14 +88,14 @@ export function Navbar({ fluid = false }: NavbarProps = {}) {
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon" className="mr-2 min-h-[44px] min-w-[44px]">
               <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle menu</span>
+              <span className="sr-only">切换菜单</span>
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-72 overflow-y-auto">
             {/* Visually hidden but accessible for screen readers */}
             <SheetHeader className="sr-only">
-              <SheetTitle>Navigation Menu</SheetTitle>
-              <SheetDescription>Main navigation and quick access links</SheetDescription>
+              <SheetTitle>导航菜单</SheetTitle>
+              <SheetDescription>主导航和快捷链接</SheetDescription>
             </SheetHeader>
             <div className="flex flex-col gap-4 py-4">
               <Link
@@ -110,7 +110,7 @@ export function Navbar({ fluid = false }: NavbarProps = {}) {
               {/* Secondary nav items (not in bottom nav) */}
               <nav className="flex flex-col gap-1">
                 <div className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Navigation
+                  导航
                 </div>
                 {mobileSheetItems.map((item) => {
                   const active = isActive(item.href)
@@ -151,7 +151,7 @@ export function Navbar({ fluid = false }: NavbarProps = {}) {
               {/* Profile menu items for mobile access */}
               <nav className="flex flex-col gap-1 border-t pt-4">
                 <div className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Quick Access
+                  快捷访问
                 </div>
                 {filteredProfileMenuItems.map((item) => {
                   const active = isActive(item.href)
@@ -181,7 +181,7 @@ export function Navbar({ fluid = false }: NavbarProps = {}) {
                   onClick={() => setMobileOpen(false)}
                 >
                   <BookOpen className="h-4 w-4" />
-                  Docs
+                  文档
                 </a>
               </nav>
             </div>
@@ -251,7 +251,7 @@ export function Navbar({ fluid = false }: NavbarProps = {}) {
                 type="button"
                 className={cn(TAB, 'gap-1 xl:hidden', moreActive ? TAB_CURRENT : TAB_IDLE)}
               >
-                More
+                更多
                 <ChevronDown className="h-3.5 w-3.5 opacity-70" />
               </button>
             </DropdownMenuTrigger>

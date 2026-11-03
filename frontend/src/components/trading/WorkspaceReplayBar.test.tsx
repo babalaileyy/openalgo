@@ -91,7 +91,7 @@ describe('workspace replay transport', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Play' }))
     fireEvent.click(screen.getByRole('button', { name: 'Next observation' }))
     fireEvent.click(screen.getByRole('button', { name: 'Previous observation' }))
-    fireEvent.change(screen.getByLabelText('Replay position'), { target: { value: '2' } })
+    fireEvent.change(screen.getByLabelText('回放位置'), { target: { value: '2' } })
     expect(handlers.onPlay).toHaveBeenCalledOnce()
     expect(handlers.onStep).toHaveBeenCalledOnce()
     expect(handlers.onStepBack).toHaveBeenCalledOnce()
@@ -146,7 +146,7 @@ describe('replay readouts', () => {
       '01 Oct 2026 10:15 IST'
     )
     expect(view.container.querySelector('[data-replay-substep]')).toBeNull()
-    expect(screen.queryByText('Simulated')).toBeNull()
+    expect(screen.queryByText('模拟')).toBeNull()
   })
 
   it('shows the step of a forming bar, and says when its prices are simulated', () => {
@@ -158,7 +158,7 @@ describe('replay readouts', () => {
       />
     )
     expect(view.container.querySelector('[data-replay-substep]')).toHaveTextContent('3/5')
-    expect(screen.getByText('Simulated')).toBeVisible()
+    expect(screen.getByText('模拟')).toBeVisible()
   })
 
   it('names the start bar under the pointer while one is chosen', () => {
@@ -225,7 +225,7 @@ describe('replay and Escape', () => {
         {...handlers}
       />
     )
-    const dialog = screen.getByRole('dialog', { name: 'Leave replay?' })
+    const dialog = screen.getByRole('dialog', { name: '退出回放？' })
     fireEvent.keyDown(dialog, { key: 'Escape' })
     expect(onCancelExit).toHaveBeenCalledOnce()
     expect(onConfirmExit).not.toHaveBeenCalled()

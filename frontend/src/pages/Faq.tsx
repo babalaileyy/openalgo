@@ -149,14 +149,14 @@ export default function Faq() {
             {/* Mobile menu button */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon" aria-label="Open menu">
+                <Button variant="ghost" size="icon" aria-label="打开菜单">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-80">
                 <SheetHeader className="sr-only">
-                  <SheetTitle>Navigation Menu</SheetTitle>
-                  <SheetDescription>Main navigation and quick access links</SheetDescription>
+                  <SheetTitle>导航菜单</SheetTitle>
+                  <SheetDescription>主导航和快捷链接</SheetDescription>
                 </SheetHeader>
                 <div className="flex items-center gap-2 mb-8">
                   <img src="/logo.png" alt="OpenAlgo" className="h-8 w-8" />
@@ -181,9 +181,7 @@ export default function Faq() {
                         strokeWidth={2}
                         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                       />
-                    </svg>
-                    Home
-                  </Link>
+                    </svg>首页</Link>
                   <Link
                     to="/faq"
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
@@ -197,36 +195,28 @@ export default function Faq() {
                     className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Download className="h-5 w-5" />
-                    Download
-                  </Link>
+                    <Download className="h-5 w-5" />下载</Link>
                   <a
                     href="https://openalgo.in/discord"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
                   >
-                    <MessageCircle className="h-5 w-5" />
-                    Community
-                  </a>
+                    <MessageCircle className="h-5 w-5" />社区</a>
                   <a
                     href="https://openalgo.in/roadmap"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
                   >
-                    <ClipboardList className="h-5 w-5" />
-                    Roadmap
-                  </a>
+                    <ClipboardList className="h-5 w-5" />路线图</a>
                   <a
                     href="https://docs.openalgo.in"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
                   >
-                    <BookOpen className="h-5 w-5" />
-                    Docs
-                  </a>
+                    <BookOpen className="h-5 w-5" />文档</a>
                 </div>
               </SheetContent>
             </Sheet>
@@ -259,7 +249,7 @@ export default function Faq() {
           {/* Right side */}
           <div className="flex items-center gap-2">
             <Link to="/download">
-              <Button size="sm">Download</Button>
+              <Button size="sm">下载</Button>
             </Link>
             <Button
               variant="ghost"
@@ -278,11 +268,8 @@ export default function Faq() {
         <div className="container mx-auto px-4 py-12">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-4">Frequently Asked Questions</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Find answers to common questions about OpenAlgo, its features, security, and
-              licensing.
-            </p>
+            <h1 className="text-4xl lg:text-5xl font-bold mb-4">常见问题</h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">了解有关 OpenAlgo 功能、安全和许可的常见问题。</p>
           </div>
 
           {/* FAQ Categories */}
@@ -319,17 +306,15 @@ export default function Faq() {
 
           {/* Resources Section */}
           <div className="max-w-4xl mx-auto mt-16">
-            <h2 className="text-2xl font-bold text-center mb-8">Need More Help?</h2>
+            <h2 className="text-2xl font-bold text-center mb-8">需要更多帮助？</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <Card className="text-center">
                 <CardHeader>
                   <BookOpen className="h-10 w-10 mx-auto text-primary" />
-                  <CardTitle className="text-lg">Documentation</CardTitle>
+                  <CardTitle className="text-lg">文档</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Comprehensive guides and API references
-                  </p>
+                  <p className="text-sm text-muted-foreground mb-4">完整使用指南和 API 参考</p>
                   <Button variant="outline" asChild>
                     <a href="https://docs.openalgo.in" target="_blank" rel="noopener noreferrer">
                       Read Docs
@@ -341,16 +326,12 @@ export default function Faq() {
               <Card className="text-center">
                 <CardHeader>
                   <MessageCircle className="h-10 w-10 mx-auto text-primary" />
-                  <CardTitle className="text-lg">Discord Community</CardTitle>
+                  <CardTitle className="text-lg">Discord 社区</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Join our active community for support
-                  </p>
+                  <p className="text-sm text-muted-foreground mb-4">加入社区获取支持</p>
                   <Button variant="outline" asChild>
-                    <a href="https://openalgo.in/discord" target="_blank" rel="noopener noreferrer">
-                      Join Discord
-                    </a>
+                    <a href="https://openalgo.in/discord" target="_blank" rel="noopener noreferrer">加入 Discord</a>
                   </Button>
                 </CardContent>
               </Card>
@@ -367,17 +348,13 @@ export default function Faq() {
                   <CardTitle className="text-lg">GitHub</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Report issues or contribute to the project
-                  </p>
+                  <p className="text-sm text-muted-foreground mb-4">报告问题或参与项目开发</p>
                   <Button variant="outline" asChild>
                     <a
                       href="https://github.com/marketcalls/openalgo"
                       target="_blank"
                       rel="noopener noreferrer"
-                    >
-                      View GitHub
-                    </a>
+                    >查看 GitHub</a>
                   </Button>
                 </CardContent>
               </Card>

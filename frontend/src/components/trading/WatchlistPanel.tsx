@@ -303,7 +303,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
           // production, both of which raced two creates on a fresh install
           // and showed the loser an error on a working setup.
           loaded = await watchlistApi.list()
-          if (loaded.length === 0) throw new Error('Could not create a watchlist')
+          if (loaded.length === 0) throw new Error('无法创建自选列表')
         }
       }
       setLoadError(null)
@@ -312,7 +312,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
       // Recorded rather than only toasted. Without this the panel falls through
       // to the empty state and tells the user their list is empty when the
       // truth is that the request failed, offering a button that cannot work.
-      setLoadError(watchlistError(error, 'Could not load your watchlists'))
+      setLoadError(watchlistError(error, '无法加载自选列表'))
       return null
     }
   }, [])
@@ -508,7 +508,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
       }
       setNameDialog(null)
     } catch (error) {
-      showToast.error(watchlistError(error, 'Could not save the list'))
+      showToast.error(watchlistError(error, '无法保存列表'))
     }
   }
 
@@ -532,7 +532,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
       }
       setConfirm(null)
     } catch (error) {
-      showToast.error(watchlistError(error, 'Could not update the list'))
+      showToast.error(watchlistError(error, '无法更新列表'))
     }
   }
 
@@ -542,7 +542,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
       await watchlistApi.addItem(active.id, row.symbol, row.exchange)
       await refresh(active.id)
     } catch (error) {
-      showToast.error(watchlistError(error, 'Could not add the instrument'))
+      showToast.error(watchlistError(error, '无法添加交易品种'))
     }
   }
 
@@ -558,7 +558,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
     try {
       await watchlistApi.removeItem(active.id, item.id)
     } catch (error) {
-      showToast.error(watchlistError(error, 'Could not remove the instrument'))
+      showToast.error(watchlistError(error, '无法移除交易品种'))
       // The recovery read can fail too, and this runs inside a void-called
       // async function, where that would surface as an unhandled rejection.
       await refresh(active.id).catch(() => {})
@@ -586,7 +586,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
         ordered.map((i) => i.id)
       )
     } catch (error) {
-      showToast.error(watchlistError(error, 'Could not save the new order'))
+      showToast.error(watchlistError(error, '无法保存新的排序'))
       await refresh(active.id).catch(() => {})
     }
   }
@@ -612,7 +612,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
     try {
       const parsed = JSON.parse(await file.text())
       const raw = Array.isArray(parsed) ? parsed : parsed.items
-      if (!Array.isArray(raw)) throw new Error('No instruments in that file')
+      if (!Array.isArray(raw)) throw new Error('文件中没有交易品种')
 
       const seed = raw
         .map((entry: { symbol?: string; exchange?: string }) => ({
@@ -624,7 +624,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
             .toUpperCase(),
         }))
         .filter((entry) => entry.symbol && entry.exchange)
-      if (seed.length === 0) throw new Error('No instruments in that file')
+      if (seed.length === 0) throw new Error('文件中没有交易品种')
 
       // The name in the file may already be taken. Suffixing on the client is
       // what keeps an import from failing on a 409 the user cannot resolve
@@ -640,8 +640,8 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
     } catch (error) {
       showToast.error(
         error instanceof SyntaxError
-          ? 'That file is not valid JSON'
-          : watchlistError(error, (error as Error)?.message || 'Could not import that file')
+          ? '文件不是有效的 JSON 格式'
+          : watchlistError(error, (error as Error)?.message || '无法导入文件')
       )
     }
   }
@@ -649,15 +649,15 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
   /* ── render ───────────────────────────────────────────────────────────── */
   const nameDialogTitle =
     nameDialog?.mode === 'rename'
-      ? 'Rename list'
+      ? '重命名列表'
       : nameDialog?.mode === 'copy'
-        ? 'Copy list'
-        : 'New list'
+        ? '复制列表'
+        : '新建列表'
 
   return (
     <PanelShell
       id="oa-panel-watchlist"
-      label="Watchlist"
+      label="自选列表"
       storageKey="oa-trading-watchlist-width"
       minWidth={minWidth}
     >
@@ -671,13 +671,13 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
               className="flex h-8 min-w-0 flex-1 items-center gap-1 rounded-md px-1.5 text-left text-[13px] font-medium transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               disabled={!active}
             >
-              <span className="truncate">{active?.name ?? 'Watchlist'}</span>
+              <span className="truncate">{active?.name ?? '自选列表'}</span>
               <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
             <DropdownMenuItem onSelect={() => setNameDialog({ mode: 'create', value: '' })}>
-              Create new list...
+              新建列表…
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled={!active}
@@ -685,41 +685,41 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
                 active && setNameDialog({ mode: 'copy', value: `${active.name} copy` })
               }
             >
-              Make a copy...
+              复制列表…
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled={!active}
               onSelect={() => active && setNameDialog({ mode: 'rename', value: active.name })}
             >
-              Rename...
+              重命名…
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={() => fileRef.current?.click()}>
-              Import list...
+              导入列表…
             </DropdownMenuItem>
             <DropdownMenuItem disabled={!active || items.length === 0} onSelect={exportList}>
-              Export list...
+              导出列表…
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               disabled={!active || items.length === 0}
               onSelect={() => active && setConfirm({ kind: 'clear', name: active.name })}
             >
-              Clear list
+              清空列表
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled={!active}
               className="text-destructive focus:text-destructive"
               onSelect={() => active && setConfirm({ kind: 'delete', name: active.name })}
             >
-              Delete list
+              删除列表
             </DropdownMenuItem>
 
             {lists.length > 1 && (
               <>
                 <DropdownMenuSeparator />
                 <div className="px-2 pb-1 pt-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-                  Your lists
+                  我的列表
                 </div>
                 {lists.map((list) => (
                   <DropdownMenuItem
@@ -744,8 +744,8 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
           className="h-8 w-8 shrink-0"
           disabled={!active}
           onClick={() => setSearchOpen(true)}
-          title="Add instrument"
-          aria-label="Add instrument"
+          title="添加交易品种"
+          aria-label="添加交易品种"
         >
           <Plus className="h-4 w-4" />
         </Button>
@@ -758,15 +758,15 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
               variant="ghost"
               size="icon"
               className="h-8 w-8 shrink-0"
-              title="Customise columns"
-              aria-label="Customise columns"
+              title="自定义列"
+              aria-label="自定义列"
             >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuLabel className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-              Columns
+              显示列
             </DropdownMenuLabel>
             {COLUMNS.map((column) => (
               <DropdownMenuCheckboxItem
@@ -779,18 +779,18 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
                 className="text-[12px]"
               >
                 {column.label === 'Chg'
-                  ? 'Change'
+                  ? '涨跌额'
                   : column.label === 'Chg%'
-                    ? 'Change %'
+                    ? '涨跌幅'
                     : column.label === 'Vol'
-                      ? 'Volume'
-                      : column.label}
+                      ? '成交量'
+                      : ({ Last: '最新价', High: '最高价', Low: '最低价', Open: '开盘价' } as Record<string, string>)[column.label] ?? column.label}
               </DropdownMenuCheckboxItem>
             ))}
 
             <DropdownMenuSeparator />
             <DropdownMenuLabel className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-              Symbol display
+              品种显示
             </DropdownMenuLabel>
             <DropdownMenuCheckboxItem
               checked={display.logo}
@@ -798,7 +798,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
               onCheckedChange={(v) => setDisplay((prev) => ({ ...prev, logo: v }))}
               className="text-[12px]"
             >
-              Symbol letter
+              品种首字母
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               checked={display.exchange}
@@ -806,7 +806,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
               onCheckedChange={(v) => setDisplay((prev) => ({ ...prev, exchange: v }))}
               className="text-[12px]"
             >
-              Exchange
+              交易所
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -817,10 +817,10 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
         className="grid shrink-0 gap-x-1.5 border-b px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70"
         style={{ gridTemplateColumns: gridTemplate }}
       >
-        <span>Symbol</span>
+        <span>交易品种</span>
         {shownColumns.map((column) => (
           <span key={column.id} className="text-right">
-            {column.label}
+            {({ Last: '最新价', Chg: '涨跌额', 'Chg%': '涨跌幅', Vol: '成交量', High: '最高价', Low: '最低价', Open: '开盘价' } as Record<string, string>)[column.label] ?? column.label}
           </span>
         ))}
         <span />
@@ -828,7 +828,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         {loading ? (
-          <p className="p-3 text-[12px] text-muted-foreground">Loading...</p>
+          <p className="p-3 text-[12px] text-muted-foreground">加载中…</p>
         ) : loadError ? (
           <div className="flex flex-col items-center gap-2 p-6 text-center">
             <p className="text-[12px] text-muted-foreground">{loadError}</p>
@@ -839,15 +839,15 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
               onClick={() => void retry()}
             >
               <RefreshCw className="h-3.5 w-3.5" />
-              Retry
+              重试
             </Button>
           </div>
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center gap-2 p-6 text-center">
             <Search className="h-5 w-5 text-muted-foreground/50" />
-            <p className="text-[12px] text-muted-foreground">This list is empty.</p>
+            <p className="text-[12px] text-muted-foreground">列表为空。</p>
             <Button variant="outline" size="sm" className="h-7" onClick={() => setSearchOpen(true)}>
-              Add an instrument
+              添加交易品种
             </Button>
           </div>
         ) : (
@@ -935,7 +935,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
                     }
                   }}
                   className="absolute inset-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
-                  aria-label={`Chart ${item.symbol} on ${item.exchange}`}
+                  aria-label={`查看 ${item.exchange} ${item.symbol} 的图表`}
                   // The charted row said so only in colour. This states it, so
                   // a screen reader hears which instrument is on the chart and a
                   // test can assert the fact rather than a Tailwind class that
@@ -991,8 +991,8 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
                   tabIndex={-1}
                   onClick={() => void removeSymbol(item)}
                   className="relative z-10 flex h-4 w-4 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
-                  title={`Remove ${item.symbol}`}
-                  aria-label={`Remove ${item.symbol}`}
+                  title={`移除 ${item.symbol}`}
+                  aria-label={`移除 ${item.symbol}`}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -1002,7 +1002,7 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
         )}
       </div>
 
-      {/* Hidden file input backing "Import list..." */}
+      {/* Hidden file input backing "导入列表…" */}
       <input
         ref={fileRef}
         type="file"
@@ -1043,15 +1043,15 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
             <DialogTitle>{nameDialogTitle}</DialogTitle>
             <DialogDescription>
               {nameDialog?.mode === 'copy'
-                ? 'The new list starts with the same instruments.'
-                : 'Names must be unique.'}
+                ? '新列表将包含相同的交易品种。'
+                : '列表名称不能重复。'}
             </DialogDescription>
           </DialogHeader>
           <Input
             autoFocus
             value={nameDialog?.value ?? ''}
             maxLength={64}
-            placeholder="List name"
+            placeholder="列表名称"
             onChange={(e) =>
               setNameDialog((prev) => (prev ? { ...prev, value: e.target.value } : prev))
             }
@@ -1061,10 +1061,10 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setNameDialog(null)}>
-              Cancel
+              取消
             </Button>
             <Button disabled={!nameDialog?.value.trim()} onClick={() => void submitName()}>
-              Save
+              保存
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1074,19 +1074,19 @@ export function WatchlistPanel({ apiKey, onPick, search, activeSymbol }: Props) 
       <Dialog open={confirm !== null} onOpenChange={(open) => !open && setConfirm(null)}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>{confirm?.kind === 'delete' ? 'Delete list' : 'Clear list'}</DialogTitle>
+            <DialogTitle>{confirm?.kind === 'delete' ? '删除列表' : '清空列表'}</DialogTitle>
             <DialogDescription>
               {confirm?.kind === 'delete'
-                ? `"${confirm?.name}" and everything in it will be removed. This cannot be undone.`
-                : `Every instrument will be removed from "${confirm?.name}". The list itself stays.`}
+                ? `将删除“${confirm?.name}”及其中所有品种，此操作无法撤销。`
+                : `将移除“${confirm?.name}”中的所有品种，列表本身会保留。`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setConfirm(null)}>
-              Cancel
+              取消
             </Button>
             <Button variant="destructive" onClick={() => void runConfirm()}>
-              {confirm?.kind === 'delete' ? 'Delete' : 'Clear'}
+              {confirm?.kind === 'delete' ? '删除' : '清空'}
             </Button>
           </DialogFooter>
         </DialogContent>

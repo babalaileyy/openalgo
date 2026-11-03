@@ -107,7 +107,7 @@ describe('the expiry control', () => {
     const user = await mount()
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    await user.click(screen.getByLabelText('Expiry'))
+    await user.click(screen.getByLabelText('到期日'))
     const options = await screen.findAllByRole('option')
 
     expect(options.map((option) => option.textContent)).toEqual(['25AUG26', '01SEP26', '29SEP26'])
@@ -118,7 +118,7 @@ describe('the expiry control', () => {
     await mount()
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    expect(screen.getByLabelText('Expiry').textContent).toContain('25AUG26')
+    expect(screen.getByLabelText('到期日').textContent).toContain('25AUG26')
   })
 
   it('picking a date stores it on the leg', async () => {
@@ -127,10 +127,10 @@ describe('the expiry control', () => {
     const user = await mount()
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    await choose(user, 'Expiry', /^01SEP26$/)
+    await choose(user, '到期日', /^01SEP26$/)
 
     expect((saved[0] as { expiry?: string }).expiry).toBe('01SEP26')
-    await waitFor(() => expect(screen.getByLabelText('Expiry').textContent).toContain('01SEP26'))
+    await waitFor(() => expect(screen.getByLabelText('到期日').textContent).toContain('01SEP26'))
   })
 
   it('leaves an untouched leg following the node so a scheduled basket rolls', async () => {
@@ -140,16 +140,16 @@ describe('the expiry control', () => {
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
     expect((saved as unknown[]).length).toBe(0)
-    expect(screen.getByText(/rolls to the next expiry/)).toBeTruthy()
+    expect(screen.getByText(/自动切换到下一个到期日/)).toBeTruthy()
   })
 
   it('says nothing about rolling once a date is pinned', async () => {
     const user = await mount()
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    await choose(user, 'Expiry', /^29SEP26$/)
+    await choose(user, '到期日', /^29SEP26$/)
 
-    await waitFor(() => expect(screen.queryByText(/rolls to the next expiry/)).toBeNull())
+    await waitFor(() => expect(screen.queryByText(/自动切换到下一个到期日/)).toBeNull())
   })
 
   it('shows the resolved date for a leg carrying a relative expiry', async () => {
@@ -160,7 +160,7 @@ describe('the expiry control', () => {
     ])
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    expect(screen.getByLabelText('Expiry').textContent).toContain('29SEP26')
+    expect(screen.getByLabelText('到期日').textContent).toContain('29SEP26')
   })
 
   it('keeps a stored date that the contract no longer lists', async () => {
@@ -170,7 +170,7 @@ describe('the expiry control', () => {
     ])
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    await user.click(screen.getByLabelText('Expiry'))
+    await user.click(screen.getByLabelText('到期日'))
     expect(await screen.findByRole('option', { name: '30JUL26' })).toBeTruthy()
   })
 
@@ -185,7 +185,7 @@ describe('the expiry control', () => {
       },
     ])
 
-    expect(await screen.findByLabelText('Expiry date')).toBeTruthy()
+    expect(await screen.findByLabelText('到期日')).toBeTruthy()
   })
 })
 
@@ -194,8 +194,8 @@ describe('the strike control', () => {
     const user = await mount()
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    await choose(user, 'Strike mode', /^Strike$/)
-    await user.click(screen.getByLabelText('Strike price'))
+    await choose(user, 'Strike mode', /^行权价$/)
+    await user.click(screen.getByLabelText('行权价'))
 
     const listbox = await screen.findByRole('listbox')
     expect(within(listbox).getByText('24150')).toBeTruthy()
@@ -209,7 +209,7 @@ describe('the strike control', () => {
     const user = await mount()
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    await choose(user, 'Strike mode', /^Strike$/)
+    await choose(user, 'Strike mode', /^行权价$/)
 
     expect((saved[0] as { strike?: number }).strike).toBe(24200)
   })
@@ -244,8 +244,8 @@ describe('product and price type', () => {
      * what was inherited nor from where. */
     await mount()
 
-    expect(screen.getByLabelText('Product').textContent).toBe('MIS')
-    expect(screen.getByLabelText('Price type').textContent).toBe('Market')
+    expect(screen.getByLabelText('产品类型').textContent).toBe('MIS')
+    expect(screen.getByLabelText('价格类型').textContent).toBe('Market')
   })
 
   it('leave an untouched leg following the node', async () => {
@@ -258,7 +258,7 @@ describe('product and price type', () => {
 
   it('pin the leg once a value is chosen', async () => {
     const user = await mount()
-    await choose(user, 'Product', /^NRML$/)
+    await choose(user, '产品类型', /^NRML$/)
 
     expect((saved[0] as { product?: string }).product).toBe('NRML')
   })
@@ -276,15 +276,15 @@ describe('product and price type', () => {
       },
     ])
 
-    expect(screen.getByLabelText('Product').textContent).toBe('NRML')
-    expect(screen.getByLabelText('Price type').textContent).toBe('Limit')
+    expect(screen.getByLabelText('产品类型').textContent).toBe('NRML')
+    expect(screen.getByLabelText('价格类型').textContent).toBe('Limit')
   })
 
   it('reveal the price field for a price type that needs one', async () => {
     const user = await mount()
-    await choose(user, 'Price type', /^Limit$/)
+    await choose(user, '价格类型', /^Limit$/)
 
-    expect(await screen.findByLabelText('Price', { exact: true })).toBeTruthy()
+    expect(await screen.findByLabelText('价格', { exact: true })).toBeTruthy()
   })
 })
 
@@ -295,8 +295,8 @@ describe('when the contract lookup fails', () => {
     getOptionStrikes.mockRejectedValue(new Error('no api key'))
     await mount()
 
-    expect(await screen.findByText(/Listed contracts unavailable/)).toBeTruthy()
-    expect(screen.getByLabelText('Expiry')).toBeTruthy()
+    expect(await screen.findByText(/无法获取上市合约/)).toBeTruthy()
+    expect(screen.getByLabelText('到期日')).toBeTruthy()
   })
 })
 
@@ -310,14 +310,14 @@ describe('a leg naming a strike the picker does not list', () => {
     ])
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    expect(screen.getByLabelText('Strike offset').textContent).toContain('OTM12')
+    expect(screen.getByLabelText('行权价偏移').textContent).toContain('OTM12')
   })
 
   it('offers the far offsets to pick in the first place', async () => {
     const user = await mount()
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    await user.click(screen.getByLabelText('Strike offset'))
+    await user.click(screen.getByLabelText('行权价偏移'))
     const offered = (await screen.findAllByRole('option')).map((o) => o.textContent)
 
     expect(offered).toContain('OTM12')
@@ -334,7 +334,7 @@ describe('a leg naming a strike the picker does not list', () => {
     ])
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    expect(screen.getByLabelText('Strike offset').textContent).toContain('OTM60')
+    expect(screen.getByLabelText('行权价偏移').textContent).toContain('OTM60')
   })
 
   it('keeps a strike outside the chain window selectable', async () => {
@@ -346,6 +346,6 @@ describe('a leg naming a strike the picker does not list', () => {
     ])
     await waitFor(() => expect(screen.getByText(/ATM 24200/)).toBeTruthy())
 
-    expect(screen.getByLabelText('Strike price').textContent).toContain('21000')
+    expect(screen.getByLabelText('行权价').textContent).toContain('21000')
   })
 })

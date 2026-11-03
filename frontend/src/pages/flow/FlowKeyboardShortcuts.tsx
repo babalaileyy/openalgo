@@ -17,52 +17,52 @@ interface ShortcutSection {
 
 const shortcutSections: ShortcutSection[] = [
   {
-    title: 'General',
+    title: '常用',
     shortcuts: [
-      { keys: ['Ctrl', 'S'], description: 'Save workflow' },
-      { keys: ['Escape'], description: 'Deselect node/edge' },
-      { keys: ['?'], description: 'Open keyboard shortcuts' },
+      { keys: ['Ctrl', 'S'], description: '保存工作流' },
+      { keys: ['Escape'], description: '取消选择节点或连线' },
+      { keys: ['?'], description: '打开快捷键说明' },
     ],
   },
   {
-    title: 'Canvas Navigation',
+    title: '画布导航',
     shortcuts: [
-      { keys: ['Scroll'], description: 'Zoom in/out' },
-      { keys: ['Drag'], description: 'Pan canvas' },
-      { keys: ['Ctrl', 'Scroll'], description: 'Zoom in/out (precise)' },
+      { keys: ['滚轮'], description: '放大或缩小' },
+      { keys: ['拖动'], description: '平移画布' },
+      { keys: ['Ctrl', '滚轮'], description: '精细缩放' },
     ],
   },
   {
-    title: 'Node Operations',
+    title: '节点操作',
     shortcuts: [
-      { keys: ['Click'], description: 'Select node' },
-      { keys: ['Delete'], description: 'Delete selected node' },
-      { keys: ['Backspace'], description: 'Delete selected node' },
-      { keys: ['Drag from palette'], description: 'Add new node' },
+      { keys: ['点击'], description: '选择节点' },
+      { keys: ['Delete'], description: '删除所选节点' },
+      { keys: ['Backspace'], description: '删除所选节点' },
+      { keys: ['从节点面板拖动'], description: '添加节点' },
     ],
   },
   {
-    title: 'Edge Operations',
+    title: '连线操作',
     shortcuts: [
-      { keys: ['Click edge'], description: 'Select edge' },
-      { keys: ['Delete'], description: 'Delete selected edge' },
-      { keys: ['Backspace'], description: 'Delete selected edge' },
-      { keys: ['Drag from handle'], description: 'Create connection' },
+      { keys: ['点击连线'], description: '选择连线' },
+      { keys: ['Delete'], description: '删除所选连线' },
+      { keys: ['Backspace'], description: '删除所选连线' },
+      { keys: ['从连接点拖动'], description: '创建连接' },
     ],
   },
   {
-    title: 'Selection',
+    title: '选择',
     shortcuts: [
-      { keys: ['Click node'], description: 'Select single node' },
-      { keys: ['Click edge'], description: 'Select single edge' },
-      { keys: ['Click canvas'], description: 'Clear selection' },
+      { keys: ['点击节点'], description: '选择单个节点' },
+      { keys: ['点击连线'], description: '选择单条连线' },
+      { keys: ['点击画布'], description: '清除选择' },
     ],
   },
   {
-    title: 'Workflow Controls',
+    title: '工作流控制',
     shortcuts: [
-      { keys: ['Ctrl', 'S'], description: 'Save changes' },
-      { keys: ['Run Now'], description: 'Execute workflow immediately' },
+      { keys: ['Ctrl', 'S'], description: '保存更改' },
+      { keys: ['立即运行'], description: '立即执行工作流' },
     ],
   },
 ]
@@ -79,15 +79,15 @@ export default function FlowKeyboardShortcuts() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
       <div className="mb-8 flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild aria-label="Back to flows list">
+        <Button variant="ghost" size="icon" asChild aria-label="返回工作流列表">
           <Link to="/flow">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Keyboard Shortcuts</h1>
+          <h1 className="text-2xl font-bold">快捷键</h1>
           <p className="text-muted-foreground">
-            Quick reference for all available keyboard shortcuts
+            查看所有可用快捷键
           </p>
         </div>
       </div>
@@ -123,13 +123,13 @@ export default function FlowKeyboardShortcuts() {
       </div>
 
       <div className="mt-8 rounded-lg border border-border bg-muted/50 p-4">
-        <h3 className="mb-2 font-medium">Tips</h3>
+        <h3 className="mb-2 font-medium">提示</h3>
         <ul className="space-y-1 text-sm text-muted-foreground">
-          <li>On Mac, use Cmd instead of Ctrl for keyboard shortcuts</li>
-          <li>Click the + button on edges to insert a new node between existing nodes</li>
-          <li>Drag nodes to reposition them on the canvas</li>
-          <li>Use the minimap in the bottom-right corner for quick navigation</li>
-          <li>Right-click nodes for context menu options</li>
+          <li>在 Mac 上使用 Cmd 代替 Ctrl</li>
+          <li>点击连线上的 + 按钮，可在现有节点之间插入新节点</li>
+          <li>拖动节点可调整其在画布中的位置</li>
+          <li>使用右下角缩略图快速导航</li>
+          <li>右键点击节点可打开菜单</li>
         </ul>
       </div>
     </div>

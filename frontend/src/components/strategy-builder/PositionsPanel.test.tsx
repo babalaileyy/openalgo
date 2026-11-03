@@ -40,7 +40,7 @@ describe('PositionsPanel probability of profit', () => {
   it('renders unavailable probability as a dash', () => {
     renderPanel(null)
 
-    expect(screen.getByText('Prob. of Profit').nextElementSibling).toHaveTextContent('—')
+    expect(screen.getByText('Prob. of Profit（盈利概率）').nextElementSibling).toHaveTextContent('—')
   })
 
   it('uses the injected Delta Exchange formatter for currency-denominated metrics', () => {

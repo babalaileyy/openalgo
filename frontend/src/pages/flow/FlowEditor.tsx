@@ -571,10 +571,10 @@ function FlowEditorContent() {
           <div className="flex-1" />
         </div>
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
-          <p className="text-muted-foreground">Invalid workflow ID</p>
+          <p className="text-muted-foreground">工作流编号无效</p>
           <Button onClick={() => navigate('/flow')}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Workflows
+            返回工作流列表
           </Button>
         </div>
       </div>
@@ -597,19 +597,19 @@ function FlowEditorContent() {
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-md text-center space-y-4 px-6">
-            <h2 className="text-lg font-semibold">Could not load this workflow</h2>
+            <h2 className="text-lg font-semibold">无法加载此工作流</h2>
             <p className="text-sm text-muted-foreground">
-              {loadError instanceof Error ? loadError.message : 'The workflow could not be loaded.'}
+              {loadError instanceof Error ? loadError.message : '无法加载工作流。'}
             </p>
             <p className="text-sm text-muted-foreground">
-              Editing is disabled so the stored workflow is not overwritten.
+              已禁用编辑，以防覆盖已保存的工作流。
             </p>
             <div className="flex items-center justify-center gap-2">
               <Button size="sm" onClick={() => refetch()}>
-                Retry
+                重试
               </Button>
               <Button variant="outline" size="sm" onClick={() => navigate('/flow')}>
-                Back to workflows
+                返回工作流列表
               </Button>
             </div>
           </div>
@@ -648,7 +648,7 @@ function FlowEditorContent() {
 
         {/* Center: Workflow Name */}
         <div className="flex-1 flex items-center justify-center">
-          <span className="text-sm font-medium text-muted-foreground">Flow Editor</span>
+          <span className="text-sm font-medium text-muted-foreground">工作流编辑器</span>
         </div>
 
         {/* Right: Actions */}
@@ -662,9 +662,9 @@ function FlowEditorContent() {
             )}
           >
             <span className="hidden sm:inline">
-              {appMode === 'live' ? 'Live Mode' : 'Analyze Mode'}
+              {appMode === 'live' ?  '实盘模式' : '模拟模式'}
             </span>
-            <span className="sm:hidden">{appMode === 'live' ? 'Live' : 'Analyze'}</span>
+            <span className="sm:hidden">{appMode === 'live' ? '实盘' : '模拟'}</span>
           </Badge>
 
           {/* Mode Toggle */}
@@ -674,8 +674,8 @@ function FlowEditorContent() {
             className="h-8 w-8"
             onClick={handleModeToggle}
             disabled={isTogglingMode}
-            title={`Switch to ${appMode === 'live' ? 'Analyze' : 'Live'} mode`}
-            aria-label={`Switch to ${appMode === 'live' ? 'Analyze' : 'Live'} mode`}
+            title={`切换至${appMode === 'live' ? '模拟' : '实盘'}模式`}
+            aria-label={`切换至${appMode === 'live' ? '模拟' : '实盘'}模式`}
           >
             {isTogglingMode ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -693,8 +693,8 @@ function FlowEditorContent() {
             className="h-8 w-8"
             onClick={toggleMode}
             disabled={appMode !== 'live'}
-            title={mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-            aria-label={mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            title={mode === 'light' ? '切换至深色主题' : '切换至浅色主题'}
+            aria-label={mode === 'light' ? '切换至深色主题' : '切换至浅色主题'}
           >
             {mode === 'light' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
@@ -702,7 +702,7 @@ function FlowEditorContent() {
           <Button variant="ghost" size="sm" className="h-7 text-xs" asChild>
             <Link to="/dashboard">
               <Home className="h-3.5 w-3.5 mr-1.5" />
-              Dashboard
+              仪表盘
             </Link>
           </Button>
 
@@ -713,7 +713,7 @@ function FlowEditorContent() {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full bg-primary text-primary-foreground"
-                aria-label="Open profile menu"
+                aria-label="打开个人菜单"
               >
                 <span className="text-sm font-medium">
                   {user?.username?.[0]?.toUpperCase() || 'O'}
@@ -739,7 +739,7 @@ function FlowEditorContent() {
                   className="flex items-center gap-2"
                 >
                   <BookOpen className="h-4 w-4" />
-                  Docs
+                  文档
                 </a>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -748,7 +748,7 @@ function FlowEditorContent() {
                 className="text-destructive focus:text-destructive"
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                退出登录
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -758,11 +758,9 @@ function FlowEditorContent() {
       <Dialog open={showReplaceDialog} onOpenChange={setShowReplaceDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Replace from JSON</DialogTitle>
+            <DialogTitle>使用 JSON 替换</DialogTitle>
             <DialogDescription>
-              Replaces this workflow's nodes and edges in place. The workflow id, webhook URL and
-              active state are kept, so nothing pointing at this workflow breaks. Export first if
-              you want a copy of the current version.
+              将直接替换此工作流的节点和连线，同时保留工作流编号、Webhook 地址和启用状态，现有引用不会失效。如需保留当前版本，请先导出。
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
@@ -790,16 +788,15 @@ function FlowEditorContent() {
             />
             {replaceError && <p className="text-xs text-destructive">{replaceError}</p>}
             <p className="text-[10px] text-muted-foreground">
-              Validated the same way as Import: a graph that could not run is rejected with the
-              reason, rather than saved to fail later.
+              验证方式与导入相同：无法运行的流程图会被拒绝并显示原因。
             </p>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowReplaceDialog(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={handleReplaceFromJson} disabled={replaceBusy || !replaceJson.trim()}>
-              {replaceBusy ? 'Replacing...' : 'Replace'}
+              {replaceBusy ? '替换中…' : '替换'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -818,7 +815,7 @@ function FlowEditorContent() {
             variant="ghost"
             size="icon"
             onClick={() => navigate('/flow')}
-            aria-label="Back to flows list"
+            aria-label="返回工作流列表"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -827,7 +824,7 @@ function FlowEditorContent() {
             onChange={(e) => setName(e.target.value)}
             className="h-8 w-64 border-transparent bg-transparent px-2 font-medium hover:border-border focus:border-border"
           />
-          {isModified && <span className="text-xs text-muted-foreground">Unsaved</span>}
+          {isModified && <span className="text-xs text-muted-foreground">未保存</span>}
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -841,7 +838,7 @@ function FlowEditorContent() {
             ) : (
               <Save className="mr-2 h-4 w-4" />
             )}
-            Save
+            保存
           </Button>
           {isActive ? (
             <Button
@@ -855,7 +852,7 @@ function FlowEditorContent() {
               ) : (
                 <Pause className="mr-2 h-4 w-4" />
               )}
-              Deactivate
+              停用
             </Button>
           ) : (
             <Button
@@ -868,12 +865,12 @@ function FlowEditorContent() {
               ) : (
                 <Play className="mr-2 h-4 w-4" />
               )}
-              Activate
+              启用
             </Button>
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Workflow actions">
+              <Button variant="ghost" size="icon" aria-label="工作流操作">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -882,24 +879,24 @@ function FlowEditorContent() {
                 onClick={() => executeMutation.mutate()}
                 disabled={executeMutation.isPending || saveMutation.isPending}
               >
-                Run Now
+                立即运行
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setShowLogPanel(!showLogPanel)}>
                 <Terminal className="mr-2 h-4 w-4" />
-                {showLogPanel ? 'Hide Logs' : 'Show Logs'}
+                {showLogPanel ? '隐藏日志' : '显示日志'}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleExport}>
                 <Download className="mr-2 h-4 w-4" />
-                Export Workflow
+                导出工作流
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setShowReplaceDialog(true)}>
                 <FileJson className="mr-2 h-4 w-4" />
-                Replace from JSON
+                使用 JSON 替换
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/flow/shortcuts">
                   <Keyboard className="mr-2 h-4 w-4" />
-                  Keyboard Shortcuts
+                  键盘快捷键
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>

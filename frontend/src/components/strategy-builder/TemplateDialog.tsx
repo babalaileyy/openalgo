@@ -266,10 +266,10 @@ export function TemplateDialog({
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-[11px] font-medium text-muted-foreground">Expiry</label>
+              <label className="text-[11px] font-medium text-muted-foreground">到期日</label>
               <Select value={expiry} onValueChange={onExpiryChange}>
                 <SelectTrigger
-                  aria-label="Strategy expiry"
+                  aria-label="策略到期日"
                   aria-invalid={expiryInvalid}
                   aria-describedby={expiryInvalid ? validationErrorId : undefined}
                   className="h-9 text-xs"
@@ -287,11 +287,11 @@ export function TemplateDialog({
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-[11px] font-medium text-muted-foreground">Lot Qty</label>
+              <label className="text-[11px] font-medium text-muted-foreground">手数</label>
               <div className="flex h-9 items-center overflow-hidden rounded-md border">
                 <button
                   type="button"
-                  aria-label="Decrease strategy lots"
+                  aria-label="减少策略手数"
                   onClick={() => setLots(Math.max(1, lots - 1))}
                   className="h-full px-2 text-muted-foreground hover:bg-muted"
                 >
@@ -299,7 +299,7 @@ export function TemplateDialog({
                 </button>
                 <input
                   type="number"
-                  aria-label="Strategy lot quantity"
+                  aria-label="策略手数"
                   min={1}
                   value={lots}
                   onChange={(e) => setLots(Math.max(1, Number(e.target.value) || 1))}
@@ -307,7 +307,7 @@ export function TemplateDialog({
                 />
                 <button
                   type="button"
-                  aria-label="Increase strategy lots"
+                  aria-label="增加策略手数"
                   onClick={() => setLots(lots + 1)}
                   className="h-full px-2 text-muted-foreground hover:bg-muted"
                 >

@@ -200,9 +200,9 @@ describe('AgentPanel chart context', () => {
     await screen.findByText(/wait for your approval/)
     await userEvent.type(box(), 'buy 1 share of RELIANCE{Enter}')
 
-    expect(await screen.findByText('This turn is waiting for your approval.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Approve' })).toBeEnabled()
-    expect(screen.getByRole('button', { name: 'Reject' })).toBeEnabled()
+    expect(await screen.findByText('此操作正在等待你的批准。')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '批准' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: '拒绝' })).toBeEnabled()
   })
 
   it('refuses to approve an order whose details never arrived', async () => {
@@ -230,8 +230,8 @@ describe('AgentPanel chart context', () => {
     expect(
       await screen.findByText(/details did not arrive \(exchange, symbol\)/)
     ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Approve' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Reject' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: '批准' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '拒绝' })).toBeEnabled()
   })
 
   it('still approves a tool that takes no arguments at all', async () => {
@@ -258,9 +258,9 @@ describe('AgentPanel chart context', () => {
     await screen.findByText(/wait for your approval/)
     await userEvent.type(box(), 'cancel all my orders{Enter}')
 
-    expect(await screen.findByText('This turn is waiting for your approval.')).toBeInTheDocument()
+    expect(await screen.findByText('此操作正在等待你的批准。')).toBeInTheDocument()
     expect(screen.queryByText(/details did not arrive/)).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Approve' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: '批准' })).toBeEnabled()
   })
 
   it('sends no context when nothing is charted', async () => {
@@ -321,7 +321,7 @@ describe('AgentPanel composer controls', () => {
     wrap(<AgentPanel getChartContext={() => context()} onChartCommand={vi.fn()} />)
 
     await userEvent.click(screen.getByRole('button', { name: 'Add to this message' }))
-    await userEvent.click(await screen.findByRole('menuitemcheckbox', { name: 'Web search' }))
+    await userEvent.click(await screen.findByRole('menuitemcheckbox', { name: '网络搜索' }))
     await userEvent.type(box(), 'what is the news on this{Enter}')
 
     await waitFor(() => expect(streams).toHaveLength(1))
@@ -372,7 +372,7 @@ describe('AgentPanel composer controls', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Add to this message' }))
     expect(
-      await screen.findByRole('menuitem', { name: 'Attach chart screenshot' })
+      await screen.findByRole('menuitem', { name: '添加图表截图' })
     ).toBeInTheDocument()
   })
 })
@@ -387,7 +387,7 @@ describe('AgentPanel setup gate', () => {
     configured = false
     wrap(<AgentPanel getChartContext={() => context()} onChartCommand={vi.fn()} />)
 
-    expect(await screen.findByText('Set up your agent')).toBeInTheDocument()
+    expect(await screen.findByText('设置助手')).toBeInTheDocument()
     expect(screen.queryByLabelText('Message the agent')).not.toBeInTheDocument()
     expect(streams).toHaveLength(0)
   })
@@ -396,7 +396,7 @@ describe('AgentPanel setup gate', () => {
     wrap(<AgentPanel getChartContext={() => context()} onChartCommand={vi.fn()} />)
 
     await waitFor(() => expect(screen.getByLabelText('Message the agent')).toBeInTheDocument())
-    expect(screen.queryByText('Set up your agent')).not.toBeInTheDocument()
+    expect(screen.queryByText('设置助手')).not.toBeInTheDocument()
   })
 })
 

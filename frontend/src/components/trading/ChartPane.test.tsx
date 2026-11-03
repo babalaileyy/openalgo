@@ -1,6 +1,7 @@
 import type { WorkspacePane } from 'openalgo-charts/workspace'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { SymbolView, TerminalOptions } from '@/lib/trading/terminal'
+import { useBrokerStore } from '@/stores/brokerStore'
 import { act, cleanup, fireEvent, render, within } from '@/test/test-utils'
 import { ChartPane } from './ChartPane'
 
@@ -136,6 +137,23 @@ beforeEach(() => {
 afterEach(cleanup)
 
 describe('chart pane preparation ownership', () => {
+  it('applies a public-data provider capability when it arrives', async () => {
+    const view = render(<ChartPane {...props} />)
+    expect(fake.owners[0].options.marketDataOnly).toBe(false)
+    await act(async () => {
+      useBrokerStore.setState({ capabilities: {
+        broker_name: 'fixture', broker_type: 'crypto', supported_exchanges: ['CRYPTO'],
+        leverage_config: false, market_data_only: true,
+        default_chart: { symbol: 'BTCUSDT.P', exchange: 'CRYPTO' },
+      } })
+    })
+    expect(fake.owners[0].destroy).toHaveBeenCalled()
+    expect(fake.owners.at(-1)?.options.marketDataOnly).toBe(true)
+    expect(fake.owners.at(-1)?.options.defaultChart).toEqual({ symbol: 'BTCUSDT.P', exchange: 'CRYPTO' })
+    view.unmount()
+    useBrokerStore.setState({ capabilities: null })
+  })
+
   it('disables CSV during replay selection and history loading, then allows the active prefix', async () => {
     const snapshot = {
       phase: 'picking' as const,
@@ -145,8 +163,8 @@ describe('chart pane preparation ownership', () => {
     }
     const view = render(<ChartPane {...props} workspaceReplay={snapshot} />)
     await act(async () => fake.owners[0].resolve())
-    fireEvent.click(view.getByRole('button', { name: 'Chart snapshot' }))
-    const csv = view.getByRole('button', { name: 'Download CSV' })
+    fireEvent.click(view.getByRole('button', { name: '图表快照' }))
+    const csv = view.getByRole('button', { name: '下载 CSV' })
     expect(csv).toBeDisabled()
     expect(csv).toHaveAttribute(
       'title',
@@ -182,19 +200,19 @@ describe('chart pane preparation ownership', () => {
       const view = render(panes('left'))
       await act(async () => fake.owners.forEach((owner) => owner.resolve()))
       view.rerender(panes('right'))
-      fireEvent.click(within(host).getByRole('button', { name: 'Chart snapshot' }))
-      fireEvent.click(view.getByRole('button', { name: 'Download CSV' }))
+      fireEvent.click(within(host).getByRole('button', { name: '图表快照' }))
+      fireEvent.click(view.getByRole('button', { name: '下载 CSV' }))
       // The menu opens the choices; everything starts ticked, so Download at
       // once writes the same file the menu always wrote.
-      const dialog = await view.findByRole('dialog', { name: 'Download chart data' })
-      fireEvent.click(within(dialog).getByRole('button', { name: 'Download CSV' }))
+      const dialog = await view.findByRole('dialog', { name: '下载图表数据' })
+      fireEvent.click(within(dialog).getByRole('button', { name: '下载 CSV' }))
       expect(fake.owners[0].exportDataCsv).not.toHaveBeenCalled()
       expect(fake.owners[1].exportDataCsv).toHaveBeenCalledExactlyOnceWith({
         range: 'all',
         studies: ['ema-1', 'rsi-1'],
         comparisons: true,
       })
-      expect(view.queryByRole('dialog', { name: 'Download chart data' })).toBeNull()
+      expect(view.queryByRole('dialog', { name: '下载图表数据' })).toBeNull()
       expect(create).toHaveBeenCalledWith(expect.any(Blob))
       expect(revoke).toHaveBeenCalledExactlyOnceWith('blob:chart-csv')
       expect(click).toHaveBeenCalledOnce()
@@ -263,7 +281,7 @@ describe('chart pane preparation ownership', () => {
         simulated: false,
       })
     )
-    fireEvent.click(view.getByRole('button', { name: 'Replay', exact: true }))
+    fireEvent.click(view.getByRole('button', { name: '行情回放', exact: true }))
     expect(start).toHaveBeenCalledExactlyOnceWith('saved')
     expect(fake.owners[0].startReplay).not.toHaveBeenCalled()
     expect(view.queryByRole('button', { name: 'Play' })).toBeNull()
@@ -282,11 +300,11 @@ describe('chart pane preparation ownership', () => {
     const view = render(panes('left'))
     await act(async () => fake.owners.forEach((owner) => owner.resolve()))
     expect(view.getAllByRole('toolbar', { name: 'Chart controls' })).toHaveLength(1)
-    fireEvent.click(within(host).getByRole('button', { name: 'Alerts', exact: true }))
+    fireEvent.click(within(host).getByRole('button', { name: '预警', exact: true }))
     expect(fake.owners[0].openAlerts).toHaveBeenCalledOnce()
     expect(fake.owners[1].openAlerts).not.toHaveBeenCalled()
     view.rerender(panes('right'))
-    fireEvent.click(within(host).getByRole('button', { name: 'Alerts', exact: true }))
+    fireEvent.click(within(host).getByRole('button', { name: '预警', exact: true }))
     expect(fake.owners[1].openAlerts).toHaveBeenCalledOnce()
     expect(fake.owners).toHaveLength(2)
     expect(fake.owners.every((owner) => owner.destroy.mock.calls.length === 0)).toBe(true)
@@ -294,7 +312,7 @@ describe('chart pane preparation ownership', () => {
 
   it('keeps controls absent until their shared host is available', () => {
     const view = render(<ChartPane {...props} toolbarHost={null} focused />)
-    expect(view.queryByRole('button', { name: 'Alerts', exact: true })).toBeNull()
+    expect(view.queryByRole('button', { name: '预警', exact: true })).toBeNull()
   })
 
   it('selects the pane through keyboard focus and exposes the selected pane', async () => {
@@ -313,18 +331,18 @@ describe('chart pane preparation ownership', () => {
     const view = render(<ChartPane {...props} toolbarHost={host} focused paneLabel="Chart 1" />)
     await act(async () => fake.owners[0].resolve())
     const chart = view.getByRole('region', { name: 'Chart 1', exact: true })
-    expect(within(host).getByRole('button', { name: 'Alerts', exact: true })).toBeVisible()
+    expect(within(host).getByRole('button', { name: '预警', exact: true })).toBeVisible()
     try {
       Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: chart })
       fireEvent(document, new Event('fullscreenchange'))
       expect(host).toBeEmptyDOMElement()
-      fireEvent.click(within(chart).getByRole('button', { name: 'Alerts', exact: true }))
+      fireEvent.click(within(chart).getByRole('button', { name: '预警', exact: true }))
       expect(fake.owners[0].openAlerts).toHaveBeenCalledOnce()
     } finally {
       Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null })
       fireEvent(document, new Event('fullscreenchange'))
     }
-    expect(within(host).getByRole('button', { name: 'Alerts', exact: true })).toBeVisible()
+    expect(within(host).getByRole('button', { name: '预警', exact: true })).toBeVisible()
     expect(fake.owners).toHaveLength(1)
   })
 
@@ -406,7 +424,7 @@ describe('chart pane preparation ownership', () => {
   it('opens alerts from the pane toolbar', async () => {
     const view = render(<ChartPane {...props} />)
     await act(async () => fake.owners[0].resolve())
-    fireEvent.click(view.getByRole('button', { name: 'Alerts', exact: true }))
+    fireEvent.click(view.getByRole('button', { name: '预警', exact: true }))
     expect(fake.owners[0].openAlerts).toHaveBeenCalledOnce()
   })
 
@@ -539,7 +557,7 @@ describe('the indicator catalogue', () => {
     await act(async () => fake.owners[0].resolve())
     const terminal = fake.owners[0]
 
-    fireEvent.click(view.getByRole('button', { name: 'Indicators' }))
+    fireEvent.click(view.getByRole('button', { name: '指标' }))
     await act(async () => {})
     expect(terminal.indicatorCatalog).toHaveBeenCalledTimes(1)
 
@@ -551,7 +569,7 @@ describe('the indicator catalogue', () => {
     fireEvent.keyDown(document, { key: 'Escape' })
     await act(async () => {})
 
-    fireEvent.click(view.getByRole('button', { name: 'Indicators' }))
+    fireEvent.click(view.getByRole('button', { name: '指标' }))
     await act(async () => {})
 
     expect(terminal.indicatorCatalog).toHaveBeenCalledTimes(2)
@@ -625,11 +643,11 @@ describe('drawings in the right-click menu', () => {
     const ask = view.getByRole('alertdialog', { name: 'Remove all drawings' })
     expect(ask).toHaveTextContent('Remove all 5 drawings from INFY?')
     expect(ask).toHaveTextContent('Order and position lines stay')
-    fireEvent.click(view.getByRole('button', { name: 'Keep them' }))
+    fireEvent.click(view.getByRole('button', { name: '保留' }))
     expect(owner.removeDrawings).not.toHaveBeenCalled()
 
     act(() => owner.options.callbacks.onDrawRemoveAll?.({ count: 5, symbol: 'INFY' }))
-    fireEvent.click(view.getByRole('button', { name: 'Remove all' }))
+    fireEvent.click(view.getByRole('button', { name: '全部移除' }))
     expect(owner.removeDrawings).toHaveBeenCalledWith(true)
   })
 
@@ -653,7 +671,7 @@ describe('typing on the chart', () => {
     const view = render(<ChartPane {...props} />)
     await act(async () => fake.owners[0].resolve())
     fireEvent.keyDown(document.body, { key: 'r' })
-    const box = (await view.findByLabelText('Search symbol')) as HTMLInputElement
+    const box = (await view.findByLabelText('搜索交易品种')) as HTMLInputElement
     expect(box.value).toBe('r')
   })
 
@@ -674,11 +692,11 @@ describe('typing on the chart', () => {
   it('leaves keys typed into a field, and a chart that is not selected, alone', async () => {
     const view = render(<ChartPane {...props} />)
     await act(async () => fake.owners[0].resolve())
-    const qty = view.getByLabelText('Qty')
+    const qty = view.getByLabelText('数量')
     fireEvent.keyDown(qty, { key: '5' })
     fireEvent.keyDown(qty, { key: 'r' })
     expect(view.queryByLabelText('Interval')).toBeNull()
-    expect(view.queryByLabelText('Search symbol')).toBeNull()
+    expect(view.queryByLabelText('搜索交易品种')).toBeNull()
     cleanup()
 
     const other = render(<ChartPane {...props} focused={false} />)
@@ -693,6 +711,6 @@ describe('typing on the chart', () => {
     fireEvent.keyDown(document.body, { key: 'h', altKey: true })
     fireEvent.keyDown(document.body, { key: '5', ctrlKey: true })
     expect(view.queryByLabelText('Interval')).toBeNull()
-    expect(view.queryByLabelText('Search symbol')).toBeNull()
+    expect(view.queryByLabelText('搜索交易品种')).toBeNull()
   })
 })

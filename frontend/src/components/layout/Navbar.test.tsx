@@ -8,7 +8,7 @@ vi.mock('@/hooks/useProfileMenuItems', () => ({
   useProfileMenuItems: () => [
     {
       href: '/profile',
-      label: 'Profile',
+      label: '个人资料',
       icon: () => null,
     },
   ],
@@ -32,8 +32,8 @@ describe('Navbar', () => {
   it('marks only the active route as current in desktop navigation', () => {
     renderNavbar('/positions')
 
-    const positions = screen.getByRole('link', { name: 'Positions' })
-    const dashboard = screen.getByRole('link', { name: 'Dashboard' })
+    const positions = screen.getByRole('link', { name: '持仓' })
+    const dashboard = screen.getByRole('link', { name: '仪表盘' })
 
     expect(positions).toHaveAttribute('aria-current', 'page')
     expect(dashboard).not.toHaveAttribute('aria-current')
@@ -49,11 +49,11 @@ describe('Navbar', () => {
     const user = userEvent.setup()
     renderNavbar('/trading')
 
-    await user.click(screen.getByRole('button', { name: 'Toggle menu' }))
+    await user.click(screen.getByRole('button', { name: '切换菜单' }))
 
-    const sheet = await screen.findByRole('dialog', { name: 'Navigation Menu' })
-    const trading = within(sheet).getByRole('link', { name: 'Trading' })
-    const platforms = within(sheet).getByRole('link', { name: 'Platforms' })
+    const sheet = await screen.findByRole('dialog', { name: '导航菜单' })
+    const trading = within(sheet).getByRole('link', { name: '图表交易' })
+    const platforms = within(sheet).getByRole('link', { name: '交易平台' })
 
     expect(trading).toHaveAttribute('aria-current', 'page')
     expect(platforms).not.toHaveAttribute('aria-current')
@@ -64,11 +64,11 @@ describe('Navbar', () => {
     const user = userEvent.setup()
     renderNavbar('/profile')
 
-    await user.click(screen.getByRole('button', { name: 'Toggle menu' }))
+    await user.click(screen.getByRole('button', { name: '切换菜单' }))
 
-    const sheet = await screen.findByRole('dialog', { name: 'Navigation Menu' })
-    const profile = within(sheet).getByRole('link', { name: 'Profile' })
-    const trading = within(sheet).getByRole('link', { name: 'Trading' })
+    const sheet = await screen.findByRole('dialog', { name: '导航菜单' })
+    const profile = within(sheet).getByRole('link', { name: '个人资料' })
+    const trading = within(sheet).getByRole('link', { name: '图表交易' })
 
     expect(profile).toHaveAttribute('aria-current', 'page')
     expect(trading).not.toHaveAttribute('aria-current')
@@ -101,7 +101,7 @@ describe('Navbar More menu', () => {
 
   async function moreMenuLabels() {
     const user = userEvent.setup()
-    await user.click(screen.getByRole('button', { name: 'More' }))
+    await user.click(screen.getByRole('button', { name: '更多' }))
     const menu = await screen.findByRole('menu')
     return within(menu)
       .getAllByRole('menuitem')
@@ -112,32 +112,25 @@ describe('Navbar More menu', () => {
     screenWidth(1024)
     renderNavbar('/dashboard')
 
-    expect(await moreMenuLabels()).toEqual(['Platforms', 'Strategies', 'Logs', 'Tools'])
+    expect(await moreMenuLabels()).toEqual(['交易平台', '策略', '日志', '工具'])
   })
 
   it('takes Tradebook and Trading as well below lg', async () => {
     screenWidth(800)
     renderNavbar('/dashboard')
 
-    expect(await moreMenuLabels()).toEqual([
-      'Tradebook',
-      'Trading',
-      'Platforms',
-      'Strategies',
-      'Logs',
-      'Tools',
-    ])
+    expect(await moreMenuLabels()).toEqual(['成交', '图表交易', '交易平台', '策略', '日志', '工具'])
   })
 
   it('is underlined only when the current page is inside it', () => {
     screenWidth(1024)
     const { unmount } = renderNavbar('/logs')
-    expect(screen.getByRole('button', { name: 'More' })).toHaveClass('text-foreground')
+    expect(screen.getByRole('button', { name: '更多' })).toHaveClass('text-foreground')
     unmount()
 
     // Tradebook is in the bar at this width, so More is not the current tab.
     renderNavbar('/tradebook')
-    expect(screen.getByRole('button', { name: 'More' })).not.toHaveClass('text-foreground')
+    expect(screen.getByRole('button', { name: '更多' })).not.toHaveClass('text-foreground')
   })
 })
 

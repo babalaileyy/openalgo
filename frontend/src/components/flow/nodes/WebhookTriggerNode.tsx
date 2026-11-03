@@ -29,7 +29,7 @@ export const WebhookTriggerNode = memo(({ data, selected }: WebhookTriggerNodePr
           </div>
           <div>
             <div className="text-xs font-medium leading-tight">Webhook</div>
-            <div className="text-[9px] text-muted-foreground">External Trigger</div>
+            <div className="text-[9px] text-muted-foreground">外部触发</div>
           </div>
         </div>
         {data.label && (

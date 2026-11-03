@@ -123,8 +123,8 @@ export type ColumnSide = 'ce' | 'pe' | 'center'
 export type ViewMode = 'price' | 'greeks'
 
 export const VIEW_MODES: { value: ViewMode; label: string }[] = [
-  { value: 'price', label: 'Price' },
-  { value: 'greeks', label: 'Greeks' },
+  { value: 'price', label: '价格' },
+  { value: 'greeks', label: '希腊值' },
 ]
 
 export interface ColumnDefinition {
@@ -143,7 +143,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   // CE columns (left side) - ordered left to right
   {
     key: 'ce_oi',
-    label: 'OI',
+    label: '持仓量',
     side: 'ce',
     width: 'w-20',
     align: 'right',
@@ -152,7 +152,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'ce_volume',
-    label: 'Volume',
+    label: '成交量',
     side: 'ce',
     width: 'w-20',
     align: 'right',
@@ -161,7 +161,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'ce_bid_qty',
-    label: 'Bid Qty',
+    label: '买一量',
     side: 'ce',
     width: 'w-16',
     align: 'right',
@@ -170,7 +170,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'ce_bid',
-    label: 'Bid',
+    label: '买一价',
     side: 'ce',
     width: 'w-16',
     align: 'right',
@@ -179,7 +179,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'ce_ltp',
-    label: 'LTP',
+    label: '最新价',
     side: 'ce',
     width: 'w-16',
     align: 'right',
@@ -188,7 +188,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'ce_ask',
-    label: 'Ask',
+    label: '卖一价',
     side: 'ce',
     width: 'w-16',
     align: 'right',
@@ -197,7 +197,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'ce_ask_qty',
-    label: 'Ask Qty',
+    label: '卖一量',
     side: 'ce',
     width: 'w-16',
     align: 'right',
@@ -206,7 +206,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'ce_spread',
-    label: 'Spread',
+    label: '买卖价差',
     side: 'ce',
     width: 'w-14',
     align: 'right',
@@ -268,7 +268,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   // Center column
   {
     key: 'strike',
-    label: 'Strike',
+    label: '行权价',
     side: 'center',
     width: 'w-20',
     align: 'center',
@@ -278,7 +278,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   // PE columns (right side) - ordered left to right
   {
     key: 'pe_spread',
-    label: 'Spread',
+    label: '买卖价差',
     side: 'pe',
     width: 'w-14',
     align: 'left',
@@ -287,7 +287,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'pe_ask_qty',
-    label: 'Ask Qty',
+    label: '卖一量',
     side: 'pe',
     width: 'w-16',
     align: 'left',
@@ -296,7 +296,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'pe_ask',
-    label: 'Ask',
+    label: '卖一价',
     side: 'pe',
     width: 'w-16',
     align: 'left',
@@ -305,7 +305,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'pe_ltp',
-    label: 'LTP',
+    label: '最新价',
     side: 'pe',
     width: 'w-16',
     align: 'left',
@@ -314,7 +314,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'pe_bid',
-    label: 'Bid',
+    label: '买一价',
     side: 'pe',
     width: 'w-16',
     align: 'left',
@@ -323,7 +323,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'pe_bid_qty',
-    label: 'Bid Qty',
+    label: '买一量',
     side: 'pe',
     width: 'w-16',
     align: 'left',
@@ -332,7 +332,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'pe_volume',
-    label: 'Volume',
+    label: '成交量',
     side: 'pe',
     width: 'w-20',
     align: 'left',
@@ -341,7 +341,7 @@ export const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   },
   {
     key: 'pe_oi',
-    label: 'OI',
+    label: '持仓量',
     side: 'pe',
     width: 'w-20',
     align: 'left',

@@ -76,7 +76,7 @@ describe('ExecuteBasketDialog', () => {
     expect(screen.queryByText('CLOSED_SYMBOL')).not.toBeInTheDocument()
     expect(screen.queryByText('STALE_SYMBOL')).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: /Execute \(2\)/ }))
+    fireEvent.click(screen.getByRole('button', { name: /执行（2）/ }))
 
     await waitFor(() =>
       expect(submitBasket).toHaveBeenCalledWith('api-key', 'Canonical contracts', [
@@ -117,7 +117,7 @@ describe('ExecuteBasketDialog', () => {
     )
 
     expect(screen.queryByText('CLOSED_SYMBOL')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Execute \(0\)/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /执行（0）/ })).toBeDisabled()
   })
 
   it('excludes legs whose lots or lot size cannot produce an integer broker quantity', () => {
@@ -155,7 +155,7 @@ describe('ExecuteBasketDialog', () => {
     for (const symbol of ['ZERO_LOTS', 'FRACTIONAL_LOTS', 'ZERO_LOT_SIZE', 'FRACTIONAL_LOT_SIZE']) {
       expect(screen.queryByText(symbol)).not.toBeInTheDocument()
     }
-    expect(screen.getByRole('button', { name: /Execute \(0\)/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /执行（0）/ })).toBeDisabled()
     expect(submitBasket).not.toHaveBeenCalled()
   })
 
@@ -212,7 +212,7 @@ describe('ExecuteBasketDialog', () => {
     fireEvent.change(screen.getAllByDisplayValue('2')[0], { target: { value: '3' } })
     fireEvent.change(screen.getAllByDisplayValue('10.05')[0], { target: { value: '12.34' } })
     fireEvent.click(screen.getByRole('button', { name: 'MIS' }))
-    fireEvent.click(screen.getByRole('button', { name: 'MKT' }))
+    fireEvent.click(screen.getByRole('button', { name: '市价（MKT）' }))
     fireEvent.click(screen.getAllByRole('checkbox')[1])
 
     view.rerender(
@@ -225,9 +225,9 @@ describe('ExecuteBasketDialog', () => {
     expect(screen.getByDisplayValue('3')).toBeInTheDocument()
     expect(screen.getByDisplayValue('12.34')).toBeInTheDocument()
     expect(screen.getAllByRole('checkbox')[1]).not.toBeChecked()
-    expect(screen.getByRole('button', { name: /Execute \(1\)/ })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /执行（1）/ })).toBeEnabled()
 
-    fireEvent.click(screen.getByRole('button', { name: /Execute \(1\)/ }))
+    fireEvent.click(screen.getByRole('button', { name: /执行（1）/ }))
     await waitFor(() =>
       expect(submitBasket).toHaveBeenCalledWith('api-key', 'Preserve choices', [
         expect.objectContaining({
@@ -276,7 +276,7 @@ describe('ExecuteBasketDialog', () => {
       />
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /Execute \(4\)/ }))
+    fireEvent.click(screen.getByRole('button', { name: /执行（4）/ }))
 
     await waitFor(() =>
       expect(submitBasket).toHaveBeenCalledWith(
@@ -304,7 +304,7 @@ describe('ExecuteBasketDialog', () => {
       />
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /Execute \(1\)/ }))
+    fireEvent.click(screen.getByRole('button', { name: /执行（1）/ }))
 
     expect(submitBasket).not.toHaveBeenCalled()
   })
@@ -321,8 +321,8 @@ describe('ExecuteBasketDialog', () => {
       />
     )
 
-    expect(screen.getByText('A: price is outside the supported tick range')).toBeInTheDocument()
-    const execute = screen.getByRole('button', { name: /Execute \(1\)/ })
+    expect(screen.getByText('A：价格超出支持的最小变动单位范围')).toBeInTheDocument()
+    const execute = screen.getByRole('button', { name: /执行（1）/ })
     expect(execute).toBeDisabled()
     fireEvent.click(execute)
     expect(submitBasket).not.toHaveBeenCalled()

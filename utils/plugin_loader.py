@@ -45,6 +45,8 @@ def load_broker_capabilities(broker_directory="broker"):
                     "broker_type": plugin_data.get("broker_type", "IN_stock"),
                     "supported_exchanges": plugin_data.get("supported_exchanges", []),
                     "leverage_config": plugin_data.get("leverage_config", False),
+                    "market_data_only": plugin_data.get("market_data_only", False),
+                    "default_chart": plugin_data.get("default_chart"),
                 }
         except (json.JSONDecodeError, IOError) as e:
             logger.error(f"Error reading plugin.json for {broker_name}: {e}")

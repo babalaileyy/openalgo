@@ -162,7 +162,7 @@ function StrikePickerDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            Pick strike — {underlying} {expiryRank} {optionType}
+            选择行权价 — {underlying} {expiryRank} {optionType}
           </DialogTitle>
           {strikes.length > 0 ? (
             <DialogDescription className="text-xs">
@@ -177,7 +177,7 @@ function StrikePickerDialog({
         </DialogHeader>
         <div className="space-y-3">
           <Input
-            placeholder="Filter (e.g. 24000)…"
+            placeholder="筛选（例如 24000）…"
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
             autoFocus
@@ -189,11 +189,11 @@ function StrikePickerDialog({
                 not be downloaded.
               </p>
             ) : isLoading ? (
-              <p className="p-3 text-center text-sm text-muted-foreground">Loading…</p>
+              <p className="p-3 text-center text-sm text-muted-foreground">加载中…</p>
             ) : error ? (
               <p className="p-3 text-center text-sm text-destructive">{error}</p>
             ) : filtered.length === 0 ? (
-              <p className="p-3 text-center text-sm text-muted-foreground">No matches</p>
+              <p className="p-3 text-center text-sm text-muted-foreground">没有匹配项</p>
             ) : (
               <ul className="divide-y">
                 {filtered.map((strike) => (
@@ -212,7 +212,7 @@ function StrikePickerDialog({
                       <span className="font-mono">{strike}</span>
                       {selectedStrike === strike && (
                         <Badge variant="secondary" className="text-[10px]">
-                          selected
+                          已选
                         </Badge>
                       )}
                     </button>
@@ -272,14 +272,14 @@ function LegCard({
         <CardTitle className="text-base">Leg {index + 1}</CardTitle>
         {removable && (
           <Button size="sm" variant="ghost" onClick={onRemove}>
-            Remove
+            移除
           </Button>
         )}
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Segment</Label>
+            <Label className="text-xs uppercase">市场分段</Label>
             <select
               value={leg.segment}
               onChange={(event) => {
@@ -311,7 +311,7 @@ function LegCard({
 
           {leg.segment !== 'cash' && (
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase">Expiry</Label>
+              <Label className="text-xs uppercase">到期日</Label>
               <select
                 value={leg.expiry ?? expiries[0]}
                 onChange={(event) => update('expiry', event.target.value as ExpiryRank)}
@@ -326,15 +326,15 @@ function LegCard({
               {/* The rank is what is stored, because that is what survives a
                   roll. The date is what the operator can check. */}
               {expiry.isLoading ? (
-                <p className="text-[10px] text-muted-foreground">resolving…</p>
+                <p className="text-[10px] text-muted-foreground">正在解析…</p>
               ) : expiry.error ? (
                 <p className="text-[10px] text-destructive" title={expiry.error}>
-                  could not resolve
+                  无法解析
                 </p>
               ) : expiry.date ? (
                 <p className="font-mono text-[10px] text-muted-foreground">{expiry.date}</p>
               ) : (
-                <p className="text-[10px] text-amber-600">not listed</p>
+                <p className="text-[10px] text-amber-600">未列出</p>
               )}
             </div>
           )}
@@ -358,12 +358,12 @@ function LegCard({
               className="h-9"
             />
             {leg.segment === 'cash' && (
-              <p className="text-[10px] text-muted-foreground">Shares, sent as-is.</p>
+              <p className="text-[10px] text-muted-foreground">股票数量按原值提交。</p>
             )}
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Position</Label>
+            <Label className="text-xs uppercase">仓位</Label>
             <div className="flex h-9 overflow-hidden rounded-md border border-input">
               {(['B', 'S'] as LegPosition[]).map((position) => (
                 <button
@@ -387,7 +387,7 @@ function LegCard({
         {leg.segment === 'options' && (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase">Option Type</Label>
+              <Label className="text-xs uppercase">期权类型</Label>
               <div className="flex h-9 overflow-hidden rounded-md border border-input">
                 {(['CE', 'PE'] as OptionType[]).map((optionType) => (
                   <button
@@ -408,7 +408,7 @@ function LegCard({
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase">Strike mode</Label>
+              <Label className="text-xs uppercase">行权价选择方式</Label>
               <div className="flex h-9 overflow-hidden rounded-md border border-input">
                 {(['atm', 'strike'] as const).map((mode) => (
                   <button
@@ -437,7 +437,7 @@ function LegCard({
 
             {leg.strike_mode === 'atm' ? (
               <div className="space-y-1.5 sm:col-span-2">
-                <Label className="text-xs uppercase">Strike offset</Label>
+                <Label className="text-xs uppercase">行权价偏移</Label>
                 <select
                   value={leg.atm_offset ?? 'ATM'}
                   onChange={(event) => update('atm_offset', event.target.value)}
@@ -452,18 +452,18 @@ function LegCard({
               </div>
             ) : (
               <div className="space-y-1.5 sm:col-span-2">
-                <Label className="text-xs uppercase">Strike value</Label>
+                <Label className="text-xs uppercase">行权价</Label>
                 <div className="flex gap-2">
                   <Input
                     type="number"
                     step={0.01}
                     value={leg.strike ?? ''}
-                    placeholder="Pick from list →"
+                    placeholder="从列表选择 →"
                     readOnly
                     className="h-9 font-mono"
                   />
                   <Button type="button" variant="outline" size="sm" onClick={onOpenStrikePicker}>
-                    Pick strike
+                    选择行权价
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -477,7 +477,7 @@ function LegCard({
         <Separator />
 
         <div className="mb-3 flex items-center gap-2">
-          <Label className="text-xs uppercase text-muted-foreground">Risk measured in</Label>
+          <Label className="text-xs uppercase text-muted-foreground">风险计量方式</Label>
           <div className="inline-flex overflow-hidden rounded-md border">
             {(['points', 'percent'] as const).map((unit) => (
               <button
@@ -538,7 +538,7 @@ function LegCard({
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Trail SL — X (pts)</Label>
+            <Label className="text-xs uppercase">移动止损 X（点）</Label>
             <Input
               type="number"
               step={0.01}
@@ -549,13 +549,10 @@ function LegCard({
               }
               className="h-9"
             />
-            <p className="text-[10px] text-muted-foreground">
-              Advance the stop by Y points for every X points the leg moves in your favour. Both
-              halves are required together.
-            </p>
+            <p className="text-[10px] text-muted-foreground">当该腿价格朝有利方向每变动 X 点时，将止损价相应上移或下移 Y 点。两项必须同时填写。</p>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Trail SL — Y (step)</Label>
+            <Label className="text-xs uppercase">移动止损 Y（步长）</Label>
             <Input
               type="number"
               step={0.01}
@@ -567,7 +564,7 @@ function LegCard({
               className="h-9"
             />
             <p className="text-[10px] text-muted-foreground">
-              Leave both at 0 for a leg with no trailing stop.
+              若该交易腿不使用跟踪止损，两项均设为 0。
             </p>
           </div>
         </div>
@@ -651,14 +648,14 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
         <CardTitle className="text-base">Leg {index + 1}</CardTitle>
         {removable && (
           <Button size="sm" variant="ghost" onClick={onRemove}>
-            Remove
+            移除
           </Button>
         )}
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Symbol</Label>
+            <Label className="text-xs uppercase">交易品种</Label>
             <UnderlyingSearchField
               value={leg.symbol ?? ''}
               onChange={(symbol) => {
@@ -678,7 +675,7 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Exchange</Label>
+            <Label className="text-xs uppercase">交易所</Label>
             <select
               value={leg.exchange || venueFor(leg.segment)}
               onChange={(event) => {
@@ -711,7 +708,7 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Segment</Label>
+            <Label className="text-xs uppercase">市场分段</Label>
             <select
               value={leg.segment}
               onChange={(event) => {
@@ -740,7 +737,7 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
 
           {leg.segment === 'futures' && (
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase">Expiry</Label>
+              <Label className="text-xs uppercase">到期日</Label>
               <select
                 value={leg.expiry ?? 'monthly'}
                 onChange={(event) => update('expiry', event.target.value as ExpiryRank)}
@@ -753,23 +750,23 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
                 ))}
               </select>
               {!leg.symbol?.trim() ? (
-                <p className="text-[10px] text-muted-foreground">pick a symbol first</p>
+                <p className="text-[10px] text-muted-foreground">请先选择交易品种</p>
               ) : expiry.isLoading ? (
-                <p className="text-[10px] text-muted-foreground">resolving…</p>
+                <p className="text-[10px] text-muted-foreground">正在解析…</p>
               ) : expiry.error ? (
                 <p className="text-[10px] text-destructive" title={expiry.error}>
-                  could not resolve
+                  无法解析
                 </p>
               ) : resolvedExpiry ? (
                 <p className="font-mono text-[10px] text-muted-foreground">{resolvedExpiry}</p>
               ) : (
-                <p className="text-[10px] text-amber-600">not listed</p>
+                <p className="text-[10px] text-amber-600">未列出</p>
               )}
             </div>
           )}
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Side</Label>
+            <Label className="text-xs uppercase">方向</Label>
             <select
               value={leg.side ?? 'both'}
               onChange={(event) => update('side', event.target.value as LegSide)}
@@ -837,7 +834,7 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
             />
             {qtyMode === 'lots' ? (
               lot.isLoading ? (
-                <p className="text-[10px] text-muted-foreground">reading lot size…</p>
+                <p className="text-[10px] text-muted-foreground">正在读取每手数量…</p>
               ) : sent != null ? (
                 <p className="text-[10px] text-muted-foreground">
                   <span className="font-mono">
@@ -876,7 +873,7 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
         <Separator />
 
         <div className="mb-3 flex items-center gap-2">
-          <Label className="text-xs uppercase text-muted-foreground">Risk measured in</Label>
+          <Label className="text-xs uppercase text-muted-foreground">风险计量方式</Label>
           <div className="inline-flex overflow-hidden rounded-md border">
             {(['points', 'percent'] as const).map((unit) => (
               <button
@@ -937,7 +934,7 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Trail SL — X (pts)</Label>
+            <Label className="text-xs uppercase">移动止损 X（点）</Label>
             <Input
               type="number"
               step={0.01}
@@ -948,13 +945,10 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
               }
               className="h-9"
             />
-            <p className="text-[10px] text-muted-foreground">
-              Advance the stop by Y points for every X points the leg moves in your favour. Both
-              halves are required together.
-            </p>
+            <p className="text-[10px] text-muted-foreground">当该腿价格朝有利方向每变动 X 点时，将止损价相应上移或下移 Y 点。两项必须同时填写。</p>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase">Trail SL — Y (step)</Label>
+            <Label className="text-xs uppercase">移动止损 Y（步长）</Label>
             <Input
               type="number"
               step={0.01}
@@ -966,7 +960,7 @@ function SignalLegCard({ leg, tab, index, onChange, onRemove, removable }: Signa
               className="h-9"
             />
             <p className="text-[10px] text-muted-foreground">
-              Leave both at 0 for a leg with no trailing stop.
+              若该交易腿不使用跟踪止损，两项均设为 0。
             </p>
           </div>
         </div>
@@ -1026,7 +1020,7 @@ function UnderlyingSearchField({
       {open && value.trim().length >= 2 && (
         <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border bg-popover shadow-md">
           {isLoading ? (
-            <p className="p-3 text-center text-xs text-muted-foreground">Searching…</p>
+            <p className="p-3 text-center text-xs text-muted-foreground">搜索中…</p>
           ) : error ? (
             <p className="p-3 text-center text-xs text-destructive">{error}</p>
           ) : results.length === 0 ? (
@@ -1287,13 +1281,13 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
     onSuccess: (created) => {
       setRevealedToken({ token: created.webhook_token, strategyId: created.strategy.id })
     },
-    onError: (err: Error) => showToast.error(err.message || 'Failed to create strategy'),
+    onError: (err: Error) => showToast.error(err.message || '创建策略失败'),
   })
 
   const updateMutation = useMutation({
     mutationFn: (payload: StrategyUpdatePayload) => updateStrategy(editing?.id ?? 0, payload),
     onSuccess: (updated) => {
-      showToast.success('Strategy updated')
+      showToast.success('策略已更新')
       navigate(`/strategy/${updated.id}`)
     },
     onError: (err: Error) => showToast.error(err.message || 'Failed to update strategy'),
@@ -1468,7 +1462,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
 
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Strategy kind</CardTitle>
+          <CardTitle className="text-base">策略种类</CardTitle>
           <CardDescription>
             {isEdit
               ? 'Kind is locked after the strategy is created.'
@@ -1526,7 +1520,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                   </div>
                   {unavailable && (
                     <div className="mt-1 text-[10px] uppercase text-muted-foreground">
-                      not available in signal mode
+                      信号模式不可用
                     </div>
                   )}
                 </button>
@@ -1539,7 +1533,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
       {isSignal && (
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Direction filter</CardTitle>
+            <CardTitle className="text-base">方向筛选</CardTitle>
             <CardDescription>
               Restricts which signals the engine accepts. Long-only ignores short_entry / short_exit
               signals; short-only ignores the long ones. Both accepts all four.
@@ -1569,7 +1563,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Index and Timings</CardTitle>
+          <CardTitle>指数与交易时间</CardTitle>
           <CardDescription>
             Pick the underlying and (for intraday) entry/exit windows.
           </CardDescription>
@@ -1577,12 +1571,12 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="strategy-name">Strategy name</Label>
+              <Label htmlFor="strategy-name">策略名称</Label>
               <Input
                 id="strategy-name"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="e.g. Iron condor weekly"
+                placeholder="例如：每周铁鹰式策略"
                 maxLength={MAX_NAME_LENGTH}
               />
             </div>
@@ -1594,7 +1588,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
               </div>
             ) : (
               <div className="space-y-1.5">
-                <Label htmlFor="underlying">Underlying</Label>
+                <Label htmlFor="underlying">标的</Label>
                 {closedUniverse ? (
                   <select
                     id="underlying"
@@ -1620,7 +1614,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                 {exchangeChoices.length > 1 && !closedUniverse ? (
                   <div className="flex items-center gap-2 pt-0.5">
                     <Label htmlFor="underlying-exchange" className="text-xs text-muted-foreground">
-                      Exchange
+                      交易所
                     </Label>
                     <select
                       id="underlying-exchange"
@@ -1637,7 +1631,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground">
-                    Exchange: <span className="font-mono">{underlyingExchange}</span>
+                    交易所： <span className="font-mono">{underlyingExchange}</span>
                   </p>
                 )}
               </div>
@@ -1646,7 +1640,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-1.5">
-              <Label>Strategy type</Label>
+              <Label>策略类型</Label>
               <div className="flex h-10 overflow-hidden rounded-md border border-input">
                 {(['intraday', 'positional'] as StrategyType[]).map((option) => (
                   <button
@@ -1669,7 +1663,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
             {strategyType === 'intraday' && (
               <>
                 <div className="space-y-1.5">
-                  <Label htmlFor="entry-time">Entry time (IST)</Label>
+                  <Label htmlFor="entry-time">入场时间（印度标准时间）</Label>
                   <Input
                     id="entry-time"
                     type="time"
@@ -1678,7 +1672,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="exit-time">Exit time (IST)</Label>
+                  <Label htmlFor="exit-time">出场时间（印度标准时间）</Label>
                   <Input
                     id="exit-time"
                     type="time"
@@ -1692,17 +1686,17 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
 
           {strategyType === 'intraday' ? (
             <p className="rounded-md bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-400">
-              Intraday signals only execute after your entry time and auto-exit at exit time.
+              日内信号仅在入场时间后执行，并在退出时间自动平仓。
             </p>
           ) : (
             <p className="rounded-md bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-400">
-              Positional strategies activate on signal and exit automatically at contract expiry.
+              持仓策略由信号激活，并在合约到期时自动退出。
             </p>
           )}
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-1.5">
-              <Label htmlFor="product">Product</Label>
+              <Label htmlFor="product">交易产品</Label>
               <select
                 id="product"
                 value={product}
@@ -1724,7 +1718,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <div>
-            <CardTitle>Leg Builder</CardTitle>
+            <CardTitle>策略腿配置</CardTitle>
             <CardDescription>
               Up to {MAX_LEGS} legs. Add as many as you need; remove the rest.
             </CardDescription>
@@ -1771,7 +1765,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Overall Strategy Settings</CardTitle>
+          <CardTitle>策略整体设置</CardTitle>
           <CardDescription>
             Strategy-level risk applied across all legs. Evaluated against total MTM (realized +
             unrealized).
@@ -1780,7 +1774,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
         <CardContent className="space-y-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-1.5">
-              <Label htmlFor="overall-sl">Overall SL (₹ MTM)</Label>
+              <Label htmlFor="overall-sl">整体止损（₹，盯市盈亏）</Label>
               <Input
                 id="overall-sl"
                 type="number"
@@ -1788,14 +1782,14 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                 step={1}
                 value={overallSl}
                 onChange={(event) => setOverallSl(event.target.value)}
-                placeholder="empty = off"
+                placeholder="留空表示关闭"
               />
               <p className="text-xs text-muted-foreground">
                 Enter as positive — applied as a negative threshold.
               </p>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="overall-target">Overall Target (₹ MTM)</Label>
+              <Label htmlFor="overall-target">整体止盈（₹，盯市盈亏）</Label>
               <Input
                 id="overall-target"
                 type="number"
@@ -1803,11 +1797,11 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                 step={1}
                 value={overallTarget}
                 onChange={(event) => setOverallTarget(event.target.value)}
-                placeholder="empty = off"
+                placeholder="留空表示关闭"
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="daily-loss-limit">Daily loss limit (₹)</Label>
+              <Label htmlFor="daily-loss-limit">每日亏损限额（₹）</Label>
               <Input
                 id="daily-loss-limit"
                 type="number"
@@ -1815,9 +1809,9 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                 step={1}
                 value={dailyLossLimit}
                 onChange={(event) => setDailyLossLimit(event.target.value)}
-                placeholder="empty = off"
+                placeholder="留空表示关闭"
               />
-              <p className="text-xs text-muted-foreground">Also entered as a positive amount.</p>
+              <p className="text-xs text-muted-foreground">同样请输入正数。</p>
             </div>
           </div>
 
@@ -1828,7 +1822,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                 checked={lockEnabled}
                 onChange={(event) => setLockEnabled(event.target.checked)}
               />
-              Enable Lock-Profit
+              启用锁定利润
             </label>
             {lockEnabled && (
               <div className="space-y-3 rounded-md border border-dashed p-3">
@@ -1856,7 +1850,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                   )}
                 >
                   <div className="space-y-1.5">
-                    <Label className="text-xs uppercase">If profit reaches (₹)</Label>
+                    <Label className="text-xs uppercase">当利润达到（₹）</Label>
                     <Input
                       type="number"
                       min={0}
@@ -1865,7 +1859,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-xs uppercase">Lock floor (₹)</Label>
+                    <Label className="text-xs uppercase">锁定利润下限（₹）</Label>
                     <Input
                       type="number"
                       min={0}
@@ -1875,7 +1869,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                   </div>
                   {lockMode === 'lock_and_trail' && (
                     <div className="space-y-1.5">
-                      <Label className="text-xs uppercase">Trail step (₹)</Label>
+                      <Label className="text-xs uppercase">移动步长（₹）</Label>
                       <Input
                         type="number"
                         min={0}
@@ -1897,7 +1891,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
               className="mt-0.5"
             />
             <span>
-              <span className="font-medium">Trail SL to entry price</span>
+              <span className="font-medium">将移动止损移至入场价</span>
               <span className="ml-2 text-xs text-muted-foreground">
                 When ANY leg's SL fires, every other open leg's SL moves to its entry.
               </span>
@@ -1908,7 +1902,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Scheduler</CardTitle>
+          <CardTitle>定时任务</CardTitle>
           <CardDescription>
             Optional cron-based start. Mon–Fri default. Times are interpreted in IST (Asia/Kolkata).
           </CardDescription>
@@ -1925,7 +1919,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
           {schedulerEnabled && (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div className="space-y-1.5">
-                <Label>Start time (IST)</Label>
+                <Label>开始时间（印度标准时间）</Label>
                 <Input
                   type="time"
                   value={schedulerStart}
@@ -1933,22 +1927,19 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Auto-stop time (IST)</Label>
+                <Label>自动停止时间（印度标准时间）</Label>
                 <Input
                   type="time"
                   value={schedulerStop}
                   onChange={(event) => setSchedulerStop(event.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Required: a scheduled start with nothing to stop it runs until the session ends.
+                  必填：定时启动的策略若没有停止条件，将一直运行至交易时段结束。
                 </p>
               </div>
             </div>
           )}
-          <p className="text-xs text-muted-foreground">
-            The webhook token is generated automatically on save and shown to you once. Copy it into
-            TradingView.
-          </p>
+          <p className="text-xs text-muted-foreground">保存时会自动生成 Webhook 令牌，且只显示一次。请将其复制到 TradingView。</p>
         </CardContent>
       </Card>
 
@@ -1957,7 +1948,7 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
           variant="outline"
           onClick={() => navigate(isEdit ? `/strategy/${editing?.id}` : '/strategy')}
         >
-          Cancel
+          取消
         </Button>
         <Button onClick={submit} disabled={submitting}>
           {submitting ? 'Saving…' : isEdit ? 'Save changes' : 'Save and Continue'}
@@ -1990,17 +1981,14 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
       >
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Strategy created — copy your webhook token</DialogTitle>
-            <DialogDescription>
-              This token is stored as a hash and cannot be shown again. If you lose it, rotate the
-              token from the Webhook tab.
-            </DialogDescription>
+            <DialogTitle>策略已创建，请复制 Webhook 令牌</DialogTitle>
+            <DialogDescription>令牌以哈希形式存储，无法再次显示。如果丢失，请在 Webhook 选项卡中重新生成。</DialogDescription>
           </DialogHeader>
 
           {revealedToken && (
             <div className="space-y-3">
               <div className="space-y-1.5">
-                <Label>Webhook URL</Label>
+                <Label>Webhook 地址</Label>
                 <div className="flex items-center gap-2">
                   <Input
                     readOnly
@@ -2013,15 +2001,13 @@ export default function StrategyWizard({ editing }: StrategyWizardProps = {}) {
                       navigator.clipboard.writeText(
                         `${window.location.origin}/strategy/webhook/${revealedToken.token}`
                       )
-                      showToast.success('Copied URL')
+                      showToast.success('地址已复制')
                     }}
-                  >
-                    Copy
-                  </Button>
+                  >复制</Button>
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label>TradingView alert message body</Label>
+                <Label>TradingView 提醒消息内容</Label>
                 <pre className="rounded-md bg-muted p-3 text-xs">
                   {'{"action":"start","mode":"sandbox"}'}
                 </pre>

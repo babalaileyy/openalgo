@@ -153,11 +153,11 @@ export default function OITracker() {
       if (response.status === 'success') {
         setOiData(response)
       } else {
-        showToast.error(response.message || 'Failed to fetch OI data')
+        showToast.error(response.message || '获取持仓量数据失败')
       }
     } catch (error) {
       if (requestIdRef.current !== requestId) return
-      showToast.error(serverSentence(error, 'Failed to fetch OI data'))
+      showToast.error(serverSentence(error, '获取持仓量数据失败'))
     } finally {
       if (requestIdRef.current === requestId) setIsLoading(false)
     }
@@ -217,9 +217,9 @@ export default function OITracker() {
         x: xIndices,
         y: ceOILots,
         type: 'bar' as const,
-        name: 'Call Options OI (lots)',
+        name: 'Call Options OI（看涨期权持仓量，手）',
         marker: { color: themeColors.ceBar },
-        hovertemplate: 'Strike %{text}<br>CE OI: %{y:,}<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>CE OI（看涨持仓量）：%{y:,}<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
       },
@@ -227,9 +227,9 @@ export default function OITracker() {
         x: xIndices,
         y: peOILots,
         type: 'bar' as const,
-        name: 'Put Options OI (lots)',
+        name: 'Put Options OI（看跌期权持仓量，手）',
         marker: { color: themeColors.peBar },
-        hovertemplate: 'Strike %{text}<br>PE OI: %{y:,}<extra></extra>',
+        hovertemplate: '行权价 %{text}<br>PE OI（看跌持仓量）：%{y:,}<extra></extra>',
         text: tickLabels,
         textposition: 'none' as const,
       },
@@ -247,7 +247,7 @@ export default function OITracker() {
               x: atmIndex,
               y: 1,
               yref: 'paper' as const,
-              text: `${selectedUnderlying} ATM Strike ${atmStrike}`,
+              text: `${selectedUnderlying} ATM Strike（平值行权价） ${atmStrike}`,
               showarrow: false,
               font: { color: themeColors.text, size: 12 },
               yanchor: 'bottom' as const,
@@ -272,7 +272,7 @@ export default function OITracker() {
 
     const layout: Partial<PlotlyTypes.Layout> = {
       title: {
-        text: `${selectedUnderlying} ${expiryLabel} - current`,
+        text: `${selectedUnderlying} ${expiryLabel} - 当前`,
         font: { color: themeColors.text, size: 14 },
       },
       paper_bgcolor: themeColors.paper,
@@ -299,13 +299,13 @@ export default function OITracker() {
         tickmode: 'array' as const,
         tickvals: tickVals,
         ticktext: tickText,
-        title: { text: 'Strike Price', font: { color: themeColors.text, size: 12 } },
+        title: { text: '行权价', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
         tickangle: -45,
       },
       yaxis: {
-        title: { text: 'Open Interest', font: { color: themeColors.text, size: 12 } },
+        title: { text: 'Open Interest（持仓量）', font: { color: themeColors.text, size: 12 } },
         tickfont: { color: themeColors.text, size: 10 },
         gridcolor: themeColors.grid,
       },
@@ -336,12 +336,12 @@ export default function OITracker() {
     <div className="py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold">OI Tracker</h1>
+        <h1 className="text-2xl font-bold">OI Tracker（持仓量追踪）</h1>
         <div className="flex items-center gap-3">
           {/* Exchange selector */}
           <Select value={selectedExchange} onValueChange={setSelectedExchange}>
             <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Exchange" />
+              <SelectValue placeholder="交易所" />
             </SelectTrigger>
             <SelectContent>
               {fnoExchanges.map((ex) => (
@@ -361,15 +361,15 @@ export default function OITracker() {
                 aria-expanded={underlyingOpen}
                 className="w-[160px] justify-between"
               >
-                {selectedUnderlying || 'Underlying'}
+                {selectedUnderlying || '标的'}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search underlying..." />
+                <CommandInput placeholder="搜索标的..." />
                 <CommandList>
-                  <CommandEmpty>No underlying found</CommandEmpty>
+                  <CommandEmpty>未找到标的</CommandEmpty>
                   <CommandGroup>
                     {underlyings.map((u) => (
                       <CommandItem
@@ -399,7 +399,7 @@ export default function OITracker() {
             disabled={expiries.length === 0}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Expiry" />
+              <SelectValue placeholder="到期日" />
             </SelectTrigger>
             <SelectContent>
               {expiries.map((e) => (
@@ -412,7 +412,7 @@ export default function OITracker() {
 
           {/* Refresh */}
           <Button variant="outline" size="sm" onClick={fetchOIData} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Refresh'}
+            {isLoading ? '加载中...' : '刷新'}
           </Button>
         </div>
       </div>
@@ -421,30 +421,30 @@ export default function OITracker() {
       {oiData && oiData.status === 'success' && (
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Spot: {oiData.spot_price?.toFixed(1)}
+            现货价：{oiData.spot_price?.toFixed(1)}
           </Badge>
           {oiData.futures_price && (
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              Futures: {oiData.futures_price.toFixed(1)}
+              期货价：{oiData.futures_price.toFixed(1)}
             </Badge>
           )}
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Lot Size: {oiData.lot_size}
+            每手数量：{oiData.lot_size}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            PCR (OI): {oiData.pcr_oi?.toFixed(2)}
+            PCR (OI)（持仓量看跌看涨比）：{oiData.pcr_oi?.toFixed(2)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            PCR (Vol): {oiData.pcr_volume?.toFixed(2)}
+            PCR (Vol)（成交量看跌看涨比）：{oiData.pcr_volume?.toFixed(2)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            ATM: {oiData.atm_strike}
+            ATM（平值行权价）：{oiData.atm_strike}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Total CE OI: {formatNumber(oiData.total_ce_oi || 0)}
+            Total CE OI（看涨总持仓量）：{formatNumber(oiData.total_ce_oi || 0)}
           </Badge>
           <Badge variant="secondary" className="text-sm px-3 py-1">
-            Total PE OI: {formatNumber(oiData.total_pe_oi || 0)}
+            Total PE OI（看跌总持仓量）：{formatNumber(oiData.total_pe_oi || 0)}
           </Badge>
         </div>
       )}
@@ -454,7 +454,7 @@ export default function OITracker() {
         <CardContent className="p-2 sm:p-4">
           {isLoading && !oiData ? (
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
-              Loading OI data...
+              正在加载持仓量数据...
             </div>
           ) : oiData?.chain && oiData.chain.length > 0 ? (
             <Plot
@@ -467,8 +467,8 @@ export default function OITracker() {
           ) : (
             <div className="flex items-center justify-center h-[500px] text-muted-foreground">
               {selectedExpiry
-                ? 'No OI data available'
-                : 'Select an underlying and expiry to view OI data'}
+                ? '暂无持仓量数据'
+                : '请选择标的和到期日以查看持仓量数据'}
             </div>
           )}
         </CardContent>

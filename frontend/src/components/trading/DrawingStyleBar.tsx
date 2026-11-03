@@ -177,8 +177,8 @@ export function DrawingStyleBar({
 
       <button
         type="button"
-        title="Colour"
-        aria-label="Colour"
+        title="颜色"
+        aria-label="颜色"
         onClick={() => toggle('color')}
         className={btn}
       >
@@ -189,8 +189,8 @@ export function DrawingStyleBar({
       </button>
       <button
         type="button"
-        title="Thickness"
-        aria-label="Thickness"
+        title="线宽"
+        aria-label="线宽"
         onClick={() => toggle('width')}
         className={btn}
       >
@@ -198,8 +198,8 @@ export function DrawingStyleBar({
       </button>
       <button
         type="button"
-        title="Line style"
-        aria-label="Line style"
+        title="线型"
+        aria-label="线型"
         onClick={() => toggle('dash')}
         className={btn}
       >
@@ -222,8 +222,8 @@ export function DrawingStyleBar({
       {sel.extend && (
         <button
           type="button"
-          title="Extend"
-          aria-label="Extend"
+          title="延伸"
+          aria-label="延伸"
           onClick={() => toggle('extend')}
           className={cn(btn, wide, (sel.extend.left || sel.extend.right) && 'text-primary')}
         >
@@ -233,8 +233,8 @@ export function DrawingStyleBar({
       {sel.levels && (
         <button
           type="button"
-          title="Levels"
-          aria-label="Levels"
+          title="水平线"
+          aria-label="水平线"
           onClick={() => toggle('levels')}
           className={cn(btn, wide)}
         >
@@ -244,8 +244,8 @@ export function DrawingStyleBar({
       {sel.hasText && (
         <button
           type="button"
-          title="Edit text"
-          aria-label="Edit text"
+          title="编辑文本"
+          aria-label="编辑文本"
           onClick={onEditText}
           className={cn(btn, wide)}
         >
@@ -266,7 +266,7 @@ export function DrawingStyleBar({
       </button>
       <button
         type="button"
-        title="Delete"
+        title="删除"
         aria-label="Delete drawing"
         onClick={onDelete}
         className={btn}
@@ -349,9 +349,7 @@ export function DrawingStyleBar({
               type="checkbox"
               checked={sel.fill.on}
               onChange={(e) => onSettings({ 'style.fill': e.target.checked })}
-            />
-            Fill
-          </label>
+            />填充</label>
           <div className="mb-2 grid grid-cols-4 gap-1">
             {SWATCHES.map((c) => (
               <button
@@ -367,9 +365,7 @@ export function DrawingStyleBar({
               />
             ))}
           </div>
-          <label className="flex items-center gap-2 text-xs text-muted-foreground">
-            Opacity
-            <input
+          <label className="flex items-center gap-2 text-xs text-muted-foreground">不透明度<input
               type="range"
               min={0}
               max={100}
@@ -397,17 +393,13 @@ export function DrawingStyleBar({
               type="checkbox"
               checked={sel.extend.left}
               onChange={(e) => onSettings({ 'style.extendLeft': e.target.checked })}
-            />
-            Extend left
-          </label>
+            />向左延伸</label>
           <label className="flex items-center gap-2 text-xs">
             <input
               type="checkbox"
               checked={sel.extend.right}
               onChange={(e) => onSettings({ 'style.extendRight': e.target.checked })}
-            />
-            Extend right
-          </label>
+            />向右延伸</label>
         </div>
       )}
 
@@ -428,21 +420,15 @@ export function DrawingStyleBar({
           </div>
           {sel.fill && (
             <button type="button" className={cn(row, narrow)} onClick={() => setOpen('fill')}>
-              <ChromeIcon id="fill" size={14} className="opacity-70" />
-              Fill...
-            </button>
+              <ChromeIcon id="fill" size={14} className="opacity-70" />填充…</button>
           )}
           {sel.extend && (
             <button type="button" className={cn(row, narrow)} onClick={() => setOpen('extend')}>
-              <ChromeIcon id="fit" size={14} className="opacity-70" />
-              Extend...
-            </button>
+              <ChromeIcon id="fit" size={14} className="opacity-70" />延伸…</button>
           )}
           {sel.levels && (
             <button type="button" className={cn(row, narrow)} onClick={() => toggle('levels')}>
-              <ChromeIcon id="legend" size={14} className="opacity-70" />
-              Levels...
-            </button>
+              <ChromeIcon id="legend" size={14} className="opacity-70" />价位…</button>
           )}
           {sel.hasText && (
             <button
@@ -453,9 +439,7 @@ export function DrawingStyleBar({
                 onEditText()
               }}
             >
-              <span className="w-3.5 text-center text-[11px] font-semibold opacity-70">T</span>
-              Edit text...
-            </button>
+              <span className="w-3.5 text-center text-[11px] font-semibold opacity-70">T</span>编辑文本…</button>
           )}
           <button
             type="button"
@@ -476,9 +460,7 @@ export function DrawingStyleBar({
               onDuplicate()
             }}
           >
-            <ChromeIcon id="duplicate" size={14} className="opacity-70" />
-            Duplicate
-          </button>
+            <ChromeIcon id="duplicate" size={14} className="opacity-70" />复制</button>
           <button
             type="button"
             className={row}
@@ -487,9 +469,7 @@ export function DrawingStyleBar({
               onOrder('front')
             }}
           >
-            <ChromeIcon id="front" size={14} className="opacity-70" />
-            Bring to front
-          </button>
+            <ChromeIcon id="front" size={14} className="opacity-70" />置于顶层</button>
           <button
             type="button"
             className={row}
@@ -498,9 +478,7 @@ export function DrawingStyleBar({
               onOrder('back')
             }}
           >
-            <ChromeIcon id="back" size={14} className="opacity-70" />
-            Send to back
-          </button>
+            <ChromeIcon id="back" size={14} className="opacity-70" />置于底层</button>
           <button
             type="button"
             className={row}
@@ -509,9 +487,7 @@ export function DrawingStyleBar({
               onHide()
             }}
           >
-            <ChromeIcon id="eye-off" size={14} className="opacity-70" />
-            Hide
-          </button>
+            <ChromeIcon id="eye-off" size={14} className="opacity-70" />隐藏</button>
         </div>
       )}
     </div>

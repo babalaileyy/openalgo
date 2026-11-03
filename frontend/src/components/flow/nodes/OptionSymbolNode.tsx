@@ -24,7 +24,7 @@ export const OptionSymbolNode = memo(({ data, selected }: OptionSymbolNodeProps)
             <Target className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Option Symbol</div>
+            <div className="text-xs font-medium leading-tight">期权合约</div>
             <div className="text-[9px] text-muted-foreground">
               {data.optionType || 'CE'} {data.offset || 'ATM'}
             </div>
@@ -32,11 +32,11 @@ export const OptionSymbolNode = memo(({ data, selected }: OptionSymbolNodeProps)
         </div>
         <div className="space-y-0.5 rounded bg-muted/50 px-1.5 py-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Underlying</span>
+            <span className="text-[10px] text-muted-foreground">标的</span>
             <span className="mono-data text-[10px] font-medium">{data.underlying || '-'}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">Expiry</span>
+            <span className="text-[10px] text-muted-foreground">到期日</span>
             <span className="mono-data text-[10px] font-medium">{data.expiryDate || '-'}</span>
           </div>
         </div>

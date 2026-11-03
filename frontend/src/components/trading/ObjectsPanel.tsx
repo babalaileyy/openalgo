@@ -1,6 +1,7 @@
 import type { ChartObjectSnapshot, ChartObjects } from 'openalgo-charts'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { cn } from '@/lib/utils'
+import { indicatorInstanceName } from '@/lib/trading/indicatorChinese'
 import { PANEL_HEADER, PanelShell } from './panelShell'
 
 interface Props {
@@ -9,18 +10,18 @@ interface Props {
 }
 
 const KIND_LABEL: Record<ChartObjectSnapshot['kind'], string> = {
-  source: 'Source',
-  indicator: 'Indicator',
-  drawing: 'Drawing',
-  profile: 'Profile',
-  group: 'Group',
+  source: '数据源',
+  indicator: '指标',
+  drawing: '画线',
+  profile: '分布图',
+  group: '分组',
 }
 const NO_OBJECTS: readonly ChartObjectSnapshot[] = Object.freeze([])
 
 function statusLabel(object: ChartObjectSnapshot): string | null {
   const state = object.dataStatus?.state
   if (!state) return null
-  return state[0].toUpperCase() + state.slice(1)
+  return ({ loading: '加载中', ready: '就绪', error: '错误', unavailable: '不可用' } as Record<string, string>)[state] ?? state
 }
 
 function Action({
@@ -67,7 +68,7 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
     const needle = query.trim().toLocaleLowerCase()
     if (!needle) return objects
     return objects.filter((object) =>
-      `${object.name} ${KIND_LABEL[object.kind]} ${object.sourceId} pane ${object.paneIndex + 1}`
+      `${object.name} ${object.kind === 'indicator' ? indicatorInstanceName(object.name) : ''} ${KIND_LABEL[object.kind]} ${object.sourceId} pane ${object.paneIndex + 1} 窗格 ${object.paneIndex + 1}`
         .toLocaleLowerCase()
         .includes(needle)
     )
@@ -81,20 +82,20 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
       // Optional providers are host code. Keep their failure inside this panel.
     }
     setActionError(
-      accepted || !model ? null : { model, message: `Could not ${verb.toLocaleLowerCase()} ${name}` }
+      accepted || !model ? null : { model, message: `无法${({ select: '选择', hide: '隐藏', show: '显示', lock: '锁定', unlock: '解锁', 'open settings for': '打开设置：', focus: '定位', remove: '移除' } as Record<string, string>)[verb] ?? verb} ${name}` }
     )
   }
 
   return (
     <PanelShell
       id="oa-panel-objects"
-      label="Objects"
+      label="图表对象"
       storageKey="oa-trading-objects-width"
       defaultWidth={360}
     >
       <div className={PANEL_HEADER}>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-[13px] font-medium">Objects</div>
+          <div className="truncate text-[13px] font-medium">图表对象</div>
           <div className="truncate text-[10px] text-muted-foreground">{paneLabel}</div>
         </div>
       </div>
@@ -104,8 +105,8 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search objects"
-          aria-label="Search objects"
+          placeholder="搜索图表对象"
+          aria-label="搜索图表对象"
           className="h-8 w-full rounded-md border border-input bg-background px-2.5 text-xs outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
         />
         {actionError?.model === model && (
@@ -118,10 +119,10 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
       <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
         {!model ? (
           <p className="px-2 py-8 text-center text-xs text-muted-foreground">
-            No chart objects available
+            暂无图表对象
           </p>
         ) : shown.length === 0 ? (
-          <p className="px-2 py-8 text-center text-xs text-muted-foreground">No matching objects</p>
+          <p className="px-2 py-8 text-center text-xs text-muted-foreground">没有匹配的图表对象</p>
         ) : (
           <div className="space-y-1.5">
             {shown.map((object) => {
@@ -129,15 +130,15 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
               const detailId = `oa-object-details-${encodeURIComponent(object.id)}`
               const details = [
                 KIND_LABEL[object.kind],
-                `Chart pane ${object.paneIndex + 1}`,
+                `图表窗格 ${object.paneIndex + 1}`,
                 status,
-                object.visible ? 'Visible' : 'Hidden',
-                object.capabilities.lock ? (object.locked ? 'Locked' : 'Unlocked') : null,
+                object.visible ? '可见' : '已隐藏',
+                object.capabilities.lock ? (object.locked ? '已锁定' : '未锁定') : null,
               ].filter(Boolean)
               const content = (
                 <>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-xs font-medium">{object.name}</span>
+                    <span className="block truncate text-xs font-medium">{object.kind === 'indicator' ? indicatorInstanceName(object.name) : object.name}</span>
                     <span
                       id={detailId}
                       className="block truncate text-[10px] text-muted-foreground"
@@ -146,10 +147,10 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
                     </span>
                   </span>
                   {!object.visible && (
-                    <span className="shrink-0 text-[10px] text-muted-foreground">Hidden</span>
+                    <span className="shrink-0 text-[10px] text-muted-foreground">已隐藏</span>
                   )}
                   {object.locked && (
-                    <span className="shrink-0 text-[10px] text-muted-foreground">Locked</span>
+                    <span className="shrink-0 text-[10px] text-muted-foreground">已锁定</span>
                   )}
                 </>
               )
@@ -165,7 +166,7 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
                     <button
                       type="button"
                       className="flex w-full items-center gap-2 rounded-sm text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                      aria-label={`Select ${object.name}`}
+                      aria-label={`选择 ${object.name}`}
                       aria-describedby={detailId}
                       aria-pressed={object.selected}
                       onClick={(event) =>
@@ -184,7 +185,7 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
                     <div className="mt-2 flex flex-wrap gap-1">
                       {object.capabilities.visibility && (
                         <Action
-                          label={object.visible ? 'Hide' : 'Show'}
+                          label={object.visible ? '隐藏' : '显示'}
                           name={object.name}
                           onClick={() =>
                             act(object.visible ? 'hide' : 'show', object.name, () =>
@@ -195,7 +196,7 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
                       )}
                       {object.capabilities.lock && (
                         <Action
-                          label={object.locked ? 'Unlock' : 'Lock'}
+                          label={object.locked ? '解锁' : '锁定'}
                           name={object.name}
                           onClick={() =>
                             act(object.locked ? 'unlock' : 'lock', object.name, () =>
@@ -206,9 +207,9 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
                       )}
                       {object.capabilities.settings && (
                         <Action
-                          label="Settings"
+                          label="设置"
                           name={object.name}
-                          ariaLabel={`Settings for ${object.name}`}
+                          ariaLabel={`设置 ${object.name}`}
                           onClick={() =>
                             act('open settings for', object.name, () =>
                               model.openSettings(object.id)
@@ -218,7 +219,7 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
                       )}
                       {object.capabilities.focus && (
                         <Action
-                          label="Focus"
+                          label="定位"
                           name={object.name}
                           onClick={() =>
                             act('focus', object.name, () => model.focus(object.id))
@@ -227,7 +228,7 @@ export function ObjectsPanel({ model, paneLabel }: Props) {
                       )}
                       {object.capabilities.remove && (
                         <Action
-                          label="Remove"
+                          label="移除"
                           name={object.name}
                           onClick={() =>
                             act('remove', object.name, () => model.remove(object.id))

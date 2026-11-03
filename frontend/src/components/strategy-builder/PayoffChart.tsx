@@ -481,7 +481,7 @@ export function PayoffChart({
       />
       <div className="space-y-3 border-t px-3 py-3 text-xs">
         <output aria-live="polite" aria-atomic="true" className="block text-muted-foreground">
-          Scenario spot <strong className="text-foreground">{formatCurrency(scenario.spot)}</strong>
+          情景标的价格 <strong className="text-foreground">{formatCurrency(scenario.spot)}</strong>
           .
           {scenarioSample && (
             <>
@@ -504,15 +504,15 @@ export function PayoffChart({
 
         <dl className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           <div className="rounded-md border bg-muted/20 px-2 py-1.5">
-            <dt className="text-muted-foreground">Maximum profit</dt>
+            <dt className="text-muted-foreground">最大盈利</dt>
             <dd className="font-semibold tabular-nums">{formatLimit(payoff.maxProfit)}</dd>
           </div>
           <div className="rounded-md border bg-muted/20 px-2 py-1.5">
-            <dt className="text-muted-foreground">Maximum loss</dt>
+            <dt className="text-muted-foreground">最大亏损</dt>
             <dd className="font-semibold tabular-nums">{formatLimit(payoff.maxLoss)}</dd>
           </div>
           <div className="rounded-md border bg-muted/20 px-2 py-1.5">
-            <dt className="text-muted-foreground">Breakevens</dt>
+            <dt className="text-muted-foreground">盈亏平衡点</dt>
             <dd data-testid="breakeven-summary" className="font-semibold tabular-nums">
               {payoff.breakevens.length > 0
                 ? `${summaryBreakevens.map(formatCurrency).join(', ')}${
@@ -544,11 +544,11 @@ export function PayoffChart({
           }
           className="w-full table-fixed border-collapse text-left"
         >
-          <caption className="sr-only">Representative payoff values</caption>
+          <caption className="sr-only">代表性损益值</caption>
           <thead>
             <tr className="border-b text-muted-foreground">
               <th scope="col" className="break-words px-2 py-1 font-medium">
-                Underlying
+                标的
               </th>
               <th scope="col" className="break-words px-2 py-1 font-medium">
                 {terminalLabel}

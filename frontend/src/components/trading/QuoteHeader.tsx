@@ -96,7 +96,7 @@ export function QuoteHeader({
       {/* Bid/Ask Row */}
       <div className="flex items-center justify-between text-sm border-t border-border/50 pt-2">
         <div className="flex items-center gap-2">
-          <span className="text-muted-foreground">Bid:</span>
+          <span className="text-muted-foreground">买一价：</span>
           <span className="text-emerald-400 font-medium font-mono">
             {bidPrice !== undefined && bidPrice > 0 ? bidPrice.toFixed(2) : '-'}
           </span>
@@ -106,7 +106,7 @@ export function QuoteHeader({
         </div>
         <div className="text-muted-foreground">|</div>
         <div className="flex items-center gap-2">
-          <span className="text-muted-foreground">Ask:</span>
+          <span className="text-muted-foreground">卖一价：</span>
           <span className="text-rose-400 font-medium font-mono">
             {askPrice !== undefined && askPrice > 0 ? askPrice.toFixed(2) : '-'}
           </span>

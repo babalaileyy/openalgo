@@ -74,7 +74,7 @@ export function AgentSetupGate({ compact = false, className }: AgentSetupGatePro
         <Bot className={cn('text-muted-foreground', compact ? 'h-6 w-6' : 'h-8 w-8')} aria-hidden />
       </div>
       <h2 className={cn('font-semibold tracking-tight', compact ? 'text-base' : 'text-2xl')}>
-        Set up your agent
+        设置助手
       </h2>
       <p className={cn('leading-relaxed text-muted-foreground', compact ? 'text-xs' : 'text-sm')}>
         {compact
@@ -86,7 +86,7 @@ export function AgentSetupGate({ compact = false, className }: AgentSetupGatePro
           reach. */}
       <Button asChild size={compact ? 'sm' : 'default'}>
         <Link to="/agent/config">
-          Configure the agent
+          配置助手
           <ArrowRight className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} aria-hidden />
         </Link>
       </Button>

@@ -99,27 +99,27 @@ describe('what each control writes', () => {
 
   it('extends to either side', () => {
     const { onSettings } = bar()
-    fireEvent.click(screen.getByRole('button', { name: 'Extend' }))
-    fireEvent.click(screen.getByRole('checkbox', { name: 'Extend right' }))
+    fireEvent.click(screen.getByRole('button', { name: '延伸' }))
+    fireEvent.click(screen.getByRole('checkbox', { name: '向右延伸' }))
     expect(onSettings).toHaveBeenCalledWith({ 'style.extendRight': true })
   })
 
   it('edits levels, adds one and resets to the tool’s own', () => {
     const { onLevels, onSettings } = bar()
-    fireEvent.click(screen.getByRole('button', { name: 'Levels' }))
+    fireEvent.click(screen.getByRole('button', { name: '水平线' }))
     fireEvent.click(screen.getByRole('checkbox', { name: 'Show level 61.8%' }))
     expect(onLevels).toHaveBeenLastCalledWith([
       { ratio: 0, color: '#787b86' },
       { ratio: 0.618, color: '#089981', enabled: false },
     ])
 
-    fireEvent.click(screen.getByRole('button', { name: 'Add level' }))
+    fireEvent.click(screen.getByRole('button', { name: '添加水平位' }))
     expect(onLevels.mock.lastCall?.[0].at(-1)).toMatchObject({ ratio: 0.236 })
 
-    fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
+    fireEvent.click(screen.getByRole('button', { name: '重置' }))
     expect(onLevels).toHaveBeenLastCalledWith([{ ratio: 0 }, { ratio: 0.5 }, { ratio: 1 }])
 
-    fireEvent.click(screen.getByRole('checkbox', { name: 'Show labels' }))
+    fireEvent.click(screen.getByRole('checkbox', { name: '显示标签' }))
     expect(onSettings).toHaveBeenLastCalledWith({ 'style.showLabels': false })
   })
 
@@ -127,13 +127,13 @@ describe('what each control writes', () => {
     const { onDuplicate, onOrder, onHide } = bar()
     const more = screen.getByRole('button', { name: 'More drawing actions' })
     fireEvent.click(more)
-    fireEvent.click(screen.getByRole('button', { name: 'Duplicate' }))
+    fireEvent.click(screen.getByRole('button', { name: '复制' }))
     fireEvent.click(more)
-    fireEvent.click(screen.getByRole('button', { name: 'Bring to front' }))
+    fireEvent.click(screen.getByRole('button', { name: '置于顶层' }))
     fireEvent.click(more)
-    fireEvent.click(screen.getByRole('button', { name: 'Send to back' }))
+    fireEvent.click(screen.getByRole('button', { name: '置于底层' }))
     fireEvent.click(more)
-    fireEvent.click(screen.getByRole('button', { name: 'Hide' }))
+    fireEvent.click(screen.getByRole('button', { name: '隐藏' }))
     expect(onDuplicate).toHaveBeenCalled()
     expect(onOrder.mock.calls).toEqual([['front'], ['back']])
     expect(onHide).toHaveBeenCalled()
@@ -142,7 +142,7 @@ describe('what each control writes', () => {
   it('offers no fill, extend or levels on a tool that has none', () => {
     bar({ tool: 'text', fill: null, extend: null, levels: false })
     expect(screen.queryByRole('button', { name: 'Fill' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Extend' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Levels' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '延伸' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '水平线' })).toBeNull()
   })
 })

@@ -47,7 +47,7 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
       await authApi.logout()
       logout()
       navigate('/login')
-      showToast.success('Logged out successfully')
+      showToast.success('已退出登录')
     } catch {
       logout()
       navigate('/login')
@@ -58,18 +58,18 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
     const result = await toggleAppMode()
     if (result.success) {
       const newMode = useThemeStore.getState().appMode
-      showToast.success(`Switched to ${newMode === 'live' ? 'Live' : 'Analyze'} mode`)
+      showToast.success(`已切换到${newMode === 'live' ? '实盘' : '模拟'}模式`)
 
       // Show warning toast when enabling analyzer mode (like old UI)
       if (newMode === 'analyzer') {
         setTimeout(() => {
-          showToast.warning('Analyzer (Sandbox) mode is for testing purposes only', undefined, {
+          showToast.warning('模拟交易模式仅用于测试', undefined, {
             duration: 10000,
           })
         }, 2000)
       }
     } else {
-      showToast.error(result.message || 'Failed to toggle mode')
+      showToast.error(result.message || '切换模式失败')
     }
   }
 
@@ -78,7 +78,7 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
     ? 'h-7 w-7 rounded-md text-foreground/80 hover:bg-accent hover:text-foreground dark:hover:bg-accent'
     : 'h-8 w-8'
   const glyph = 'h-4 w-4'
-  const modeLabel = appMode === 'live' ? 'Live' : 'Analyze'
+  const modeLabel = appMode === 'live' ? '实盘' : '模拟'
 
   return (
     <>
@@ -107,7 +107,7 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
         {/* The toolbar shares its row with the whole chart toolbar, so the long
             wording waits for a wider screen there than in the navbar. */}
         <span className={toolbar ? 'hidden min-[1800px]:inline' : 'hidden 2xl:inline'}>
-          {modeLabel} Mode
+          {modeLabel}模式
         </span>
         <span className={toolbar ? 'min-[1800px]:hidden' : '2xl:hidden'}>{modeLabel}</span>
       </Badge>
@@ -119,8 +119,8 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
         className={iconButton}
         onClick={handleModeToggle}
         disabled={isTogglingMode}
-        title={`Switch to ${appMode === 'live' ? 'Analyze' : 'Live'} mode`}
-        aria-label={`Switch to ${appMode === 'live' ? 'Analyze' : 'Live'} mode`}
+        title={`切换到${appMode === 'live' ? '模拟' : '实盘'}模式`}
+        aria-label={`切换到${appMode === 'live' ? '模拟' : '实盘'}模式`}
       >
         {isTogglingMode ? (
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -138,8 +138,8 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
         className={iconButton}
         onClick={toggleMode}
         disabled={appMode !== 'live'}
-        title={mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-        aria-label={mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+        title={mode === 'light' ? '切换到深色模式' : '切换到浅色模式'}
+        aria-label={mode === 'light' ? '切换到深色模式' : '切换到浅色模式'}
       >
         {mode === 'light' ? <Sun className={glyph} /> : <Moon className={glyph} />}
       </Button>
@@ -156,7 +156,7 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
                 ? 'ml-0.5 h-7 w-7 hover:bg-primary/90 hover:text-primary-foreground dark:hover:bg-primary/90'
                 : 'h-8 w-8'
             )}
-            aria-label="Open user menu"
+            aria-label="打开用户菜单"
           >
             <span className={toolbar ? 'text-[13px] font-semibold' : 'text-sm font-medium'}>
               {user?.username?.[0]?.toUpperCase() || 'O'}
@@ -191,7 +191,7 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
               className="flex items-center gap-2"
             >
               <BookOpen className="h-4 w-4" />
-              Docs
+              文档
             </a>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -200,7 +200,7 @@ export function AccountControls({ variant = 'navbar' }: { variant?: 'navbar' | '
             className="text-destructive focus:text-destructive"
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Logout
+            退出登录
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

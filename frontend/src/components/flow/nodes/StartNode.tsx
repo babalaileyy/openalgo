@@ -42,7 +42,7 @@ export const StartNode = memo(({ data, selected }: StartNodeProps) => {
             <Icon className="h-3 w-3" />
           </div>
           <div>
-            <div className="text-xs font-medium leading-tight">Start</div>
+            <div className="text-xs font-medium leading-tight">开始</div>
             <div className="text-[9px] text-muted-foreground">
               {scheduleLabels[data.scheduleType] || 'Schedule'}
             </div>
@@ -52,12 +52,12 @@ export const StartNode = memo(({ data, selected }: StartNodeProps) => {
           {/* Show interval for interval schedule, time for others */}
           {data.scheduleType === 'interval' ? (
             <div className="flex items-center justify-between gap-2">
-              <span className="text-muted-foreground">Every:</span>
+              <span className="text-muted-foreground">间隔：</span>
               <span className="mono-data font-medium">{getIntervalDisplay()}</span>
             </div>
           ) : (
             <div className="flex items-center justify-between gap-2">
-              <span className="text-muted-foreground">Time:</span>
+              <span className="text-muted-foreground">时间：</span>
               <span className="mono-data font-medium">{data.time || '09:15'}</span>
             </div>
           )}
@@ -66,7 +66,7 @@ export const StartNode = memo(({ data, selected }: StartNodeProps) => {
             data.days.length > 0 &&
             data.days.length < 7 && (
               <div className="mt-0.5 flex items-center justify-between">
-                <span className="text-muted-foreground">Days:</span>
+                <span className="text-muted-foreground">日期：</span>
                 <span className="mono-data text-[9px]">
                   {data.days.map((d) => ['M', 'T', 'W', 'T', 'F', 'S', 'S'][d]).join('')}
                 </span>

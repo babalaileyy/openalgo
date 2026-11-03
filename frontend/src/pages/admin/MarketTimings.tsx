@@ -84,11 +84,11 @@ export default function MarketTimingsPage() {
         setEditingExchange(null)
         fetchTimings()
       } else {
-        showToast.error(response.message || 'Failed to update timing', 'admin')
+        showToast.error(response.message || '更新交易时段失败', 'admin')
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
-      showToast.error(err.response?.data?.message || 'Failed to update timing', 'admin')
+      showToast.error(err.response?.data?.message || '更新交易时段失败', 'admin')
     } finally {
       setIsSaving(false)
     }
@@ -144,30 +144,28 @@ export default function MarketTimingsPage() {
           </Link>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Clock className="h-6 w-6" />
-            Market Timings
+            交易时间
           </h1>
         </div>
-        <p className="text-muted-foreground">Configure trading session timings for each exchange</p>
+        <p className="text-muted-foreground">配置各交易所的交易时段</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Default Timings */}
         <Card>
           <CardHeader>
-            <CardTitle>Default Timings</CardTitle>
-            <CardDescription>
-              Configure the default trading session timings for each exchange
-            </CardDescription>
+            <CardTitle>默认交易时间</CardTitle>
+            <CardDescription>配置各交易所的默认交易时段</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="border rounded-md">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Exchange</TableHead>
-                    <TableHead>Start Time</TableHead>
-                    <TableHead>End Time</TableHead>
-                    <TableHead className="w-[80px]">Actions</TableHead>
+                    <TableHead>交易所</TableHead>
+                    <TableHead>开始时间</TableHead>
+                    <TableHead>结束时间</TableHead>
+                    <TableHead className="w-[80px]">操作</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -213,7 +211,7 @@ export default function MarketTimingsPage() {
                               className="h-8 w-8"
                               onClick={() => handleSaveEdit(timing.exchange)}
                               disabled={isSaving}
-                              title="Save changes"
+                              title="保存更改"
                               aria-label={`Save timing changes for ${timing.exchange}`}
                             >
                               <Save className="h-4 w-4" />
@@ -223,7 +221,7 @@ export default function MarketTimingsPage() {
                               variant="ghost"
                               className="h-8 w-8"
                               onClick={() => setEditingExchange(null)}
-                              title="Cancel editing"
+                              title="取消编辑"
                               aria-label={`Cancel editing ${timing.exchange}`}
                             >
                               <X className="h-4 w-4" />
@@ -286,8 +284,8 @@ export default function MarketTimingsPage() {
           {/* Check Timings for Date */}
           <Card>
             <CardHeader>
-              <CardTitle>Check Timings for Date</CardTitle>
-              <CardDescription>Look up market timings for a specific date</CardDescription>
+              <CardTitle>查询指定日期的交易时间</CardTitle>
+              <CardDescription>查询指定日期的市场交易时间</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex gap-2">
@@ -340,37 +338,37 @@ export default function MarketTimingsPage() {
       {/* Info Section */}
       <Card>
         <CardHeader>
-          <CardTitle>About Market Timings</CardTitle>
+          <CardTitle>关于市场交易时间</CardTitle>
         </CardHeader>
         <CardContent className="prose prose-sm dark:prose-invert max-w-none">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
             <div>
-              <h4 className="font-semibold text-foreground mb-2">Equity Markets (NSE, BSE)</h4>
+              <h4 className="font-semibold text-foreground mb-2">股票市场（NSE、BSE）</h4>
               <ul className="list-disc list-inside space-y-1">
-                <li>Pre-open session: 09:00 - 09:15</li>
-                <li>Normal market: 09:15 - 15:30</li>
-                <li>Post-close session: 15:40 - 16:00</li>
+                <li>盘前时段：09:00 - 09:15</li>
+                <li>正常交易时段：09:15 - 15:30</li>
+                <li>盘后时段：15:40 - 16:00</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-2">F&O Markets (NFO, BFO)</h4>
+              <h4 className="font-semibold text-foreground mb-2">期货及期权市场（NFO、BFO）</h4>
               <ul className="list-disc list-inside space-y-1">
-                <li>Normal market: 09:15 - 15:30</li>
-                <li>Same timings as equity markets</li>
+                <li>正常交易时段：09:15 - 15:30</li>
+                <li>与股票市场时间相同</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-2">Currency Markets (CDS, BCD)</h4>
+              <h4 className="font-semibold text-foreground mb-2">外汇市场（CDS、BCD）</h4>
               <ul className="list-disc list-inside space-y-1">
-                <li>Normal market: 09:00 - 17:00</li>
-                <li>Extended hours compared to equity</li>
+                <li>正常交易时段：09:00 - 17:00</li>
+                <li>交易时间长于股票市场</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-2">Commodity Market (MCX)</h4>
+              <h4 className="font-semibold text-foreground mb-2">商品市场（MCX）</h4>
               <ul className="list-disc list-inside space-y-1">
-                <li>Normal market: 09:00 - 23:55</li>
-                <li>Extended trading into late evening</li>
+                <li>正常交易时段：09:00 - 23:55</li>
+                <li>交易持续至深夜</li>
               </ul>
             </div>
           </div>

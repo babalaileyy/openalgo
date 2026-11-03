@@ -121,7 +121,7 @@ export function DockShell({ tab, onTabChange, counts, header, children }: Props)
   // 24px buttons in a strip whose content box is 27px (28 less the top
   // border), so a selected tab's fill never overpaints the hairline.
   const tabs = (
-    <div role="tablist" aria-label="Trading books" className="flex items-center gap-0.5">
+    <div role="tablist" aria-label="交易记录" className="flex items-center gap-0.5">
       {DOCK_TABS.map(({ id, label }, index) => {
         const selected = tab === id
         const count = counts[id]
@@ -171,7 +171,7 @@ export function DockShell({ tab, onTabChange, counts, header, children }: Props)
   return (
     <section
       id={DOCK_ID}
-      aria-label="Trading dock"
+      aria-label="交易面板"
       className="relative flex shrink-0 flex-col overflow-hidden border-t bg-background"
       style={open ? { height, maxHeight: '60vh' } : { height: DOCK_STRIP_HEIGHT }}
     >
@@ -182,7 +182,7 @@ export function DockShell({ tab, onTabChange, counts, header, children }: Props)
           <div
             role="separator"
             aria-orientation="horizontal"
-            aria-label="Resize trading dock"
+            aria-label="调整交易面板高度"
             aria-valuenow={height}
             aria-valuemin={DOCK_MIN_HEIGHT}
             aria-valuemax={dockMaxHeight(viewportHeight())}
@@ -215,12 +215,12 @@ export function DockShell({ tab, onTabChange, counts, header, children }: Props)
         {open && (
           <>
             <div className="flex min-w-0 flex-1 items-center justify-end gap-2">{header}</div>
-            <Tip side="left" tip={{ title: 'Collapse', chord: 'Esc', sub: 'Back to the strip' }}>
+            <Tip side="left" tip={{ title: '收起', chord: 'Esc', sub: '返回标签栏' }}>
               <button
                 type="button"
                 onClick={() => onTabChange(null)}
                 className={cn(RAIL_BTN, 'h-7 w-7')}
-                aria-label="Collapse trading dock"
+                aria-label="收起交易面板"
               >
                 <ChromeIcon id="chevron-down" />
               </button>
