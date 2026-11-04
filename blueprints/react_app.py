@@ -7,7 +7,7 @@ import mimetypes
 import os
 from pathlib import Path
 
-from flask import Blueprint, abort, request, send_file, send_from_directory
+from flask import Blueprint, abort, redirect, request, send_file, send_from_directory
 
 react_bp = Blueprint("react", __name__)
 
@@ -120,7 +120,7 @@ def react_login():
 # Setup route (initial admin setup)
 @react_bp.route("/setup")
 def react_setup():
-    return serve_react_app()
+    return redirect("/login")
 
 
 # Password reset
