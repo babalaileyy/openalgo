@@ -76,7 +76,7 @@ def test_cross_platform_runtime_suite_covers_windows_mac_and_arm64():
     job = _jobs()["gthread-platforms"]
     assert set(job["strategy"]["matrix"]["runner"]) == {
         "windows-latest",
-        "macos-latest",
+        "macos-15-intel",
         "ubuntu-24.04-arm",
     }
     script = _script(job)
