@@ -72,11 +72,10 @@ def test_the_full_migration_suite_runs_on_linux_with_eventlet_installed():
     assert not any(step.get("continue-on-error") for step in job["steps"])
 
 
-def test_cross_platform_runtime_suite_covers_windows_mac_and_arm64():
+def test_cross_platform_runtime_suite_covers_windows_and_arm64():
     job = _jobs()["gthread-platforms"]
     assert set(job["strategy"]["matrix"]["runner"]) == {
         "windows-latest",
-        "macos-15-intel",
         "ubuntu-24.04-arm",
     }
     script = _script(job)

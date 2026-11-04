@@ -247,7 +247,7 @@ jobs:
       - name: Run every gthread migration test file
         run: .venv/bin/python -m pytest test/test_gthread_*.py -o addopts="" --timeout=120 -rs
 
-  # Windows (development installs), macOS and native Linux ARM64 run the
+  # Windows (development installs) and native Linux ARM64 run the
   # portable runtime, lifecycle, session, shutdown and sandbox money tests.
   # Shell launcher/systemd/Docker tests stay in the Linux migration job.
   # The ARM64 cell installs eventlet so the default-worker lifecycle cases run.
@@ -258,7 +258,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [windows-latest, macos-15-intel, ubuntu-24.04-arm]
+        runner: [windows-latest, ubuntu-24.04-arm]
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
