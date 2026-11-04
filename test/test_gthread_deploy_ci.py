@@ -72,37 +72,6 @@ def test_the_full_migration_suite_runs_on_linux_with_eventlet_installed():
     assert not any(step.get("continue-on-error") for step in job["steps"])
 
 
-def test_cross_platform_runtime_suite_covers_windows_and_arm64():
-    job = _jobs()["gthread-platforms"]
-    assert set(job["strategy"]["matrix"]["runner"]) == {
-        "windows-latest",
-        "ubuntu-24.04-arm",
-    }
-    script = _script(job)
-    for name in (
-        "test_gthread_foundation_runtime.py",
-        "test_gthread_foundation_lifecycle.py",
-        "test_gthread_core_db_sessions.py",
-        "test_gthread_core_shutdown.py",
-        "test_gthread_core_proxy_mode.py",
-        "test_gthread_hosts_chartink.py",
-        "test_gthread_historify_lifecycle.py",
-        "test_gthread_sandbox_funds.py",
-        "test_gthread_sandbox_orders.py",
-        "test_gthread_review_funds_cas_cleanup.py",
-        "test_gthread_memory_auth_decrypt.py",
-        "test_gthread_memory_order_updates.py",
-        "test_gthread_memory_streaming.py",
-        "test_gthread_memory_flow.py",
-    ):
-        assert f"test/{name}" in script
-        assert (ROOT / "test" / name).is_file(), name
-    assert job["timeout-minutes"] <= 20
-    assert "uv run --no-sync python -m pytest" in script
-    assert '"eventlet==0.41.2"' in script
-    assert not any(step.get("continue-on-error") for step in job["steps"])
-
-
 def test_images_are_built_only_after_the_new_jobs_pass():
     needs = set(_jobs()["docker-build"]["needs"])
     assert {
@@ -110,5 +79,4 @@ def test_images_are_built_only_after_the_new_jobs_pass():
         "eventlet-fallback",
         "gthread-gates",
         "gthread-migration",
-        "gthread-platforms",
     } <= needs

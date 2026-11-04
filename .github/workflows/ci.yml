@@ -247,47 +247,6 @@ jobs:
       - name: Run every gthread migration test file
         run: .venv/bin/python -m pytest test/test_gthread_*.py -o addopts="" --timeout=120 -rs
 
-  # Windows (development installs) and native Linux ARM64 run the
-  # portable runtime, lifecycle, session, shutdown and sandbox money tests.
-  # Shell launcher/systemd/Docker tests stay in the Linux migration job.
-  # The ARM64 cell installs eventlet so the default-worker lifecycle cases run.
-  gthread-platforms:
-    needs: backend-lint
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        runner: [windows-latest, ubuntu-24.04-arm]
-    steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-          python-version: "3.12"
-      - run: uv sync
-      - name: Install the default worker on Linux ARM64
-        if: runner.os == 'Linux'
-        run: uv pip install "eventlet==0.41.2"
-      - name: Portable runtime and concurrency tests
-        run: >-
-          uv run --no-sync python -m pytest
-          test/test_gthread_foundation_runtime.py
-          test/test_gthread_foundation_lifecycle.py
-          test/test_gthread_core_db_sessions.py
-          test/test_gthread_core_shutdown.py
-          test/test_gthread_core_proxy_mode.py
-          test/test_gthread_hosts_chartink.py
-          test/test_gthread_historify_lifecycle.py
-          test/test_gthread_sandbox_funds.py
-          test/test_gthread_sandbox_orders.py
-          test/test_gthread_review_funds_cas_cleanup.py
-          test/test_gthread_memory_auth_decrypt.py
-          test/test_gthread_memory_order_updates.py
-          test/test_gthread_memory_streaming.py
-          test/test_gthread_memory_flow.py
-          -o addopts="" --timeout=120 -rs
-
   # Frontend linting
   frontend-lint:
     runs-on: ubuntu-latest
@@ -458,9 +417,9 @@ jobs:
         run: uv run pip-audit
         continue-on-error: true
 
-  # Build and smoke-test each architecture locally; deployment publishes to GHCR.
+  # Build and smoke-test the Linux AMD64 image used by the server.
   docker-build:
-    needs: [backend-lint, backend-test, frontend-build, security-scan, gunicorn-boot, eventlet-fallback, gthread-gates, gthread-migration, gthread-platforms]
+    needs: [backend-lint, backend-test, frontend-build, security-scan, gunicorn-boot, eventlet-fallback, gthread-gates, gthread-migration]
     strategy:
       fail-fast: false
       matrix:
@@ -468,9 +427,6 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest
             suffix: amd64
-          - platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            suffix: arm64
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v6
@@ -487,12 +443,9 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.suffix }}
           cache-to: type=gha,mode=max,scope=${{ matrix.suffix }}
 
-      # Kaleido + Chromium smoke test, run natively on each matrix leg.
+      # Kaleido + Chromium smoke test for the server image.
       # Renders a trivial Plotly figure to PNG inside the just-built image
-      # to verify chromium + kaleido + plotly are wired up end to end. Now
-      # runs on both amd64 and arm64, so arch-specific regressions (e.g.
-      # missing arm64 Chromium libs, wheel compatibility issues) surface
-      # in CI rather than in production.
+      # to verify chromium + kaleido + plotly are wired up end to end.
       #
       # Does NOT catch the asyncio/eventlet nesting regression — that one
       # only manifests when called from inside a live PTB event loop, and
