@@ -70,6 +70,20 @@ const emptyTemplate = {
 afterEach(() => vi.restoreAllMocks())
 
 describe('named indicator templates', () => {
+  it('saves distinct templates when randomUUID is unavailable', async () => {
+    vi.stubGlobal('crypto', { getRandomValues: globalThis.crypto.getRandomValues.bind(globalThis.crypto) })
+    try {
+      const host = harness()
+      const user = await open()
+      await save(user, 'First')
+      await save(user, 'Second')
+      const ids = host.saved()?.templates.map((template) => template.id)
+      expect(new Set(ids).size).toBe(2)
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
   it('saves real captured studies with a name and applies to the current focused target', async () => {
     const host = harness()
     const user = await open()

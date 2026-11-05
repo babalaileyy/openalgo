@@ -82,7 +82,13 @@ export function useChartWorkspaceCatalog(
       owner = {
         account,
         storage,
-        repository: new WorkspaceRepository(storage, `oa-trading:${account}`),
+        repository: new WorkspaceRepository(storage, `oa-trading:${account}`, {
+          id: () => {
+            const bytes = new Uint8Array(16)
+            crypto.getRandomValues(bytes)
+            return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+          },
+        }),
         active: true,
         pending: 0,
       }
