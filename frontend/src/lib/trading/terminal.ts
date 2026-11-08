@@ -3929,6 +3929,8 @@ export class TradingTerminal {
     // The built-in tier is a static bundle: import it once.
     if (!this.indicatorsLoaded) {
       await import('openalgo-charts/indicators')
+      const { registerKdj } = await import('./kdj')
+      registerKdj()
       this.indicatorsLoaded = true
     }
     // The user's own modules are re-checked on every call, which is what makes a
@@ -3976,6 +3978,8 @@ export class TradingTerminal {
   private async loadIndicatorsFor(ids: readonly string[]): Promise<void> {
     if (!this.indicatorsLoaded) {
       await import('openalgo-charts/indicators')
+      const { registerKdj } = await import('./kdj')
+      registerKdj()
       this.indicatorsLoaded = true
     }
     if (ids.length === 0) return
